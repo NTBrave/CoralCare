@@ -1,15 +1,15 @@
 <template>
   <div id="app" v-noRight>
     <!-- PC端 -->
-    <el-container v-if="phone==null">
+    <el-container>
       <!-- 侧边栏 -->
-      <el-aside style="width: 200px;">
+      <el-aside v-show="!isHome" style="width: 200px;">
         <div
           style="background-color: #001529; width: 199px;opacity: 0.95; height: 60px;; position: fixed;"
         >
           <!-- <el-image :src="require('./assets/images/favicon.png')" style="width: 40%;"></el-image> -->
           <p style="text-align: left;padding:10px 0 5px 10px;margin:0;">
-            <img src="./assets/images/favicon.png" alt width="30%;" />
+            <img src="./assets/images/logo.svg" alt width="30%;" />
           </p>
         </div>
         <el-menu
@@ -21,46 +21,72 @@
           style="height: 100%; text-align: left; position: fixed; width: 200px;margin-top: 60px;"
           @select="changeRoute"
         >
-          <el-menu-item index="1">
-            <a-icon type="user" style="font-size: 20px;" />
-            <span>个人信息</span>
-          </el-menu-item>
-          <!-- 
-          <a-sub-menu key="sub1">
-            <span slot="title">
-              <a-icon type="file-text" />
-              <span>文档管理</span>
-          </span>-->
-          <el-menu-item index="2">
-            <a-icon type="file-text" style="font-size: 20px;" />
-            <span>个人文档</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <a-icon type="file-text" style="font-size: 20px;" />
-            <span>部门文档</span>
-          </el-menu-item>
-          <!-- </a-sub-menu> -->
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>区域</span>
+            </template>
+            <el-menu-item index="1-1">
+              <span>深圳大鹏</span>
+            </el-menu-item>
+            <el-menu-item index="1-2">
+              <span>湛江徐闻</span>
+            </el-menu-item>
+          </el-submenu>
 
-          <el-menu-item index="4">
-            <a-icon type="file-search" style="font-size: 20px;" />
-            <span>文档检索</span>
-          </el-menu-item>
-          <el-menu-item index="5" disabled>
-            <a-icon type="delete" style="font-size: 20px;" />
-            <span>回收站</span>
-          </el-menu-item>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-edit"></i>
+              <span>业务管理</span>
+            </template>
+            <el-menu-item index="2-1">
+              <span>潜爱护礁</span>
+            </el-menu-item>
+            <el-menu-item index="2-2">
+              <span>水文观测</span>
+            </el-menu-item>
+            <el-menu-item index="2-3">
+              <span>多维检索</span>
+            </el-menu-item>
+          </el-submenu>
+
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-bangzhu"></i>
+              <span>珊瑚管理</span>
+            </template>
+            <el-menu-item index="3-1">
+              <span>区域视图</span>
+            </el-menu-item>
+            <el-menu-item index="3-2">
+              <span>多维检索</span>
+            </el-menu-item>
+          </el-submenu>
+
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-data-line"></i>
+              <span>数据管理</span>
+            </template>
+            <el-menu-item index="4-1">
+              <span>区域数据</span>
+            </el-menu-item>
+            <el-menu-item index="4-2">
+              <span>珊瑚数据</span>
+            </el-menu-item>
+            <el-menu-item index="4-3">
+              <span>水文数据</span>
+            </el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
 
       <el-container>
         <el-header
+          v-show="!isHome"
           style="position: fixed;z-index: 999;background-color: white;height: 60px;width: 100%; line-height: 60px;box-shadow: 0px 5px 6px 0 rgba(0,0,0,.07); "
         >
-          <el-image
-            :src="require('./assets/logo.png')"
-            style="height: 50px; width: 240px; padding: 5px 0; float: left;"
-          ></el-image>
-          <div style="float: left;width: 30%;margin: 0 0 0 14%;" v-if="noSearchPage">
+          <div style="float: left;width: 30%;margin: 0 0 0 23%;" v-if="noSearchPage">
             <el-autocomplete
               style="width: 100%;"
               :fetch-suggestions="getKeyword"
@@ -78,8 +104,17 @@
             </el-autocomplete>
           </div>
 
+          <div style="float: right; margin-right:11.5%" v-if="(loginData.isLogin)">
+            <el-button
+              type="text"
+              icon="el-icon-s-help"
+              @click="changeRoute('1')"
+              style="font-size: 16px;margin-right:24px;"
+            >首页</el-button>
+          </div>
+
           <!-- 右上角用户小弹窗 -->
-          <div style="float: right; margin-right: 13%;" v-if="(loginData.isLogin)">
+          <div style="float: right; margin-right: 1%;" v-if="(loginData.isLogin)">
             <el-popover trigger="hover" placement="bottom" width="150">
               <p style="text-align: center;">{{loginData.currentUserName}}</p>
 
@@ -148,7 +183,65 @@
             >登陆</el-button>
           </div>
         </el-header>
+        <el-header
+          v-show="isHome"
+          style="position: fixed;z-index: 999;background-color: white;height: 60px;width: 100%; line-height: 60px;box-shadow: 0px 5px 6px 0 rgba(0,0,0,.07); "
+        >
+          <div style="float: right; margin-right:1%" v-if="(loginData.isLogin)">
+            <el-button
+              type="text"
+              icon="el-icon-edit-outline"
+              @click="changeRoute('4-1')"
+              style="font-size: 16px;margin-right:24px;"
+            >浅爱护礁</el-button>
+          </div>
+          <!-- 右上角用户小弹窗 -->
+          <div style="float: right; margin-right: 1%;" v-if="(loginData.isLogin)">
+            <el-popover trigger="hover" placement="bottom" width="150">
+              <p style="text-align: center;">{{loginData.currentUserName}}</p>
 
+              <div class="MyDivider"></div>
+              <el-button
+                type="text"
+                icon="el-icon-user"
+                @click="changeRoute('1')"
+                size="mini"
+                style="display:block;margin:0 auto;font-size: 14px;color: #303133;"
+              >个人中心</el-button>
+              <div class="MyDivider"></div>
+              <el-button
+                type="text"
+                icon="el-icon-switch-button"
+                @click="logout"
+                size="mini"
+                style="display:block;margin:0 auto;font-size: 14px;"
+              >退出登陆</el-button>
+              <div class="MyDivider"></div>
+              <el-button
+                type="text"
+                style="display:block;margin:0 auto;font-size: 14px;"
+                size="mini"
+                icon="el-icon-edit-outline"
+                @click="registeredData.visible = true"
+              >注册</el-button>
+              <p slot="reference" style="text-align: center;" type="text">
+                <!-- <el-buton type="primary"  circle > -->
+                <img src="./assets/images/boy.png" alt width="90%;" />
+              </p>
+            </el-popover>
+          </div>
+
+          <!-- 右上角 登陆按钮 -->
+          <div style="float: right; margin-right:1%" v-if="(!loginData.isLogin)">
+            <el-button
+              style="font-size: 16px;margin-right:24px;"
+              size="mini"
+              type="danger"
+              icon="el-icon-right"
+              @click="loginData.visible = true"
+            >登陆</el-button>
+          </div>
+        </el-header>
         <el-main :style="{minHeight: screenHeight - 120 + 'px'}" class="init">
           <router-view></router-view>
         </el-main>
@@ -156,79 +249,7 @@
         <el-footer class="footerSize" style="height: 30px;">{{footerText}}</el-footer>
       </el-container>
     </el-container>
-    <!-- 移动端 -->
-    <div v-if="phone!=null" style="height:100%">
-      <div class="headerTop">
-        <div style="float: left;font-size: 25px;">
-          <span class="el-icon-menu" @click="leftDrawer = true"></span>
-        </div>
-        <div style="float: left;width: 80%;margin: 0 0 0 3%;" v-if="noSearchPage">
-          <el-autocomplete
-            style="width: 100%;"
-            :fetch-suggestions="getKeyword"
-            @select="turnToSearch"
-            @keyup.native.enter.stop="turnToSearchByKeyword"
-            v-model="keyword"
-            placeholder="搜索你的资源"
-          >
-            <el-button
-              icon="el-icon-search"
-              type="primary"
-              size="mini"
-              @click.stop="turnToSearchByKeyword"
-              slot="append"
-            ></el-button>
-          </el-autocomplete>
-        </div>
-        <div style="float: right;font-size: 25px;">
-          <span class="el-icon-more"></span>
-        </div>
 
-        <!-- 左侧菜单 -->
-        <el-drawer :visible.sync="leftDrawer" direction="ltr" size="200" :show-close="false">
-         
-            <div
-              style="background-color: #001529; width:199px;opacity: 0.95; height: 50px;; position: fixed;padding-top:5px"
-            >
-              <span style="text-align: left;padding:0 0 0 5px;">
-                <img src="./assets/images/favicon.png" alt width="30%;" />
-              </span>
-              <span style="color: #fff;font-size: 20px;">sparrow
-                </span>
-            </div>
-            <el-menu
-              :default-active="selectedKeys"
-              mode="vertical"
-              class="el-menu-vertical-demo"
-              style="height: 50%; text-align: left; position: fixed; width: 200px;margin-top: 50px;"
-              @select="changeRoute"
-            >
-              <el-menu-item index="1">
-                <a-icon type="user" style="font-size: 15px;" />
-                <span>个人信息</span>
-              </el-menu-item>
-              <el-menu-item index="2">
-                <a-icon type="file-text" style="font-size: 15px;" />
-                <span>个人文档</span>
-              </el-menu-item>
-              <el-menu-item index="3" disabled>
-                <a-icon type="file-text" style="font-size: 15px;" />
-                <span>部门文档</span>
-              </el-menu-item>
-
-              <el-menu-item index="4">
-                <a-icon type="file-search" style="font-size: 15px;" />
-                <span>文档检索</span>
-              </el-menu-item>
-              <el-menu-item index="5" disabled>
-                <a-icon type="delete" style="font-size: 15px;" />
-                <span>回收站</span>
-              </el-menu-item>
-            </el-menu>
-
-        </el-drawer>
-      </div>
-    </div>
     <!-- 登陆弹窗 -->
     <el-dialog title="登陆" :visible.sync="loginData.visible" width="400px" style="text-align: left;">
       <div v-loading="LoginLoading" element-loading-text="正在登陆">
@@ -395,13 +416,16 @@ export default {
 
       // 侧边栏
       collapsed: false,
-      selectedKeys: "2",
+      selectedKeys: "4-1",
 
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
 
       //移动端
-      leftDrawer: false
+      leftDrawer: false,
+
+      //判断是否在主页
+      isHome: false
     };
   },
   mounted: function() {
@@ -413,37 +437,40 @@ export default {
 
     // 获取屏幕高度
     this.screenHeight = document.documentElement.clientHeight;
+    // 判断是否在首页
+    this.isHome = this.$store.state.isHome;
+    console.log(this.isHome);
 
     let _this = this;
     //调用接口 获取用户元数据
-    Api.getUser()
-      .then(res => {
-        // console.log("getUser:", res);
-        if (res.data.status === 200) {
-          //vuex 用户信息
-          _this.$store.commit("setUserInforFromAppVue", res.data.data);
-          _this.recordLoginData(res);
-          Message({
-            message: "用户登陆成功 ",
-            center: true,
-            type: "success",
-            showClose: true,
-            customClass: "zZindex"
-          });
-        } else {
-          _this.loginData.visible = true;
-        }
-      })
-      .catch(err => {
-        _this.loginData.visible = true;
-        Message({
-          message: "请先登陆",
-          center: true,
-          type: "warning",
-          showClose: true,
-          customClass: "zZindex"
-        });
-      });
+    // Api.getUser()
+    //   .then(res => {
+    //     // console.log("getUser:", res);
+    //     if (res.data.status === 200) {
+    //       //vuex 用户信息
+    //       _this.$store.commit("setUserInforFromAppVue", res.data.data);
+    //       _this.recordLoginData(res);
+    //       Message({
+    //         message: "用户登陆成功 ",
+    //         center: true,
+    //         type: "success",
+    //         showClose: true,
+    //         customClass: "zZindex"
+    //       });
+    //     } else {
+    //       _this.loginData.visible = true;
+    //     }
+    //   })
+    //   .catch(err => {
+    //     _this.loginData.visible = true;
+    //     Message({
+    //       message: "请先登陆",
+    //       center: true,
+    //       type: "warning",
+    //       showClose: true,
+    //       customClass: "zZindex"
+    //     });
+    //   });
 
     this.changeKeys(window.location.hash);
   },
@@ -451,6 +478,12 @@ export default {
     //为了能左边菜单高亮显示
     $route(to, from) {
       this.changeKeys(window.location.hash);
+    },
+
+    // 判断是否在首页
+    "$store.state.isHome": function() {
+      this.isHome = this.$store.state.isHome;
+      console.log(this.isHome);
     }
   },
   methods: {
@@ -641,11 +674,20 @@ export default {
     // 侧边栏
     changeRoute(e) {
       // console.log(e);
+      if (e != "1") {
+        this.$store.commit("setIsHome", false);
+        this.isHome = false;
+        console.log(this.isHome);
+      }
       switch (e) {
         case "1": {
           // console.log("toUser");
+          this.$store.commit("setIsHome", true);
+          this.isHome = true;
+          console.log(this.isHome);
+
           this.$router.push({
-            path: "/user"
+            path: "/home"
           });
           break;
         }
@@ -663,10 +705,31 @@ export default {
           });
           break;
         }
-        case "4": {
+        case "4-1": {
           // console.log("toSearch");
           this.$router.push({
-            path: "/search"
+            path: "/chart"
+          });
+          break;
+        }
+        case "4-2": {
+          // console.log("toSearch");
+          this.$router.push({
+            path: "/chart"
+          });
+          break;
+        }
+        case "4-3": {
+          // console.log("toSearch");
+          this.$router.push({
+            path: "/chart"
+          });
+          break;
+        }
+        case "2-1": {
+          // console.log("toSearch");
+          this.$router.push({
+            path: "/coralWork"
           });
           break;
         }
@@ -676,6 +739,9 @@ export default {
     //监测url改变 然后高亮显示左边对应选项
     changeKeys(hash) {
       console.log(hash);
+      if (hash == "#/" || hash == "#/home") {
+        this.$store.commit("setIsHome", true);
+      }else{ this.$store.commit("setIsHome", false);}
       if (hash == "#/doc") {
         this.selectedKeys = "2";
         this.noSearchPage = true;
@@ -783,6 +849,16 @@ export default {
   color: #2c3e50;
 }
 
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
 .init {
   margin: 0;
   padding: 0 !important;
@@ -842,7 +918,7 @@ export default {
 }
 
 .el-drawer__header {
-    margin-bottom: 0px !important;
-    padding: 0 0 0 0 !important;
+  margin-bottom: 0px !important;
+  padding: 0 0 0 0 !important;
 }
 </style>

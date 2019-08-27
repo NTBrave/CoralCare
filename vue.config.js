@@ -3,6 +3,10 @@ const CompressionPlugin = require("compression-webpack-plugin")
 module.exports = {
 	// baseUrl: '/tool/',
 	publicPath: './',
+	transpileDependencies: [
+		'vue-echarts',
+		'resize-detector'
+	  ],
 	// 	configureWebpack: {
 	// 		devServer: {
 	// 			proxy: {
@@ -36,11 +40,11 @@ module.exports = {
 	//设置图标的
 	pwa: {
 		iconPath: {
-		  favicon32: './favicon.png',
-		  favicon16: './favicon.png',
-		  appleTouchIcon: './favicon.png',
-		  maskIcon: './favicon.png',
-		  msTileImage: './favicon.png'
+		  favicon32: './LOGO57.png',
+		  favicon16: './LOGO57.png',
+		  appleTouchIcon: './LOGO57.png',
+		  maskIcon: './LOGO57.png',
+		  msTileImage: './LOGO57.png'
 		}
 	},
 
@@ -88,6 +92,6 @@ module.exports = {
 		// 模板会被推导为 `public/subpage.html`
 		// 并且如果找不到的话，就回退到 `public/index.html`。
 		// 输出文件名会被推导为 `subpage.html`。
-		singleFile: 'src/subpage/main.js'
+		// singleFile: 'src/subpage/main.js'
 	}
 }

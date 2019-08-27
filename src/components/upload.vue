@@ -1,5 +1,5 @@
 <template>
-	<a-drawer title="上传文件" width="400" :closable="false" @close="close" :visible="uploadVisiable">
+	<div title="上传文件" width="250px" :closable="false" @close="close" v-show="uploadVisiable">
 		<el-upload style="text-align: center;" drag multiple action="" :http-request="uploadProcess">
 			<i class="el-icon-upload"></i>
 			<div>
@@ -7,7 +7,7 @@
 				<span class="em">点击上传</span>
 			</div>
 		</el-upload>
-	</a-drawer>
+	</div>
 </template>
 
 <script>
@@ -181,5 +181,8 @@
 	.em {
 		color: #409eff;
 		font-style: normal;
+	}
+	.el-upload-dragger{
+		width: 250px !important ;
 	}
 </style>

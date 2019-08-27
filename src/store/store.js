@@ -33,9 +33,16 @@ export default new Vuex.Store({
 			Show: false,
 			Left: 0,
 			Top: 0
-		}
+		},
+
+		// 判断是否在首页
+		isHome: true,
 	},
 	mutations: {
+		setIsHome(state, home) {
+			state.isHome = home;
+			// console.log(state.isHome);
+		},
 		setmenu(state, newMenu) {
 			// console.log("vuex: ", newMenu)
 			state.menu.Show = newMenu.Show;

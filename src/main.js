@@ -9,8 +9,13 @@ import "ant-design-vue/dist/antd.css";
 import axios from 'axios'
 import store from './store/store'
 import { Message } from 'element-ui';
-// import MintUI from 'mint-ui'
-// import 'mint-ui/lib/style.css'
+
+// 手动引入 ECharts 各模块来减小打包体积
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/component/tooltip'
+import ECharts from 'vue-echarts'
+// 注册组件后即可使用
+Vue.component('v-chart', ECharts)
 
 // Vue.use(MintUI)
 Vue.prototype.axios = axios

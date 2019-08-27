@@ -3,7 +3,11 @@ import Router from 'vue-router'
 import App from '../App'
 import Doc from '../pages/doc'
 import Search from '../pages/search'
-import File from '../subpage/SingleFile'
+import Chart from '../pages/chart'
+import CoralWork from '../pages/coralWork'
+import Home from '../home/home'
+
+
 import User from '../pages/user'
 
 
@@ -13,6 +17,11 @@ export default new Router({
 	mode: "hash",
 // 	base: '/tool/',
 	routes: [
+		{
+			path: '/',
+			name: 'home',
+			component: Home
+		},
 		{
 			path: '/doc',
 			name: 'doc',
@@ -32,6 +41,21 @@ export default new Router({
 			path:'/user',
 			name:'user',
 			component:User
-		}
+		},
+		{
+			path: '/chart',
+			name: 'chart',
+			component: Chart
+		},
+		{
+			path: '/coralWork',
+			name: 'coralWork',
+			component: CoralWork
+		},
+		{
+			path: '/home',
+			name: 'home',
+			component: Home
+		},
 	],
 })

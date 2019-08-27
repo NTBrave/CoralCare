@@ -1,4 +1,74 @@
-export const gl = [{
+export const miaoPu = [
+{
+	"id": 1,
+	"title": "苗圃1"
+},
+{
+	"id": 2,
+	"title": "苗圃2"
+},
+{
+	"id": 3,
+	"title": "苗圃3"
+},
+{
+	"id": 4,
+	"title": "苗圃4"
+},
+{
+	"id": 5,
+	"title": "苗圃5"
+}
+];
+
+export const fenQu = [
+	{
+		"id": 1,
+		"title": "分区1"
+	},
+	{
+		"id": 2,
+		"title": "分区2"
+	},
+	{
+		"id": 3,
+		"title": "分区3"
+	},
+	{
+		"id": 4,
+		"title": "分区4"
+	},
+	{
+		"id": 5,
+		"title": "分区5"
+	}
+	];
+
+export const imageList= [
+	{
+		"id": 1,
+		"title": "B-201908101634-23"
+	},
+	{
+		"id": 2,
+		"title": "B-201908191634-23"
+	},
+	{
+		"id": 3,
+		"title": "B-201909031634-23"
+	},
+	{
+		"id": 4,
+		"title": "B-201909151634-23"
+	},
+	{
+		"id": 5,
+		"title": "B-201910101634-23"
+	}
+	];
+
+
+	export const gl = [{
 	// "permission": "100",
 	// "groupInfo": {
 	// 	"group_id": "75895fa6-9054-49cf-8db2-08312f1766d8",

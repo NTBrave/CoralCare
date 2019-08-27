@@ -107,6 +107,7 @@ export const Associations = (keyword, tag_count, category_count) => {
 
 // S3	搜索结果
 export const Results = (type, keyword, tags, categories, exts, created_time, modified_time, time_zone, page, per_page) => {
+	console.log(type, keyword, tags, categories, exts, created_time, modified_time, time_zone, page, per_page);
 	return new axios({
 		url: baseUrl + '/search/results',
 		data: {
