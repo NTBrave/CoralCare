@@ -225,7 +225,7 @@ export default {
   },
   computed: {
     img1() {
-      return "https://blackwalnutwebsite.oss-cn-hangzhou.aliyuncs.com/public/images/logo.svg";
+      return "https://www.dive4love.org/wp-content/uploads/2018/12/LOGO57.png";
     },
     tfboosturl: function() {
       return"https://blackwalnutwebsite.oss-cn-hangzhou.aliyuncs.com/public/images/tfboost_2.png";

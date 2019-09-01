@@ -183,15 +183,37 @@
             >登陆</el-button>
           </div>
         </el-header>
-        <el-header
-          v-show="isHome"
-          style="position: fixed;z-index: 999;background-color: white;height: 60px;width: 100%; line-height: 60px;box-shadow: 0px 5px 6px 0 rgba(0,0,0,.07); "
-        >
+        <el-header v-show="isHome" class="app-header">
+          <div style="font-size: 19px;">大鹏潜爱-CoralCare</div>
+          <div style="margin-left:20%">
+            <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal">
+              <el-menu-item index="1">首页</el-menu-item>
+              <el-submenu index="2">
+                <template slot="title" style="font-size: 16px;">潜爱护礁</template>
+                <el-menu-item index="2-1">残肢培育</el-menu-item>
+                <el-menu-item index="2-2">环境维护</el-menu-item>
+                <el-menu-item index="2-3">珊瑚普查</el-menu-item>
+                <el-menu-item index="2-4">水文观测</el-menu-item>
+              </el-submenu>
+              <el-menu-item index="7">珊瑚品种</el-menu-item>
+
+              <el-menu-item index="6">我要认养</el-menu-item>
+              <el-menu-item index="3">活动公告</el-menu-item>
+              <el-menu-item index="8">关于我们</el-menu-item>
+              <el-menu-item index="9">合作伙伴</el-menu-item>
+
+              <el-menu-item index="4"  @click="loginData.visible = true">登陆</el-menu-item>
+              <el-menu-item index="5" @click="registeredData.visible = true">注册</el-menu-item>
+
+
+
+            </el-menu>
+          </div>
           <div style="float: right; margin-right:1%" v-if="(loginData.isLogin)">
             <el-button
               type="text"
               icon="el-icon-edit-outline"
-              @click="changeRoute('4-1')"
+              @click="changeRoute('2-1')"
               style="font-size: 16px;margin-right:24px;"
             >浅爱护礁</el-button>
           </div>
@@ -232,7 +254,7 @@
           </div>
 
           <!-- 右上角 登陆按钮 -->
-          <div style="float: right; margin-right:1%" v-if="(!loginData.isLogin)">
+          <!-- <div style="float: right; margin-right:1%" v-if="(!loginData.isLogin)">
             <el-button
               style="font-size: 16px;margin-right:24px;"
               size="mini"
@@ -240,7 +262,7 @@
               icon="el-icon-right"
               @click="loginData.visible = true"
             >登陆</el-button>
-          </div>
+          </div> -->
         </el-header>
         <el-main :style="{minHeight: screenHeight - 120 + 'px'}" class="init">
           <router-view></router-view>
@@ -412,11 +434,11 @@ export default {
         }
       },
       // 页脚内容
-      footerText: "华喜科技 天盛科技 华南理工大学 Micerlabs@2019",
+      footerText: "大鹏潜爱 天盛信息 华南理工大学 Micerlabs@2019",
 
       // 侧边栏
       collapsed: false,
-      selectedKeys: "4-1",
+      selectedKeys: "2-1",
 
       circleUrl:
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
@@ -698,10 +720,17 @@ export default {
           });
           break;
         }
-        case "3": {
+        case "3-1": {
           // console.log("toDocGroup");
           this.$router.push({
-            path: "/doc"
+            path: "/area"
+          });
+          break;
+        }
+        case "3-2": {
+          // console.log("toDocGroup");
+          this.$router.push({
+            path: "/coralManage"
           });
           break;
         }
@@ -714,17 +743,17 @@ export default {
         }
         case "4-2": {
           // console.log("toSearch");
-          this.$router.push({
-            path: "/chart"
-          });
-          break;
+          // this.$router.push({
+          //   path: "/chart"
+          // });
+          // break;
         }
         case "4-3": {
           // console.log("toSearch");
-          this.$router.push({
-            path: "/chart"
-          });
-          break;
+          // this.$router.push({
+          //   path: "/chart"
+          // });
+          // break;
         }
         case "2-1": {
           // console.log("toSearch");
@@ -741,19 +770,24 @@ export default {
       console.log(hash);
       if (hash == "#/" || hash == "#/home") {
         this.$store.commit("setIsHome", true);
-      }else{ this.$store.commit("setIsHome", false);}
-      if (hash == "#/doc") {
-        this.selectedKeys = "2";
-        this.noSearchPage = true;
+      } else {
+        this.$store.commit("setIsHome", false);
+      }
+      if (hash == "#/coralWork") {
+        this.selectedKeys = "2-1";
       }
 
-      if (hash.search("#/search") != -1) {
-        this.selectedKeys = "4";
-        this.noSearchPage = false;
+      if (hash.search("#/area") != -1) {
+        this.selectedKeys = "3-1";
+        // this.noSearchPage = false;
       }
-      if (hash == "#/user") {
-        this.selectedKeys = "1";
-        this.noSearchPage = true;
+      if (hash == "#/coralManage") {
+        this.selectedKeys = "3-2";
+        // this.noSearchPage = true;
+      }
+      if (hash == "#/chart") {
+        this.selectedKeys = "4-1";
+        // this.noSearchPage = true;
       }
     },
     handleError(err) {
@@ -850,13 +884,13 @@ export default {
 }
 
 h2 {
-    display: block;
-    font-size: 1.5em;
-    margin-block-start: 0.83em;
-    margin-block-end: 0.83em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    font-weight: bold;
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
 }
 
 .init {
@@ -872,7 +906,7 @@ h2 {
 }
 .footerSize {
   /* position: fixed; */
-  width: 85%;
+  /* width: 85%; */
   bottom: 0px;
 
   /* height: 60px; */
@@ -921,4 +955,24 @@ h2 {
   margin-bottom: 0px !important;
   padding: 0 0 0 0 !important;
 }
+.app-header {
+  position: fixed;
+  display: flex;
+  z-index: 999;
+  background-color: white;
+  height: 60px;
+  width: 100%;
+  line-height: 60px;
+  box-shadow: 0px 5px 6px 0 rgba(0, 0, 0, 0.07);
+}
+.el-menu-demo{
+  font-size: 16px ;
+  font-weight:1000;
+}
+/* .el-submenu__title {
+   font-size: 16px !important;
+}
+.el-menu-item {
+   font-size: 16px !important;
+} */
 </style>

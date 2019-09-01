@@ -17,7 +17,6 @@ import ECharts from 'vue-echarts'
 // 注册组件后即可使用
 Vue.component('v-chart', ECharts)
 
-// Vue.use(MintUI)
 Vue.prototype.axios = axios
 axios.defaults.withCredentials = true;
 

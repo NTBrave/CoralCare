@@ -6,6 +6,8 @@ import Search from '../pages/search'
 import Chart from '../pages/chart'
 import CoralWork from '../pages/coralWork'
 import Home from '../home/home'
+import CoralManage from '../pages/coralManage'
+import Area from '../pages/area'
 
 
 import User from '../pages/user'
@@ -56,6 +58,16 @@ export default new Router({
 			path: '/home',
 			name: 'home',
 			component: Home
+		},
+		{
+			path: '/coralManage',
+			name: 'coralManage',
+			component: CoralManage
+		},
+		{
+			path: '/area',
+			name: 'area',
+			component: Area
 		},
 	],
 })

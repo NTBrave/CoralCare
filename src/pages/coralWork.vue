@@ -8,12 +8,12 @@
         <el-form-item label="活动名称">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="活动区域">
+        <!-- <el-form-item label="活动区域">
           <el-select placeholder="请选择活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="活动时间">
           <el-col :span="11">
             <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker>
@@ -44,12 +44,7 @@
         <el-form-item label="活动名称">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="活动区域">
-          <el-select placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
+     
         <el-form-item label="活动时间">
           <el-col :span="11">
             <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker>
@@ -121,8 +116,8 @@
         <div class="resoult" :style="resoultSize">
           <div v-show="resultItems.length!=0">找到的档案：</div>
           <el-row v-for="(item, index) in resultItems" :key="index" class="one-resoult">
-            <el-col :offset="0" :span="24" @click="VTree(3)">
-              <h3
+            <el-col :offset="0" :span="24">
+              <h3 @click="VTree(3)"
                 v-html="item.title_highlight"
                 style="color: #08c;"
               >{{item.title_highlight + '.' + item.ext}}</h3>
@@ -142,12 +137,12 @@
         <el-form-item label="活动名称">
           <el-input></el-input>
         </el-form-item>
-        <el-form-item label="活动区域">
+        <!-- <el-form-item label="活动区域">
           <el-select placeholder="请选择活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="活动时间">
           <el-col :span="11">
             <el-date-picker type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker>
@@ -335,11 +330,17 @@ export default {
       console.log(index);
       if (index == 1) {
         this.tree1 = false;
+        this.tree2 = false;
+        this.tree3 = false;
+        this.tree4 = false;
       } else if (index == 2) {
         this.tree2 = false;
+        this.tree3 = false;
+        this.tree4 = false;
       }
       if (index == 3) {
         this.tree3 = false;
+        this.tree4 = false;
       }
       if (index == 4) {
         this.tree4 = false;
@@ -355,6 +356,7 @@ export default {
         this.tree3 = true;
       } else if (index == 4) {
         this.tree4 = true;
+        this.$store.commit("uploadV");
       }
     }
   }
