@@ -1,5 +1,5 @@
 <template>
-	<div title="上传文件" width="250px" :closable="false" @close="close" v-show="uploadVisiable">
+	<div width="250px" :closable="false" @close="close" >
 		<el-upload style="text-align: center;" drag multiple action="" :http-request="uploadProcess">
 			<i class="el-icon-upload"></i>
 			<div>

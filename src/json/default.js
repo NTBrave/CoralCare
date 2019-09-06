@@ -1,3 +1,19 @@
+export const coralList=[  { title: "B-蓝1", value: 1 },
+{ title: "B-蓝2", value: 2 },
+{ title: "B-蓝13", value: 3 },
+{ title: "B-绿23", value: 4 },
+{ title: "B-绿25", value: 1 },
+{ title: "B-绿26", value: 2 },
+{ title: "B-绿27", value: 3 },
+{ title: "B-蓝1", value: 1 },
+{ title: "B-蓝2", value: 2 },
+{ title: "B-蓝13", value: 3 },
+{ title: "B-绿23", value: 4 },
+{ title: "B-绿25", value: 1 },
+{ title: "B-绿26", value: 2 },
+{ title: "B-绿27", value: 3 },
+{ title: "B-绿29", value: 4 }];
+
 export const miaoPu = [
 {
 	"id": 1,
@@ -45,6 +61,65 @@ export const fenQu = [
 	];
 
 export const imageList= [
+	{
+		"id": 1,
+		"title": "B-201908101634-23"
+	},
+	{
+		"id": 2,
+		"title": "B-201908191634-23"
+	},
+	{
+		"id": 3,
+		"title": "B-201909031634-23"
+	},
+	{
+		"id": 4,
+		"title": "B-201909151634-23"
+	},
+	{
+		"id": 5,
+		"title": "B-201910101634-23"
+	},
+	{
+		"id": 1,
+		"title": "B-201908101634-23"
+	},
+	{
+		"id": 2,
+		"title": "B-201908191634-23"
+	},
+	{
+		"id": 3,
+		"title": "B-201909031634-23"
+	},
+	{
+		"id": 4,
+		"title": "B-201909151634-23"
+	},
+	{
+		"id": 5,
+		"title": "B-201910101634-23"
+	},{
+		"id": 1,
+		"title": "B-201908101634-23"
+	},
+	{
+		"id": 2,
+		"title": "B-201908191634-23"
+	},
+	{
+		"id": 3,
+		"title": "B-201909031634-23"
+	},
+	{
+		"id": 4,
+		"title": "B-201909151634-23"
+	},
+	{
+		"id": 5,
+		"title": "B-201910101634-23"
+	},
 	{
 		"id": 1,
 		"title": "B-201908101634-23"

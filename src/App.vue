@@ -4,13 +4,21 @@
     <el-container>
       <!-- 侧边栏 -->
       <el-aside v-show="!isHome" style="width: 200px;">
-        <div
-          style="background-color: #001529; width: 199px;opacity: 0.95; height: 60px;; position: fixed;"
+        <!-- <div class="side-top"
+          
         >
-          <!-- <el-image :src="require('./assets/images/favicon.png')" style="width: 40%;"></el-image> -->
+      
           <p style="text-align: left;padding:10px 0 5px 10px;margin:0;">
             <img src="./assets/images/logo.svg" alt width="30%;" />
           </p>
+        </div>-->
+        <div class="side-top">
+          <el-carousel indicator-position="none" :autoplay="false" height="60px">
+            <el-carousel-item v-for="(item,index) in areaImge" :key="index">
+              <div :style="item.color">
+              <h3 >{{ item.title }}</h3></div>
+            </el-carousel-item>
+          </el-carousel>
         </div>
         <el-menu
           :default-active="selectedKeys"
@@ -21,18 +29,9 @@
           style="height: 100%; text-align: left; position: fixed; width: 200px;margin-top: 60px;"
           @select="changeRoute"
         >
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>区域</span>
-            </template>
-            <el-menu-item index="1-1">
-              <span>深圳大鹏</span>
-            </el-menu-item>
-            <el-menu-item index="1-2">
-              <span>湛江徐闻</span>
-            </el-menu-item>
-          </el-submenu>
+          <!-- <el-menu-item index="1">
+         
+          </el-menu-item>-->
 
           <el-submenu index="2">
             <template slot="title">
@@ -40,44 +39,40 @@
               <span>业务管理</span>
             </template>
             <el-menu-item index="2-1">
-              <span>潜爱护礁</span>
+              <span>残肢培育</span>
             </el-menu-item>
-            <el-menu-item index="2-2">
+            <el-menu-item disabled index="2-2">
               <span>水文观测</span>
             </el-menu-item>
-            <el-menu-item index="2-3">
-              <span>多维检索</span>
+            <el-menu-item disabled index="2-3">
+              <span>生境维护</span>
             </el-menu-item>
           </el-submenu>
 
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-bangzhu"></i>
-              <span>珊瑚管理</span>
-            </template>
-            <el-menu-item index="3-1">
-              <span>区域视图</span>
-            </el-menu-item>
-            <el-menu-item index="3-2">
-              <span>多维检索</span>
-            </el-menu-item>
-          </el-submenu>
+          <el-menu-item index="3">
+            <i class="el-icon-picture"></i>
+            <span>珊瑚管理</span>
+          </el-menu-item>
 
-          <el-submenu index="4">
+          <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-data-line"></i>
               <span>数据管理</span>
             </template>
-            <el-menu-item index="4-1">
-              <span>区域数据</span>
-            </el-menu-item>
-            <el-menu-item index="4-2">
+            <el-menu-item index="5-1">
               <span>珊瑚数据</span>
             </el-menu-item>
-            <el-menu-item index="4-3">
+            <el-menu-item index="5-2">
+              <span>区域数据</span>
+            </el-menu-item>
+            <el-menu-item disabled index="5-3">
               <span>水文数据</span>
             </el-menu-item>
           </el-submenu>
+          <el-menu-item index="4">
+            <i class="el-icon-search"></i>
+            <span>多维检索</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
 
@@ -183,9 +178,20 @@
             >登陆</el-button>
           </div>
         </el-header>
+
         <el-header v-show="isHome" class="app-header">
           <div style="font-size: 19px;">大鹏潜爱-CoralCare</div>
-          <div style="margin-left:20%">
+          <div style="margin-left:10%">
+            <!-- <a-menu mode="horizontal">
+              <a-menu-item key="1">首页</a-menu-item>
+              <a-menu-item key="2">活动案例</a-menu-item>
+              <a-menu-item key="3">珊瑚案例</a-menu-item>
+              <a-menu-item key="4">活动公告</a-menu-item>
+              <a-menu-item key="5">合作伙伴</a-menu-item>
+              <a-menu-item key="6">关于我们</a-menu-item>
+              <a-menu-item key="7" @click="loginData.visible = true">登陆 </a-menu-item>
+              <a-menu-item key="8" @click="registeredData.visible = true">注册</a-menu-item>
+            </a-menu>-->
             <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal">
               <el-menu-item index="1">首页</el-menu-item>
               <el-submenu index="2">
@@ -195,18 +201,15 @@
                 <el-menu-item index="2-3">珊瑚普查</el-menu-item>
                 <el-menu-item index="2-4">水文观测</el-menu-item>
               </el-submenu>
-              <el-menu-item index="7">珊瑚品种</el-menu-item>
+              <el-menu-item index="7">珊瑚案例</el-menu-item>
 
-              <el-menu-item index="6">我要认养</el-menu-item>
+              <el-menu-item index="6">活动案例</el-menu-item>
               <el-menu-item index="3">活动公告</el-menu-item>
               <el-menu-item index="8">关于我们</el-menu-item>
               <el-menu-item index="9">合作伙伴</el-menu-item>
 
-              <el-menu-item index="4"  @click="loginData.visible = true">登陆</el-menu-item>
+              <el-menu-item index="4" @click="loginData.visible = true">登陆</el-menu-item>
               <el-menu-item index="5" @click="registeredData.visible = true">注册</el-menu-item>
-
-
-
             </el-menu>
           </div>
           <div style="float: right; margin-right:1%" v-if="(loginData.isLogin)">
@@ -215,7 +218,7 @@
               icon="el-icon-edit-outline"
               @click="changeRoute('2-1')"
               style="font-size: 16px;margin-right:24px;"
-            >浅爱护礁</el-button>
+            >潜爱护礁</el-button>
           </div>
           <!-- 右上角用户小弹窗 -->
           <div style="float: right; margin-right: 1%;" v-if="(loginData.isLogin)">
@@ -252,17 +255,6 @@
               </p>
             </el-popover>
           </div>
-
-          <!-- 右上角 登陆按钮 -->
-          <!-- <div style="float: right; margin-right:1%" v-if="(!loginData.isLogin)">
-            <el-button
-              style="font-size: 16px;margin-right:24px;"
-              size="mini"
-              type="danger"
-              icon="el-icon-right"
-              @click="loginData.visible = true"
-            >登陆</el-button>
-          </div> -->
         </el-header>
         <el-main :style="{minHeight: screenHeight - 120 + 'px'}" class="init">
           <router-view></router-view>
@@ -275,10 +267,6 @@
     <!-- 登陆弹窗 -->
     <el-dialog title="登陆" :visible.sync="loginData.visible" width="400px" style="text-align: left;">
       <div v-loading="LoginLoading" element-loading-text="正在登陆">
-        <el-image
-          :src="require('./assets/logo.png')"
-          style="height:40px; width: 193px; margin: 0 auto; display: block;"
-        ></el-image>
         <el-form
           label-position="right"
           label-width="80px"
@@ -447,7 +435,17 @@ export default {
       leftDrawer: false,
 
       //判断是否在主页
-      isHome: false
+      isHome: false,
+       areaImge:[
+        {
+        'color':"background-color:#46C54F;height:100%;",
+        'title':"深圳大鹏"
+        },
+        {
+        'color':"background-color:#23E4E7;height:100%;",
+        'title':"湛江徐闻"
+        }
+      ],
     };
   },
   mounted: function() {
@@ -699,7 +697,7 @@ export default {
       if (e != "1") {
         this.$store.commit("setIsHome", false);
         this.isHome = false;
-        console.log(this.isHome);
+        // console.log(this.isHome);
       }
       switch (e) {
         case "1": {
@@ -709,56 +707,46 @@ export default {
           console.log(this.isHome);
 
           this.$router.push({
-            path: "/home"
+            path: "/"
           });
           break;
         }
-        case "2": {
-          // console.log("toDoc");
+        case "2-1": {
+          // console.log("toSearch");
           this.$router.push({
-            path: "/doc"
+            path: "/coralWork"
           });
           break;
         }
-        case "3-1": {
-          // console.log("toDocGroup");
-          this.$router.push({
-            path: "/area"
-          });
-          break;
+        case "2-2": {
         }
-        case "3-2": {
+        case "2-3": {
+        }
+        case "3": {
           // console.log("toDocGroup");
           this.$router.push({
             path: "/coralManage"
           });
           break;
         }
-        case "4-1": {
+        case "4": {
+          // console.log("toDocGroup");
+          this.$router.push({
+            path: "/search"
+          });
+          break;
+        }
+        case "5-1": {
           // console.log("toSearch");
           this.$router.push({
             path: "/chart"
           });
           break;
         }
-        case "4-2": {
-          // console.log("toSearch");
-          // this.$router.push({
-          //   path: "/chart"
-          // });
-          // break;
-        }
-        case "4-3": {
-          // console.log("toSearch");
-          // this.$router.push({
-          //   path: "/chart"
-          // });
-          // break;
-        }
-        case "2-1": {
-          // console.log("toSearch");
+        case "5-2": {
+          // console.log("toDocGroup");
           this.$router.push({
-            path: "/coralWork"
+            path: "/area"
           });
           break;
         }
@@ -959,15 +947,31 @@ h2 {
   position: fixed;
   display: flex;
   z-index: 999;
-  background-color: white;
+  /* opacity :0.5; */
+  background-color: rgba(255, 255, 255, 0.075);
+  color: white;
   height: 60px;
   width: 100%;
   line-height: 60px;
   box-shadow: 0px 5px 6px 0 rgba(0, 0, 0, 0.07);
+  transition: width 2s;
+  -webkit-transition: width 2s;
 }
-.el-menu-demo{
-  font-size: 16px ;
-  font-weight:1000;
+.app-header .el-menu {
+  background-color: rgba(255, 255, 255, 0);
+}
+.app-header .el-menu.el-menu--horizontal {
+  border-bottom: solid 1px rgba(255, 255, 255, 0);
+}
+/* .app-header .el-menu--horizontal {
+color: white;
+}
+.app-header .el-menu-item {
+color: white;
+} */
+.el-menu-demo {
+  font-size: 16px;
+  font-weight: 1000;
 }
 /* .el-submenu__title {
    font-size: 16px !important;
@@ -975,4 +979,11 @@ h2 {
 .el-menu-item {
    font-size: 16px !important;
 } */
+.side-top {
+  background-color: #001529;
+  width: 199px;
+  opacity: 0.95;
+  height: 60px;
+  position: fixed;
+}
 </style>

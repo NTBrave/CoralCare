@@ -54,11 +54,11 @@ export default new Router({
 			name: 'coralWork',
 			component: CoralWork
 		},
-		{
-			path: '/home',
-			name: 'home',
-			component: Home
-		},
+		// {
+		// 	path: '/home',
+		// 	name: 'home',
+		// 	component: Home
+		// },
 		{
 			path: '/coralManage',
 			name: 'coralManage',

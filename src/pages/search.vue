@@ -473,9 +473,9 @@
 						temp.push(this.defaultTypes[i]);
 					}
 				}
-				console.log("originLength" + originLength);
-				console.log(defaultKeys);
-				console.log(temp);
+				// console.log("originLength" + originLength);
+				// console.log(defaultKeys);
+				// console.log(temp);
 				this.defaultTypes = temp;
 
 				this.types = arr;
