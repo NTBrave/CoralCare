@@ -459,7 +459,7 @@ export default {
     this.screenHeight = document.documentElement.clientHeight;
     // 判断是否在首页
     this.isHome = this.$store.state.isHome;
-    console.log(this.isHome);
+    console.log("APP:isHome:  "+this.isHome);
 
     let _this = this;
     //调用接口 获取用户元数据
