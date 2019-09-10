@@ -1,12 +1,151 @@
 <template>
   <!-- <div style="margin-top:60px;"> -->
   <div>
+    <el-header class="app-header">
+      <el-row :gutter="10">
+      <el-col :span="6" >大鹏潜爱-CoralCare</el-col>
+      <el-col :span="16" >
+        <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal">
+          <el-menu-item index="1">首页</el-menu-item>
+          <el-submenu index="2">
+            <template slot="title" style="font-size: 16px;">潜爱护礁</template>
+            <el-menu-item index="2-1">残肢培育</el-menu-item>
+            <el-menu-item index="2-2">环境维护</el-menu-item>
+            <el-menu-item index="2-3">珊瑚普查</el-menu-item>
+            <el-menu-item index="2-4">水文观测</el-menu-item>
+          </el-submenu>
+          <el-menu-item index="7">珊瑚案例</el-menu-item>
+
+          <el-menu-item index="6">活动案例</el-menu-item>
+          <el-menu-item index="3">活动公告</el-menu-item>
+          <el-menu-item index="8">关于我们</el-menu-item>
+          <el-menu-item index="9">合作伙伴</el-menu-item>
+
+          <el-menu-item index="4" @click="loginData.visible = true">登陆</el-menu-item>
+          <el-menu-item index="5" @click="registeredData.visible = true">注册</el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :span="1"  v-if="(loginData.isLogin)">
+        <el-button
+          type="text"
+          icon="el-icon-edit-outline"
+          @click="changeRoute('2-1')"
+          style="font-size: 16px;margin-right:24px;"
+        >潜爱护礁</el-button>
+      </el-col>
+      <!-- 右上角用户小弹窗 -->
+      <el-col :span="1" v-if="(loginData.isLogin)">
+        <el-popover trigger="hover" placement="bottom" width="150">
+          <p style="text-align: center;">{{loginData.currentUserName}}</p>
+
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            icon="el-icon-user"
+            @click="changeRoute('1')"
+            size="mini"
+            style="display:block;margin:0 auto;font-size: 14px;color: #303133;"
+          >个人中心</el-button>
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            icon="el-icon-switch-button"
+            @click="logout"
+            size="mini"
+            style="display:block;margin:0 auto;font-size: 14px;"
+          >退出登陆</el-button>
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            style="display:block;margin:0 auto;font-size: 14px;"
+            size="mini"
+            icon="el-icon-edit-outline"
+            @click="registeredData.visible = true"
+          >注册</el-button>
+          <p slot="reference" style="text-align: center;" type="text">
+            <!-- <el-buton type="primary"  circle > -->
+            <img src="../assets/images/boy.png" alt width="90%;" />
+          </p>
+        </el-popover>
+      </el-col>
+      </el-row>
+    </el-header>
+
+    <!-- 登陆弹窗 -->
+    <el-dialog title="登陆" :visible.sync="loginData.visible" width="400px" style="text-align: left;">
+      <div v-loading="LoginLoading" element-loading-text="正在登陆">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          style="margin-right: 50px; margin-top: 30px"
+          :model="loginData"
+          :rules="loginData.rules"
+        >
+          <el-form-item label="工号" prop="user">
+            <el-input v-model="loginData.user"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pwd">
+            <el-input v-model="loginData.pwd" show-password></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <el-button
+            type="primary"
+            @click="registeredData.visible = true"
+            style="margin-right: 120px;"
+          >注册</el-button>
+          <el-button @click="cancelLogin">取 消</el-button>
+          <el-button type="primary" @click="login">确 定</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- 注册弹窗 -->
+    <el-dialog
+      title="注册"
+      :visible.sync="registeredData.visible"
+      width="400px"
+      style="text-align: left;"
+    >
+      <div v-loading="RegistLoading" element-loading-text="正在注册">
+        <el-image
+          :src="require('../assets/logo.png')"
+          style="height:40px; width: 193px; margin: 0 auto; display: block;"
+        ></el-image>
+
+        <el-form
+          label-position="right"
+          label-width="80px"
+          style="margin-right: 50px; margin-top: 30px"
+          :model="registeredData"
+          :rules="registeredData.rules"
+        >
+          <el-form-item label="工号" prop="work_no">
+            <el-input v-model="registeredData.work_no"></el-input>
+          </el-form-item>
+          <el-form-item label="名字" prop="username">
+            <el-input v-model="registeredData.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pwd">
+            <el-input v-model="registeredData.pwd" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="registeredData.email"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <el-button @click="cancelRegistered">取 消</el-button>
+          <el-button style="margin-left:210px;" type="primary" @click="registered">确 定</el-button>
+          <!-- <el-button @click="registered.visible = true">注册</el-button> -->
+        </div>
+      </div>
+    </el-dialog>
     <!-- <el-row style="background-color:#f4f4f4;margin-top:20px "> -->
     <div class="homepage-hero-module">
       <div class="video-container">
         <!-- <div :style="fixStyle" class="filter"></div> -->
         <video :style="fixStyle" autoplay loop class="fillWidth">
-          <source src="..\assets\video\4.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
+          <source src="http://dayy.xyz/resource/4.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
         </video>
       </div>
     </div>
@@ -142,7 +281,10 @@
 </template>
 <script>
 import parallax1 from "../components/parallax/parallax1.vue";
+import * as Api from "../api/api";
 import seaWave from "../components/seaWave.vue";
+import { Message, Loading } from "element-ui";
+
 export default {
   name: "login",
   components: {
@@ -155,12 +297,82 @@ export default {
       vedioCanPlay: false,
       fixStyle: "",
 
+      //loading动画
+      LoginLoading: false,
+      RegistLoading: false,
+
       lunboheight: "500px",
       exhibitions: [],
       codelabs: [],
       blogs: [],
       cardspan: 7,
-      videoHeight: null
+      videoHeight: null,
+      // 登陆
+      loginData: {
+        visible: false,
+        logoutVisible: false,
+        isLogin: false,
+        currentUserName: "lintean",
+        currentUserNo: "",
+        currentUserId: "",
+        currentUserEmail: "",
+        user: "",
+        pwd: "",
+        rules: {
+          user: [
+            {
+              required: true,
+              message: "请输入工号",
+              trigger: "blur"
+            }
+          ],
+          pwd: [
+            {
+              required: true,
+              message: "请输入密码",
+              trigger: "blur"
+            }
+          ]
+        }
+      },
+      registeredData: {
+        visible: false,
+        work_no: "",
+        username: "",
+        pwd: "",
+        email: "",
+
+        rules: {
+          work_no: [
+            {
+              required: true,
+              message: "请输入工号",
+              trigger: "blur"
+            }
+          ],
+          username: [
+            {
+              required: true,
+              message: "请输入用户名字",
+              trigger: "blur"
+            }
+          ],
+          pwd: [
+            {
+              required: true,
+              message: "请输入密码",
+              trigger: "blur"
+            }
+          ],
+          email: [
+            {
+              required: true,
+              message: "请输入邮箱",
+              trigger: "blur"
+            }
+          ]
+        }
+      }
     };
   },
   computed: {
@@ -175,7 +387,188 @@ export default {
   methods: {
     canplay() {
       this.vedioCanPlay = true;
-    }
+    },
+    login() {
+      let _this = this;
+      _this.LoginLoading = true;
+      //调用接口 用户登陆
+      Api.Login(this.loginData.user, this.loginData.pwd)
+        .then(res => {
+          //vuex 用户信息
+          _this.$store.commit("setUserInforFromAppVue", res.data.data);
+          //   console.log("Login：", res);
+          if (res.data.status === 200) {
+            // _this.recordLoginData(res);
+            _this.loginData.isLogin = true;
+            _this.loginData.visible = false;
+            _this.loginData.currentUserName = res.data.data.userInfo.username;
+            _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
+            _this.loginData.currentUserEmail = res.data.data.userInfo.email;
+            _this.loginData.isLogin = true;
+            Message({
+              message: "用户登陆 成功",
+              center: true,
+              type: "success",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            Message({
+              message: res.data.msg,
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.LoginLoading = false;
+
+          Message({
+            message: "账号密码不正确 " + err,
+            center: true,
+            type: "warning",
+            showClose: true,
+            customClass: "zZindex"
+          });
+        });
+    },
+    registered() {
+      let _this = this;
+      //掉用接口 用户注册
+      _this.RegistLoading = true;
+      Api.newUser(
+        this.registeredData.work_no,
+        this.registeredData.username,
+        this.registeredData.pwd,
+        this.registeredData.email
+      )
+        .then(res => {
+          // console.log("registered：", res.data.status);
+          if (res.data.status === 200) {
+            this.registeredData.visible = false;
+            (_this.RegistLoading = false),
+              Message({
+                message: "用户注册 成功",
+                center: true,
+                type: "success",
+                showClose: true,
+                customClass: "zZindex"
+              });
+          } else {
+            Message({
+              message: res.data.msg,
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+        })
+        .catch(err => {
+          _this.RegistLoading = false;
+          console.log("registered：", err);
+          if (err.response.status == 400) {
+            Message({
+              message: "工号已存在",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else if (err.response.status == 403) {
+            Message({
+              message: "请先登陆,才能注册新用户",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            Message({
+              message: "注册失败",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+          console.log(err);
+        });
+    },
+    logout() {
+      let _this = this;
+      //调用接口 注销登陆
+      Api.Logout()
+        .then(res => {
+          //   console.log("Logout：", res);
+
+          if (res.data.status === 200) {
+            _this.loginData.isLogin = false;
+            _this.loginData.visible = true;
+            Message({
+              message: "注销登陆 成功",
+              center: true,
+              type: "success",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            alert(res.data.msg);
+          }
+        })
+        .catch(err => {
+          Message({
+            message: "注销登陆 失败",
+            center: true,
+            type: "warning",
+            showClose: true,
+            customClass: "zZindex"
+          });
+          _this.handleError(err);
+        });
+    },
+    cancelLogin() {
+      this.loginData.visible = false;
+      Message({
+        message: "未登录",
+        center: true,
+        showClose: true,
+        customClass: "zZindex"
+      });
+    },
+
+    cancelRegistered() {
+      this.registeredData.visible = false;
+      Message({
+        message: "取消注册",
+        center: true,
+        showClose: true,
+        customClass: "zZindex"
+      });
+    },
+     // 侧边栏
+    changeRoute(e) {
+     
+      switch (e) {
+        case "1": {
+          this.$router.push({
+            path: "/"
+          });
+          break;
+        }
+        case "2-1": {
+          // console.log("toSearch");
+          this.$router.push({
+            path: "/manage/coralWork"
+          });
+          break;
+        }
+        
+      }
+    },
   },
   mounted: function() {
     //对 window 对象的 onresize 事件的监听。
@@ -280,7 +673,7 @@ export default {
 .proCrad:hover {
   // height: 500px;
   background: #f0f0f0;
-  box-shadow: 0 0 10px  #aaa8a8;
+  box-shadow: 0 0 10px #aaa8a8;
 }
 .proCrad {
   max-width: 350px;

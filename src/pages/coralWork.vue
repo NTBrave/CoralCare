@@ -7,7 +7,7 @@
 
       <div v-for="(work,index) in firstWork" :key="index">
         <div class="first-work" @click="chooseFirst(index)">
-          <el-button  type="primary" round>{{work}}</el-button>
+          <el-button type="primary" round>{{work}}</el-button>
         </div>
       </div>
       <div>
@@ -21,7 +21,13 @@
           ></span>
           </h2>-->
         </div>
-        <el-form v-show="isHuJiao==true" ref="form" :model="sizeForm" label-width="80px" size="mini">
+        <el-form
+          v-show="isHuJiao==true"
+          ref="form"
+          :model="sizeForm"
+          label-width="80px"
+          size="mini"
+        >
           <el-form-item label="名称:">B-3-20191010</el-form-item>
           <el-form-item label="类型:">潜爱护礁</el-form-item>
           <el-form-item label="区域:">深圳大鹏</el-form-item>
@@ -74,7 +80,6 @@
                 <el-option
                   v-for="(Option,index) in secondWork"
                   :key="index"
-             
                   :label="Option"
                   :value="Option"
                 ></el-option>
@@ -303,9 +308,7 @@
               <el-option label="rgb" value="G"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="尺寸:">
-           
-          </el-form-item>
+          <el-form-item label="尺寸:"></el-form-item>
           <el-form-item label="污损生物">
             <el-input v-model="form.name"></el-input>
           </el-form-item>
@@ -324,15 +327,24 @@
         </el-form>
       </div>
     </div>
-    <div class="workTree" v-show="tree3" >
+    <div class="workTree" v-show="tree3">
       <div class="work-title">
         <h2>
           上传成功：
-          <span @click="HTree(3)" class="el-icon-circle-close" style="float:right;margin: 5px;"></span>
+          <span
+            @click="HTree(3)"
+            class="el-icon-circle-close"
+            style="float:right;margin: 5px;"
+          ></span>
         </h2>
       </div>
-      <div style="height:200px;"><img src="http://dayy.xyz/resource/1.jpg" height="130px" alt=""></div>
-       <el-button>测量尺寸</el-button>
+      <div style="height:200px;">
+        <img src="http://dayy.xyz/resource/1.jpg" height="130px" alt />
+      </div>
+      <el-button @click="makeAreaVisible = true">测量尺寸</el-button>
+      <el-dialog title="提示" :visible.sync="makeAreaVisible" width="80%">
+        <MakeArea></MakeArea>
+      </el-dialog>
     </div>
     <!-- </div> -->
   </div>
@@ -345,11 +357,13 @@ import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
 import { Message, Loading } from "element-ui";
 import Upload from "../components/upload.vue";
+import MakeArea from "../components/makeArea.vue";
 
 export default {
   name: "coralWork",
    components: {
-    Upload: Upload
+    Upload,
+    MakeArea,
   },
   data() {
     return {
@@ -399,7 +413,8 @@ export default {
       //判断 是否护礁
       isHuJiao: null,
       //判断 是否首次暂养
-      isNew: true
+      isNew: true,
+      makeAreaVisible:false,
     };
   },
   //用的自定义组件
@@ -475,7 +490,7 @@ export default {
         .then(res => {
           if (res.data.status === 200) {
             // 结果数组
-            console.log(res.data.data);
+            // console.log(res.data.data);
             this.resultItems.splice(0, this.resultItems.length);
             this.resultItems = res.data.data.results;
           } else {
@@ -510,7 +525,7 @@ export default {
       }
     },
     VTree(index) {
-      console.log(index);
+      // console.log(index);
       if (index == 1) {
         this.tree1 = true;
       } else if (index == 2) {
