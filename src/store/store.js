@@ -1,120 +1,52 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
+import getters from "./getters.js";
+import actions from "./actions.js";
+import mutations from "./mutations.js";
 
 Vue.use(Vuex);
 
+const state = {
+  // 登陆获得的初始信息,仅存储
+  userInformation: null,
+  pathBackup: [],
+  currentResourceBackup: null,
+
+  // 各种抽屉的visible变量
+  groupVisible: false,
+  docMetaVisible: false,
+  dirMetaVisible: false,
+  fileMetaVisible: false,
+  changeNameVisible: false,
+  uploadVisiable: false,
+
+  //这个值用于 从其他页面返回后 还能到达跳转前的界面
+  idOfThePathJust: null,
+  typeOfThePathJust: null,
+
+  //这个值用于 从其他页面返回后 还能到是自己选的图标card大小
+  whatSizeCard: "",
+
+  //这个值用于 从其他页面返回后 还能到是自己选的列表或图标
+  ListOrNot: true,
+
+  //自定义右键菜单
+  menu: {
+    Show: false,
+    Left: 0,
+    Top: 0
+  },
+
+  // 判断是否在首页
+  isHome: true,
+
+  // 判断是否登录
+  ifLogin: true
+};
+
 export default new Vuex.Store({
-	state: {
-		// 登陆获得的初始信息,仅存储
-		userInformation: null,
-		pathBackup: [],
-		currentResourceBackup: null,
-
-		// 各种抽屉的visible变量
-		groupVisible: false,
-		docMetaVisible: false,
-		dirMetaVisible: false,
-		fileMetaVisible: false,
-		changeNameVisible: false,
-		uploadVisiable: false,
-
-		//这个值用于 从其他页面返回后 还能到达跳转前的界面
-		idOfThePathJust: null,
-		typeOfThePathJust: null,
-
-		//这个值用于 从其他页面返回后 还能到是自己选的图标card大小
-		whatSizeCard: "",
-
-		//这个值用于 从其他页面返回后 还能到是自己选的列表或图标
-		ListOrNot: true,
-
-		//自定义右键菜单
-		menu: {
-			Show: false,
-			Left: 0,
-			Top: 0
-		},
-
-		// 判断是否在首页
-		isHome: true,
-	},
-	mutations: {
-		setIsHome(state, home) {
-			state.isHome = home;
-			// console.log(state.isHome);
-		},
-		setmenu(state, newMenu) {
-			// console.log("vuex: ", newMenu)
-			state.menu.Show = newMenu.Show;
-			state.menu.Left = newMenu.Left;
-			state.menu.Top = newMenu.Top;
-		},
-		setUserInforFromAppVue(state, infor) {
-			state.userInformation = infor
-
-		},
-		setwhatSizeCard(state, size) {
-			state.whatSizeCard = size;
-		},
-		setIdOfThePathJust(state, id) {
-			state.idOfThePathJust = id;
-		},
-		setTypeOfThePathJust(state, type) {
-			state.typeOfThePathJust = type;
-		},
-
-		setPathBackup(state, payload) {
-			state.pathBackup = payload.pathBackup;
-		},
-		setCurrentResourceBackup(state, payload) {
-			state.currentResourceBackup = payload.currentResourceBackup;
-		},
-
-		setListOrNot(state, yesno) {
-			state.ListOrNot = yesno;
-		},
-		// visible
-		groupV(state) {
-			state.groupVisible = true;
-		},
-		// hidden
-		groupH(state) {
-			state.groupVisible = false;
-		},
-
-		docMetaV(state) {
-			state.docMetaVisible = true;
-		},
-		docMetaH(state) {
-			state.docMetaVisible = false;
-		},
-
-		dirMetaV(state) {
-			state.dirMetaVisible = true;
-		},
-		dirMetaH(state) {
-			state.dirMetaVisible = false;
-		},
-
-		fileMetaV(state) {
-			state.fileMetaVisible = true;
-		},
-		fileMetaH(state) {
-			state.fileMetaVisible = false;
-		},
-
-		changeNameV(state) {
-			state.changeNameVisible = true;
-		},
-		changeNameH(state) {
-			state.changeNameVisible = false;
-		},
-
-		uploadV(state) {
-			state.uploadVisiable = true;
-		},
-		uploadH(state) {
-			state.uploadVisiable = false;
-		},
-	}
+  state,
+  getters,
+  mutations,
+  actions
 });

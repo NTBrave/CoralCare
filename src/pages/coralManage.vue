@@ -3,9 +3,6 @@
     <div class="managePage">
       <div class="selectItem">
         <div>
-          <!-- <div class="work-title">
-            <h2>区域</h2>
-          </div>-->
           <h3>深圳大鹏</h3>
         </div>
         <div class="selects">
@@ -156,51 +153,48 @@
             <el-form-item label="环节:">首次暂养</el-form-item>
             <el-form-item label="备注:">甚是好看</el-form-item>
           </el-form>
-
         </div>
       </div>
     </div>
   </div>
 </template>
 
-
-
 <script>
-import * as Api from "../api/api";
-import * as DEFAULT from "../json/default";
-import { Message, Loading } from "element-ui";
+import * as Api from '../api/api'
+import * as DEFAULT from '../json/default'
+import { Message, Loading } from 'element-ui'
 // import Upload from "../components/upload.vue";
-import swiperper from "../components/swiper.vue";
+import swiperper from '../components/swiper.vue'
 // import "swiper/dist/css/swiper.css";
 // import { swiper, swiperSlide } from "vue-awesome-swiper";
 
 export default {
-  name: "coralWork",
+  name: 'coralWork',
   data() {
     return {
       bodySize: {
-        height: " ",
-        width: " "
+        height: ' ',
+        width: ' '
       },
       resoultSize: {
-        height: " "
+        height: ' '
       },
 
       nursery1: [
-        { label: "苗圃1", value: 1 },
-        { label: "苗圃2", value: 2 },
-        { label: "苗圃3", value: 3 },
-        { label: "苗圃4", value: 4 },
-        { label: "苗圃5", value: 5 },
-        { label: "苗圃6", value: 6 }
+        { label: '苗圃1', value: 1 },
+        { label: '苗圃2', value: 2 },
+        { label: '苗圃3', value: 3 },
+        { label: '苗圃4', value: 4 },
+        { label: '苗圃5', value: 5 },
+        { label: '苗圃6', value: 6 }
       ],
-      nursery: ["苗圃1", "苗圃2", "苗圃3", "苗圃4", "苗圃5", "苗圃6"],
+      nursery: ['苗圃1', '苗圃2', '苗圃3', '苗圃4', '苗圃5', '苗圃6'],
 
-      secondTitle: "苗圃1",
-      area: ["分区1", "分区2", "分区3", "分区4"],
+      secondTitle: '苗圃1',
+      area: ['分区1', '分区2', '分区3', '分区4'],
       coralList: DEFAULT.coralList,
-      thirdTitle: "首次暂养",
-      keyword: "",
+      thirdTitle: '首次暂养',
+      keyword: '',
       showMiaoPu: DEFAULT.miaoPu,
       showFenQu: DEFAULT.fenQu,
       radio: 1,
@@ -209,14 +203,14 @@ export default {
       resultItems: [],
       imageList: DEFAULT.imageList,
       sizeForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       // tree1: [true, true, true, true, true]，
       tree1: false,
@@ -233,191 +227,210 @@ export default {
       checkAllFenQu: false,
       checkedMiaopu: [],
       checkedQu: []
-    };
+    }
   },
   //用的自定义组件
   components: {
     swiperper
   },
   mounted: function() {
-    let _this = this;
-    _this.bodySize.height = document.body.clientHeight - 90 + "px";
-    _this.bodySize.width = document.body.clientWidth - 200 + "px";
+    let _this = this
+    _this.bodySize.height = document.body.clientHeight - 90 + 'px'
+    _this.bodySize.width = document.body.clientWidth - 200 + 'px'
     _this.resoultSize.height =
-      (document.body.clientHeight - 90) * 0.96 * 0.8 + "px";
+      (document.body.clientHeight - 90) * 0.96 * 0.8 + 'px'
   },
   methods: {
     chooseMiaoPu(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.nursery.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.nursery.length
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount >= this.nursery.length;
+        checkedCount > 0 && checkedCount >= this.nursery.length
     },
     handleAllMiaoPu(val) {
-      this.checkedMiaopu = val ? this.nursery : [];
-      this.isIndeterminate = false;
+      this.checkedMiaopu = val ? this.nursery : []
+      this.isIndeterminate = false
     },
     chooseQu(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.area.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.area.length
       this.isIndeterminate2 =
-        checkedCount > 0 && checkedCount >= this.area.length;
+        checkedCount > 0 && checkedCount >= this.area.length
     },
     handleAllQu(val) {
-      this.checkedQu = val ? this.area : [];
-      this.isIndeterminate2 = false;
+      this.checkedQu = val ? this.area : []
+      this.isIndeterminate2 = false
     },
 
     chooseFirst2(index) {
-      this.secondTitle = this.nursery2[index];
+      this.secondTitle = this.nursery2[index]
     },
     chooseSecond(index) {
-      this.thirdTitle = this.area[index];
+      this.thirdTitle = this.area[index]
     },
     getKeyword(keyword, cb) {
-      let _this = this;
-      _this.cardLoading = true;
-      Api.Suggestions("all", this.keyword, 10)
+      let _this = this
+      _this.cardLoading = true
+      Api.Suggestions('all', this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = [];
+            let searchSuggestions = []
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              };
-              searchSuggestions.push(temp);
+              }
+              searchSuggestions.push(temp)
             }
-            cb(searchSuggestions);
-            _this.cardLoading = false;
+            cb(searchSuggestions)
+            _this.cardLoading = false
           } else {
-            Message.error(res.data.msg);
+            Message.error(res.data.msg)
           }
         })
         .catch(err => {
-          console.log("getKeyword");
+          console.log('getKeyword')
 
-          _this.handleError(err);
-          _this.cardLoading = false;
-        });
+          _this.handleError(err)
+          _this.cardLoading = false
+        })
     },
     handleSelect(item) {
       // 点击后处理
-      this.keyword = item.value;
-      this.search();
+      this.keyword = item.value
+      this.search()
     },
     search() {
       Api.Results(
-        "all",
+        'all',
         this.keyword,
         [],
         [],
-        ["all"],
+        ['all'],
         { from: null, to: null },
         { from: null, to: null },
-        "+8",
+        '+8',
         1,
         10
       )
         .then(res => {
           if (res.data.status === 200) {
             // 结果数组
-            console.log(res.data.data);
-            this.resultItems.splice(0, this.resultItems.length);
-            this.resultItems = res.data.data.results;
+            console.log(res.data.data)
+            this.resultItems.splice(0, this.resultItems.length)
+            this.resultItems = res.data.data.results
           } else {
-            alert(res.data.msg);
+            alert(res.data.msg)
           }
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     callUpload() {
-      this.$store.commit("uploadV");
+      this.$store.commit('uploadV')
     },
     HTree(index) {
-      console.log(index);
+      console.log(index)
       if (index == 1) {
-        this.tree1 = false;
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree1 = false
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       } else if (index == 2) {
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 3) {
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 4) {
-        this.tree4 = false;
+        this.tree4 = false
       }
     },
     VTree(index) {
-      console.log(index);
+      console.log(index)
       if (index == 1) {
-        this.tree1 = true;
+        this.tree1 = true
       } else if (index == 2) {
-        this.tree2 = true;
+        this.tree2 = true
       } else if (index == 3) {
-        this.tree3 = true;
+        this.tree3 = true
       } else if (index == 4) {
-        this.tree4 = true;
-        this.$store.commit("uploadV");
+        this.tree4 = true
+        this.$store.commit('uploadV')
       }
     }
   }
-};
+}
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 .workPage {
   width: 100%;
-  height: 100%;
-  margin: 60px 0 0 0;
-  background-color: rgba(0, 0, 0, 0.08);
-  /* border: 1px solid seagreen;
-   */
+  background-color: rgba(255, 0, 0, 0.08);
   display: flex;
 }
+
 .managePage {
   width: 98%;
-  height: 96%;
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04); */
-  margin: 1% 0 0 1%;
 }
 
 .second-work {
   margin-top: 5px;
 }
+
 .first-work {
   margin-top: 5px;
 }
+
 .work-title {
   /* font-weight: 800; */
 }
+
 .resoult {
   overflow: scroll;
   width: 100%;
   height: 60px;
 }
+
 .one-list:hover {
   background-color: #99a9bf;
 }
+
 .one-list {
   height: 40px;
   width: 90%;
   padding: 10px;
   overflow: hidden;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.12);
-
   margin: 0 auto;
   margin-top: 7%;
 }
+<<<<<<< Updated upstream
 
+=======
+
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+
+>>>>>>> Stashed changes
 .selectItem {
   /* display: flex; */
   /* border: 1px solid blue; */
@@ -426,12 +439,14 @@ export default {
   height: 14%;
   background-color: white;
 }
+
 .CoralFile {
   height: 96%;
   width: 20%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   margin: 1% 1% 1% 0;
 }
+
 .selects {
   width: 70%;
   /* margin-top: 5%; */
@@ -439,15 +454,16 @@ export default {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   margin: 0 auto;
 }
+
 .swiper-slide {
   background-position: center;
   background-size: cover;
   width: 300px;
   height: 300px;
 }
+
 .img-numbers {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-
   /* float: left; */
   margin: 0 0 11% 0;
   width: 96%;
@@ -460,11 +476,14 @@ export default {
   font-size: 3em;
   padding-top: 5%;
 }
+
 .img-msg {
 }
+
 .el-form-item__content {
   font-size: 12px;
 }
+
 .el-form-item__label {
   color: #929396;
 }

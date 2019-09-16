@@ -1,14 +1,10 @@
 module.exports = {
-  presets: [
-    '@vue/app'
-  ],
-  "env":{
-    "development":{
-      "sourceMaps":true,
-      "retainLines":true, 
+  presets: ["@vue/app"],
+  env: {
+    development: {
+      sourceMaps: true,
+      retainLines: true,
+      plugins: ["dynamic-import-node"]
     }
-  },
-  presets: [
-    '@vue/app'
-  ]
-}
+  }
+};

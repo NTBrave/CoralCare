@@ -1,81 +1,80 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import App from '../App'
-import Doc from '../pages/doc'
-import Search from '../pages/search'
-import Chart from '../pages/chart'
-import CoralWork from '../pages/coralWork'
-import Home from '../home/home'
-import CoralManage from '../pages/coralManage'
-import Manage from '../pages/manage'
-import Area from '../pages/area'
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "../home/home";
 
-
-import User from '../pages/user'
-
-
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-	mode: "hash",
-	// 	base: '/tool/',
-	routes: [
-		{
-			path: '/home',
-			name: 'home',
-			component: Home,
-			// children: [
-			// 	{ path: 'activity', component: Activity }
-			// ]
-		},
-		{
-			path: '/manage',
-			name: 'manage',
-			component: Manage,
-			children: [
-				{
-					path: '/manage/doc',
-					name: 'doc',
-					component: Doc
-				},
-				{ //需要跳转的页面
-					path: '/manage/search',
-					name: 'search',
-					component: Search
-				},
-				{ //需要跳转的页面
-					path: '/manage/file',
-					name: 'file',
-					component: File
-				},
-				{
-					path: '/manage/user',
-					name: 'user',
-					component: User
-				},
-				{
-					path: '/manage/chart',
-					name: 'chart',
-					component: Chart
-				},
-				{
-					path: '/manage/coralWork',
-					name: 'coralWork',
-					component: CoralWork
-				},
-				
-				{
-					path: '/manage/coralManage',
-					name: 'coralManage',
-					component: CoralManage
-				},
-				{
-					path: '/manage/area',
-					name: 'area',
-					component: Area
-				},
-			]
-		},
-		
-	],
-})
+  mode: "hash",
+  // 	base: '/tool/',
+  routes: [
+    {
+      path: "/home",
+      name: "home",
+      component: Home
+      // children: [
+      // 	{ path: 'activity', component: Activity }
+      // ]
+    },
+    {
+      path: "/",
+      name: "index",
+      redirect: "/home"
+    },
+    {
+      path: "/manage",
+      name: "manage",
+      component: () => import("../pages/manage"),
+      children: [
+        {
+          path: "/manage/doc",
+          name: "doc",
+          component: () => import("../pages/doc.vue")
+        },
+        {
+          //需要跳转的页面
+          path: "/manage/search",
+          name: "search",
+          component: () => import("../pages/search.vue")
+        },
+        // {
+        //   //需要跳转的页面
+        //   path: "/manage/file",
+        //   name: "file",
+        //   component: () => import("../pages/file")
+        // },
+        {
+          path: "/manage/user",
+          name: "user",
+          component: () => import("../pages/user.vue")
+        },
+        {
+          path: "/manage/chart",
+          name: "chart",
+          component: () => import("../pages/chart.vue")
+        },
+        {
+          path: "/manage/coralWork",
+          name: "coralWork",
+          component: () => import("../pages/coralWork.vue")
+        },
+
+        {
+          path: "/manage/coralManage",
+          name: "coralManage",
+          component: () => import("../pages/coralManage.vue")
+        },
+        {
+          path: "/manage/area",
+          name: "area",
+          component: () => import("../pages/area.vue")
+        }
+        // {
+        //   path: "/manage/doc",
+        //   name: "doc",
+        //   component: () => import("../pages/doc.vue")
+        // }
+      ]
+    }
+  ]
+});

@@ -1,39 +1,36 @@
-import Vue from 'vue'
-import App from './App.vue'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import router from './router/router'
-
-import Antd from 'ant-design-vue'
+import Vue from "vue";
+import App from "./App.vue";
+import axios from "axios";
+import router from "./router/router";
+import store from "./store/store";
+import "element-ui/lib/theme-chalk/index.css";
+import ElementUI from "element-ui";
+import Antd from "ant-design-vue";
+// import Calendar from "ant-design-vue/lib/calendar";
 import "ant-design-vue/dist/antd.css";
-import axios from 'axios'
-import store from './store/store'
-import { Message } from 'element-ui';
+// import "ant-design-vue/lib/calendar/style";
+import "echarts/lib/chart/bar";
+import "echarts/lib/component/tooltip";
+import ECharts from "vue-echarts";
+import globalDirective from "./components/directive";
 
-// 手动引入 ECharts 各模块来减小打包体积
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/component/tooltip'
-import ECharts from 'vue-echarts'
-// 注册组件后即可使用
-Vue.component('v-chart', ECharts)
-
-Vue.prototype.axios = axios
+Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
 
-Vue.config.productionTip = false
 Vue.use(ElementUI);
-Vue.use(Message);
 Vue.use(Antd);
+// Vue.component(Calendar.name, Calendar);
+Vue.component("v-chart", ECharts);
+Vue.use(globalDirective);
 
-import globalDirective from './components/directive'
-
-Vue.use(globalDirective )
+Vue.prototype.axios = axios;
+Vue.prototype.$message = ElementUI.Message;
 
 new Vue({
-	router,
-	store,
-	data: {
-		eventHub: new Vue()
-	},
-	render: h => h(App),
-}).$mount('#app')
+  router,
+  store,
+  data: {
+    // eventHub: new Vue()
+  },
+  render: h => h(App)
+}).$mount("#app");
