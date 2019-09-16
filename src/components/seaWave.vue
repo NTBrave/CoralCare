@@ -60,6 +60,8 @@ export default {
      
        _this.container.style.position="absolute";
        _this.container.style.zIndex="-1";
+       _this.container.style.top="-20%";
+       //获取 海浪存在的区域
       let fader = document.getElementById("qinaiIntro");
       
       fader.appendChild(_this.container);
