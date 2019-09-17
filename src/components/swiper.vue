@@ -9,16 +9,10 @@
 
 
 
-<<<<<<< Updated upstream
 <script >
 
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-=======
-<script>
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
->>>>>>> Stashed changes
 
 export default {
   name: 'swiperper',
@@ -72,12 +66,9 @@ export default {
 }
 </script>
 
-<<<<<<< Updated upstream
 <style scoped>
 
-=======
-<style>
->>>>>>> Stashed changes
+
 .swiper-slide {
   background-position: center;
   background-size: cover;
