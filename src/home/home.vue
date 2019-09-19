@@ -2,7 +2,7 @@
   <div class="the-home">
     <!-- 头部导航栏 -->
     <el-row class="app-header" :gutter="1">
-      <el-col :offset="14" :span="1">
+      <el-col :offset="13" :span="2" class="shouye">
         <div>
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />首页
@@ -140,7 +140,7 @@
 
     <!-- 微博微信 -->
     <el-row class="text-align weixin-weibo">
-      <el-col :span="12" id="introdus-title" class="weixin-weibo-title">
+      <el-col :span="12" id="introdus-title" class="weixin-weibo-title fen-height">
         <div class="wexin-weibo-first">
           <img src="../assets/home/big_title2.svg" alt />
         </div>
@@ -151,6 +151,7 @@
         @mouseenter.native.stop="hoverChang(2)"
         @mouseleave.native.stop.stop="leaveChang(2)"
         id="introdus-weixin"
+        class="fen-height"
       >
         <div class="weixin-svg">
           <img src="../assets/home/weixin.svg" alt />
@@ -164,6 +165,7 @@
         @mouseenter.native.stop="hoverChang(1)"
         @mouseleave.native.stop.stop="leaveChang(1)"
         id="introdus-weibo"
+        class="fen-height"
       >
         <div class="weibo-svg">
           <img src="../assets/home/weibo.svg" alt />
@@ -182,14 +184,14 @@
         </el-col>
       </el-row>
       <el-row class="intro-text">
-        <el-col :offset="2" :span="11">
+        <el-col class="zuoYe" :offset="2" :span="11">
           “潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁
           <br />保护区建立等三个部分的珊瑚保育项目。目前项目正在建立一条百
           <br />米长的珊瑚观光带为目标，通过创建歉岁员珊瑚保护参与体系，同
           <br />时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊
           <br />瑚，最终建设有深圳特色的珊瑚礁保护区域提供和范例。
         </el-col>
-        <el-col :offset="1" :span="10">
+        <el-col class="zuoYe" :offset="1" :span="10">
           <div>
             <span class="mar-right intro-text-height">
               <img src="../assets/home/yuan2.png" alt />
@@ -285,7 +287,7 @@
       </el-row>
     </el-row>
 
-    <el-row>
+    <el-row class="noShowInPhone">
       <el-row>
         <el-col class="coral-title" :offset="1" :span="2">
           <div>珊瑚案列</div>
@@ -948,72 +950,65 @@ export default {
 
       var left =
         ((event.clientX - bbox.left) / document.body.clientWidth) * 100 + 6;
+      //通过改变css 中的left 来改变位置
 
+      let index_pointer = 0;
+      console.log(left);
+      if (left > 17 && left < 21) {
+        index_pointer = 0;
+        left = 19.297;
+      } else if (left > 22 && left < 23.5) {
+        index_pointer = 1;
+        left = 22.95;
+      } else if (left > 25 && left < 25.5) {
+        index_pointer = 2;
+        left = 25.41;
+      } else if (left > 25.7 && left < 26.3) {
+        index_pointer = 3;
+        left = 26.194;
+      } else if (left > 28.3 && left < 29.7) {
+        index_pointer = 4;
+        left = 29.224;
+      } else if (left > 30.2 && left < 31.7) {
+        index_pointer = 5;
+        left = 30.739;
+      } else if (left > 45 && left < 46.4) {
+        index_pointer = 6;
+        left = 46.199;
+      } else if (left > 46.7 && left < 48.5) {
+        index_pointer = 7;
+        left = 47.197;
+      } else if (left > 55 && left < 56.8) {
+        index_pointer = 8;
+        left = 55.97;
+      } else if (left > 59.2 && left < 61.8) {
+        index_pointer = 9;
+        left = 60.15;
+      } else if (left > 62.6 && left < 67.3) {
+        index_pointer = 10;
+        left = 64.54;
+      } else if (left > 70 && left < 74.5) {
+        index_pointer = 11;
+        left = 73.94;
+      } else if (left > 75.1 && left < 78.5) {
+        index_pointer = 12;
+        left = 75.56;
+      } else if (left > 80 && left < 85) {
+        index_pointer = 13;
+        left = 83.14;
+      } else {
+        index_pointer = -1;
+      }
       time.style.left = left + "%";
       timeMsg.style.left = left + 3 + "%";
-
-      if (left > 18.5 && left < 19.7) {
-        _this.examSize = _this.exampleData[0].size;
-        _this.examTime = _this.exampleData[0].time;
-        activityImg[0].children[0].src = _this.exampleData[0].url;
-      } else if (left > 22.3 && left < 23.2) {
-        _this.examSize = _this.exampleData[1].size;
-        _this.examTime = _this.exampleData[1].time;
-        activityImg[0].children[0].src = _this.exampleData[1].url;
-      } else if (left > 25 && left < 25.4) {
-        _this.examSize = _this.exampleData[2].size;
-        _this.examTime = _this.exampleData[2].time;
-        activityImg[0].children[0].src = _this.exampleData[2].url;
-      } else if (left > 25.7 && left < 26.3) {
-        _this.examSize = _this.exampleData[3].size;
-        _this.examTime = _this.exampleData[3].time;
-        activityImg[0].children[0].src = _this.exampleData[3].url;
-      } else if (left > 28.7 && left < 29.3) {
-        _this.examSize = _this.exampleData[4].size;
-        _this.examTime = _this.exampleData[4].time;
-        activityImg[0].children[0].src = _this.exampleData[4].url;
-      } else if (left > 30.2 && left < 30.9) {
-        _this.examSize = _this.exampleData[5].size;
-        _this.examTime = _this.exampleData[6].time;
-        activityImg[0].children[0].src = _this.exampleData[5].url;
-      } else if (left > 45.7 && left < 46.2) {
-        _this.examSize = _this.exampleData[6].size;
-        _this.examTime = _this.exampleData[6].time;
-        activityImg[0].children[0].src = _this.exampleData[6].url;
-      } else if (left > 46.8 && left < 47.2) {
-        _this.examSize = _this.exampleData[7].size;
-        _this.examTime = _this.exampleData[7].time;
-        activityImg[0].children[0].src = _this.exampleData[7].url;
-      } else if (left > 55.5 && left < 56.2) {
-        _this.examSize = _this.exampleData[8].size;
-        _this.examTime = _this.exampleData[8].time;
-        activityImg[0].children[0].src = _this.exampleData[8].url;
-      } else if (left > 59.8 && left < 60.3) {
-        _this.examSize = _this.exampleData[9].size;
-        _this.examTime = _this.exampleData[9].time;
-        activityImg[0].children[0].src = _this.exampleData[9].url;
-      } else if (left > 64.1 && left < 64.7) {
-        _this.examSize = _this.exampleData[10].size;
-        _this.examTime = _this.exampleData[10].time;
-        activityImg[0].children[0].src = _this.exampleData[10].url;
-      } else if (left > 73.4 && left < 74.2) {
-        _this.examSize = _this.exampleData[11].size;
-        _this.examTime = _this.exampleData[11].time;
-
-        activityImg[0].children[0].src = _this.exampleData[11].url;
-      } else if (left > 75.1 && left < 75.9) {
-        _this.examSize = _this.exampleData[12].size;
-        _this.examTime = _this.exampleData[12].time;
-
-        activityImg[0].children[0].src = _this.exampleData[12].url;
-      } else if (left > 82.3 && left < 83.5) {
-        _this.examSize = _this.exampleData[13].size;
-        _this.examTime = _this.exampleData[13].time;
-
-        activityImg[0].children[0].src = _this.exampleData[13].url;
+      if (index_pointer >= 0) {
+        _this.examSize = _this.exampleData[index_pointer].size;
+        _this.examTime = _this.exampleData[index_pointer].time;
+        //设置图片的url
+        activityImg[0].children[0].src = _this.exampleData[index_pointer].url;
       } else {
         _this.examSize = "";
-        _this.examTime = "这天没活动";
+        _this.examTime = "这天无活动";
       }
     }
   },
@@ -1025,22 +1020,22 @@ export default {
     let preAndNext = 1000;
     window.onresize = () => {
       const windowWidth = document.body.clientWidth;
-      let thHome = $(".the-home")[0];
-      let weiwei = $(".weixin-weibo")[0];
-      let footerSwiper = $(".swiper-container")[0];
+      // let thHome = $(".the-home")[0];
+      // let weiwei = $(".weixin-weibo")[0];
+      // let footerSwiper = $(".swiper-container")[0];
       if (windowWidth < 1350) {
-        thHome.style.fontSize = "15px";
-        weiwei.style.marginTop = "24.6%";
-        footerSwiper.style.width = "80%";
+        // thHome.style.fontSize = "15px";
+        // weiwei.style.marginTop = "24.6%";
+        // footerSwiper.style.width = "80%";
         preAndNext = 800;
-        let swiperSlideImg = $(".ssImg");
-        for (let i = 0; i < swiperSlideImg.length; i++) {
-          swiperSlideImg[i].style.maxWidth = "250px";
-        }
+        // let swiperSlideImg = $(".ssImg");
+        // for (let i = 0; i < swiperSlideImg.length; i++) {
+        // swiperSlideImg[i].style.maxWidth = "250px";
+        // }
       } else if (windowWidth < 1600) {
-        thHome.style.fontSize = "20px";
-        weiwei.style.marginTop = "24.6%";
-        footerSwiper.style.width = "79%";
+        // thHome.style.fontSize = "20px";
+        // weiwei.style.marginTop = "24.6%";
+        // footerSwiper.style.width = "79%";
         preAndNext = 800;
       }
       _this.videoHeight = windowWidth * 0.677;
@@ -1070,21 +1065,21 @@ export default {
       let videoE = $(".app-header")[0];
       let prevBtn = $(".swiper-button-prev")[0];
       let nextBtn = $(".swiper-button-next")[0];
-      if (scrolDis > document.body.scrollHeight - preAndNext) {
-        prevBtn.style.display = "block";
-        nextBtn.style.display = "block";
-      } else {
-        prevBtn.style.display = "none";
-        nextBtn.style.display = "none";
-      }
+      // if (scrolDis > document.body.scrollHeight - preAndNext) {
+      //   prevBtn.style.display = "block";
+      //   nextBtn.style.display = "block";
+      // } else {
+      //   prevBtn.style.display = "none";
+      //   nextBtn.style.display = "none";
+      // }
       //下面可以加动画的
-      if (scrolDis > _this.videoHeight * 0.6) {
-        videoE.style.background = "rgba(0, 0, 0, 0.075)";
-        videoE.style.color = "black";
-      } else {
-        videoE.style.background = "rgba(255, 255, 255, 0.075)";
-        videoE.style.color = "white";
-      }
+      // if (scrolDis > _this.videoHeight * 0.6) {
+      //   videoE.style.background = "rgba(0, 0, 0, 0.075)";
+      //   videoE.style.color = "black";
+      // } else {
+      videoE.style.background = "rgba(255, 255, 255, 0.075)";
+      videoE.style.color = "white";
+      // }
     };
     //设置 3d 海浪
     let bgCanvas = document.getElementsByTagName("canvas")[0];
