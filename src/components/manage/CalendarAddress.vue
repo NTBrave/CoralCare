@@ -1,8 +1,8 @@
 <template>
   <div class="root">
     <div class="ifShowCalendar" @click="showDrawer">
-      <div class="time">{{chooseDate}}</div>
-      <div class="address">{{address[addressIndex].name}}</div>
+      <div class="time">{{activity.dateNumber}}</div>
+      <div class="address">{{activity.address}}</div>
     </div>
     <show-drawer ref="drawer" @hide="requestBeforeHideDrawer">
       <div class="addressSlide">
@@ -11,7 +11,7 @@
           :autoplay="false"
           trigger="click"
           indicator-position="none"
-          @change="((pre, next) => {printsss(pre, next)})"
+          @change="((pre, next) => {selectAddress(pre, next)})"
         >
           <el-carousel-item v-for="item in address" :key="item.id">
             <div class="image-cnt">
@@ -22,13 +22,46 @@
         </el-carousel>
       </div>
       <div class="calendar-cnt">
-        <a-calendar
-          :fullscreen="false"
-          @panelChange="onPanelChange"
-          @select="onSelect"
-          :locale="locale"
-        />
+        <el-input placeholder="请输入内容" v-model="chooseDate">
+          <template slot="prepend">活动日期</template>
+        </el-input>
+        <div class="calendar-board" v-if="true">
+          <a-calendar
+            :fullscreen="false"
+            @panelChange="onPanelChange"
+            @select="onSelect"
+            :locale="locale"
+          />
+        </div>
       </div>
+      <div class="button-area">
+        <div class="activity-button" v-if="ifNewActivity">
+          <el-button round>查看当日活动</el-button>
+          <el-button round @click="newActivity">新建当日活动</el-button>
+        </div>
+        <div class="hour-choose" v-else>
+          <el-input
+            type="number"
+            min="1"
+            max="24"
+            placeholder="请输入1-24之间的整数值"
+            v-model.number="selectHour"
+            @change="timeReady(selectHour)"
+          >
+            <template slot="prepend">
+              <span style="cursor: pointer" @click="newActivity">活动时间</span>
+            </template>
+          </el-input>
+        </div>
+      </div>
+      <el-button
+        class="checkNewActivity"
+        :style="{color: isTimeReady? '': 'red'} "
+        round
+        v-if="!ifNewActivity"
+        :disabled="isTimeReady"
+        @click="submitTimeAddress"
+      >确认新建活动</el-button>
     </show-drawer>
   </div>
 </template>
@@ -87,28 +120,40 @@ const locale = {
 }
 
 import DrawerVue from './Drawer.vue'
+import { mapGetters } from 'vuex'
+
 export default {
   components: {
     'show-drawer': DrawerVue
   },
   data() {
     return {
-      ifShow: false, // 抽屉状态
       bannerHeight: '', // 轮播图片
       addressIndex: 0, // 轮播图片索引
 
       address,
       locale,
-      chooseDate: ''
+      chooseDate: '', // 选择活动日期
+
+      dateNumber: '', // 以活动日期和具体时间生成的编号
+      activityAddress: '', // 活动地点
+
+      ifNewActivity: true, // 是否显示新建活动按钮
+      selectHour: '', // 选择具体活动时间
+      isTimeReady: true // 是否能建活动
     }
   },
   computed: {
-    // chooseDate() {
-    // let date_choose = new Date().getUTCDate()
-    // let year = date_choose.getMonth
-    // return date_choose
-    // this.onSelect(value)
+    // activity() {
+    //   return this.$store.getters.getActivity
     // }
+    ...mapGetters({ activity: 'getActivity' })
+  },
+  watch: {
+    selectHour: function() {
+      // this.submitTimeAddress()
+      this.timeReady(this.selectHour)
+    }
   },
   methods: {
     // 点击打开抽屉
@@ -118,22 +163,58 @@ export default {
 
     // 关闭抽屉
     requestBeforeHideDrawer() {
-      this.$refs.drawer.close()
+      if (!this.isTimeReady) {
+        // this.$refs.drawer.close()
+        this.submitTimeAddress()
+      }
     },
 
-    printsss(pre, next) {
+    selectAddress(pre, next) {
       this.addressIndex = pre
-      console.log(pre, next)
+      this.activityAddress = this.address[pre].name
     },
 
     onPanelChange(value, mode) {
       console.log(value, mode)
     },
 
+    // 时间选择
     onSelect(value) {
-      let date = value.format('YYYY-MM-DD')
-      this.chooseDate = date
-      // console.log(date)
+      // console.log(value)
+
+      this.chooseDate = value.format('M月D日  YYYY年')
+      if (this.selectHour < 10) {
+        this.dateNumber = value.format('YYYYMMDD') + 0 + this.selectHour
+      } else this.dateNumber = value.format('YYYYMMDD') + this.selectHour
+      console.log(this.dateNumber)
+    },
+
+    // 新建活动按钮与选择具体时间输入框显示控制
+    newActivity() {
+      this.ifNewActivity = !this.ifNewActivity
+    },
+
+    // 选择具体时间后才可以确认新建活动
+    timeReady(hourTime) {
+      if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
+        this.selectHour = hourTime
+        console.log(this.selectHour)
+        this.isTimeReady = false
+      } else {
+        this.isTimeReady = true
+      }
+    },
+
+    // 确定好时间地点后创建活动提交活动编号和地点
+    submitTimeAddress() {
+      this.onSelect(moment())
+      let activity = {
+        dateNumber: this.dateNumber,
+        address: this.activityAddress
+      }
+
+      this.$store.commit('setDateNumber', activity)
+      this.$refs.drawer.close()
     },
 
     // 图片首次加载方法
@@ -158,9 +239,6 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.root {
-}
-
 .ifShowCalendar {
   width: 10%;
   min-width: 200px;
@@ -177,12 +255,12 @@ export default {
   height: 20%;
   background-color: rgba(255 255 255 0.9);
   border-radius: 10px;
-  position: absolute;
-  left: 0;
-  top: 5%;
-  bottom: 0;
-  right: 0;
-  margin: 0 auto;
+  // position: absolute;
+  // left: 0;
+  // top: 5%;
+  // bottom: 0;
+  // right: 0;
+  margin: 10% auto;
 
   .image-cnt {
     display: flex;
@@ -192,17 +270,80 @@ export default {
 }
 
 .calendar-cnt {
-  width: 80%;
-  height: 40%;
+  width: 70%;
+  // height: 30%;
+  // position: absolute;
+  // left: 0;
+  // top: 28%;
+  // bottom: 0;
+  // right: 0;
+  margin: 5% auto;
+  z-index: 10000;
+
+  // border: 1px solid #d9d9d9;
+  // border-radius: 4px;
+  // background-color: rgba(255 255 255 0.8);
+  .calendar-board {
+    width: 90%;
+    margin: 5% auto;
+  }
+}
+
+.button-area {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .activity-button {
+    .el-button {
+      font-size: 0.95rem;
+
+      &:nth-last-child(1) {
+        color: rgba(255 0 0 0.9);
+      }
+    }
+  }
+
+  .hour-choose {
+    width: 70%;
+  }
+}
+
+.checkNewActivity, .active {
+  height: 40px;
   position: absolute;
   left: 0;
-  top: 30%;
-  bottom: 0;
+  bottom: 6%;
   right: 0;
   margin: 0 auto;
-  z-index: 10000;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  background-color: rgba(255 255 255 0.8);
+  font-size: 0.95rem;
+}
+
+.active {
+  color: rgba(255 0 0 0.9);
+}
+</style>
+<style lang="stylus">
+// 输入框组件样式
+.calendar-cnt, .button-area {
+  .el-input {
+    .el-input-group__prepend {
+      border-top-left-radius: 50px;
+      border-bottom-left-radius: 50px;
+      border: none;
+    }
+
+    .el-input__inner {
+      border-top-right-radius: 50px;
+      border-bottom-right-radius: 50px;
+      border: none;
+    }
+  }
+
+  .calendar-board {
+    .ant-fullcalendar-header {
+      display: none;
+    }
+  }
 }
 </style>

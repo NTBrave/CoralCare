@@ -74,6 +74,13 @@ const mutations = {
   },
   uploadH(state) {
     state.uploadVisiable = false;
+  },
+
+  /**
+   *   后台管理端
+   */
+  setDateNumber(state, activity) {
+    state.activity = activity;
   }
 };
 

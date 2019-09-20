@@ -10,9 +10,8 @@
 
 
 <script >
-
-import "swiper/dist/css/swiper.css";
-import { swiper, swiperSlide } from "vue-awesome-swiper";
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
   name: 'swiperper',
@@ -67,8 +66,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .swiper-slide {
   background-position: center;
   background-size: cover;

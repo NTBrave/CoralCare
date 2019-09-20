@@ -20,12 +20,14 @@ export default {
     navigator: Navigator
   },
   data() {
-    return {
-      loginState: this.$store.getters.getIfLogin
-    }
+    return {}
   },
   methods: {},
-  computed: {},
+  computed: {
+    loginState() {
+      return this.$store.getters.getIfLogin
+    }
+  },
   mounted() {
     // console.log(this.$store)
     if (this.loginState === false) {

@@ -410,6 +410,7 @@ export default {
   margin: 0 auto;
   margin-top: 7%;
 }
+
 .selectItem {
   /* display: flex; */
   /* border: 1px solid blue; */

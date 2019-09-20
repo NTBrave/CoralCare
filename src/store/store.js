@@ -40,8 +40,17 @@ const state = {
   // 判断是否在首页
   isHome: true,
 
-  // 判断是否登录
-  ifLogin: true
+  /**
+   *  后台管理端
+   *
+   * 0
+   */
+
+  ifLogin: true, // 判断是否登录
+  activity: {
+    dateNumber: "", // 活动编号(根据日期时间生成)
+    address: "" // 活动地点
+  }
 };
 
 export default new Vuex.Store({

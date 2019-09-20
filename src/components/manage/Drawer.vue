@@ -10,7 +10,7 @@
 export default {
   data() {
     return {
-      ifshow: false,
+      ifshow: true,
       shadowAnimation: 'showShadow',
       calendarAnimation: 'showCalendar'
     }
@@ -49,7 +49,7 @@ export default {
   .mainBoard {
     position: fixed;
     top: 0;
-    width: 40%;
+    width: 400px;
     height: 100%;
     overflow: auto;
     background-color: rgba(0 200 200 1);
