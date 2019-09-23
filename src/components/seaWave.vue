@@ -60,6 +60,8 @@ export default {
      
        _this.container.style.position="absolute";
        _this.container.style.zIndex="-1";
+       _this.container.style.top="10%";
+       //获取 海浪存在的区域
       let fader = document.getElementById("qinaiIntro");
       
       fader.appendChild(_this.container);
@@ -101,7 +103,7 @@ export default {
       //小球颜色 color
       var material = new THREE.ShaderMaterial({
         uniforms: {
-          color: { value: new THREE.Color(0xA7CFE9) }
+          color: { value: new THREE.Color( 0xdfd9d9 ) }
         },
         vertexShader: document.getElementById("vertexshader").textContent,
         fragmentShader: document.getElementById("fragmentshader").textContent
@@ -183,7 +185,6 @@ export default {
       _this.renderer.render(_this.scene, _this.camera);
       _this.count += 0.1;
     }
-
 
   },
   mounted() {

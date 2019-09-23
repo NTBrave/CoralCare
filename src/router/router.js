@@ -1,83 +1,86 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import App from '../App'
-import Doc from '../pages/doc'
-import Search from '../pages/search'
-import Chart from '../pages/chart'
-import CoralWork from '../pages/coralWork'
-import Home from '../home/home'
-import CoralManage from '../pages/coralManage'
-import Area from '../pages/area'
-import Codelabs from '../pages/codelabs'
-import Exhibition from '../pages/exhibition'
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "../home/home";
 
-import User from '../pages/user'
-
-
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
     mode: "hash",
     // 	base: '/tool/',
     routes: [{
-            path: '/',
-            name: 'home',
+            path: "/home",
+            name: "home",
             component: Home
+                // children: [
+                // 	{ path: 'activity', component: Activity }
+                // ]
         },
         {
-            path: '/doc',
-            name: 'doc',
-            component: Doc
-        },
-        { //需要跳转的页面
-            path: '/search',
-            name: 'search',
-            component: Search
-        },
-        { //需要跳转的页面
-            path: '/file',
-            name: 'file',
-            component: File
+            path: "/",
+            name: "index",
+            redirect: "/home"
         },
         {
-            path: '/user',
-            name: 'user',
-            component: User
-        },
-        {
-            path: '/chart',
-            name: 'chart',
-            component: Chart
-        },
-        {
-            path: '/coralWork',
-            name: 'coralWork',
-            component: CoralWork
-        },
-        // {
-        // 	path: '/home',
-        // 	name: 'home',
-        // 	component: Home
-        // },
-        {
-            path: '/coralManage',
-            name: 'coralManage',
-            component: CoralManage
-        },
-        {
-            path: '/area',
-            name: 'area',
-            component: Area
-        },
-        {
-            path: '/codelabs',
-            name: 'codelabs',
-            component: Codelabs
-        },
-        {
-            path: '/exhibition',
-            name: 'exhibition',
-            component: Exhibition
+            path: "/manage",
+            name: "manage",
+            component: () =>
+                import ("../pages/manage"),
+            children: [{
+                    path: "/manage/doc",
+                    name: "doc",
+                    component: () =>
+                        import ("../pages/doc.vue")
+                },
+                {
+                    //需要跳转的页面
+                    path: "/manage/search",
+                    name: "search",
+                    component: () =>
+                        import ("../pages/search.vue")
+                },
+                // {
+                //   //需要跳转的页面
+                //   path: "/manage/file",
+                //   name: "file",
+                //   component: () => import("../pages/file")
+                // },
+                {
+                    path: "/manage/user",
+                    name: "user",
+                    component: () =>
+                        import ("../pages/user.vue")
+                },
+                {
+                    path: "/manage/chart",
+                    name: "chart",
+                    component: () =>
+                        import ("../pages/chart.vue")
+                },
+                {
+                    path: "/manage/coralWork",
+                    name: "coralWork",
+                    component: () =>
+                        import ("../pages/coralWork.vue")
+                },
+
+                {
+                    path: "/manage/coralManage",
+                    name: "coralManage",
+                    component: () =>
+                        import ("../pages/coralManage.vue")
+                },
+                {
+                    path: "/manage/area",
+                    name: "area",
+                    component: () =>
+                        import ("../pages/area.vue")
+                }
+                // {
+                //   path: "/manage/doc",
+                //   name: "doc",
+                //   component: () => import("../pages/doc.vue")
+                // }
+            ]
         }
-    ],
-})
+    ]
+});

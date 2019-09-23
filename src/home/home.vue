@@ -1,301 +1,1093 @@
 <template>
-  <!-- <div style="margin-top:60px;"> -->
-  <div>
-    <!-- <el-row style="background-color:#f4f4f4;margin-top:20px "> -->
-    <div class="homepage-hero-module">
-      <div class="video-container">
-        <!-- <div :style="fixStyle" class="filter"></div> -->
-        <video :style="fixStyle" autoplay loop class="fillWidth">
-          <source src="..\assets\video\4.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
-        </video>
-      </div>
-    </div>
-    <!-- </el-row> -->
-
-    <seaWave></seaWave>
-
-    <div id="qinaiIntro" style="height: 600px;">
-      <el-col :span="12" :offset="6">
-        <div style="text-align:center">
-          <span style="font-size:48px;  ">
-            <b>潜爱</b>
-            <el-progress :percentage="100" :show-text="false" color="#101011" height="70%"></el-progress>
+  <div class="the-home">
+    <!-- 头部导航栏 -->
+    <el-row class="app-header" :gutter="1">
+      <el-col :offset="13" :span="2" class="shouye">
+        <div>
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />首页
           </span>
         </div>
       </el-col>
-
-      <el-col :span="12" :offset="6">
+      <el-col :offset="1" :span="2">
+        <div @click="changeRoute('2-1')">
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />潜爱护礁
+          </span>
+        </div>
+      </el-col>
+      <el-col class="sign-in-up" v-if="(!loginData.isLogin)" :offset="2" :span="4">
         <div>
-          <el-row type="flex" align="middle">
-            <el-col :span="4">
-              <div style="text-align:center">
-                <img src="../assets/black/shao.svg" alt="图片正加载中" width="100%" />
-              </div>
-            </el-col>
-            <el-col :span="20">
-              <div>
-                <h2>Codelabs</h2>
-                <br />
-                <p>
-                  &nbsp;&nbsp;&nbsp;&nbsp;中文名，在线动手实验室，学习者可以在 Codelabs 中实操，通过在云端的在线动手实验室学习或加深开源技术的各个重要知识点，让 TensorFlow
-                  去完成我们可以交给人工智能完成的事情，增强人工智能与现有计算思维的结合，帮助学习者实际使用人工智能！
-                </p>
-              </div>
-            </el-col>
-          </el-row>
+          <span @click="loginData.visible = true" class="login-btn">登录</span>
         </div>
 
         <div>
-          <el-row type="flex" align="middle">
-            <el-col :span="20">
-              <div style="margin-right:60px">
-                <h2>线上线下活动</h2>
-                <br />
-                <p>
-                  &nbsp;&nbsp;&nbsp;&nbsp;BoostNext 的系列线上学习活动、InnoCampBoostMaker
-                  夏令营或冬令营，以及系列线上学习活动线下沙龙，每一个学习者都可以在线上线下畅所欲言，发现和分享 TensorFlow
-                  带给我们的进步！
-                </p>
-              </div>
-            </el-col>
-            <el-col :span="4">
-              <div style="text-align:center">
-                <img src="../assets/black/qi.svg" alt="图片正加载中" width="100%" />
-              </div>
-            </el-col>
-          </el-row>
+          <span @click="registeredData.visible = true" class="regist-btn">注册</span>
         </div>
+      </el-col>
 
-        <div>
-          <el-row type="flex" align="middle">
-            <el-col :span="4">
-              <div style="text-align:center">
-                <img src="../assets/black/you.svg" alt="图片正加载中" width="100%" />
-              </div>
-            </el-col>
-            <el-col :span="20">
-              <div style="margin-left:3%">
-                <h2>案例体验</h2>
-                <br />
-                <p>
-                  &nbsp;&nbsp;&nbsp;&nbsp;AI入门第一步是体验，你可以在这里体验到使用 TensorFlow
-                  等技术的相关案例，在体验中感受到人工智能的智慧与强大，培养对人工智能的认识和了解，认识到什么是人工智能以及它的你能力范畴；培养人工智能相关的思维方法，把计算思维、数据思维和人工智能思维通过案例的体验来交互！
-                </p>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
+      <!-- 右上角用户小弹窗 -->
+      <el-col :span="1" v-if="(loginData.isLogin)">
+        <el-popover trigger="hover" placement="bottom" width="150">
+          <p class="text-align">{{loginData.currentUserName}}</p>
+
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            icon="el-icon-user"
+            @click="changeRoute('1')"
+            size="mini"
+            class="top-btn top-btn-color"
+          >个人中心</el-button>
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            icon="el-icon-switch-button"
+            @click="logout"
+            size="mini"
+            class="top-btn"
+          >退出登陆</el-button>
+          <div class="MyDivider"></div>
+          <el-button
+            type="text"
+            class="top-btn"
+            size="mini"
+            icon="el-icon-edit-outline"
+            @click="registeredData.visible = true"
+          >注册</el-button>
+          <p slot="reference" class="text-align" type="text">
+            <!-- <el-buton type="primary"  circle > -->
+            <img src="../assets/images/boy.png" alt class="top-user-icon" />
+          </p>
+        </el-popover>
       </el-col>
-    </div>
-    <el-col :span="24">
-      <div style="text-align:center">
-        <parallax1 photo2href="/images/home1.jpg"></parallax1>
-      </div>
-    </el-col>
-    <el-row>
-      <el-col :span="4" :offset="10">
-        <img :src="img1" width="100%" />
-      </el-col>
-      <el-col :span="18" :offset="3">
-        <hr />
-        <el-row>
-          <el-col :span="22" style>
-            <h1>珊瑚案例</h1>
-          </el-col>
-          <el-col :span="2" style="float: right;">
-            <el-button type="text">
-              <router-link to="/codelabs?type=所有类别" tag="p" style="font-size:14px">更多</router-link>
-            </el-button>
-          </el-col>
-          <el-col>
-            <el-row>
-              <el-col :offset="1" :span="cardspan" v-for="(card,index) in 5" :key="index">
-                <div class="coralCrad">珊瑚案例{{card}}</div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="18" :offset="3">
-        <hr />
-        <el-row>
-          <el-col :span="22" style>
-            <h1>活动案例</h1>
-          </el-col>
-          <el-col :span="2" style="float: right;">
-            <el-button type="text">
-              <router-link to="/exhibition?type=所有类别" tag="p" style="font-size:14px">更多</router-link>
-            </el-button>
-          </el-col>
-          <el-col>
-            <el-row>
-              <el-col :offset="1" :span="cardspan" v-for="(card,index) in 3" :key="index">
-                <div class="proCrad">活动案例{{card}}</div>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="12" :offset="6"></el-col>
     </el-row>
+    <!-- 开头视频背景 -->
+    <el-row class="video-container">
+      <video :style="fixStyle" autoplay loop class="fillWidth" muted>
+        <source src="../assets/video/video.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
+      </video>
+    </el-row>
+
+    <div class="homepage-hero-module">
+      <!-- 潜爱logo -->
+      <el-row class="qianAi-logo">
+        <img src="../assets/home/logo_x.svg" alt />
+      </el-row>
+      <!-- 种珊瑚，种人心 -->
+      <el-row class="intro-logo">
+        <img src="../assets/home/big_title2.png" alt />
+      </el-row>
+
+      <!-- 蒙版 -->
+      <el-row class="meng-ban">
+        <img src="../assets/home/meng2.png" alt />
+      </el-row>
+
+      <!-- 文字介绍 和视频 -->
+      <el-row class="all-intro">
+        <el-row>
+          <el-col class="coral-title" :offset="1" :span="2">
+            <div>关于潜爱</div>
+            <div class="coral-title-line"></div>
+          </el-col>
+          <el-col :offset="18" :span="3" class="two-gif">
+            <div @click="changeIsShowVideo">
+              <img v-show="!isShowVideo" src="../assets/home/cycle_jitter.gif" alt />
+              <img
+                class="close-video"
+                v-if="isShowVideo&&!isInCloseVideo"
+                src="../assets/home/change_once.gif"
+                alt
+              />
+              <img
+                class="in-close-video"
+                v-if="isInCloseVideo"
+                src="../assets/home/go_back.gif"
+                alt
+              />
+            </div>
+          </el-col>
+        </el-row>
+        <el-row class="intro-text">
+          <el-col :offset="3" :span="13" class="line-height">
+            &nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”，是由大鹏新区管委会和磨房网共同发起的民间珊瑚保育
+            <br />组织，倡导并践行珊瑚礁生态的自然恢复，构建海洋意识教育体系，传播
+            <br />海洋保护理念和方法，激发公众、企业、政府个各类社会组织的跨界参与。
+            <br />共同推进珊瑚保护机制的建设，为珊瑚礁生态的恢复营造更好的条件。
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”经过7年的珊瑚保育实践探索，以“种珊瑚，种人心”为
+            <br />口号，衍生了“潜爱护礁”和”潜爱课堂“两大核心公益项目，以此领跑
+            <br />海洋意识教育传播，成为珊瑚保育的民间专业组织。
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”项目落地于2012年，正式注册于2014年。
+          </el-col>
+          <el-col class="tips-video" :offset="1" :span="7">
+            <img src="../assets/home/tips.png" alt />
+          </el-col>
+        </el-row>
+
+        <el-row class="the-video-row">
+          <el-col>
+            <div v-show="isVideoPause&&isShowVideo&&!isInCloseVideo" class="action-svg">
+              <img src="../assets/home/action.svg" alt />
+            </div>
+            <video id="showVideo" class="intro-video-no" autoplay controls>
+              <source src="http://dayy.xyz/resource/4.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
+            </video>
+          </el-col>
+        </el-row>
+      </el-row>
+    </div>
+
+    <!-- 微博微信 -->
+    <el-row class="text-align weixin-weibo">
+      <el-col :span="12" id="introdus-title" class="weixin-weibo-title fen-height">
+        <div class="wexin-weibo-first">
+          <img src="../assets/home/big_title2.svg" alt />
+        </div>
+      </el-col>
+
+      <el-col
+        :span="6"
+        @mouseenter.native.stop="hoverChang(2)"
+        @mouseleave.native.stop.stop="leaveChang(2)"
+        id="introdus-weixin"
+        class="fen-height"
+      >
+        <div class="weixin-svg">
+          <img src="../assets/home/weixin.svg" alt />
+        </div>
+        <div v-show="showWeixin" class="e-wei-ma">
+          <img src="../assets/home/wx120.jpg" alt />
+        </div>
+      </el-col>
+      <el-col
+        :span="6"
+        @mouseenter.native.stop="hoverChang(1)"
+        @mouseleave.native.stop.stop="leaveChang(1)"
+        id="introdus-weibo"
+        class="fen-height"
+      >
+        <div class="weibo-svg">
+          <img src="../assets/home/weibo.svg" alt />
+        </div>
+        <div v-show="showWeibo" class="e-wei-ma">
+          <img src="../assets/home/wb120.jpg" alt />
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-row>
+        <el-col class="coral-title" :offset="1" :span="2">
+          <div>潜爱护礁</div>
+          <div class="coral-title-line"></div>
+        </el-col>
+      </el-row>
+      <el-row class="intro-text">
+        <el-col class="zuoYe" :offset="2" :span="11">
+          “潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁
+          <br />保护区建立等三个部分的珊瑚保育项目。目前项目正在建立一条百
+          <br />米长的珊瑚观光带为目标，通过创建歉岁员珊瑚保护参与体系，同
+          <br />时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊
+          <br />瑚，最终建设有深圳特色的珊瑚礁保护区域提供和范例。
+        </el-col>
+        <el-col class="zuoYe" :offset="1" :span="10">
+          <div>
+            <span class="mar-right intro-text-height">
+              <img src="../assets/home/yuan2.png" alt />
+            </span>千名潜水志愿者参与，最大程度培养珊瑚保育公民科学家
+          </div>
+          <div>
+            <span class="mar-right intro-text-height">
+              <img src="../assets/home/yuan2.png" alt />
+            </span>打捞海底垃圾1.7顿，收集渔网2000多米
+          </div>
+          <div>
+            <span class="mar-right intro-text-height">
+              <img src="../assets/home/yuan2.png" alt />
+            </span>种植5802株珊瑚，救助残肢257株珊瑚
+          </div>
+          <div>
+            <span class="mar-right intro-text-height">
+              <img src="../assets/home/yuan2.png" alt />
+            </span>已建立2个海上珊瑚试点保护区
+          </div>
+        </el-col>
+      </el-row>
+    </el-row>
+    <el-row>
+      <el-row>
+        <el-col class="coral-title" :offset="1" :span="2">
+          <div>主要活动</div>
+          <div class="coral-title-line"></div>
+        </el-col>
+      </el-row>
+      <el-row class="text-align all-activities">
+        <div class="one-activities">
+          <div class="activity-card" @mouseenter="showTheBg1=true;" @mouseleave="showTheBg1=false;">
+            <img v-show="showTheBg1" class="activity_bg" src="../assets/home/com_bg.png" alt />
+            <span class="activity-text" v-show="showTheBg1">
+              残肢培育：
+              <br />搜集珊瑚碎片，
+              <br />暂养在苗圃，
+              <br />回播到自然礁石
+            </span>
+            <img v-show="!showTheBg1" src="../assets/home/activity1.png" alt />
+          </div>
+          <div class="activity-title">残肢培育</div>
+        </div>
+        <div class="one-activities">
+          <div class="activity-card" @mouseenter="showTheBg2=true;" @mouseleave="showTheBg2=false;">
+            <img v-show="showTheBg2" class="activity_bg" src="../assets/home/com_bg.png" alt />
+            <span class="activity-text" v-show="showTheBg2">
+              珊瑚普查：
+              <br />底栖动物、
+              <br />经济型鱼类、
+              <br />珊瑚覆盖率调查
+            </span>
+            <img v-show="!showTheBg2" src="../assets/home/activity2.png" alt />
+          </div>
+          <div class="activity-title">珊瑚普查</div>
+        </div>
+        <div class="one-activities">
+          <div class="activity-card" @mouseenter="showTheBg3=true;" @mouseleave="showTheBg3=false;">
+            <img v-show="showTheBg3" class="activity_bg" src="../assets/home/com_bg.png" alt />
+            <span class="activity-text" v-show="showTheBg3">
+              生境维护：
+              <br />海底捡垃圾，
+              <br />搜集渔网，
+              <br />台风后水底巡查
+            </span>
+            <img v-show="!showTheBg3" src="../assets/home/activity3.png" alt />
+          </div>
+          <div class="activity-title">生态维护</div>
+        </div>
+        <div class="one-activities">
+          <div class="activity-card" @mouseenter="showTheBg4=true;" @mouseleave="showTheBg4=false;">
+            <img v-show="showTheBg4" class="activity_bg" src="../assets/home/com_bg.png" alt />
+            <span class="activity-text" v-show="showTheBg4">
+              水文观测：
+              <br />水质、透光率、水温检测
+            </span>
+            <img v-show="!showTheBg4" src="../assets/home/activity4.png" alt />
+          </div>
+          <div class="activity-title">水文观测</div>
+        </div>
+        <div class="one-activities">
+          <div class="activity-card" @mouseenter="showTheBg5=true;" @mouseleave="showTheBg5=false;">
+            <img v-show="showTheBg5" class="activity_bg" src="../assets/home/com_bg.png" alt />
+            <span class="activity-text" v-show="showTheBg5">
+              珊瑚多样性监测：
+              <br />监测珊瑚礁生物多样性
+            </span>
+            <img v-show="!showTheBg5" src="../assets/home/activity5.png" alt />
+          </div>
+          <div class="activity-title">珊瑚多样性监测</div>
+        </div>
+      </el-row>
+    </el-row>
+
+    <el-row class="noShowInPhone">
+      <el-row>
+        <el-col class="coral-title" :offset="1" :span="2">
+          <div>珊瑚案列</div>
+          <div class="coral-title-line"></div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="10" :span="4" class="example-title line-height">“蓝35号” 珊瑚档案</el-col>
+      </el-row>
+
+      <el-row>
+        <el-col class="example-carousel" :offset="2" :span="20">
+          <el-row>
+            <el-col :offset="4" :span="9">
+              <div>
+                <el-carousel
+                  height="400px"
+                  :autoplay="false"
+                  arrow="never"
+                  indicator-position="none"
+                >
+                  <el-carousel-item v-for="(item,index) in exampleData" :key="index">
+                    <img :src="item.url" alt />
+                  </el-carousel-item>
+                </el-carousel>
+              </div>
+            </el-col>
+
+            <el-col :offset="3" :span="8">
+              <div>
+                <div class="example-one-msg">
+                  <span class="mar-right">
+                    <img class="example-one-img" src="../assets/home/coral.png" alt />
+                  </span>品种：十字牡丹
+                </div>
+                <div class="example-one-msg">
+                  <span class="mar-right">
+                    <img class="example-one-img" src="../assets/home/positon.png" alt />
+                  </span>位置：深圳大鹏-苗圃1号-8区
+                </div>
+                <div class="intro-line">
+                  <img src="../assets/home/intro_line.png" alt />
+                </div>
+
+                <div class="example-one-msg">
+                  <span class="example-one-margin">面积：{{examSize}}平方厘米</span>
+                </div>
+                <div class="example-one-msg">
+                  <span class="example-one-margin">拍摄时间：{{examTime}}</span>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col class="time-chart-title" :offset="1" :span="2">
+          <div>珊瑚面积变化</div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="2" :span="20">
+          <div id="time-char-div" @click="setPoint">
+            <img class="time-chart" src="../assets/home/time_char.png" alt />
+            <img id="time-line" src="../assets/home/time_choose.png" alt />
+            <div id="time-msg">
+              {{examTime}}
+              <br />
+              {{examSize}}
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </el-row>
+
+    <el-row>
+      <el-col class="coral-title" :offset="1" :span="2">
+        <div>珊瑚数据</div>
+        <div class="coral-title-line"></div>
+      </el-col>
+    </el-row>
+    <seaWave></seaWave>
+    <el-row id="qinaiIntro">
+      <el-row>
+        <el-col class="do-you-know" :offset="2" :span="20">
+          你知道吗，每日有
+          <span class="know-big">1.2万</span>株珊瑚从地球上消失
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col class="konw-big-text" :offset="9" :span="6">潜爱正在行动......</el-col>
+      </el-row>
+      <el-row class="konw-margin">
+        <el-col :offset="5" :span="5" class="know-text">
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />
+          </span>已暂养
+          <span class="konw-big-text">1.2万</span>株珊瑚
+        </el-col>
+        <el-col :offset="4" :span="5" class="know-text">
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />
+          </span>已回播
+          <span class="konw-big-text">1.2万</span>株珊瑚
+        </el-col>
+      </el-row>
+      <el-row class="konw-margin">
+        <el-col :offset="5" :span="5" class="know-text">
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />
+          </span>已建立
+          <span class="konw-big-text">6</span>个珊瑚苗圃
+        </el-col>
+
+        <el-col :offset="4" :span="5" class="know-text">
+          <span class="mar-right">
+            <img src="../assets/home/yuan2.png" alt />
+          </span> 已建立
+          <span class="konw-big-text">257</span>份珊瑚档案
+        </el-col>
+      </el-row>
+    </el-row>
+    <el-row>
+      <el-col class="com-to-us" :offset="9" :span="6">
+        <span class="regist-btn comToUs-btn">立即加入我们</span>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col class="coral-title" :offset="1" :span="2">
+        <div>潜爱站点</div>
+        <div class="coral-title-line"></div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <div>
+        <img class="station-img" src="../assets/home/station.png" alt />
+      </div>
+    </el-row>
+
+    <el-row class="di-tu">
+      <div class="footer-bg">
+        <el-row>
+          <el-col :offset="1" :span="2">
+            <div class="footer-title">支持单位</div>
+            <div class="footer-title-line"></div>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col>
+            <swiper :options="swiperOption">
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/1.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/2.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/3.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/4.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/5.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/6.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/7.png" alt />
+              </swiperSlide>
+              <swiperSlide>
+                <img class="ssImg" src="../assets/home/org/8.png" alt />
+              </swiperSlide>
+
+              <!-- <div class="swiper-pagination" slot="pagination"></div> -->
+              <div class="swiper-button-prev" slot="button-prev"></div>
+              <div class="swiper-button-next" slot="button-next"></div>
+            </swiper>
+          </el-col>
+        </el-row>
+      </div>
+    </el-row>
+    <!-- 登陆弹窗 -->
+    <el-dialog title="登陆" :visible.sync="loginData.visible" width="400px" class="login-dialog">
+      <div v-loading="LoginLoading" element-loading-text="正在登陆">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          class="login-input"
+          :model="loginData"
+          :rules="loginData.rules"
+        >
+          <el-form-item label="工号" prop="user">
+            <el-input v-model="loginData.user"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pwd">
+            <el-input v-model="loginData.pwd" show-password></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <el-button type="primary" @click="registeredData.visible = true" class="regise-btn">注册</el-button>
+          <el-button @click="cancelLogin">取 消</el-button>
+          <el-button type="primary" @click="login">确 定</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- 注册弹窗 -->
+    <el-dialog title="注册" :visible.sync="registeredData.visible" width="400px" class="login-dialog">
+      <div v-loading="RegistLoading" element-loading-text="正在注册">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          class="regise-input"
+          :model="registeredData"
+          :rules="registeredData.rules"
+        >
+          <el-form-item label="工号" prop="work_no">
+            <el-input v-model="registeredData.work_no"></el-input>
+          </el-form-item>
+          <el-form-item label="名字" prop="username">
+            <el-input v-model="registeredData.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="pwd">
+            <el-input v-model="registeredData.pwd" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="registeredData.email"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <el-button @click="cancelRegistered">取 消</el-button>
+          <el-button class="regise-sure-btn" type="primary" @click="registered">确 定</el-button>
+          <!-- <el-button @click="registered.visible = true">注册</el-button> -->
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import parallax1 from "../components/parallax/parallax1.vue";
+import * as Api from "../api/api";
 import seaWave from "../components/seaWave.vue";
+import { Message, Loading } from "element-ui";
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   name: "login",
   components: {
-    parallax1,
-    seaWave
+    seaWave,
+    swiper,
+    swiperSlide
   },
 
   data() {
     return {
-      vedioCanPlay: false,
+      swiperOption: {
+        slidesPerView: 4,
+        spaceBetween: 30,
+        // centeredSlides: true,
+        loop: true,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        }
+      },
+
+      isShowVideo: false,
+      isInCloseVideo: false,
+      isVideoPause: false,
+      showWeibo: false,
+      showWeixin: false,
+      showTheBg1: false,
+      showTheBg2: false,
+      showTheBg3: false,
+      showTheBg4: false,
+      showTheBg5: false,
       fixStyle: "",
+
+      //loading动画
+      LoginLoading: false,
+      RegistLoading: false,
 
       lunboheight: "500px",
       exhibitions: [],
       codelabs: [],
       blogs: [],
       cardspan: 7,
-      videoHeight: null
+      videoHeight: null,
+      // 登陆
+      loginData: {
+        visible: false,
+        logoutVisible: false,
+        isLogin: false,
+        currentUserName: "lintean",
+        currentUserNo: "",
+        currentUserId: "",
+        currentUserEmail: "",
+        user: "",
+        pwd: "",
+        rules: {
+          user: [
+            {
+              required: true,
+              message: "请输入工号",
+              trigger: "blur"
+            }
+          ],
+          pwd: [
+            {
+              required: true,
+              message: "请输入密码",
+              trigger: "blur"
+            }
+          ]
+        }
+      },
+      registeredData: {
+        visible: false,
+        work_no: "",
+        username: "",
+        pwd: "",
+        email: "",
+
+        rules: {
+          work_no: [
+            {
+              required: true,
+              message: "请输入工号",
+              trigger: "blur"
+            }
+          ],
+          username: [
+            {
+              required: true,
+              message: "请输入用户名字",
+              trigger: "blur"
+            }
+          ],
+          pwd: [
+            {
+              required: true,
+              message: "请输入密码",
+              trigger: "blur"
+            }
+          ],
+          email: [
+            {
+              required: true,
+              message: "请输入邮箱",
+              trigger: "blur"
+            }
+          ]
+        }
+      },
+      examSize: "223.4",
+      examTime: "2018.4.10",
+      exampleData: [
+        {
+          url: "http://dayy.xyz/resource/example/1.png",
+          size: "223.4",
+          time: "2018.4.10"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/2.jpg",
+          size: "235.6",
+          time: "2018.5.09"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/3.jpg",
+          size: "240.2",
+          time: "2018.6.09"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/4.jpg",
+          size: "242.5",
+          time: "2018.6.17"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/5.jpg",
+          size: "243.2",
+          time: "2018.7.01"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/6.jpg",
+          size: "250.4",
+          time: "2018.7.28"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/7.jpg",
+          size: "254.6",
+          time: "2018.11.17"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/8.jpg",
+          size: "260.3",
+          time: "2018.12.29"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/9.jpg",
+          size: "268.4",
+          time: "2019.3.02"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/10.jpg",
+          size: "278.5",
+          time: "2019.3.17"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/11.jpg",
+          size: "279.1",
+          time: "2019.4.06"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/12.jpg",
+          size: "280.5",
+          time: "2019.6.02"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/13.jpg",
+          size: "284.6",
+          time: "2019.6.22"
+        },
+        {
+          url: "http://dayy.xyz/resource/example/14.jpg",
+          size: "288.1",
+          time: "2019.8.24"
+        }
+      ]
     };
   },
-  computed: {
-    img1() {
-      return "https://www.dive4love.org/wp-content/uploads/2018/12/LOGO57.png";
-    },
-    PATH_TO_MP4: function() {
-      // return "https://s3.pstatp.com/aweme/resource/web/static/image/index/tvc-v3_4138031.mp4";
-      return "http://dayy.xyz/resource/dy.mp4";
-    }
-  },
+  computed: {},
   methods: {
-    canplay() {
-      this.vedioCanPlay = true;
+    // canplay() {
+    //   this.vedioCanPlay = true;
+    // },
+    login() {
+      let _this = this;
+      _this.LoginLoading = true;
+      //调用接口 用户登陆
+      Api.Login(this.loginData.user, this.loginData.pwd)
+        .then(res => {
+          //vuex 用户信息
+          _this.$store.commit("setUserInforFromAppVue", res.data.data);
+          //   console.log("Login：", res);
+          if (res.data.status === 200) {
+            // _this.recordLoginData(res);
+            _this.loginData.isLogin = true;
+            _this.loginData.visible = false;
+            _this.loginData.currentUserName = res.data.data.userInfo.username;
+            _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
+            _this.loginData.currentUserEmail = res.data.data.userInfo.email;
+            _this.loginData.isLogin = true;
+            Message({
+              message: "用户登陆 成功",
+              center: true,
+              type: "success",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            Message({
+              message: res.data.msg,
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.LoginLoading = false;
+
+          Message({
+            message: "账号密码不正确 " + err,
+            center: true,
+            type: "warning",
+            showClose: true,
+            customClass: "zZindex"
+          });
+        });
+    },
+    registered() {
+      let _this = this;
+      //掉用接口 用户注册
+      _this.RegistLoading = true;
+      Api.newUser(
+        this.registeredData.work_no,
+        this.registeredData.username,
+        this.registeredData.pwd,
+        this.registeredData.email
+      )
+        .then(res => {
+          // console.log("registered：", res.data.status);
+          if (res.data.status === 200) {
+            this.registeredData.visible = false;
+            (_this.RegistLoading = false),
+              Message({
+                message: "用户注册 成功",
+                center: true,
+                type: "success",
+                showClose: true,
+                customClass: "zZindex"
+              });
+          } else {
+            Message({
+              message: res.data.msg,
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+        })
+        .catch(err => {
+          _this.RegistLoading = false;
+          console.log("registered：", err);
+          if (err.response.status == 400) {
+            Message({
+              message: "工号已存在",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else if (err.response.status == 403) {
+            Message({
+              message: "请先登陆,才能注册新用户",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            Message({
+              message: "注册失败",
+              center: true,
+              type: "warning",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          }
+          console.log(err);
+        });
+    },
+    logout() {
+      let _this = this;
+      //调用接口 注销登陆
+      Api.Logout()
+        .then(res => {
+          //   console.log("Logout：", res);
+
+          if (res.data.status === 200) {
+            _this.loginData.isLogin = false;
+            _this.loginData.visible = true;
+            Message({
+              message: "注销登陆 成功",
+              center: true,
+              type: "success",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            alert(res.data.msg);
+          }
+        })
+        .catch(err => {
+          Message({
+            message: "注销登陆 失败",
+            center: true,
+            type: "warning",
+            showClose: true,
+            customClass: "zZindex"
+          });
+          _this.handleError(err);
+        });
+    },
+    cancelLogin() {
+      this.loginData.visible = false;
+      Message({
+        message: "未登录",
+        center: true,
+        showClose: true,
+        customClass: "zZindex"
+      });
+    },
+    changeRoute(index) {
+      if (index == "2-1") {
+        this.$router.push("/manage/coralWork");
+      } else if (index == "1") {
+        this.$router.push("/manage/user");
+      }
+    },
+    cancelRegistered() {
+      this.registeredData.visible = false;
+      Message({
+        message: "取消注册",
+        center: true,
+        showClose: true,
+        customClass: "zZindex"
+      });
+    },
+
+    changeIsShowVideo() {
+      let _this = this;
+      _this.isVideoPause = false;
+      this.isShowVideo = !this.isShowVideo;
+      var video = document.getElementById("showVideo");
+      if (this.isShowVideo) {
+        video.className = "intro-video";
+        video.play();
+      } else {
+        video.className = "intro-video-close";
+        video.pause();
+        _this.isInCloseVideo = true;
+        _this.isShowVideo = !_this.isShowVideo;
+        setTimeout(function() {
+          _this.isInCloseVideo = false;
+          _this.isShowVideo = !_this.isShowVideo;
+          video.pause();
+        }, 1000);
+      }
+
+      // if (_this.isShowVideo) {
+      //   video.play();
+      // } else {
+      //   video.pause();
+      // }
+    },
+    //粉色横条 微博微信 显示
+    hoverChang(ind) {
+      var title = document.getElementById("introdus-title");
+      var wei =
+        ind === 1
+          ? document.getElementById("introdus-weibo")
+          : document.getElementById("introdus-weixin");
+      ind === 1 ? (this.showWeibo = true) : (this.showWeixin = true);
+      title.style.width = "25%";
+      wei.style.width = "50%";
+    },
+    leaveChang(ind) {
+      var title = document.getElementById("introdus-title");
+      var wei =
+        ind === 1
+          ? document.getElementById("introdus-weibo")
+          : document.getElementById("introdus-weixin");
+      ind === 1 ? (this.showWeibo = false) : (this.showWeixin = false);
+      title.style.width = "50%";
+      wei.style.width = "25%";
+    },
+    setPoint(event) {
+      let _this = this;
+      var theCharImg = document.getElementById("time-char-div");
+      var time = document.getElementById("time-line");
+      var timeMsg = document.getElementById("time-msg");
+      var activityImg = document.getElementsByClassName("is-active");
+      var bbox = theCharImg.getBoundingClientRect();
+
+      var left =
+        ((event.clientX - bbox.left) / document.body.clientWidth) * 100 + 6;
+      //通过改变css 中的left 来改变位置
+
+      let index_pointer = 0;
+      console.log(left);
+      if (left > 17 && left < 21) {
+        index_pointer = 0;
+        left = 19.297;
+      } else if (left > 22 && left < 23.5) {
+        index_pointer = 1;
+        left = 22.95;
+      } else if (left > 25 && left < 25.5) {
+        index_pointer = 2;
+        left = 25.41;
+      } else if (left > 25.7 && left < 26.3) {
+        index_pointer = 3;
+        left = 26.194;
+      } else if (left > 28.3 && left < 29.7) {
+        index_pointer = 4;
+        left = 29.224;
+      } else if (left > 30.2 && left < 31.7) {
+        index_pointer = 5;
+        left = 30.739;
+      } else if (left > 45 && left < 46.4) {
+        index_pointer = 6;
+        left = 46.199;
+      } else if (left > 46.7 && left < 48.5) {
+        index_pointer = 7;
+        left = 47.197;
+      } else if (left > 55 && left < 56.8) {
+        index_pointer = 8;
+        left = 55.97;
+      } else if (left > 59.2 && left < 61.8) {
+        index_pointer = 9;
+        left = 60.15;
+      } else if (left > 62.6 && left < 67.3) {
+        index_pointer = 10;
+        left = 64.54;
+      } else if (left > 70 && left < 74.5) {
+        index_pointer = 11;
+        left = 73.94;
+      } else if (left > 75.1 && left < 78.5) {
+        index_pointer = 12;
+        left = 75.56;
+      } else if (left > 80 && left < 85) {
+        index_pointer = 13;
+        left = 83.14;
+      } else {
+        index_pointer = -1;
+      }
+      time.style.left = left + "%";
+      timeMsg.style.left = left + 3 + "%";
+      if (index_pointer >= 0) {
+        _this.examSize = _this.exampleData[index_pointer].size;
+        _this.examTime = _this.exampleData[index_pointer].time;
+        //设置图片的url
+        activityImg[0].children[0].src = _this.exampleData[index_pointer].url;
+      } else {
+        _this.examSize = "";
+        _this.examTime = "这天无活动";
+      }
     }
   },
   mounted: function() {
     //对 window 对象的 onresize 事件的监听。
     //当窗口大小更改时，程序同步修改 video的尺寸，
-    //使得视频的最窄的边始终撑满浏览器的窗口，而长的边左右两边被均匀地裁减。
+    //适配处理
     let _this = this;
+    let preAndNext = 1000;
     window.onresize = () => {
       const windowWidth = document.body.clientWidth;
-      const windowHeight = document.body.clientHeight;
-      _this.videoHeight = windowWidth * 0.41875;
-
+      // let thHome = $(".the-home")[0];
+      // let weiwei = $(".weixin-weibo")[0];
+      // let footerSwiper = $(".swiper-container")[0];
+      if (windowWidth < 1350) {
+        // thHome.style.fontSize = "15px";
+        // weiwei.style.marginTop = "24.6%";
+        // footerSwiper.style.width = "80%";
+        preAndNext = 800;
+        // let swiperSlideImg = $(".ssImg");
+        // for (let i = 0; i < swiperSlideImg.length; i++) {
+        // swiperSlideImg[i].style.maxWidth = "250px";
+        // }
+      } else if (windowWidth < 1600) {
+        // thHome.style.fontSize = "20px";
+        // weiwei.style.marginTop = "24.6%";
+        // footerSwiper.style.width = "79%";
+        preAndNext = 800;
+      }
+      _this.videoHeight = windowWidth * 0.677;
       _this.fixStyle = {
-        height: windowWidth * 0.41875 + "px",
+        height: windowWidth * 0.677 + "px",
         width: windowWidth + "px"
-        // "margin-left": "initial"
       };
     };
     window.onresize();
-    let videoH = $(".fillWidth")[0];
-    // 关闭视频的声音。
-    videoH.muted = true;
+
+    var video = document.getElementById("showVideo");
+    video.pause();
+    video.addEventListener("pause", function() {
+      // console.log("pause");
+      _this.isVideoPause = true;
+    });
+    video.addEventListener("play", function() {
+      //  console.log("play");
+      _this.isVideoPause = false;
+    });
 
     // 获取窗口滚动的距离
     window.onscroll = () => {
+      // console.log(document.body.scrollHeight)
       let scrolDis =
         document.documentElement.scrollTop || document.body.scrollTop;
       let videoE = $(".app-header")[0];
-      if (scrolDis > _this.videoHeight - 60) {
-        videoE.style.background = "rgba(255, 255, 255)";
-        videoE.style.color = "black";
-      } else {
-        videoE.style.background = "rgba(255, 255, 255, 0.075)";
-        videoE.style.color = "white";
-      }
+      let prevBtn = $(".swiper-button-prev")[0];
+      let nextBtn = $(".swiper-button-next")[0];
+      // if (scrolDis > document.body.scrollHeight - preAndNext) {
+      //   prevBtn.style.display = "block";
+      //   nextBtn.style.display = "block";
+      // } else {
+      //   prevBtn.style.display = "none";
+      //   nextBtn.style.display = "none";
+      // }
+      //下面可以加动画的
+      // if (scrolDis > _this.videoHeight * 0.6) {
+      //   videoE.style.background = "rgba(0, 0, 0, 0.075)";
+      //   videoE.style.color = "black";
+      // } else {
+      videoE.style.background = "rgba(255, 255, 255, 0.075)";
+      videoE.style.color = "white";
+      // }
     };
+    //设置 3d 海浪
     let bgCanvas = document.getElementsByTagName("canvas")[0];
     bgCanvas.style.height = "600px";
   }
 };
 </script>
-<style scoped lang="scss">
-.sea-wave {
-  width: 100%;
-  height: 500px;
-}
-
-.img_wap {
-  padding-bottom: 45%;
-  width: 100%;
-  position: relative;
-}
-
-.img_wap .img-responsive {
-  width: 100%;
-  height: 100%;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.imgcenter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-row {
-  margin-bottom: 1%;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.el-col {
-  margin-bottom: 1%;
-}
-
-.parallax-container {
-  position: relative;
-  overflow: hidden;
-  height: 200px;
-}
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-.coralCrad {
-  height: 100px;
-  background-color: #f0f0f0;
-  margin: 20px auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 20px;
-  box-shadow: 0 3px 0 #f6921e;
-  border-radius: 4px;
-}
-.proCrad:hover {
-  // height: 500px;
-  background: #f0f0f0;
-  box-shadow: 0 0 10px  #aaa8a8;
-}
-.proCrad {
-  max-width: 350px;
-  height: 450px;
-  margin: 20px auto;
-  background: #fff;
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-out;
-  border-radius: 1em 1em 0.5em 0.5em;
-  border-radius: 4px;
-}
+<style scoped src="./home.css">
 </style>
 
 
-
-
-// WEBPACK FOOTER //
-// src/views/index.vue
