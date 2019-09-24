@@ -111,14 +111,13 @@
         </el-row>
         <el-row class="intro-text">
           <el-col :offset="3" :span="13" class="line-height">
-            &nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”，是由大鹏新区管委会和磨房网共同发起的民间珊瑚保育
-            <br />组织，倡导并践行珊瑚礁生态的自然恢复，构建海洋意识教育体系，传播
-            <br />海洋保护理念和方法，激发公众、企业、政府个各类社会组织的跨界参与。
-            <br />共同推进珊瑚保护机制的建设，为珊瑚礁生态的恢复营造更好的条件。
-            <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”经过7年的珊瑚保育实践探索，以“种珊瑚，种人心”为
-            <br />口号，衍生了“潜爱护礁”和”潜爱课堂“两大核心公益项目，以此领跑
-            <br />海洋意识教育传播，成为珊瑚保育的民间专业组织。
-            <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”项目落地于2012年，正式注册于2014年。
+            <div class="text-width">
+              &nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”，是由大鹏新区管委会和磨房网共同发起的民间珊瑚保育组织，倡导并践行珊瑚礁生态的自然恢复，构建海洋意识教育体系，传播海洋保护理念和方法，激发公众、企业、政府个各类社会组织的跨界参与。共同推进珊瑚保护机制的建设，为珊瑚礁生态的恢复营造更好的条件。
+              <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”经过7年的珊瑚保育实践探索，以“种珊瑚，种人心”为口号，
+              衍生了“潜爱护礁”和”潜爱课堂“两大核心公益项目，以此领跑海洋意
+              识教育传播，成为珊瑚保育的民间专业组织。
+              <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”项目落地于2012年，正式注册于2014年。
+            </div>
           </el-col>
           <el-col class="tips-video" :offset="1" :span="7">
             <img src="../assets/home/tips.png" alt />
@@ -185,11 +184,9 @@
       </el-row>
       <el-row class="intro-text">
         <el-col class="zuoYe" :offset="2" :span="11">
-          “潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁
-          <br />保护区建立等三个部分的珊瑚保育项目。目前项目正在建立一条百
-          <br />米长的珊瑚观光带为目标，通过创建歉岁员珊瑚保护参与体系，同
-          <br />时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊
-          <br />瑚，最终建设有深圳特色的珊瑚礁保护区域提供和范例。
+          <div
+            class="text-width"
+          >“潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁保护区建立等三个部分的珊瑚保育项目。目前项目正在建立一条百米长的珊瑚观光带为目标，通过创建歉岁员珊瑚保护参与体系，同时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊瑚，最终建设有深圳特色的珊瑚礁保护区域提供和范例。</div>
         </el-col>
         <el-col class="zuoYe" :offset="1" :span="10">
           <div>
@@ -227,7 +224,7 @@
           <div class="activity-card" @mouseenter="showTheBg1=true;" @mouseleave="showTheBg1=false;">
             <img v-show="showTheBg1" class="activity_bg" src="../assets/home/com_bg.png" alt />
             <span class="activity-text" v-show="showTheBg1">
-              残肢培育：
+              <span class="activity-card-title">残肢培育：</span>
               <br />搜集珊瑚碎片，
               <br />暂养在苗圃，
               <br />回播到自然礁石
@@ -240,7 +237,7 @@
           <div class="activity-card" @mouseenter="showTheBg2=true;" @mouseleave="showTheBg2=false;">
             <img v-show="showTheBg2" class="activity_bg" src="../assets/home/com_bg.png" alt />
             <span class="activity-text" v-show="showTheBg2">
-              珊瑚普查：
+              <span class="activity-card-title">珊瑚普查：</span>
               <br />底栖动物、
               <br />经济型鱼类、
               <br />珊瑚覆盖率调查
@@ -253,7 +250,7 @@
           <div class="activity-card" @mouseenter="showTheBg3=true;" @mouseleave="showTheBg3=false;">
             <img v-show="showTheBg3" class="activity_bg" src="../assets/home/com_bg.png" alt />
             <span class="activity-text" v-show="showTheBg3">
-              生境维护：
+              <span class="activity-card-title">生境维护：</span>
               <br />海底捡垃圾，
               <br />搜集渔网，
               <br />台风后水底巡查
@@ -266,7 +263,7 @@
           <div class="activity-card" @mouseenter="showTheBg4=true;" @mouseleave="showTheBg4=false;">
             <img v-show="showTheBg4" class="activity_bg" src="../assets/home/com_bg.png" alt />
             <span class="activity-text" v-show="showTheBg4">
-              水文观测：
+              <span class="activity-card-title">水文观测：</span>
               <br />水质、透光率、水温检测
             </span>
             <img v-show="!showTheBg4" src="../assets/home/activity4.png" alt />
@@ -277,8 +274,10 @@
           <div class="activity-card" @mouseenter="showTheBg5=true;" @mouseleave="showTheBg5=false;">
             <img v-show="showTheBg5" class="activity_bg" src="../assets/home/com_bg.png" alt />
             <span class="activity-text" v-show="showTheBg5">
-              珊瑚多样性监测：
-              <br />监测珊瑚礁生物多样性
+              <span class="activity-card-title">
+                珊瑚多样性监测：
+                <br />监测珊瑚礁生物多样性
+              </span>
             </span>
             <img v-show="!showTheBg5" src="../assets/home/activity5.png" alt />
           </div>
@@ -385,13 +384,13 @@
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />
           </span>已暂养
-          <span class="konw-big-text">1.2万</span>株珊瑚
+          <span class="konw-big-text">324</span>株珊瑚
         </el-col>
         <el-col :offset="4" :span="5" class="know-text">
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />
           </span>已回播
-          <span class="konw-big-text">1.2万</span>株珊瑚
+          <span class="konw-big-text">120</span>株珊瑚
         </el-col>
       </el-row>
       <el-row class="konw-margin">
@@ -399,14 +398,14 @@
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />
           </span>已建立
-          <span class="konw-big-text">6</span>个珊瑚苗圃
+          <span class="konw-big-text">123</span>个珊瑚档案
         </el-col>
 
         <el-col :offset="4" :span="5" class="know-text">
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />
-          </span> 已建立
-          <span class="konw-big-text">257</span>份珊瑚档案
+          </span>回播成活率
+          <span class="konw-big-text">20.2%</span>
         </el-col>
       </el-row>
     </el-row>
@@ -473,8 +472,14 @@
       </div>
     </el-row>
     <!-- 登陆弹窗 -->
-    <el-dialog title="登陆" :visible.sync="loginData.visible" width="400px" class="login-dialog">
-      <div v-loading="LoginLoading" element-loading-text="正在登陆">
+    <el-dialog
+      :visible.sync="loginData.visible"
+      width="30%"
+      custom-class="el-dialog"
+      class="login-dialog"
+    >
+      <div class="myDialog" v-loading="LoginLoading" element-loading-text="正在登陆">
+        <div class="dialog-header">登陆账号</div>
         <el-form
           label-position="right"
           label-width="80px"
@@ -489,17 +494,22 @@
             <el-input v-model="loginData.pwd" show-password></el-input>
           </el-form-item>
         </el-form>
-        <div slot="footer">
-          <el-button type="primary" @click="registeredData.visible = true" class="regise-btn">注册</el-button>
-          <el-button @click="cancelLogin">取 消</el-button>
-          <el-button type="primary" @click="login">确 定</el-button>
+        <div>
+          <el-button type="text" @click="registeredData.visible = true" class="regise-btn">注册账号</el-button>
         </div>
+        <div style="display: flex;justify-content: center;">
+          <!-- <el-button @click="cancelLogin">取 消</el-button> -->
+          <div class="sign-in-btn" @click="login">登陆</div>
+        </div>
+
+        <div style="margin-top: 2%;font-size: 20px;">手机验证码登陆</div>
       </div>
     </el-dialog>
 
     <!-- 注册弹窗 -->
-    <el-dialog title="注册" :visible.sync="registeredData.visible" width="400px" class="login-dialog">
-      <div v-loading="RegistLoading" element-loading-text="正在注册">
+    <el-dialog :visible.sync="registeredData.visible" width="400px" class="login-dialog">
+      <div class="myDialog" v-loading="RegistLoading" element-loading-text="正在注册">
+        <div class="dialog-header">注册账号</div>
         <el-form
           label-position="right"
           label-width="80px"
@@ -510,23 +520,30 @@
           <el-form-item label="工号" prop="work_no">
             <el-input v-model="registeredData.work_no"></el-input>
           </el-form-item>
-          <el-form-item label="名字" prop="username">
-            <el-input v-model="registeredData.username"></el-input>
-          </el-form-item>
           <el-form-item label="密码" prop="pwd">
             <el-input v-model="registeredData.pwd" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="名字" prop="username">
+            <el-input v-model="registeredData.username"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="registeredData.email"></el-input>
           </el-form-item>
         </el-form>
-        <div slot="footer">
+        <div slot="footer" style="display: flex;justify-content: center;">
           <el-button @click="cancelRegistered">取 消</el-button>
-          <el-button class="regise-sure-btn" type="primary" @click="registered">确 定</el-button>
+          <div class="regise-sure-btn" @click="registered" round>注册</div>
           <!-- <el-button @click="registered.visible = true">注册</el-button> -->
         </div>
       </div>
     </el-dialog>
+    <div>
+      <a-back-top />
+      <strong style="color: rgba(64, 64, 64, 0.6)"></strong>
+    </div>
+    <div id="footer">
+      <img class="footer-svg" src="../assets/home/bubble.svg" alt />
+    </div>
   </div>
 </template>
 <script>

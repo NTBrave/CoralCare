@@ -25,12 +25,13 @@ export default new Router({
             name: "manage",
             component: () =>
                 import ("../pages/manage"),
-            children: [{
-                    path: "/manage/doc",
-                    name: "doc",
-                    component: () =>
-                        import ("../pages/doc.vue")
-                },
+            children: [
+            //     {
+            //         path: "/manage/doc",
+            //         name: "doc",
+            //         component: () =>
+            //             import ("../pages/doc.vue")
+            //     },
                 {
                     //需要跳转的页面
                     path: "/manage/search",

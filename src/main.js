@@ -12,7 +12,7 @@ import "ant-design-vue/dist/antd.css";
 import "echarts/lib/chart/bar";
 import "echarts/lib/component/tooltip";
 import ECharts from "vue-echarts";
-import globalDirective from "./components/directive";
+import globalDirective from "./util/directive";
 
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;

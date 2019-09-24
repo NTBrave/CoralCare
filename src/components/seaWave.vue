@@ -28,8 +28,8 @@
 
 
 	<script type="module">
-import * as THREE from "./threeD/three.module.js";
-// import Stats from './jsm/libs/stats.module.js';
+import * as THREE from "../threeD/three.module.js";
+
 export default {
   name: "Home",
   data() {
