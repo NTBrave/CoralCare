@@ -1,7 +1,13 @@
 <template>
   <nav>
     <div class="nav-box">
-      <calendar-view></calendar-view>
+      <div>
+        <div v-if="isActivity">
+          <calendar-view></calendar-view>
+        </div>
+        <div v-else-if="isCoralRecord"></div>
+        <div v-else></div>
+      </div>
       <div v-if="noSearchPage">
         <el-autocomplete
           style="width:300px;"
@@ -72,7 +78,10 @@ export default {
       LoginLoading: false,
       RegistLoading: false,
       // 手机端 还未完成
-      phone: false
+      phone: false,
+
+      isActivity: true, // 在残枝培育页面显示日历抽屉按钮
+      isCoralRecord: true // 在植株档案页面显示筛选条件
     }
   },
   computed: {

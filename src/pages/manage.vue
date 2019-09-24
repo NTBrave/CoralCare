@@ -22,6 +22,14 @@ export default {
   data() {
     return {}
   },
+  watch: {
+    // '$route.path': function() {
+    //   let url = new RegExp('/manage')
+    //   if (url.test(this.$route.path)) {
+    //     this.$router.push('/manage/main')
+    //   }
+    // }
+  },
   methods: {},
   computed: {
     loginState() {
@@ -31,7 +39,7 @@ export default {
   mounted() {
     // console.log(this.$store)
     if (this.loginState === false) {
-      this.$router.push('./invalid')
+      this.$router.push('/invalid')
     }
   }
 }

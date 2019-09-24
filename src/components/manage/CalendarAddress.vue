@@ -36,7 +36,7 @@
       </div>
       <div class="button-area">
         <div class="activity-button" v-if="ifNewActivity">
-          <el-button round>查看当日活动</el-button>
+          <el-button round @click="dayActivity">查看当日活动</el-button>
           <el-button round @click="newActivity">新建当日活动</el-button>
         </div>
         <div class="hour-choose" v-else>
@@ -120,7 +120,8 @@ const locale = {
 }
 
 import DrawerVue from './Drawer.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+// import requsetApi from '../../api/api'
 
 export default {
   components: {
@@ -128,18 +129,21 @@ export default {
   },
   data() {
     return {
+      address,
+      locale,
+
       bannerHeight: '', // 轮播图片
       addressIndex: 0, // 轮播图片索引
 
-      address,
-      locale,
       chooseDate: '', // 选择活动日期
 
-      dateNumber: '', // 以活动日期和具体时间生成的编号
+      dateNumber_review: '', // 以活动日期生成的查看当日活动编号
+      dateNumber_build: '', // 以活动日期和具体时间生成的新建活动编号
       activityAddress: '', // 活动地点
 
-      ifNewActivity: true, // 是否显示新建活动按钮
       selectHour: '', // 选择具体活动时间
+
+      ifNewActivity: true, // 是否显示新建活动按钮
       isTimeReady: true // 是否能建活动
     }
   },
@@ -153,9 +157,18 @@ export default {
     selectHour: function() {
       // this.submitTimeAddress()
       this.timeReady(this.selectHour)
+    },
+    '$route.path': function() {
+      if (this.$route.path !== '/manage/dayActivity') {
+        this.$refs.drawer.close()
+      } else {
+        this.showDrawer()
+      }
     }
   },
   methods: {
+    ...mapMutations(['setActivity']),
+
     // 点击打开抽屉
     showDrawer() {
       this.$refs.drawer.open()
@@ -178,15 +191,11 @@ export default {
       console.log(value, mode)
     },
 
-    // 时间选择
+    // 日历时间选择
     onSelect(value) {
       // console.log(value)
-
       this.chooseDate = value.format('M月D日  YYYY年')
-      if (this.selectHour < 10) {
-        this.dateNumber = value.format('YYYYMMDD') + 0 + this.selectHour
-      } else this.dateNumber = value.format('YYYYMMDD') + this.selectHour
-      console.log(this.dateNumber)
+      this.dateNumber_review = value.format('YYYYMMDD')
     },
 
     // 新建活动按钮与选择具体时间输入框显示控制
@@ -197,8 +206,13 @@ export default {
     // 选择具体时间后才可以确认新建活动
     timeReady(hourTime) {
       if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
+        if (hourTime < 10) {
+          this.dateNumber_build = this.dateNumber_review + 0 + hourTime
+        } else {
+          this.dateNumber_build = this.dateNumber_review + hourTime
+        }
         this.selectHour = hourTime
-        console.log(this.selectHour)
+        // console.log(this.selectHour)
         this.isTimeReady = false
       } else {
         this.isTimeReady = true
@@ -207,24 +221,40 @@ export default {
 
     // 确定好时间地点后创建活动提交活动编号和地点
     submitTimeAddress() {
-      this.onSelect(moment())
-      let activity = {
-        dateNumber: this.dateNumber,
+      // this.onSelect(moment())
+      let buildActivity = {
+        dateNumber: this.dateNumber_build,
         address: this.activityAddress
       }
 
-      this.$store.commit('setDateNumber', activity)
+      // this.$store.commit('setActivity', buildActivity)
+      this.setActivity(buildActivity)
       this.$refs.drawer.close()
+    },
+
+    // 点击查看当日活动
+    dayActivity() {
+      let reviewActivity = {
+        dateNumber: this.dateNumber_review,
+        address: this.activityAddress
+      }
+      // this.$store.commit('setActivity', reviewActivity)
+      this.setActivity(reviewActivity)
+
+      // requsetApi(url, reviewActivity)
+
+      this.$refs.drawer.close()
+      // this.$router.push('/manage/dayActivity')
     },
 
     // 图片首次加载方法
     imgLoad(idx) {
-      console.log(this.$refs.bannerHeight)
-      console.log(this.$refs.bannerHeight[idx].height)
+      // console.log(this.$refs.bannerHeight)
+      // console.log(this.$refs.bannerHeight[idx].height)
       this.$nextTick(() => {
         // console.log(this.$refs.bannerHeight)
         this.bannerHeight = this.$refs.bannerHeight[idx].bannerHeight
-        console.log(this.$refs.bannerHeight[idx].height)
+        // console.log(this.$refs.bannerHeight[idx].height)
       })
     }
   },
@@ -234,7 +264,12 @@ export default {
       this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
       this.imgLoad(this.addressIndex)
     })
+
     this.onSelect(moment())
+    if (this.$route.path === '/manage/coralWork') {
+      this.showDrawer()
+    }
+    // console.log(this.dateNumber)
   }
 }
 </script>

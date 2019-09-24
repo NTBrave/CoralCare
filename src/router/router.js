@@ -27,6 +27,12 @@ export default new Router({
       component: () => import("../pages/manage"),
       children: [
         {
+          path: "/manage/main",
+          name: "main",
+          alias: "/manage",
+          component: () => import("../pages/coralWork.vue")
+        },
+        {
           path: "/manage/doc",
           name: "doc",
           component: () => import("../pages/doc.vue")
@@ -54,9 +60,12 @@ export default new Router({
           component: () => import("../pages/chart.vue")
         },
         {
-          path: "/manage/coralWork",
-          name: "coralWork",
-          component: () => import("../pages/coralWork.vue")
+          // path: "/manage/coralWork",
+          // name: "coralWork",
+          // component: () => import("../pages/coralWork.vue")
+          path: "/manage/dayActivity",
+          name: "dayActivity",
+          component: () => import("../pages/DayActivity.vue")
         },
 
         {

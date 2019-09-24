@@ -42,17 +42,27 @@ const menus = [
     icon: 'el-icon-edit',
     childs: [
       {
-        name: '残肢培育',
-        disabled: false,
-        url: '/manage/coralWork'
-      },
-      {
-        name: '水文观测',
+        name: '潜爱护礁',
         disabled: true,
         url: ''
       },
       {
+        name: '残枝培育',
+        disabled: false,
+        url: '/manage/dayActivity'
+      },
+      {
         name: '生境维护',
+        disabled: true,
+        url: ''
+      },
+      {
+        name: '珊瑚普查',
+        disabled: true,
+        url: ''
+      },
+      {
+        name: '水文观测',
         disabled: true,
         url: ''
       }
@@ -60,13 +70,19 @@ const menus = [
   },
   {
     name: '珊瑚管理',
-    childs: null,
-    url: '/manage/coralManage',
-    icon: 'el-icon-picture'
+    url: 'null-2',
+    icon: 'el-icon-picture',
+    childs: [
+      {
+        name: '植株档案',
+        disabled: false,
+        url: '/manage/coralManage'
+      }
+    ]
   },
   {
     name: '数据管理',
-    url: 'null-2',
+    url: 'null-3',
     icon: 'el-icon-data-line',
     childs: [
       {
@@ -101,7 +117,7 @@ export default {
     }
   },
   beforeMount() {
-    this.selectedKeys = this.$route.path
+    // this.selectedKeys = this.$route.path
   },
   data() {
     return {

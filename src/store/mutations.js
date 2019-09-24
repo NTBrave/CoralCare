@@ -79,7 +79,7 @@ const mutations = {
   /**
    *   后台管理端
    */
-  setDateNumber(state, activity) {
+  setActivity(state, activity) {
     state.activity = activity;
   }
 };
