@@ -32,11 +32,11 @@ export default new Router({
           alias: "/manage",
           component: () => import("../pages/coralWork.vue")
         },
-        {
-          path: "/manage/doc",
-          name: "doc",
-          component: () => import("../pages/doc.vue")
-        },
+        // {
+        //   path: "/manage/doc",
+        //   name: "doc",
+        //   component: () => import("../pages/doc.vue")
+        // },
         {
           //需要跳转的页面
           path: "/manage/search",
@@ -55,9 +55,9 @@ export default new Router({
           component: () => import("../pages/user.vue")
         },
         {
-          path: "/manage/chart",
-          name: "chart",
-          component: () => import("../pages/chart.vue")
+          path: "/",
+          name: "index",
+          redirect: "/home"
         },
         {
           // path: "/manage/coralWork",

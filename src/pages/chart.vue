@@ -1,39 +1,43 @@
 <template>
   <div class="all-chart" :style="bodySize">
-    <div class="left-chart">
-      <div class="one-numbers">
-        <div class="shahu-num">200</div>
-        <div class="shahu-msg">珊瑚图片总数</div>
+    <div style="height:1px;"></div>
+    <div class="dropdown-style">
+      <span style="margin-right:20px;">选择区域</span>
+   <el-dropdown @command="handleCommand">
+  <span class="el-dropdown-link">
+    {{dropdownKey}}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+     <el-dropdown-item command="所有区域">所有区域</el-dropdown-item>
+    <el-dropdown-item command="深圳大鹏">深圳大鹏</el-dropdown-item>
+    <el-dropdown-item command="镇江某地">镇江某地</el-dropdown-item>
+    <el-dropdown-item command="惠州某地">惠州某地</el-dropdown-item>
+    <el-dropdown-item command="菲律宾某地">菲律宾某地</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+</div>
+    <div style="position:relative;z-index:100">
+      <div class="coralNumber" @click="clickCoral(0)">
+        <div :class="coralClickStyle[0]">当前暂养<span class="innerNum">{{coralNumber[0]}}</span>株珊瑚</div>
+        <div class="bottomTriangle" v-show="coralBottomJudge[0]" id="ss"></div>
       </div>
-      <div class="one-numbers">
-        <div class="shahu-num">60</div>
-        <div class="shahu-msg">珊瑚档案数量</div>
+      <div class="coralNumber" @click="clickCoral(1)">
+        <div :class="coralClickStyle[1]">历史暂养<span class="innerNum">{{coralNumber[1]}}</span>株珊瑚</div>
+        <div class="bottomTriangle" v-show="coralBottomJudge[1]"></div>
       </div>
-      <div class="one-numbers">
-        <div class="shahu-num">32</div>
-        <div class="shahu-msg">暂养次数</div>
+      <div class="coralNumber" @click="clickCoral(2)">
+        <div :class="coralClickStyle[2]">当前回播<span class="innerNum">{{coralNumber[2]}}</span>株珊瑚</div>
+        <div class="bottomTriangle" v-show="coralBottomJudge[2]"></div>
       </div>
-      <div class="one-numbers">
-        <div class="shahu-num">25</div>
-        <div class="shahu-msg">回播次数</div>
+      <div class="coralNumber" @click="clickCoral(3)">
+        <div :class="coralClickStyle[3]">历史回播<span class="innerNum">{{coralNumber[3]}}</span>株珊瑚</div>
+        <div class="bottomTriangle" v-show="coralBottomJudge[3]"></div>
       </div>
     </div>
+    <div style="height:135px;position:relative"></div>
+  
 
-    <div class="right-chart">
-      <div class="one-chart" style>
-        <v-chart :options="polar1" />
-      </div>
-      <div class="one-chart" style>
-        <v-chart :options="polar2" />
-      </div>
-
-      <div class="one-chart">
-        <v-chart :options="polar3" />
-      </div>
-      <div class="one-chart" style>
-        <v-chart :options="polar4" />
-      </div>
-    </div>
+    <component :is="graphId" style=""></component>
   </div>
 </template>
 
@@ -48,11 +52,14 @@ import "echarts/lib/component/legend";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/chart/bar";
 import "echarts/lib/chart/pie";
-
+import firstGraph from "@/components/chart/firstGraph.vue"
+import secondGraph from "@/components/chart/secondGraph.vue"
+import thirdGraph from "@/components/chart/thirdGraph.vue"
+import fourthGraph from "@/components/chart/fourthGraph.vue"
 export default {
-  components: {
-    "v-chart": ECharts
-  },
+  // components: {
+  //   "v-chart": ECharts
+  // },
   name: "chart",
   data() {
     let data = [];
@@ -68,7 +75,12 @@ export default {
       work_no: "",
       email: "",
       username: "",
-
+      dropdownKey:'所有区域',
+      checkList:['深圳大鹏'],
+      graphId:"firstGraph",
+      coralNumber:[17,52,76,2],//新增珊瑚数量
+      coralClickStyle:["coralNumber3","coralNumber2","coralNumber2","coralNumber2"],
+      coralBottomJudge:[true,false,false,false],
       master_dirs: [],
       resource_id: "",
       resource_name: "",
@@ -283,15 +295,34 @@ export default {
     //     (document.body.clientHeight - 90) * 0.475 + "px";
     // }
   },
+  components:{firstGraph,secondGraph,thirdGraph,fourthGraph},
   methods: {
-    updatePublicMsg() {
-      console.log("更新信息");
+    clickCoral(num){
+      for(var i=0;i<=3;i++){
+        this.coralBottomJudge[i]=false;
+        this.coralClickStyle[i]="coralNumber2"
+     
+      }
+      this.coralBottomJudge[num]=true;
+      this.coralClickStyle[num]="coralNumber3";
+      switch(num){
+        case 0:
+          this.graphId="firstGraph";
+          break;
+        case 1:
+          this.graphId="secondGraph";
+          break;
+        case 2:
+          this.graphId="thirdGraph";
+          break;
+        default:
+          this.graphId="fourthGraph"
+          break;
+      }
+
     },
-    goMasterDirs(index) {
-      console.log("去主目录", index);
-    },
-    goUserDirs() {
-      console.log("去个人目录");
+    handleCommand(command){
+      this.dropdownKey=command;
     }
   }
 };
@@ -299,33 +330,26 @@ export default {
 
 
 <style scoped>
-.user-content {
-  /* float: right; */
-  margin: 5% 0 0 30%;
+.dropdown-style{
+  background-color:#00c8c8;
+  border-radius:14px;
+  line-height:28px;
+  width:200px;
+  text-align:center;
+  margin:10px;
+
 }
-.grid-content {
-  float: left;
-  width: 50%;
-  height: 100%;
-}
+
+.el-dropdown-link {
+    cursor: pointer;
+  }
+
 .all-chart {
   width: 800px;
   height: 600px;
-  margin: 60px 0 0 0;
+  /* margin: 60px 0 0 0; */
   background-color: rgba(0, 0, 0, 0.08);
   /* border: 1px solid seagreen; */
-}
-.left-chart {
-  height: 100%;
-  float: left;
-  width: 20%;
-  /* border: 1px solid seagreen; */
-}
-.right-chart {
-  width: 80%;
-  height: 100%;
-  float: right;
-  /* border: 1px solid blue; */
 }
 .echarts {
   width: 420px;
@@ -337,27 +361,41 @@ canvas {
   margin: 0 auto;
   border: 1px solid red;
 }
-.one-chart {
-  float: left;
-  margin: 1% 0 0 1%;
-  width: 48.5%;
-  height: 47.5%;
-  background-color: white;
-}
-.one-numbers {
-  /* float: left; */
-  margin: 4% 0 0 4%;
-  width: 96%;
-  height: 23%;
-  background-color: white;
-}
 
-.shahu-num {
-  font-weight: bold;
-  font-size: 5em;
-  padding-top: 5%;
+.coralNumber{
+  height:150px;
+  float:left;
+  width:25%; 
+  text-align:center;
+  color:white;
 }
-.shahu-msg {
+.coralNumber2{
+   height:100px;
+   width:100%;
+   border-right:1px white solid;
+   line-height:100px;
+   background-color:#00c8c8;
+}
+.coralNumber3{
+   height:100px;
+   width:100%;
+   border-right:1px white solid;
+   line-height:100px;
+   background-color:red;
+}
+.innerNum{
+  font-size:26px;
+  margin:15px;
+}
+.bottomTriangle{
+        height: 0px;
+        border-style: solid;
+        border-width: 20px 20px 0 20px;
+        border-color: red transparent transparent transparent;
+        width: 0px;
+        box-sizing:content-box;
+        margin:auto;
+ 
 }
 </style>  
 

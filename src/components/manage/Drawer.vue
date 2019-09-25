@@ -40,7 +40,7 @@ export default {
 .drawerBoard {
   position: fixed;
   top: 0;
-  left: 200px;
+  left: 9rem;
   width: 100%;
   height: 100%;
   background-color: rgba(0 0 0 0.5);
@@ -79,14 +79,14 @@ export default {
   }
 
   to {
-    left: 200px;
+    left: 9rem;
   }
 }
 
 // 日历关闭动画
 @keyframes hide-Calendar {
   from {
-    left: 200px;
+    left: 9rem;
   }
 
   to {

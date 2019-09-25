@@ -275,14 +275,18 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .ifShowCalendar {
-  width: 10%;
-  min-width: 200px;
-  height: 30px;
+  width: 100%;
+  min-width: 250px;
+  height: 2rem;
   background-color: rgba(0 200 200 1);
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-radius: 30px;
+
+  div {
+    font-size: 0.9rem;
+  }
 }
 
 .addressSlide {
@@ -331,7 +335,7 @@ export default {
 
   .activity-button {
     .el-button {
-      font-size: 0.95rem;
+      font-size: 0.8rem;
 
       &:nth-last-child(1) {
         color: rgba(255 0 0 0.9);

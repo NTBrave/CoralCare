@@ -1,7 +1,7 @@
 <template>
   <aside class="side-bar-cnt">
     <div class="logoArea">
-      <img src="../../assets/logo.svg" />
+      <img src="../../assets/logo.png" />
     </div>
     <el-menu
       style="height: 100%"
@@ -13,19 +13,20 @@
       @select="changeRoute"
     >
       <div v-for="item in menus" :key="item.name">
-        <el-submenu v-if="item.childs" :index="item.url">
-          <template slot="title">
+        <div v-if="item.childs" :index="item.url">
+          <el-menu-item class="menus-father">
             <i :class="item.icon"></i>
             <span>{{item.name}}</span>
-          </template>
+          </el-menu-item>
           <el-menu-item
             v-for="sub in item.childs"
             :key="sub.name"
             :index="sub.url"
             :disabled="sub.disabled"
           >{{sub.name}}</el-menu-item>
-        </el-submenu>
-        <el-menu-item v-else :index="item.url">
+        </div>
+
+        <el-menu-item class="menus-father" v-else :index="item.url">
           <i :class="item.icon"></i>
           <span>{{item.name}}</span>
         </el-menu-item>
@@ -61,6 +62,7 @@ const menus = [
         disabled: true,
         url: ''
       },
+
       {
         name: '水文观测',
         disabled: true,
@@ -137,23 +139,37 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .side-bar-cnt {
-  width: 200px;
+  width: 9rem;
   position: fixed;
   top: 0;
   bottom: 0;
   background-color: #fff;
   z-index: 1000;
+  font-size: 1rem;
 
   .logoArea {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 50px;
+    height: 57px;
+    margin: 20px 0;
   }
 }
 
 .side-top {
   background-color: #001529;
   height: 60px;
+}
+
+.el-menu-item {
+  font-size: 1rem;
+  text-align: right;
+  font-weight: lighter;
+}
+
+.menus-father {
+  margin-right: 1rem;
+  font-weight: normal;
+  cursor: default;
 }
 </style>

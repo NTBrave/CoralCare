@@ -162,10 +162,10 @@ nav {
   position: fixed;
   top: 0;
   right: 0;
-  left: 200px;
+  left: 9rem;
   padding: 0 20px;
   background-color: white;
-  height: 60px;
+  height: 4rem;
   display: flex;
   box-shadow: 0px 5px 6px 0 rgba(0, 0, 0, 0.07);
   align-items: center;

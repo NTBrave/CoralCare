@@ -157,6 +157,7 @@ export default {
 <style lang="stylus" scoped>
 .dayActivity {
   display: flex;
+  font-size: 16px;
 
   .activityList {
     // width: 10%;
@@ -181,7 +182,7 @@ export default {
         background: rgba(255 255 255 1);
         box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
         padding: 2px 5px;
-        margin-bottom: 0.05rem;
+        margin-bottom: 0.1rem;
       }
     }
   }

@@ -53,8 +53,8 @@ export default {
 .manage-box {
   position: fixed;
   overflow: auto;
-  top: 60px;
-  left: 200px;
+  top: 4rem;
+  left: 9rem;
   right: 0;
   bottom: 0;
 }
