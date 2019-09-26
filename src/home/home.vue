@@ -1,6 +1,5 @@
 <template>
   <div class="the-home">
-    <!-- 头部导航栏 -->
     <el-row class="app-header" :gutter="1">
       <el-col :offset="13" :span="2" class="shouye">
         <div>
@@ -26,7 +25,6 @@
         </div>
       </el-col>
 
-      <!-- 右上角用户小弹窗 -->
       <el-col :span="1" v-if="(loginData.isLogin)">
         <el-popover trigger="hover" placement="bottom" width="150">
           <p class="text-align">{{loginData.currentUserName}}</p>
@@ -56,13 +54,12 @@
             @click="registeredData.visible = true"
           >注册</el-button>
           <p slot="reference" class="text-align" type="text">
-            <!-- <el-buton type="primary"  circle > -->
             <img src="../assets/images/boy.png" alt class="top-user-icon" />
           </p>
         </el-popover>
       </el-col>
     </el-row>
-    <!-- 开头视频背景 -->
+
     <el-row class="video-container">
       <video :style="fixStyle" autoplay loop class="fillWidth" muted>
         <source src="../assets/video/video.mp4" type="video/mp4" />浏览器不支持 video 标签，建议升级浏览器。
@@ -70,21 +67,18 @@
     </el-row>
 
     <div class="homepage-hero-module">
-      <!-- 潜爱logo -->
       <el-row class="qianAi-logo">
         <img src="../assets/home/logo_x.svg" alt />
       </el-row>
-      <!-- 种珊瑚，种人心 -->
+
       <el-row class="intro-logo">
         <img src="../assets/home/big_title2.png" alt />
       </el-row>
 
-      <!-- 蒙版 -->
       <el-row class="meng-ban">
         <img src="../assets/home/meng2.png" alt />
       </el-row>
 
-      <!-- 文字介绍 和视频 -->
       <el-row class="all-intro">
         <el-row>
           <el-col class="coral-title" :offset="1" :span="2">
@@ -137,7 +131,6 @@
       </el-row>
     </div>
 
-    <!-- 微博微信 -->
     <el-row class="text-align weixin-weibo">
       <el-col :span="12" id="introdus-title" class="weixin-weibo-title fen-height">
         <div class="wexin-weibo-first">
@@ -332,7 +325,10 @@
                 </div>
 
                 <div class="example-one-msg">
-                  <span class="example-one-margin">面积：{{examSize}}平方厘米</span>
+                  <span class="example-one-margin">
+                    面积：{{examSize}}cm
+                    <sup>2</sup>
+                  </span>
                 </div>
                 <div class="example-one-msg">
                   <span class="example-one-margin">拍摄时间：{{examTime}}</span>
@@ -463,7 +459,6 @@
                 <img class="ssImg" src="../assets/home/org/8.png" alt />
               </swiperSlide>
 
-              <!-- <div class="swiper-pagination" slot="pagination"></div> -->
               <div class="swiper-button-prev" slot="button-prev"></div>
               <div class="swiper-button-next" slot="button-next"></div>
             </swiper>
@@ -471,7 +466,7 @@
         </el-row>
       </div>
     </el-row>
-    <!-- 登陆弹窗 -->
+
     <el-dialog
       :visible.sync="loginData.visible"
       width="30%"
@@ -498,7 +493,6 @@
           <el-button type="text" @click="registeredData.visible = true" class="regise-btn">注册账号</el-button>
         </div>
         <div style="display: flex;justify-content: center;">
-          <!-- <el-button @click="cancelLogin">取 消</el-button> -->
           <div class="sign-in-btn" @click="login">登陆</div>
         </div>
 
@@ -506,7 +500,6 @@
       </div>
     </el-dialog>
 
-    <!-- 注册弹窗 -->
     <el-dialog :visible.sync="registeredData.visible" width="400px" class="login-dialog">
       <div class="myDialog" v-loading="RegistLoading" element-loading-text="正在注册">
         <div class="dialog-header">注册账号</div>
@@ -533,7 +526,6 @@
         <div slot="footer" style="display: flex;justify-content: center;">
           <el-button @click="cancelRegistered">取 消</el-button>
           <div class="regise-sure-btn" @click="registered" round>注册</div>
-          <!-- <el-button @click="registered.visible = true">注册</el-button> -->
         </div>
       </div>
     </el-dialog>
@@ -542,18 +534,25 @@
       <strong style="color: rgba(64, 64, 64, 0.6)"></strong>
     </div>
     <div id="footer">
-      <img class="footer-svg" src="../assets/home/bubble.svg" alt />
+      <!-- <iframe
+        style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
+        src="../assets/home/bubble.svg"
+      >
+      </iframe> -->
+      <!-- use -->
+        <!-- <object style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
+        data="../assets/home/bubble.svg" type="image/svg+xml"></object> -->
     </div>
   </div>
 </template>
 <script>
-import * as Api from '../api/api'
-import seaWave from '../components/seaWave.vue'
-import { Message, Loading } from 'element-ui'
-import 'swiper/dist/css/swiper.css'
-import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import * as Api from "../api/api";
+import seaWave from "../components/seaWave.vue";
+import { Message, Loading } from "element-ui";
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
-  name: 'login',
+  name: "login",
   components: {
     seaWave,
     swiper,
@@ -568,8 +567,8 @@ export default {
         // centeredSlides: true,
         loop: true,
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
         }
       },
 
@@ -583,13 +582,13 @@ export default {
       showTheBg3: false,
       showTheBg4: false,
       showTheBg5: false,
-      fixStyle: '',
+      fixStyle: "",
 
       //loading动画
       LoginLoading: false,
       RegistLoading: false,
 
-      lunboheight: '500px',
+      lunboheight: "500px",
       exhibitions: [],
       codelabs: [],
       blogs: [],
@@ -600,142 +599,142 @@ export default {
         visible: false,
         logoutVisible: false,
         isLogin: false,
-        currentUserName: 'lintean',
-        currentUserNo: '',
-        currentUserId: '',
-        currentUserEmail: '',
-        user: '',
-        pwd: '',
+        currentUserName: "lintean",
+        currentUserNo: "",
+        currentUserId: "",
+        currentUserEmail: "",
+        user: "",
+        pwd: "",
         rules: {
           user: [
             {
               required: true,
-              message: '请输入工号',
-              trigger: 'blur'
+              message: "请输入工号",
+              trigger: "blur"
             }
           ],
           pwd: [
             {
               required: true,
-              message: '请输入密码',
-              trigger: 'blur'
+              message: "请输入密码",
+              trigger: "blur"
             }
           ]
         }
       },
       registeredData: {
         visible: false,
-        work_no: '',
-        username: '',
-        pwd: '',
-        email: '',
+        work_no: "",
+        username: "",
+        pwd: "",
+        email: "",
 
         rules: {
           work_no: [
             {
               required: true,
-              message: '请输入工号',
-              trigger: 'blur'
+              message: "请输入工号",
+              trigger: "blur"
             }
           ],
           username: [
             {
               required: true,
-              message: '请输入用户名字',
-              trigger: 'blur'
+              message: "请输入用户名字",
+              trigger: "blur"
             }
           ],
           pwd: [
             {
               required: true,
-              message: '请输入密码',
-              trigger: 'blur'
+              message: "请输入密码",
+              trigger: "blur"
             }
           ],
           email: [
             {
               required: true,
-              message: '请输入邮箱',
-              trigger: 'blur'
+              message: "请输入邮箱",
+              trigger: "blur"
             }
           ]
         }
       },
-      examSize: '223.4',
-      examTime: '2018.4.10',
+      examSize: "223.4",
+      examTime: "2018.4.10",
       exampleData: [
         {
-          url: 'http://dayy.xyz/resource/example/1.png',
-          size: '223.4',
-          time: '2018.4.10'
+          url: "http://dayy.xyz/resource/example/1.png",
+          size: "223.4",
+          time: "2018.4.10"
         },
         {
-          url: 'http://dayy.xyz/resource/example/2.jpg',
-          size: '235.6',
-          time: '2018.5.09'
+          url: "http://dayy.xyz/resource/example/2.jpg",
+          size: "235.6",
+          time: "2018.5.09"
         },
         {
-          url: 'http://dayy.xyz/resource/example/3.jpg',
-          size: '240.2',
-          time: '2018.6.09'
+          url: "http://dayy.xyz/resource/example/3.jpg",
+          size: "240.2",
+          time: "2018.6.09"
         },
         {
-          url: 'http://dayy.xyz/resource/example/4.jpg',
-          size: '242.5',
-          time: '2018.6.17'
+          url: "http://dayy.xyz/resource/example/4.jpg",
+          size: "242.5",
+          time: "2018.6.17"
         },
         {
-          url: 'http://dayy.xyz/resource/example/5.jpg',
-          size: '243.2',
-          time: '2018.7.01'
+          url: "http://dayy.xyz/resource/example/5.jpg",
+          size: "243.2",
+          time: "2018.7.01"
         },
         {
-          url: 'http://dayy.xyz/resource/example/6.jpg',
-          size: '250.4',
-          time: '2018.7.28'
+          url: "http://dayy.xyz/resource/example/6.jpg",
+          size: "250.4",
+          time: "2018.7.28"
         },
         {
-          url: 'http://dayy.xyz/resource/example/7.jpg',
-          size: '254.6',
-          time: '2018.11.17'
+          url: "http://dayy.xyz/resource/example/7.jpg",
+          size: "254.6",
+          time: "2018.11.17"
         },
         {
-          url: 'http://dayy.xyz/resource/example/8.jpg',
-          size: '260.3',
-          time: '2018.12.29'
+          url: "http://dayy.xyz/resource/example/8.jpg",
+          size: "260.3",
+          time: "2018.12.29"
         },
         {
-          url: 'http://dayy.xyz/resource/example/9.jpg',
-          size: '268.4',
-          time: '2019.3.02'
+          url: "http://dayy.xyz/resource/example/9.jpg",
+          size: "268.4",
+          time: "2019.3.02"
         },
         {
-          url: 'http://dayy.xyz/resource/example/10.jpg',
-          size: '278.5',
-          time: '2019.3.17'
+          url: "http://dayy.xyz/resource/example/10.jpg",
+          size: "278.5",
+          time: "2019.3.17"
         },
         {
-          url: 'http://dayy.xyz/resource/example/11.jpg',
-          size: '279.1',
-          time: '2019.4.06'
+          url: "http://dayy.xyz/resource/example/11.jpg",
+          size: "279.1",
+          time: "2019.4.06"
         },
         {
-          url: 'http://dayy.xyz/resource/example/12.jpg',
-          size: '280.5',
-          time: '2019.6.02'
+          url: "http://dayy.xyz/resource/example/12.jpg",
+          size: "280.5",
+          time: "2019.6.02"
         },
         {
-          url: 'http://dayy.xyz/resource/example/13.jpg',
-          size: '284.6',
-          time: '2019.6.22'
+          url: "http://dayy.xyz/resource/example/13.jpg",
+          size: "284.6",
+          time: "2019.6.22"
         },
         {
-          url: 'http://dayy.xyz/resource/example/14.jpg',
-          size: '288.1',
-          time: '2019.8.24'
+          url: "http://dayy.xyz/resource/example/14.jpg",
+          size: "288.1",
+          time: "2019.8.24"
         }
       ]
-    }
+    };
   },
   computed: {},
   methods: {
@@ -743,56 +742,56 @@ export default {
     //   this.vedioCanPlay = true;
     // },
     login() {
-      let _this = this
-      _this.LoginLoading = true
+      let _this = this;
+      _this.LoginLoading = true;
       //调用接口 用户登陆
       Api.Login(this.loginData.user, this.loginData.pwd)
         .then(res => {
           //vuex 用户信息
-          _this.$store.commit('setUserInforFromAppVue', res.data.data)
+          _this.$store.commit("setUserInforFromAppVue", res.data.data);
           //   console.log("Login：", res);
           if (res.data.status === 200) {
             // _this.recordLoginData(res);
-            _this.loginData.isLogin = true
-            _this.loginData.visible = false
-            _this.loginData.currentUserName = res.data.data.userInfo.username
-            _this.loginData.currentUserNo = res.data.data.userInfo.work_no
-            _this.loginData.currentUserEmail = res.data.data.userInfo.email
-            _this.loginData.isLogin = true
+            _this.loginData.isLogin = true;
+            _this.loginData.visible = false;
+            _this.loginData.currentUserName = res.data.data.userInfo.username;
+            _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
+            _this.loginData.currentUserEmail = res.data.data.userInfo.email;
+            _this.loginData.isLogin = true;
             Message({
-              message: '用户登陆 成功',
+              message: "用户登陆 成功",
               center: true,
-              type: 'success',
+              type: "success",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           } else {
             Message({
               message: res.data.msg,
               center: true,
-              type: 'warning',
+              type: "warning",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           }
         })
         .catch(err => {
-          console.log(err)
-          this.LoginLoading = false
+          console.log(err);
+          this.LoginLoading = false;
 
           Message({
-            message: '账号密码不正确 ' + err,
+            message: "账号密码不正确 " + err,
             center: true,
-            type: 'warning',
+            type: "warning",
             showClose: true,
-            customClass: 'zZindex'
-          })
-        })
+            customClass: "zZindex"
+          });
+        });
     },
     registered() {
-      let _this = this
+      let _this = this;
       //掉用接口 用户注册
-      _this.RegistLoading = true
+      _this.RegistLoading = true;
       Api.newUser(
         this.registeredData.work_no,
         this.registeredData.username,
@@ -802,132 +801,132 @@ export default {
         .then(res => {
           // console.log("registered：", res.data.status);
           if (res.data.status === 200) {
-            this.registeredData.visible = false
-            ;(_this.RegistLoading = false),
+            this.registeredData.visible = false;
+            (_this.RegistLoading = false),
               Message({
-                message: '用户注册 成功',
+                message: "用户注册 成功",
                 center: true,
-                type: 'success',
+                type: "success",
                 showClose: true,
-                customClass: 'zZindex'
-              })
+                customClass: "zZindex"
+              });
           } else {
             Message({
               message: res.data.msg,
               center: true,
-              type: 'warning',
+              type: "warning",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           }
         })
         .catch(err => {
-          _this.RegistLoading = false
-          console.log('registered：', err)
+          _this.RegistLoading = false;
+          console.log("registered：", err);
           if (err.response.status == 400) {
             Message({
-              message: '工号已存在',
+              message: "工号已存在",
               center: true,
-              type: 'warning',
+              type: "warning",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           } else if (err.response.status == 403) {
             Message({
-              message: '请先登陆,才能注册新用户',
+              message: "请先登陆,才能注册新用户",
               center: true,
-              type: 'warning',
+              type: "warning",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           } else {
             Message({
-              message: '注册失败',
+              message: "注册失败",
               center: true,
-              type: 'warning',
+              type: "warning",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           }
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     logout() {
-      let _this = this
+      let _this = this;
       //调用接口 注销登陆
       Api.Logout()
         .then(res => {
           //   console.log("Logout：", res);
 
           if (res.data.status === 200) {
-            _this.loginData.isLogin = false
-            _this.loginData.visible = true
+            _this.loginData.isLogin = false;
+            _this.loginData.visible = true;
             Message({
-              message: '注销登陆 成功',
+              message: "注销登陆 成功",
               center: true,
-              type: 'success',
+              type: "success",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
           Message({
-            message: '注销登陆 失败',
+            message: "注销登陆 失败",
             center: true,
-            type: 'warning',
+            type: "warning",
             showClose: true,
-            customClass: 'zZindex'
-          })
-          _this.handleError(err)
-        })
+            customClass: "zZindex"
+          });
+          _this.handleError(err);
+        });
     },
     cancelLogin() {
-      this.loginData.visible = false
+      this.loginData.visible = false;
       Message({
-        message: '未登录',
+        message: "未登录",
         center: true,
         showClose: true,
-        customClass: 'zZindex'
-      })
+        customClass: "zZindex"
+      });
     },
     changeRoute(index) {
-      if (index == '2-1') {
-        this.$router.push('/manage')
-      } else if (index == '1') {
-        this.$router.push('/manage/user')
+      if (index == "2-1") {
+        this.$router.push("/manage");
+      } else if (index == "1") {
+        this.$router.push("/manage/user");
       }
     },
     cancelRegistered() {
-      this.registeredData.visible = false
+      this.registeredData.visible = false;
       Message({
-        message: '取消注册',
+        message: "取消注册",
         center: true,
         showClose: true,
-        customClass: 'zZindex'
-      })
+        customClass: "zZindex"
+      });
     },
 
     changeIsShowVideo() {
-      let _this = this
-      _this.isVideoPause = false
-      this.isShowVideo = !this.isShowVideo
-      var video = document.getElementById('showVideo')
+      let _this = this;
+      _this.isVideoPause = false;
+      this.isShowVideo = !this.isShowVideo;
+      var video = document.getElementById("showVideo");
       if (this.isShowVideo) {
-        video.className = 'intro-video'
-        video.play()
+        video.className = "intro-video";
+        video.play();
       } else {
-        video.className = 'intro-video-close'
-        video.pause()
-        _this.isInCloseVideo = true
-        _this.isShowVideo = !_this.isShowVideo
+        video.className = "intro-video-close";
+        video.pause();
+        _this.isInCloseVideo = true;
+        _this.isShowVideo = !_this.isShowVideo;
         setTimeout(function() {
-          _this.isInCloseVideo = false
-          _this.isShowVideo = !_this.isShowVideo
-          video.pause()
-        }, 1000)
+          _this.isInCloseVideo = false;
+          _this.isShowVideo = !_this.isShowVideo;
+          video.pause();
+        }, 1000);
       }
 
       // if (_this.isShowVideo) {
@@ -938,94 +937,94 @@ export default {
     },
     //粉色横条 微博微信 显示
     hoverChang(ind) {
-      var title = document.getElementById('introdus-title')
+      var title = document.getElementById("introdus-title");
       var wei =
         ind === 1
-          ? document.getElementById('introdus-weibo')
-          : document.getElementById('introdus-weixin')
-      ind === 1 ? (this.showWeibo = true) : (this.showWeixin = true)
-      title.style.width = '25%'
-      wei.style.width = '50%'
+          ? document.getElementById("introdus-weibo")
+          : document.getElementById("introdus-weixin");
+      ind === 1 ? (this.showWeibo = true) : (this.showWeixin = true);
+      title.style.width = "25%";
+      wei.style.width = "50%";
     },
     leaveChang(ind) {
-      var title = document.getElementById('introdus-title')
+      var title = document.getElementById("introdus-title");
       var wei =
         ind === 1
-          ? document.getElementById('introdus-weibo')
-          : document.getElementById('introdus-weixin')
-      ind === 1 ? (this.showWeibo = false) : (this.showWeixin = false)
-      title.style.width = '50%'
-      wei.style.width = '25%'
+          ? document.getElementById("introdus-weibo")
+          : document.getElementById("introdus-weixin");
+      ind === 1 ? (this.showWeibo = false) : (this.showWeixin = false);
+      title.style.width = "50%";
+      wei.style.width = "25%";
     },
     setPoint(event) {
-      let _this = this
-      var theCharImg = document.getElementById('time-char-div')
-      var time = document.getElementById('time-line')
-      var timeMsg = document.getElementById('time-msg')
-      var activityImg = document.getElementsByClassName('is-active')
-      var bbox = theCharImg.getBoundingClientRect()
+      let _this = this;
+      var theCharImg = document.getElementById("time-char-div");
+      var time = document.getElementById("time-line");
+      var timeMsg = document.getElementById("time-msg");
+      var activityImg = document.getElementsByClassName("is-active");
+      var bbox = theCharImg.getBoundingClientRect();
 
       var left =
-        ((event.clientX - bbox.left) / document.body.clientWidth) * 100 + 6
+        ((event.clientX - bbox.left) / document.body.clientWidth) * 100 + 6;
       //通过改变css 中的left 来改变位置
 
-      let index_pointer = 0
-      console.log(left)
+      let index_pointer = 0;
+      console.log(left);
       if (left > 17 && left < 21) {
-        index_pointer = 0
-        left = 19.297
+        index_pointer = 0;
+        left = 19.297;
       } else if (left > 22 && left < 23.5) {
-        index_pointer = 1
-        left = 22.95
+        index_pointer = 1;
+        left = 22.95;
       } else if (left > 25 && left < 25.5) {
-        index_pointer = 2
-        left = 25.41
+        index_pointer = 2;
+        left = 25.41;
       } else if (left > 25.7 && left < 26.3) {
-        index_pointer = 3
-        left = 26.194
+        index_pointer = 3;
+        left = 26.194;
       } else if (left > 28.3 && left < 29.7) {
-        index_pointer = 4
-        left = 29.224
+        index_pointer = 4;
+        left = 29.224;
       } else if (left > 30.2 && left < 31.7) {
-        index_pointer = 5
-        left = 30.739
+        index_pointer = 5;
+        left = 30.739;
       } else if (left > 45 && left < 46.4) {
-        index_pointer = 6
-        left = 46.199
+        index_pointer = 6;
+        left = 46.199;
       } else if (left > 46.7 && left < 48.5) {
-        index_pointer = 7
-        left = 47.197
+        index_pointer = 7;
+        left = 47.197;
       } else if (left > 55 && left < 56.8) {
-        index_pointer = 8
-        left = 55.97
+        index_pointer = 8;
+        left = 55.97;
       } else if (left > 59.2 && left < 61.8) {
-        index_pointer = 9
-        left = 60.15
+        index_pointer = 9;
+        left = 60.15;
       } else if (left > 62.6 && left < 67.3) {
-        index_pointer = 10
-        left = 64.54
+        index_pointer = 10;
+        left = 64.54;
       } else if (left > 70 && left < 74.5) {
-        index_pointer = 11
-        left = 73.94
+        index_pointer = 11;
+        left = 73.94;
       } else if (left > 75.1 && left < 78.5) {
-        index_pointer = 12
-        left = 75.56
+        index_pointer = 12;
+        left = 75.56;
       } else if (left > 80 && left < 85) {
-        index_pointer = 13
-        left = 83.14
+        index_pointer = 13;
+        left = 83.14;
       } else {
-        index_pointer = -1
+        index_pointer = -1;
       }
-      time.style.left = left + '%'
-      timeMsg.style.left = left + 3 + '%'
+      time.style.left = left + "%";
+      timeMsg.style.left = left + 3 + "%";
       if (index_pointer >= 0) {
-        _this.examSize = _this.exampleData[index_pointer].size
-        _this.examTime = _this.exampleData[index_pointer].time
+        _this.examSize = _this.exampleData[index_pointer].size;
+        _this.examTime = _this.exampleData[index_pointer].time;
         //设置图片的url
-        activityImg[0].children[0].src = _this.exampleData[index_pointer].url
+        activityImg[0].children[0].src = _this.exampleData[index_pointer].url;
       } else {
-        _this.examSize = ''
-        _this.examTime = '这天无活动'
+        _this.examSize = "";
+        _this.examTime = "这天无活动";
       }
     }
   },
@@ -1033,10 +1032,10 @@ export default {
     //对 window 对象的 onresize 事件的监听。
     //当窗口大小更改时，程序同步修改 video的尺寸，
     //适配处理
-    let _this = this
-    let preAndNext = 1000
+    let _this = this;
+    let preAndNext = 1000;
     window.onresize = () => {
-      const windowWidth = document.body.clientWidth
+      const windowWidth = document.body.clientWidth;
       // let thHome = $(".the-home")[0];
       // let weiwei = $(".weixin-weibo")[0];
       // let footerSwiper = $(".swiper-container")[0];
@@ -1044,7 +1043,7 @@ export default {
         // thHome.style.fontSize = "15px";
         // weiwei.style.marginTop = "24.6%";
         // footerSwiper.style.width = "80%";
-        preAndNext = 800
+        preAndNext = 800;
         // let swiperSlideImg = $(".ssImg");
         // for (let i = 0; i < swiperSlideImg.length; i++) {
         // swiperSlideImg[i].style.maxWidth = "250px";
@@ -1053,35 +1052,35 @@ export default {
         // thHome.style.fontSize = "20px";
         // weiwei.style.marginTop = "24.6%";
         // footerSwiper.style.width = "79%";
-        preAndNext = 800
+        preAndNext = 800;
       }
-      _this.videoHeight = windowWidth * 0.677
+      _this.videoHeight = windowWidth * 0.677;
       _this.fixStyle = {
-        height: windowWidth * 0.677 + 'px',
-        width: windowWidth + 'px'
-      }
-    }
-    window.onresize()
+        height: windowWidth * 0.677 + "px",
+        width: windowWidth + "px"
+      };
+    };
+    window.onresize();
 
-    var video = document.getElementById('showVideo')
-    video.pause()
-    video.addEventListener('pause', function() {
+    var video = document.getElementById("showVideo");
+    video.pause();
+    video.addEventListener("pause", function() {
       // console.log("pause");
-      _this.isVideoPause = true
-    })
-    video.addEventListener('play', function() {
+      _this.isVideoPause = true;
+    });
+    video.addEventListener("play", function() {
       //  console.log("play");
-      _this.isVideoPause = false
-    })
+      _this.isVideoPause = false;
+    });
 
     // 获取窗口滚动的距离
     window.onscroll = () => {
       // console.log(document.body.scrollHeight)
       let scrolDis =
-        document.documentElement.scrollTop || document.body.scrollTop
-      let videoE = $('.app-header')[0]
-      let prevBtn = $('.swiper-button-prev')[0]
-      let nextBtn = $('.swiper-button-next')[0]
+        document.documentElement.scrollTop || document.body.scrollTop;
+      let videoE = $(".app-header")[0];
+      let prevBtn = $(".swiper-button-prev")[0];
+      let nextBtn = $(".swiper-button-next")[0];
       // if (scrolDis > document.body.scrollHeight - preAndNext) {
       //   prevBtn.style.display = "block";
       //   nextBtn.style.display = "block";
@@ -1094,15 +1093,15 @@ export default {
       //   videoE.style.background = "rgba(0, 0, 0, 0.075)";
       //   videoE.style.color = "black";
       // } else {
-      videoE.style.background = 'rgba(255, 255, 255, 0.075)'
-      videoE.style.color = 'white'
+      videoE.style.background = "rgba(255, 255, 255, 0.075)";
+      videoE.style.color = "white";
       // }
-    }
+    };
     //设置 3d 海浪
-    let bgCanvas = document.getElementsByTagName('canvas')[0]
-    bgCanvas.style.height = '600px'
+    let bgCanvas = document.getElementsByTagName("canvas")[0];
+    bgCanvas.style.height = "600px";
   }
-}
+};
 </script>
 <style scoped src="./home.css">
 </style>

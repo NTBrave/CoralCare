@@ -75,13 +75,13 @@ function resize()
 {
       svg1 = document.getElementById('svg1');
       var bBox = svg1.getBBox();
-      //console.log('XxY', bBox.x + 'x' + bBox.y);
-      //console.log('size', bBox.width + 'x' + bBox.height);
+      console.log('XxY', bBox.x + 'x' + bBox.y);
+      console.log('size', bBox.width + 'x' + bBox.height);
 
       nx = (bBox.width*0.9);
       ny = (bBox.height*0.9);
-      //console.log(screen.width);
-      //console.log(document.getElementById('svg1'));
+      console.log(screen.width);
+      console.log(document.getElementById('svg1'));
 
 }
 
