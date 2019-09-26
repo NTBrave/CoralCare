@@ -54,11 +54,7 @@ export default new Router({
           name: "user",
           component: () => import("../pages/user.vue")
         },
-        {
-          path: "/",
-          name: "index",
-          redirect: "/home"
-        },
+
         {
           // path: "/manage/coralWork",
           // name: "coralWork",
