@@ -146,6 +146,7 @@ export default {
   background-color: #fff;
   z-index: 1000;
   font-size: 1rem;
+  box-shadow:4px 4px 8px rgba(0,0,0,0.16);
 
   .logoArea {
     display: flex;
@@ -164,12 +165,12 @@ export default {
 .el-menu-item {
   font-size: 1rem;
   text-align: right;
-  font-weight: lighter;
+  font-weight: 300;
 }
 
 .menus-father {
   margin-right: 1rem;
-  font-weight: normal;
+  font-weight: 400;
   cursor: default;
 }
 </style>

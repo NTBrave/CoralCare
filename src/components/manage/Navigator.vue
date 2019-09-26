@@ -8,7 +8,7 @@
         <div v-else-if="isCoralRecord"></div>
         <div v-else></div>
       </div>
-      <div v-if="noSearchPage">
+      <!-- <div v-if="noSearchPage">
         <el-autocomplete
           style="width:300px;"
           :fetch-suggestions="getKeyword"
@@ -24,55 +24,35 @@
             slot="append"
           ></el-button>
         </el-autocomplete>
-      </div>
+      </div> -->
 
       <div class="right-btn-cnt">
-        <el-button type="text" icon="el-icon-s-help" @click="changeRoute">首页</el-button>
-        <!-- 右上角用户小弹窗 -->
-        <el-dropdown @command="handleCommand">
-          <span class="el-dropdown-link">
-            <img src="../../assets/images/boy.png" alt width="90%;" />
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item style="text-align: center;" disabled>{{userName}}</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-user" command="center">个人中心</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-switch-button" command="logout">退出登陆</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-edit-outline" command="register">注册</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-popover style="height: 25px;" trigger="click" title="近期新增：" placement="left-start">
-          <div style="background:red">
-            <span>8月12日</span>
-            <ul>
-              <li>添加鼠标覆盖后的功能图标</li>
-            </ul>
-            <span>8月18日</span>
-            <ul>
-              <li>内置预览窗口</li>
-              <li>修复已知bug</li>
-            </ul>
-          </div>
-          <p slot="reference" type="text">
-            <a class="el-icon-bell" style="font-size: 25px;"></a>
-          </p>
-        </el-popover>
+        <span class="el-dropdown-link">
+          <img src="../../assets/images/boy.png" alt width="90%;" />
+        </span>
+        <span>{{userName}}</span>
+
+        <span class="el-dropdown-link" @click="changeRoute">
+          <img src="../../assets/images/home.png" alt width="90%;" />
+        </span>
+        <span style=" cursor: pointer;" @click="changeRoute">返回首页</span>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import * as Api from '../../api/api'
-import * as DEFAULT from '../../json/default'
-import CalendarAddress from './CalendarAddress.vue'
+import * as Api from "../../api/api";
+import * as DEFAULT from "../../json/default";
+import CalendarAddress from "./CalendarAddress.vue";
 export default {
   components: {
-    'calendar-view': CalendarAddress
+    "calendar-view": CalendarAddress
   },
   data() {
     return {
       // 搜索
-      keyword: '',
+      keyword: "",
       noSearchPage: true,
       //loading动画
       LoginLoading: false,
@@ -82,75 +62,75 @@ export default {
 
       isActivity: true, // 在残枝培育页面显示日历抽屉按钮
       isCoralRecord: true // 在植株档案页面显示筛选条件
-    }
+    };
   },
   computed: {
     userName() {
       // 获得当前用户的名字
-      return 'Name'
+      return "0001";
     }
   },
   methods: {
     handleCommand(cmd) {
       switch (cmd) {
-        case 'center':
-        case 'logout':
-        case 'register':
-          this.$message.error('hh')
-          break
+        case "center":
+        case "logout":
+        case "register":
+          this.$message.error("hh");
+          break;
       }
     },
 
     getKeyword(keyword, cb) {
-      let _this = this
-      _this.cardLoading = true
-      Api.Suggestions('all', this.keyword, 10)
+      let _this = this;
+      _this.cardLoading = true;
+      Api.Suggestions("all", this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = []
+            let searchSuggestions = [];
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              }
-              searchSuggestions.push(temp)
+              };
+              searchSuggestions.push(temp);
             }
-            cb(searchSuggestions)
-            _this.cardLoading = false
+            cb(searchSuggestions);
+            _this.cardLoading = false;
           } else {
-            Message.error(res.data.msg)
+            Message.error(res.data.msg);
           }
         })
         .catch(err => {
-          console.log('getKeyword')
+          console.log("getKeyword");
 
-          this.$message.error(DEFAULT.defaultNetwordError)
-          _this.cardLoading = false
-        })
+          this.$message.error(DEFAULT.defaultNetwordError);
+          _this.cardLoading = false;
+        });
     },
     turnToSearch(item) {
       this.$router.push({
-        path: '/manage/search',
+        path: "/manage/search",
         query: {
           keyword: item.value,
           resourceId: null
         }
-      })
+      });
     },
     turnToSearchByKeyword() {
       this.$router.push({
-        path: '/manage/search',
+        path: "/manage/search",
         query: {
           keyword: this.keyword,
           resourceId: null
         }
-      })
+      });
     },
     changeRoute() {
-      this.$router.push('/manage/coralWork')
+      this.$router.push("/home");
     }
   }
-}
+};
 </script>
 <style lang="stylus" scoped>
 nav {
@@ -175,12 +155,13 @@ nav {
 
 .el-dropdown-link {
   cursor: pointer;
+  margin: auto 0.5rem auto 2rem;
 }
 
 .right-btn-cnt {
   display: flex;
   align-items: center;
-  width: 12%;
+  font-size: 1rem;
   min-width: 180px;
   justify-content: space-around;
 }

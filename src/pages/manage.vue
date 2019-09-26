@@ -1,5 +1,6 @@
 <template>
-  <div class="manage-cnt" v-noRight>
+  <!-- <div class="manage-cnt" v-noRight> -->
+    <div class="manage-cnt">
     <sidebar></sidebar>
     <navigator></navigator>
     <div class="manage-box">
@@ -63,5 +64,6 @@ footer {
   background-color: transparent;
   text-align: center;
   line-height: 30px;
+   font-size:0.75rem;
 }
 </style>

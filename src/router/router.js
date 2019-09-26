@@ -77,12 +77,12 @@ export default new Router({
           path: "/manage/area",
           name: "area",
           component: () => import("../pages/area.vue")
+        },
+        {
+          path: "/manage/chart",
+          name: "doc",
+          component: () => import("../pages/chart.vue")
         }
-        // {
-        //   path: "/manage/doc",
-        //   name: "doc",
-        //   component: () => import("../pages/doc.vue")
-        // }
       ]
     }
   ]

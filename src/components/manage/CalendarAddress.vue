@@ -285,7 +285,7 @@ export default {
   border-radius: 30px;
 
   div {
-    font-size: 0.9rem;
+    font-size: 0.9rem;color:white;
   }
 }
 

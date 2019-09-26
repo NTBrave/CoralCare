@@ -1,19 +1,19 @@
 export const coralList = [
-  { title: "B-蓝1", value: 1 },
-  { title: "B-蓝2", value: 2 },
-  { title: "B-蓝13", value: 3 },
-  { title: "B-绿23", value: 4 },
-  { title: "B-绿25", value: 1 },
-  { title: "B-绿26", value: 2 },
-  { title: "B-绿27", value: 3 },
-  { title: "B-蓝1", value: 1 },
-  { title: "B-蓝2", value: 2 },
-  { title: "B-蓝13", value: 3 },
-  { title: "B-绿23", value: 4 },
-  { title: "B-绿25", value: 1 },
-  { title: "B-绿26", value: 2 },
-  { title: "B-绿27", value: 3 },
-  { title: "B-绿29", value: 4 }
+  { title: "B-蓝-1", value: 1 },
+  { title: "B-蓝-2", value: 2 },
+  { title: "B-蓝-13", value: 3 },
+  { title: "B-绿-23", value: 4 },
+  { title: "B-绿-25", value: 1 },
+  { title: "B-绿-26", value: 2 },
+  { title: "B-绿-27", value: 3 },
+  { title: "B-蓝-1", value: 1 },
+  { title: "B-蓝-2", value: 2 },
+  { title: "B-蓝-13", value: 3 },
+  { title: "B-绿-23", value: 4 },
+  { title: "B-绿-25", value: 1 },
+  { title: "B-绿-26", value: 2 },
+  { title: "B-绿-27", value: 3 },
+  { title: "B-绿-29", value: 4 }
 ];
 
 export const miaoPu = [
