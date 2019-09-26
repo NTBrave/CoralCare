@@ -534,11 +534,12 @@
       <strong style="color: rgba(64, 64, 64, 0.6)"></strong>
     </div>
     <div id="footer">
-      <iframe
+      <!-- <iframe
         style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
         src="../assets/home/bubble.svg"
       >
-      </iframe>
+      </iframe> -->
+      <!-- use -->
         <!-- <object style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
         data="../assets/home/bubble.svg" type="image/svg+xml"></object> -->
     </div>
