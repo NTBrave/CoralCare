@@ -5,7 +5,7 @@
     <navigator></navigator>
     <div class="manage-box">
       <router-view></router-view>
-      <footer>大鹏潜爱 天盛信息 华南理工大学 Micerlabs&copy;2019</footer>
+      <footer style="position: absolute;bottom: 0;text-align: center;width: 100%;">大鹏潜爱 天盛信息 华南理工大学 Micerlabs&copy;2019</footer>
     </div>
   </div>
 </template>

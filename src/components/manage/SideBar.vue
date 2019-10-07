@@ -92,11 +92,11 @@ const menus = [
         disabled: false,
         url: '/manage/chart'
       },
-      {
-        name: '区域数据',
-        disabled: false,
-        url: '/manage/area'
-      },
+      // {
+      //   name: '区域数据',
+      //   disabled: false,
+      //   url: '/manage/area'
+      // },
       {
         name: '水文数据',
         disabled: true,
