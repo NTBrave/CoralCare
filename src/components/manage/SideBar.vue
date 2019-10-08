@@ -42,15 +42,15 @@ const menus = [
     url: 'null-1',
     icon: 'el-icon-edit',
     childs: [
-      {
-        name: '潜爱护礁',
-        disabled: true,
-        url: ''
-      },
+      // {
+      //   name: '潜爱护礁',
+      //   disabled: true,
+      //   url: ''
+      // },
       {
         name: '残枝培育',
         disabled: false,
-        url: '/manage/dayActivity'
+        url: '/manage/coralBreed/dayActivity'
       },
       {
         name: '生境维护',
@@ -115,16 +115,16 @@ const menus = [
 export default {
   watch: {
     '$route.path': function() {
-      this.selectedKeys = this.$route.path
+      this.changeSelectedKeys()
     }
   },
   beforeMount() {
-    // this.selectedKeys = this.$route.path
+    this.changeSelectedKeys()
   },
   data() {
     return {
       menus: menus,
-      selectedKeys: '/manage/coralWork'
+      selectedKeys: ''
     }
   },
   methods: {
@@ -133,6 +133,13 @@ export default {
       if (e && e.indexOf('null') === -1) {
         this.$router.push(e)
       }
+    },
+
+    // 判断渲染激活导航栏
+    changeSelectedKeys() {
+      if (this.$route.path.search(/coralBreed/) !== -1) {
+        this.selectedKeys = '/manage/coralBreed/dayActivity'
+      } else this.selectedKeys = this.$route.path
     }
   }
 }
@@ -146,7 +153,8 @@ export default {
   background-color: #fff;
   z-index: 1000;
   font-size: 1rem;
-  box-shadow:4px 4px 8px rgba(0,0,0,0.16);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.16);
+  overflow: auto;
 
   .logoArea {
     display: flex;

@@ -98,9 +98,12 @@
                 </div>
               </el-col>
             </el-row>
-            <div class="see-more">查看详情
-              <span style="width:1.2rem"> <img width="20%" src="../assets/images/seeMore.svg" alt=""></span>
-              </div>
+            <div class="see-more">
+              查看详情
+              <span style="width:1.2rem">
+                <img width="20%" src="../assets/images/seeMore.svg" alt />
+              </span>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -109,108 +112,105 @@
 </template>
 
 <script>
-import * as Api from "../api/api";
-import * as DEFAULT from "../json/default";
-import { Message, Loading } from "element-ui";
+import * as Api from '../api/api'
+import * as DEFAULT from '../json/default'
+import { Message, Loading } from 'element-ui'
 
 export default {
-  name: "coralWork",
+  name: 'coralWork',
   data() {
     return {
       bodySize: {
-        height: " ",
-        width: " "
+        height: ' ',
+        width: ' '
       },
       resoultSize: {
-        height: " "
+        height: ' '
       },
       SelectionTable: [
         {
-          tips: "测量",
+          tips: '测量',
           width: 7,
-          choose: "暂未测量",
-          label: [
-            { name: "有过测量", value: 11 },
-            { name: "全部", value: 12 }
-          ]
+          choose: '暂未测量',
+          label: [{ name: '有过测量', value: 11 }, { name: '全部', value: 12 }]
         },
         {
-          tips: "测量时间顺序",
+          tips: '测量时间顺序',
           width: 11,
-          choose: "最终测量时间升序",
+          choose: '最终测量时间升序',
           label: [
-            { name: "最终测量时间升序", value: 21 },
-            { name: "最终测量时间降序", value: 22 }
+            { name: '最终测量时间升序', value: 21 },
+            { name: '最终测量时间降序', value: 22 }
           ]
         },
         {
-          tips: "时间",
+          tips: '时间',
           width: 11,
-          choose: "所有最终记录时间",
+          choose: '所有最终记录时间',
           label: [
-             { name: "所有最终记录时间", value: 30 },
-            { name: "3月 2019年", value: 31 },
-            { name: "2月 2019年", value: 32 },
-              { name: "1月 2019年", value: 33 },
-                { name: "12月 2018年", value: 34 }
+            { name: '所有最终记录时间', value: 30 },
+            { name: '3月 2019年', value: 31 },
+            { name: '2月 2019年', value: 32 },
+            { name: '1月 2019年', value: 33 },
+            { name: '12月 2018年', value: 34 }
           ]
         },
         {
-          tips: "种类",
+          tips: '种类',
           width: 7,
-          choose: "所有种类",
+          choose: '所有种类',
           label: [
-            { name: "所有种类", value: 41 },
-            { name: "盔型珊瑚科", value: 42 }
+            { name: '所有种类', value: 41 },
+            { name: '盔型珊瑚科', value: 42 }
           ]
         },
         {
-          tips: "状态",
+          tips: '状态',
           width: 7,
-          choose: "所有状态",
+          choose: '所有状态',
           label: [
-            { name: "死亡", value: 51 },
-            { name: "部分死亡", value: 52 },
-            { name: "良好", value: 53 },
-            { name: "失踪", value: 54 },
-            { name: "所有状态", value: 55 }
+            { name: '死亡', value: 51 },
+            { name: '部分死亡', value: 52 },
+            { name: '良好', value: 53 },
+            { name: '失踪', value: 54 },
+            { name: '所有状态', value: 55 }
           ]
         },
         {
-          tips: "阶段",
+          tips: '阶段',
           width: 7,
-          choose: "全部",
+          choose: '全部',
           label: [
-            { name: "全部", value: 61 },
-            { name: "未完结", value: 62 },
-            { name: "已完结", value: 63 }
+            { name: '全部', value: 61 },
+            { name: '未完结', value: 62 },
+            { name: '已完结', value: 63 }
           ]
         }
       ],
 
       nursery1: [
-        { label: "苗圃1", value: 1 },
-        { label: "苗圃2", value: 2 },
-        { label: "苗圃3", value: 3 },
-        { label: "苗圃4", value: 4 },
-        { label: "苗圃5", value: 5 },
-        { label: "苗圃6", value: 6 }
+        { label: '苗圃1', value: 1 },
+        { label: '苗圃2', value: 2 },
+        { label: '苗圃3', value: 3 },
+        { label: '苗圃4', value: 4 },
+        { label: '苗圃5', value: 5 },
+        { label: '苗圃6', value: 6 }
       ],
-      nursery: ["苗圃1", "苗圃2", "苗圃3", "苗圃4", "苗圃5", "苗圃6"],
+      nursery: ['苗圃1', '苗圃2', '苗圃3', '苗圃4', '苗圃5', '苗圃6'],
       coralInformations: [
-        { infor: "珊瑚编号", msg: "B-红-01" },
-        { infor: "现处位置", msg: "惠州三门岛-宇宙号-1区" },
-        { infor: "珊瑚品种", msg: "盔型珊瑚科目" },
-        { infor: "珊瑚颜色", msg: "rgb(150,119,46)" },
-        { infor: "最终尺寸", msg: "5.66" },
-        { infor: "相处状态", msg: "部分死亡" },
-        { infor: "相处阶段", msg: "回播" }
+        { infor: '珊瑚编号', msg: 'B-红-01' },
+        { infor: '现处位置', msg: '惠州三门岛-宇宙号-1区' },
+        { infor: '珊瑚品种', msg: '盔型珊瑚科目' },
+        { infor: '珊瑚颜色', msg: 'rgb(150,119,46)' },
+        { infor: '最终尺寸', msg: '5.66' },
+        { infor: '相处状态', msg: '部分死亡' },
+        { infor: '相处阶段', msg: '回播' }
       ],
-      secondTitle: "苗圃1",
-      area: ["分区1", "分区2", "分区3", "分区4"],
+      secondTitle: '苗圃1',
+      area: ['分区1', '分区2', '分区3', '分区4'],
       coralList: DEFAULT.coralList,
-      thirdTitle: "首次暂养",
-      keyword: "",
+      thirdTitle: '首次暂养',
+      keyword: '',
       showMiaoPu: DEFAULT.miaoPu,
       showFenQu: DEFAULT.fenQu,
       radio: 1,
@@ -219,14 +219,14 @@ export default {
       resultItems: [],
       imageList: DEFAULT.imageList,
       sizeForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       // tree1: [true, true, true, true, true]，
       tree1: false,
@@ -245,211 +245,211 @@ export default {
       checkedQu: [],
       exampleData: [
         {
-          url: "http://dayy.xyz/resource/example/1.png",
-          size: "223.4",
-          time: "2018.4.10"
+          url: 'http://dayy.xyz/resource/example/1.png',
+          size: '223.4',
+          time: '2018.4.10'
         },
         {
-          url: "http://dayy.xyz/resource/example/2.jpg",
-          size: "235.6",
-          time: "2018.5.09"
+          url: 'http://dayy.xyz/resource/example/2.jpg',
+          size: '235.6',
+          time: '2018.5.09'
         },
         {
-          url: "http://dayy.xyz/resource/example/3.jpg",
-          size: "240.2",
-          time: "2018.6.09"
+          url: 'http://dayy.xyz/resource/example/3.jpg',
+          size: '240.2',
+          time: '2018.6.09'
         },
         {
-          url: "http://dayy.xyz/resource/example/4.jpg",
-          size: "242.5",
-          time: "2018.6.17"
+          url: 'http://dayy.xyz/resource/example/4.jpg',
+          size: '242.5',
+          time: '2018.6.17'
         },
         {
-          url: "http://dayy.xyz/resource/example/5.jpg",
-          size: "243.2",
-          time: "2018.7.01"
+          url: 'http://dayy.xyz/resource/example/5.jpg',
+          size: '243.2',
+          time: '2018.7.01'
         },
         {
-          url: "http://dayy.xyz/resource/example/6.jpg",
-          size: "250.4",
-          time: "2018.7.28"
+          url: 'http://dayy.xyz/resource/example/6.jpg',
+          size: '250.4',
+          time: '2018.7.28'
         },
         {
-          url: "http://dayy.xyz/resource/example/7.jpg",
-          size: "254.6",
-          time: "2018.11.17"
+          url: 'http://dayy.xyz/resource/example/7.jpg',
+          size: '254.6',
+          time: '2018.11.17'
         },
         {
-          url: "http://dayy.xyz/resource/example/8.jpg",
-          size: "260.3",
-          time: "2018.12.29"
+          url: 'http://dayy.xyz/resource/example/8.jpg',
+          size: '260.3',
+          time: '2018.12.29'
         },
         {
-          url: "http://dayy.xyz/resource/example/9.jpg",
-          size: "268.4",
-          time: "2019.3.02"
+          url: 'http://dayy.xyz/resource/example/9.jpg',
+          size: '268.4',
+          time: '2019.3.02'
         },
         {
-          url: "http://dayy.xyz/resource/example/10.jpg",
-          size: "278.5",
-          time: "2019.3.17"
+          url: 'http://dayy.xyz/resource/example/10.jpg',
+          size: '278.5',
+          time: '2019.3.17'
         },
         {
-          url: "http://dayy.xyz/resource/example/11.jpg",
-          size: "279.1",
-          time: "2019.4.06"
+          url: 'http://dayy.xyz/resource/example/11.jpg',
+          size: '279.1',
+          time: '2019.4.06'
         },
         {
-          url: "http://dayy.xyz/resource/example/12.jpg",
-          size: "280.5",
-          time: "2019.6.02"
+          url: 'http://dayy.xyz/resource/example/12.jpg',
+          size: '280.5',
+          time: '2019.6.02'
         },
         {
-          url: "http://dayy.xyz/resource/example/13.jpg",
-          size: "284.6",
-          time: "2019.6.22"
+          url: 'http://dayy.xyz/resource/example/13.jpg',
+          size: '284.6',
+          time: '2019.6.22'
         },
         {
-          url: "http://dayy.xyz/resource/example/14.jpg",
-          size: "288.1",
-          time: "2019.8.24"
+          url: 'http://dayy.xyz/resource/example/14.jpg',
+          size: '288.1',
+          time: '2019.8.24'
         }
       ]
-    };
+    }
   },
 
   mounted: function() {
-    let _this = this;
-    _this.bodySize.height = document.body.clientHeight - 110 + "px";
+    let _this = this
+    _this.bodySize.height = document.body.clientHeight - 110 + 'px'
     // _this.bodySize.width = document.body.clientWidth - 200 + "px";
     // _this.resoultSize.height =
     //   (document.body.clientHeight - 90) * 0.96 * 0.8 + "px";
   },
   methods: {
     chooseMiaoPu(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.nursery.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.nursery.length
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount >= this.nursery.length;
+        checkedCount > 0 && checkedCount >= this.nursery.length
     },
     handleAllMiaoPu(val) {
-      this.checkedMiaopu = val ? this.nursery : [];
-      this.isIndeterminate = false;
+      this.checkedMiaopu = val ? this.nursery : []
+      this.isIndeterminate = false
     },
     chooseQu(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.area.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.area.length
       this.isIndeterminate2 =
-        checkedCount > 0 && checkedCount >= this.area.length;
+        checkedCount > 0 && checkedCount >= this.area.length
     },
     handleAllQu(val) {
-      this.checkedQu = val ? this.area : [];
-      this.isIndeterminate2 = false;
+      this.checkedQu = val ? this.area : []
+      this.isIndeterminate2 = false
     },
 
     chooseFirst2(index) {
-      this.secondTitle = this.nursery2[index];
+      this.secondTitle = this.nursery2[index]
     },
     chooseSecond(index) {
-      this.thirdTitle = this.area[index];
+      this.thirdTitle = this.area[index]
     },
     getKeyword(keyword, cb) {
-      let _this = this;
-      _this.cardLoading = true;
-      Api.Suggestions("all", this.keyword, 10)
+      let _this = this
+      _this.cardLoading = true
+      Api.Suggestions('all', this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = [];
+            let searchSuggestions = []
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              };
-              searchSuggestions.push(temp);
+              }
+              searchSuggestions.push(temp)
             }
-            cb(searchSuggestions);
-            _this.cardLoading = false;
+            cb(searchSuggestions)
+            _this.cardLoading = false
           } else {
-            Message.error(res.data.msg);
+            Message.error(res.data.msg)
           }
         })
         .catch(err => {
-          console.log("getKeyword");
+          console.log('getKeyword')
 
-          _this.handleError(err);
-          _this.cardLoading = false;
-        });
+          _this.handleError(err)
+          _this.cardLoading = false
+        })
     },
     handleSelect(item) {
       // 点击后处理
-      this.keyword = item.value;
-      this.search();
+      this.keyword = item.value
+      this.search()
     },
     search() {
       Api.Results(
-        "all",
+        'all',
         this.keyword,
         [],
         [],
-        ["all"],
+        ['all'],
         { from: null, to: null },
         { from: null, to: null },
-        "+8",
+        '+8',
         1,
         10
       )
         .then(res => {
           if (res.data.status === 200) {
             // 结果数组
-            console.log(res.data.data);
-            this.resultItems.splice(0, this.resultItems.length);
-            this.resultItems = res.data.data.results;
+            console.log(res.data.data)
+            this.resultItems.splice(0, this.resultItems.length)
+            this.resultItems = res.data.data.results
           } else {
-            alert(res.data.msg);
+            alert(res.data.msg)
           }
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     callUpload() {
-      this.$store.commit("uploadV");
+      this.$store.commit('uploadV')
     },
     HTree(index) {
-      console.log(index);
+      console.log(index)
       if (index == 1) {
-        this.tree1 = false;
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree1 = false
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       } else if (index == 2) {
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 3) {
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 4) {
-        this.tree4 = false;
+        this.tree4 = false
       }
     },
     VTree(index) {
-      console.log(index);
+      console.log(index)
       if (index == 1) {
-        this.tree1 = true;
+        this.tree1 = true
       } else if (index == 2) {
-        this.tree2 = true;
+        this.tree2 = true
       } else if (index == 3) {
-        this.tree3 = true;
+        this.tree3 = true
       } else if (index == 4) {
-        this.tree4 = true;
-        this.$store.commit("uploadV");
+        this.tree4 = true
+        this.$store.commit('uploadV')
       }
     }
   }
-};
+}
 </script>
 
 <style>
@@ -532,7 +532,7 @@ export default {
   font-size: 20px;
 }
 .one-select {
-  margin: 1rem 2rem;
+  margin: 1rem 1rem;
 }
 .exampleCarousel {
   padding: 1rem;
@@ -576,7 +576,7 @@ export default {
 .see-more {
   position: absolute;
   right: 6rem;
-  top: 2rem;color:rgba(126,126,126,1);
+  top: 2rem;
+  color: rgba(126, 126, 126, 1);
 }
-
 </style>

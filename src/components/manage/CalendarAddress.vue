@@ -1,28 +1,32 @@
 <template>
   <div class="root">
     <div class="ifShowCalendar" @click="showDrawer">
-      <div class="time">{{activity.dateNumber}}</div>
+      <div class="time">{{activity.timeNum}}</div>
       <div class="address">{{activity.address}}</div>
     </div>
     <show-drawer ref="drawer" @hide="requestBeforeHideDrawer">
       <div class="addressSlide">
         <el-carousel
-          :height="bannerHeight + 'px'"
+          height="180px"
           :autoplay="false"
           trigger="click"
           indicator-position="none"
           @change="((pre, next) => {selectAddress(pre, next)})"
         >
-          <el-carousel-item v-for="item in address" :key="item.id">
-            <div class="image-cnt">
-              <img :src="item.img" ref="bannerHeight" @load="imgLoad(item.id)" />
-              <span>{{item.name}}</span>
-            </div>
+          <el-carousel-item v-for="(item, idx) in address" :key="idx">
+            <!-- <div class="image-cnt"> -->
+            <!-- <img :src="item.img" ref="bannerHeight" @load="imgLoad(item.id)" />
+            <span>{{item.name}}</span>-->
+            <div
+              class="image-cnt"
+              :style="{backgroundImage: 'url(' + item.img + ')', backgroundRepeat:'no-repeat', backgroundPosition:'center center', backgroundSize: 'contain'}"
+            >{{item.id + item.name}}</div>
+            <!-- </div> -->
           </el-carousel-item>
         </el-carousel>
       </div>
       <div class="calendar-cnt">
-        <el-input placeholder="请输入内容" v-model="chooseDate">
+        <el-input placeholder="请选择日期" v-model="chooseDate" :disabled="true">
           <template slot="prepend">活动日期</template>
         </el-input>
         <div class="calendar-board" v-if="true">
@@ -31,13 +35,21 @@
             @panelChange="onPanelChange"
             @select="onSelect"
             :locale="locale"
-          />
+          >
+            <template slot="dateCellRender" slot-scope="value">
+              <div
+                v-if="todayHasActivity(value)"
+                class="notes-date"
+                :style="{backgroundColor: todayHasActivity(value).color}"
+              ></div>
+            </template>
+          </a-calendar>
         </div>
       </div>
       <div class="button-area">
         <div class="activity-button" v-if="ifNewActivity">
-          <el-button round @click="dayActivity">查看当日活动</el-button>
-          <el-button round @click="newActivity">新建当日活动</el-button>
+          <el-button round @click="dayActivity">查看下水作业</el-button>
+          <el-button round @click="newActivity">新建下水作业</el-button>
         </div>
         <div class="hour-choose" v-else>
           <el-input
@@ -69,17 +81,29 @@
 // 日历语言
 import moment from 'moment'
 import 'moment/locale/zh-cn'
+import { getActivityDays } from '../../api/api'
 moment.locale('zh-cn')
 
 // 地点
 const address = [
   {
-    id: 0,
-    name: '深圳大鹏1',
+    id: 'A',
+    name: '大鹏大澳湾',
     img: require('../../assets/logo.png')
+    // img: '../../assets/logo.png'
   },
-  { id: 1, name: '深圳大鹏2', img: require('../../assets/logo.png') },
-  { id: 2, name: '深圳大鹏3', img: require('../../assets/images/4.png') }
+  {
+    id: 'B',
+    name: '大亚湾核电站',
+    img: require('../../assets/logo.png')
+    // img: '../../assets/logo.png'
+  },
+  {
+    id: 'C',
+    name: '三门岛鬼湾',
+    img: require('../../assets/images/4.png')
+    // img: '../../assets/images/4.png'
+  }
 ]
 
 // 日历配置
@@ -119,9 +143,18 @@ const locale = {
   }
 }
 
+// const datesHaveActivity = [
+//   { date: '20190907', state: 0 },
+//   { date: '20190915', state: 0 },
+//   { date: '20190916', state: 0 },
+//   { date: '20190918', state: 0 },
+//   { date: '20190920', state: 0 },
+//   { date: '20190925', state: 0 }
+// ]
+
 import DrawerVue from './Drawer.vue'
 import { mapGetters, mapMutations } from 'vuex'
-// import requsetApi from '../../api/api'
+import { newDivingOperation } from '../../api/api'
 
 export default {
   components: {
@@ -144,14 +177,19 @@ export default {
       selectHour: '', // 选择具体活动时间
 
       ifNewActivity: true, // 是否显示新建活动按钮
-      isTimeReady: true // 是否能建活动
+      isTimeReady: true, // 是否能建活动
+
+      datesHaveActivity: []
     }
   },
   computed: {
     // activity() {
     //   return this.$store.getters.getActivity
     // }
-    ...mapGetters({ activity: 'getActivity' })
+    ...mapGetters({
+      activity: 'getActivity',
+      showActivity: 'getCalendarShowActivity'
+    })
   },
   watch: {
     selectHour: function() {
@@ -159,41 +197,60 @@ export default {
       this.timeReady(this.selectHour)
     },
     '$route.path': function() {
-      if (this.$route.path !== '/manage/dayActivity') {
+      if (this.$route.path !== '/manage/coralBreed/dayActivity') {
         this.$refs.drawer.close()
       } else {
         this.showDrawer()
+
+        // this.showDrawer()
       }
+    },
+    showActivity: function() {
+      if (this.showActivity === true) {
+        // 请求有活动的日期
+        // console.log(this.dateNumber_review.slice(0, 6))
+        // this.setActivityDays(
+        //   this.dateNumber_review.slice(),
+        //   this.activityAddress
+        // )
+        this.setCalendarShowActivity(false)
+      }
+      // console.log(this.showActivity)
     }
   },
   methods: {
-    ...mapMutations(['setActivity']),
+    ...mapMutations(['setActivity', 'setCalendarShowActivity']),
 
     // 点击打开抽屉
     showDrawer() {
       this.$refs.drawer.open()
     },
 
-    // 关闭抽屉
+    // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
     requestBeforeHideDrawer() {
       if (!this.isTimeReady) {
-        // this.$refs.drawer.close()
         this.submitTimeAddress()
+      } else {
+        this.dayActivity()
       }
     },
 
     selectAddress(pre, next) {
       this.addressIndex = pre
-      this.activityAddress = this.address[pre].name
+      this.activityAddress = this.address[pre].id + this.address[pre].name
     },
 
-    onPanelChange(value, mode) {
-      console.log(value, mode)
+    onPanelChange(value) {
+      // console.log(value.date().toString())
+      console.log(value.format('YYYYMM'))
+      // 切换年月视图时更新当前月视图有活动日期
+      // this.setActivityDays(value.format('YYYYMM'))
     },
 
     // 日历时间选择
-    onSelect(value) {
+    onSelect(value, mode) {
       // console.log(value)
+      this.onPanelChange(value)
       this.chooseDate = value.format('M月D日  YYYY年')
       this.dateNumber_review = value.format('YYYYMMDD')
     },
@@ -208,8 +265,10 @@ export default {
       if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
         if (hourTime < 10) {
           this.dateNumber_build = this.dateNumber_review + 0 + hourTime
+          // this.selectHour = '0' + hourTime + ":00"
         } else {
           this.dateNumber_build = this.dateNumber_review + hourTime
+          // this.selectHour = hourTime+":00"
         }
         this.selectHour = hourTime
         // console.log(this.selectHour)
@@ -219,57 +278,114 @@ export default {
       }
     },
 
-    // 确定好时间地点后创建活动提交活动编号和地点
+    // 确定好时间地点后创建活动提交活动编号和地点，生成一次下水作业id
     submitTimeAddress() {
       // this.onSelect(moment())
       let buildActivity = {
-        dateNumber: this.dateNumber_build,
+        timeNum: this.dateNumber_build,
         address: this.activityAddress
       }
 
+      // 缓存选择的时间与地点，刷新页面时读取数据
+      sessionStorage.setItem('selectedTime', this.dateNumber_build)
+      sessionStorage.setItem('selectedAddress', this.activityAddress)
+
       // this.$store.commit('setActivity', buildActivity)
       this.setActivity(buildActivity)
+
+      // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
+      // newDivingOperation(buildActivity)
+
+      this.$router.push({
+        name: `newActivity`,
+        query: {
+          // time: this.dateNumber_review,
+          // address: this.activityAddress
+          time: this.activity.timeNum,
+          address: this.activity.address
+        }
+      })
       this.$refs.drawer.close()
     },
 
     // 点击查看当日活动
     dayActivity() {
       let reviewActivity = {
-        dateNumber: this.dateNumber_review,
+        timeNum: this.dateNumber_review,
         address: this.activityAddress
       }
+
+      // 缓存选择的时间与地点，刷新页面时读取数据
+      sessionStorage.setItem('selectedTime', this.dateNumber_review)
+      sessionStorage.setItem('selectedAddress', this.activityAddress)
+
       // this.$store.commit('setActivity', reviewActivity)
       this.setActivity(reviewActivity)
 
-      // requsetApi(url, reviewActivity)
-
+      this.$router.push({
+        name: `dayActivity`,
+        query: {
+          // time: this.dateNumber_review,
+          // address: this.activityAddress
+          time: this.activity.timeNum,
+          address: this.activity.address
+        }
+      })
       this.$refs.drawer.close()
-      // this.$router.push('/manage/dayActivity')
     },
 
-    // 图片首次加载方法
-    imgLoad(idx) {
-      // console.log(this.$refs.bannerHeight)
-      // console.log(this.$refs.bannerHeight[idx].height)
-      this.$nextTick(() => {
-        // console.log(this.$refs.bannerHeight)
-        this.bannerHeight = this.$refs.bannerHeight[idx].bannerHeight
-        // console.log(this.$refs.bannerHeight[idx].height)
+    // 当前月视图有活动的日期列表（需渲染不同样式）
+    todayHasActivity(value) {
+      let dateList
+      for (let i = 0; i < this.datesHaveActivity.length; i++) {
+        let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
+          'MMDD'
+        )
+        // console.log(date)
+        if (value.format('MMDD') === date) {
+          switch (this.datesHaveActivity[i].state) {
+            case 0:
+              dateList = {
+                color: 'rgba(255,255,255,1)'
+                // content: date.slice(2)
+              }
+              break
+            default:
+          }
+        }
+      }
+      return dateList || null
+    },
+
+    // 设置当前月视图有活动的日期
+    setActivityDays(yearMonth) {
+      getActivityDays(yearMonth).then(res => {
+        console.log(res)
       })
     }
+
+    // 图片首次加载方法
+    // imgLoad(idx) {
+    //   console.log(this.$refs.bannerHeight)
+    //   // console.log(this.$refs.bannerHeight[idx].height)
+    //   this.$nextTick(() => {
+    //     // console.log(this.$refs.bannerHeight)
+    //     this.bannerHeight = this.$refs.bannerHeight[idx].bannerHeight
+    //     // console.log(this.$refs.bannerHeight[idx].height)
+    //   })
+    // }
   },
   mounted() {
-    this.imgLoad(this.addressIndex)
-    window.addEventListener('resize', () => {
-      this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
-      this.imgLoad(this.addressIndex)
-    })
+    // this.imgLoad(this.addressIndex)
+    // window.addEventListener('resize', () => {
+    //   this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
+    //   this.imgLoad(this.addressIndex)
+    // })
 
     this.onSelect(moment())
-    if (this.$route.path === '/manage/coralWork') {
+    if (this.$route.path === '/manage/coralBreed/dayActivity') {
       this.showDrawer()
     }
-    // console.log(this.dateNumber)
   }
 }
 </script>
@@ -278,20 +394,21 @@ export default {
   width: 100%;
   min-width: 250px;
   height: 2rem;
-  background-color: rgba(0 200 200 1);
+  background-color: #00ADBA;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-radius: 30px;
 
   div {
-    font-size: 0.9rem;color:white;
+    font-size: 0.8rem;
+    color: white;
   }
 }
 
 .addressSlide {
   width: 70%;
-  height: 20%;
+  height: 9rem;
   background-color: rgba(255 255 255 0.9);
   border-radius: 10px;
   // position: absolute;
@@ -302,9 +419,10 @@ export default {
   margin: 10% auto;
 
   .image-cnt {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 9rem;
   }
 }
 
@@ -324,7 +442,7 @@ export default {
   // background-color: rgba(255 255 255 0.8);
   .calendar-board {
     width: 90%;
-    margin: 5% auto;
+    margin: 0 auto;
   }
 }
 
@@ -350,16 +468,25 @@ export default {
 
 .checkNewActivity, .active {
   height: 40px;
-  position: absolute;
-  left: 0;
-  bottom: 6%;
-  right: 0;
-  margin: 0 auto;
-  font-size: 0.95rem;
+  position: relative;
+  margin: 10% auto;
+  // font-size: 0.95rem;
 }
 
 .active {
   color: rgba(255 0 0 0.9);
+}
+
+.notes-date {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: 30%;
+  z-index: -1;
+  // text-align: center;
+  // font-size: 28px;
 }
 </style>
 <style lang="stylus">
@@ -381,7 +508,19 @@ export default {
 
   .calendar-board {
     .ant-fullcalendar-header {
-      display: none;
+      text-align: center;
+      padding: 0;
+
+      .ant-select {
+        .ant-select-selection {
+          background-color: transparent;
+          border: none;
+        }
+      }
+
+      .ant-radio-group {
+        display: none;
+      }
     }
   }
 }

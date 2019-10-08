@@ -353,32 +353,32 @@
 
 
 <script>
-import * as Api from "../api/api";
-import * as DEFAULT from "../json/default";
-import { Message, Loading } from "element-ui";
-import Upload from "../components/upload.vue";
-import MakeArea from "../components/makeArea.vue";
+import * as Api from '../api/api'
+import * as DEFAULT from '../json/default'
+import { Message, Loading } from 'element-ui'
+import Upload from '../components/upload.vue'
+import MakeArea from '../components/makeArea.vue'
 
 export default {
-  name: "coralWork",
-   components: {
+  name: 'coralWork',
+  components: {
     Upload,
-    MakeArea,
+    MakeArea
   },
   data() {
     return {
       bodySize: {
-        height: " ",
-        width: " "
+        height: ' ',
+        width: ' '
       },
       resoultSize: {
-        height: " "
+        height: ' '
       },
-      firstWork: ["残肢培育", "潜爱护礁"],
-      secondTitle: "残肢培育",
-      secondWork: ["首次暂养", "暂养巡检", "回播", "回播巡检"],
-      thirdTitle: "首次暂养",
-      keyword: "",
+      firstWork: ['残肢培育', '潜爱护礁'],
+      secondTitle: '残肢培育',
+      secondWork: ['首次暂养', '暂养巡检', '回播', '回播巡检'],
+      thirdTitle: '首次暂养',
+      keyword: '',
       showMiaoPu: DEFAULT.miaoPu,
       showFenQu: DEFAULT.fenQu,
       radio: 1,
@@ -387,14 +387,14 @@ export default {
       resultItems: [],
       imageList: DEFAULT.imageList,
       sizeForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        resource: "",
-        desc: ""
+        resource: '',
+        desc: ''
       },
       // tree1: [true, true, true, true, true]，
       tree1: false,
@@ -402,88 +402,88 @@ export default {
       tree3: false,
       tree4: false,
       form: {
-        name: "",
-        date1: "",
-        desc: "",
-        region: "",
-        num: "",
-        type: "",
-        resource: ""
+        name: '',
+        date1: '',
+        desc: '',
+        region: '',
+        num: '',
+        type: '',
+        resource: ''
       },
       //判断 是否护礁
       isHuJiao: null,
       //判断 是否首次暂养
       isNew: true,
-      makeAreaVisible:false,
-    };
+      makeAreaVisible: false
+    }
   },
   //用的自定义组件
- 
+
   mounted: function() {
-    let _this = this;
-    var myDate = new Date();
-    _this.bodySize.height = document.body.clientHeight - 90 + "px";
-    _this.bodySize.width = document.body.clientWidth - 200 + "px";
+    let _this = this
+    var myDate = new Date()
+    _this.bodySize.height = document.body.clientHeight - 90 + 'px'
+    _this.bodySize.width = document.body.clientWidth - 200 + 'px'
     // _this.resoultSize.height =
     //   (document.body.clientHeight - 90) * 0.96 * 0.8 + "px";
     // _this.form.date1 = myDate.toLocaleDateString();
   },
   methods: {
     chooseFirst(index) {
-      this.HTree(2);
+      this.HTree(2)
       if (index == 1) {
-        this.isHuJiao = true;
+        this.isHuJiao = true
       } else {
-        this.isHuJiao = false;
+        this.isHuJiao = false
       }
-      this.secondTitle = this.firstWork[index];
+      this.secondTitle = this.firstWork[index]
     },
     chooseSecond(index) {
       // this.HTree(4);
-      this.thirdTitle = this.secondWork[index];
+      this.thirdTitle = this.secondWork[index]
     },
     getKeyword(keyword, cb) {
-      let _this = this;
-      _this.cardLoading = true;
-      Api.Suggestions("all", this.keyword, 10)
+      let _this = this
+      _this.cardLoading = true
+      Api.Suggestions('all', this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = [];
+            let searchSuggestions = []
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              };
-              searchSuggestions.push(temp);
+              }
+              searchSuggestions.push(temp)
             }
-            cb(searchSuggestions);
-            _this.cardLoading = false;
+            cb(searchSuggestions)
+            _this.cardLoading = false
           } else {
-            Message.error(res.data.msg);
+            Message.error(res.data.msg)
           }
         })
         .catch(err => {
-          console.log("getKeyword");
+          console.log('getKeyword')
 
-          _this.handleError(err);
-          _this.cardLoading = false;
-        });
+          _this.handleError(err)
+          _this.cardLoading = false
+        })
     },
     handleSelect(item) {
       // 点击后处理
-      this.keyword = item.value;
-      this.search();
+      this.keyword = item.value
+      this.search()
     },
     search() {
       Api.Results(
-        "all",
+        'all',
         this.keyword,
         [],
         [],
-        ["all"],
+        ['all'],
         { from: null, to: null },
         { from: null, to: null },
-        "+8",
+        '+8',
         1,
         10
       )
@@ -491,61 +491,69 @@ export default {
           if (res.data.status === 200) {
             // 结果数组
             // console.log(res.data.data);
-            this.resultItems.splice(0, this.resultItems.length);
-            this.resultItems = res.data.data.results;
+            this.resultItems.splice(0, this.resultItems.length)
+            this.resultItems = res.data.data.results
           } else {
-            alert(res.data.msg);
+            alert(res.data.msg)
           }
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
     callUpload() {
-      this.$store.commit("uploadV");
+      this.$store.commit('uploadV')
     },
     HTree(index) {
-      console.log(index);
+      console.log(index)
       if (index == 1) {
-        this.tree1 = false;
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree1 = false
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       } else if (index == 2) {
-        this.tree2 = false;
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree2 = false
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 3) {
-        this.tree3 = false;
-        this.tree4 = false;
+        this.tree3 = false
+        this.tree4 = false
       }
       if (index == 4) {
-        this.tree4 = false;
+        this.tree4 = false
       }
     },
     VTree(index) {
       // console.log(index);
       if (index == 1) {
-        this.tree1 = true;
+        this.tree1 = true
       } else if (index == 2) {
-        this.tree2 = true;
+        this.tree2 = true
       } else if (index == 3) {
-        this.tree3 = true; this.$store.commit("uploadV");
+        this.tree3 = true
+        this.$store.commit('uploadV')
       } else if (index == 4) {
-        this.tree4 = true;
+        this.tree4 = true
       }
     },
 
     changeStage() {
-      if (this.thirdTitle == "首次暂养") {
-        this.isNew = true;
+      if (this.thirdTitle == '首次暂养') {
+        this.isNew = true
       } else {
-        this.isNew = false;
+        this.isNew = false
       }
     }
   }
-};
+  // beforeRouteLeave(to, from, next) {
+  //   console.log(to)
+  //   console.log(from)
+  //   console.log(next)
+  //   console.log('22')
+  //   next()
+  // }
+}
 </script>
 
 <style scoped>

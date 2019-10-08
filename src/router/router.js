@@ -59,11 +59,35 @@ export default new Router({
           // path: "/manage/coralWork",
           // name: "coralWork",
           // component: () => import("../pages/coralWork.vue")
-          path: "/manage/dayActivity",
+          path: "/manage/coralBreed/dayActivity",
           name: "dayActivity",
-          component: () => import("../pages/DayActivity.vue")
+          component: () => import("../pages/coralBreed/DayActivity.vue")
         },
 
+        {
+          path: "/manage/coralBreed/newActivity",
+          name: "newActivity",
+          component: () => import("../pages/coralBreed/NewActivity.vue")
+        },
+        {
+          path: "/manage/coralBreed/newActivity/:ActivityType",
+          name: "activityType",
+          component: () => import("../pages/coralBreed/ActivitySelect.vue"),
+          children: [
+            {
+              path: "/manage/coralBreed/newActivity/:ActivityType/create",
+              name: "create",
+              alias: "/manage/coralBreed/newActivity/:ActivityType",
+              component: () => import("../pages/coralBreed/CreateActivity.vue")
+            },
+            {
+              path: "/manage/coralBreed/newActivity/:ActivityType/success",
+              name: "success",
+
+              component: () => import("../pages/coralBreed/SuccessActivity.vue")
+            }
+          ]
+        },
         {
           path: "/manage/coralManage",
           name: "coralManage",
@@ -76,7 +100,7 @@ export default new Router({
         },
         {
           path: "/manage/chart",
-          name: "doc",
+          name: "chart",
           component: () => import("../pages/chart.vue")
         }
       ]

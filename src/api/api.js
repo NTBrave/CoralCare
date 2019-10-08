@@ -24,18 +24,48 @@ export const baseUrl2 = "http://39.108.210.48:8089/v2";
  *   统一请求接口
  */
 
-const requestApi = (url, data, callback) => {
-  axios
-    .post(url, data)
-    .then(res => {
-      console.log(res);
-      callback;
-    })
-    .catch(err => {
-      console.log(err);
-    });
-};
-export default requestApi;
+// const requestApi = (url, data, method) =>
+//   new axios({
+//     url: baseUrl + url,
+//     data,
+//     method
+//   })
+
+// export default requestApi;
+
+/**
+ *  coralBreed残枝培育部分的接口
+ *  username 蔡梓彬
+ */
+
+// 进入残枝培育页面时弹出日历抽屉，请求当前月视图有活动的日期
+// export const getActivityDays = (yearMonth, address) =>
+//   new axios({
+//     url: `${baseUrl}/#`,
+//     data: {
+//       yearMonth,
+//       address
+//     },
+//     method: "###"
+//   });
+
+// 创建一次下水作业
+// export const newDivingOperation = divingOperation =>
+//   new axios({
+//     url: `${baseUrl}/#`,
+//     data: {
+//       timeNum: divingOperation.timeNum,
+//       address: divingOperation.address
+//     },
+//     method: "###"
+//   });
+
+// 在一次已创建的下水作业中创建一个活动类型
+// export const newActivityType = form =>
+//   new axios({
+//     url: `${baseUrl}/#`,
+//     data: form
+//   });
 
 // 用户模块
 // U1	新建用户

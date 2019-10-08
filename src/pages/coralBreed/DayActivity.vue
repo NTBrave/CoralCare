@@ -1,29 +1,35 @@
 <template>
-  <div class="dayActivity">
-    <div class="activityList">
-      <span>当日活动列表</span>
-      <div class="listBoard" v-for="(activityEach, idx_1) in activityList" :key="idx_1">
-        <div
-          class="listItem"
-          v-for="(activityEach_sub, idx_2) in activityEach"
-          :key="idx_2"
-          @click="showActivityInfo(activityEach_sub, idx_1, idx_2)"
-        >{{activityEach_sub}}</div>
+  <div class="dayActivityRoot">
+    <div class="empty" v-if="activityList.length === 0">当前日期没有活动</div>
+    <div class="dayActivity" v-else>
+      <div class="activityList">
+        <span>当日活动列表</span>
+        <div class="listBoard" v-for="(activityEach, idx_1) in activityList" :key="idx_1">
+          <div
+            class="listItem"
+            :class="(activityEach_sub !== activityList[activityFirstIndex][activitySecondIndex]) ? '': 'activeItem'"
+            v-for="(activityEach_sub, idx_2) in activityEach"
+            :key="idx_2"
+            @click="showActivityInfo(activityEach_sub, idx_1, idx_2)"
+          >{{activityEach_sub}}</div>
+        </div>
       </div>
-    </div>
+      <div></div>
 
-    <div>
-      <file-item
-        v-for="(item, idx) in showActivityData.coralList"
-        :key="idx"
-        :showActivityData="showActivityData.coralList[idx]"
-      ></file-item>
+      <div>
+        <file-item
+          v-for="(item, idx) in showActivityData.coralList"
+          :key="idx"
+          :showActivityData="showActivityData.coralList[idx]"
+        ></file-item>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import FileItemVue from '../components/dayActivity/FileItem.vue'
+import { mapMutations } from 'vuex'
+import FileItemVue from '../../components/dayActivity/FileItem.vue'
 export default {
   components: {
     'file-item': FileItemVue
@@ -252,6 +258,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setCalendarShowActivity']),
     showActivityInfo(activityNum, firstIndex, secondIndex) {
       for (let activity of this.activityDetail) {
         if (activity.activityInfo.activityNum === activityNum) {
@@ -259,45 +266,85 @@ export default {
         }
       }
 
+      // 判断点击哪个具体活动，对应显示样式
       this.activityFirstIndex = firstIndex
       this.activitySecondIndex = secondIndex
     }
   },
-  mounted() {}
+  mounted() {
+    // console.log('111')
+    // console.log(this.$el)
+  },
+  beforeRouteEnter(to, from, next) {
+    // console.log(to)
+    // console.log(from)
+    // console.log(next)
+    next(vm => {
+      vm.setCalendarShowActivity(true)
+
+      // console.log(vm.$store.getters.getCalendarShowActivity)
+    })
+    // console.log('333')
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
-.dayActivity {
-  display: flex;
-  font-size: 16px;
-
-  .activityList {
-    // width: 10%;
+.dayActivityRoot {
+  .dayActivity {
     display: flex;
-    flex-direction: column;
-    // border: 1px solid red;
-    align-items: center;
-    margin-top: 3rem;
+    font-size: 16px;
 
-    span {
-      color: red;
-      margin-bottom: 1rem;
-    }
+    .activityList {
+      // width: 10%;
+      display: flex;
+      flex-direction: column;
+      // border: 1px solid red;
+      align-items: center;
+      margin-top: 3rem;
 
-    .listBoard {
-      margin-bottom: 1rem;
+      span {
+        color: red;
+        margin-bottom: 1rem;
+      }
 
-      .listItem {
-        // display: flex;
-        // flex-direction: column;
-        // border: 1px solid green;
-        background: rgba(255 255 255 1);
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-        padding: 2px 5px;
-        margin-bottom: 0.1rem;
+      .listBoard {
+        margin-bottom: 1rem;
+
+        .listItem {
+          // display: flex;
+          // flex-direction: column;
+          // border: 1px solid green;
+          background: rgba(255 255 255 1);
+          box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+          padding: 2px 5px;
+          margin-bottom: 0.1rem;
+          cursor: pointer;
+
+          &:hover {
+            color: #3FC1CB;
+          }
+        }
+
+        .activeItem {
+          color: #3FC1CB;
+          background: #F5F5F5;
+        }
       }
     }
+  }
+
+  .empty {
+    font-size: 2rem;
+    color: gray;
+    // position: relative;
+    // top: 0;
+    // right: 0;
+    // bottom: 0;
+    // left: 0;
+    height: 20rem;
+    line-height: 20rem;
+    text-align: center;
   }
 }
 </style>

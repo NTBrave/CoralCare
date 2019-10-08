@@ -52,7 +52,8 @@ export default {
     width: 400px;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0 200 200 1);
+    background-color: #00ADBA;
+    text-align: center;
   }
 
   .showCalendar {

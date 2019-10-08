@@ -79,8 +79,30 @@ const mutations = {
   /**
    *   后台管理端
    */
+  // 改变在残枝培育页面时显示的时间地点按钮内容
   setActivity(state, activity) {
     state.activity = activity;
+  },
+
+  // 设置日历发起请求渲染有活动日期
+  setCalendarShowActivity(state, calendarShowActivity) {
+    state.calendarShowActivity = calendarShowActivity;
+  },
+
+  // 缓存当前创建的下水作业对应的活动
+  setNowDivingActivitiesList(state, data) {
+    state.nowDivingActivitiesList.push(data);
+    console.log("***************");
+  },
+
+  // 缓存当前的活动编号
+  setNowDivingActivity(state, data) {
+    state.nowDivingActivity = data;
+  },
+
+  // 缓存当前页面对应的活动类型导航栏id
+  setActiveId(state, id) {
+    state.activeId = id;
   }
 };
 

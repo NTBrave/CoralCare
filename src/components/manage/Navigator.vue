@@ -2,13 +2,13 @@
   <nav>
     <div class="nav-box">
       <div>
-        <div v-if="isActivity">
+        <div v-if="pageRoute.search(/coralBreed/) !== -1">
           <calendar-view></calendar-view>
         </div>
-        <div v-else-if="isCoralRecord"></div>
-        <div v-else></div>
+        <div v-else-if="pageRoute === '/manage/coralManage'">&nbsp;&nbsp;jdaklsfjlaksjf</div>
+        <div v-else-if="pageRoute === '/manage/chart'">wer;qweriojm</div>
       </div>
-      <!-- <div v-if="noSearchPage">
+      <div v-if="noSearchPage">
         <el-autocomplete
           style="width:300px;"
           :fetch-suggestions="getKeyword"
@@ -24,7 +24,7 @@
             slot="append"
           ></el-button>
         </el-autocomplete>
-      </div> -->
+      </div>
 
       <div class="right-btn-cnt">
         <span class="el-dropdown-link">
@@ -42,17 +42,23 @@
 </template>
 
 <script>
-import * as Api from "../../api/api";
-import * as DEFAULT from "../../json/default";
-import CalendarAddress from "./CalendarAddress.vue";
+import * as Api from '../../api/api'
+import * as DEFAULT from '../../json/default'
+import CalendarAddress from './CalendarAddress.vue'
 export default {
   components: {
-    "calendar-view": CalendarAddress
+    'calendar-view': CalendarAddress
+  },
+  props: {
+    // isDayActivity: Boolean,
+    // isCoralManage: Boolean
+    // isChart: Boolean
+    pageRoute: String
   },
   data() {
     return {
       // 搜索
-      keyword: "",
+      keyword: '',
       noSearchPage: true,
       //loading动画
       LoginLoading: false,
@@ -62,75 +68,81 @@ export default {
 
       isActivity: true, // 在残枝培育页面显示日历抽屉按钮
       isCoralRecord: true // 在植株档案页面显示筛选条件
-    };
+    }
   },
   computed: {
     userName() {
       // 获得当前用户的名字
-      return "0001";
+      return '0001'
     }
   },
   methods: {
     handleCommand(cmd) {
       switch (cmd) {
-        case "center":
-        case "logout":
-        case "register":
-          this.$message.error("hh");
-          break;
+        case 'center':
+        case 'logout':
+        case 'register':
+          this.$message.error('hh')
+          break
       }
     },
 
     getKeyword(keyword, cb) {
-      let _this = this;
-      _this.cardLoading = true;
-      Api.Suggestions("all", this.keyword, 10)
+      let _this = this
+      _this.cardLoading = true
+      Api.Suggestions('all', this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = [];
+            let searchSuggestions = []
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              };
-              searchSuggestions.push(temp);
+              }
+              searchSuggestions.push(temp)
             }
-            cb(searchSuggestions);
-            _this.cardLoading = false;
+            cb(searchSuggestions)
+            _this.cardLoading = false
           } else {
-            Message.error(res.data.msg);
+            Message.error(res.data.msg)
           }
         })
         .catch(err => {
-          console.log("getKeyword");
+          console.log('getKeyword')
 
-          this.$message.error(DEFAULT.defaultNetwordError);
-          _this.cardLoading = false;
-        });
+          this.$message.error(DEFAULT.defaultNetwordError)
+          _this.cardLoading = false
+        })
     },
     turnToSearch(item) {
       this.$router.push({
-        path: "/manage/search",
+        path: '/manage/search',
         query: {
           keyword: item.value,
           resourceId: null
         }
-      });
+      })
     },
     turnToSearchByKeyword() {
       this.$router.push({
-        path: "/manage/search",
+        path: '/manage/search',
         query: {
           keyword: this.keyword,
           resourceId: null
         }
-      });
+      })
     },
     changeRoute() {
-      this.$router.push("/home");
+      this.$router.push('/home')
     }
   }
-};
+
+  // beforeRouteEnter(to, from, next) {
+  //   console.log(to)
+  //   console.log(from)
+  //   next()
+  // }
+}
 </script>
 <style lang="stylus" scoped>
 nav {
