@@ -1,19 +1,19 @@
 export const coralList = [
-  { title: "B-蓝-1", value: 1 },
-  { title: "B-蓝-2", value: 2 },
-  { title: "B-蓝-13", value: 3 },
-  { title: "B-绿-23", value: 4 },
-  { title: "B-绿-25", value: 1 },
-  { title: "B-绿-26", value: 2 },
-  { title: "B-绿-27", value: 3 },
-  { title: "B-蓝-1", value: 1 },
-  { title: "B-蓝-2", value: 2 },
-  { title: "B-蓝-13", value: 3 },
-  { title: "B-绿-23", value: 4 },
-  { title: "B-绿-25", value: 1 },
-  { title: "B-绿-26", value: 2 },
-  { title: "B-绿-27", value: 3 },
-  { title: "B-绿-29", value: 4 }
+  { title: "A-宇宙号-2区-蓝-09", value: 1 ,star:false},
+  { title: "A-宇宙号-1区-蓝-15", value: 2 ,star:true},
+  { title: "A-样线1-红-02", value: 3 ,star:false},
+  { title: "A-样线1-蓝-10", value: 4 ,star:false},
+  { title: "A-样线1-蓝-07", value: 1 ,star:true},
+  { title: "A-样线2-红-01", value: 2 ,star:false},
+  { title: "B-样线1-绿-03", value: 3 ,star:true},
+  { title: "B-样线2-绿-04", value: 1 ,star:false},
+  { title: "A-宇宙号-3区-绿-01", value: 2 ,star:false},
+  { title: "A-宇宙号-3区-绿-02", value: 3 ,star:false},
+  { title: "B-宇宙号-3区-绿-23", value: 4 ,star:true},
+  { title: "B-宇宙号-4区-绿-25", value: 1 ,star:false},
+  { title: "B-宇宙号-4区-绿-26", value: 2 ,star:false},
+  { title: "B-宇宙号-5区-绿-27", value: 3 ,star:true},
+  { title: "B-宇宙号-5区-绿-29", value: 4 ,star:false}
 ];
 
 export const miaoPu = [

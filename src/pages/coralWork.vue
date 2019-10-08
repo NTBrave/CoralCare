@@ -1,6 +1,18 @@
 <template>
-  <div class="workPage" :style="bodySize">
-    <div class="workTree">
+  <div>
+    <div style="width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex;">
+      <img style="max-width: 900px;" src="../assets/images/welcome.png" alt />
+    </div>
+    <div style="text-align: center;font-size: 3rem;font-weight: 300;">
+      <div>WELCOME!</div>
+      <div style="font-size: 3rem;">欢迎使用</div>
+    </div>
+
+    <!-- <div class="workPage" :style="bodySize"> -->
+    <!-- <div class="workTree">
       <div class="work-title">
         <h2>活动</h2>
       </div>
@@ -12,14 +24,7 @@
       </div>
       <div>
         <div class="work-title">
-          <!-- <h2>
-          {{secondTitle}}
-          <span
-            @click="HTree(1)"
-            class="el-icon-circle-close"
-            style="float:right;margin: 5px;"
-          ></span>
-          </h2>-->
+      
         </div>
         <el-form
           v-show="isHuJiao==true"
@@ -119,7 +124,7 @@
             <el-button icon="el-icon-search" type="primary" @click="search" slot="append"></el-button>
           </el-autocomplete>
         </div>
-        <!-- 选择苗圃 -->
+    
         <div style="margin-top: 10px">
           <el-radio-group v-model="radio" size="mini">
             <el-radio-button
@@ -129,7 +134,7 @@
             >{{miaoPu.title}}</el-radio-button>
           </el-radio-group>
         </div>
-        <!-- 选择分区 -->
+  
         <div style="margin-top: 10px">
           <el-radio-group v-model="radio2" size="mini">
             <el-radio-button
@@ -141,7 +146,7 @@
         </div>
 
         <div class="MyDivider" style="margin-top:10px"></div>
-        <!-- <div class="resoult" :style="resoultSize"> -->
+     
         <div style="height: 100%; overflow-y: scroll;">
           <div v-show="resultItems.length!=0">找到的档案：</div>
           <el-row v-for="(item, index) in resultItems" :key="index" class="one-resoult">
@@ -345,8 +350,7 @@
       <el-dialog title="提示" :visible.sync="makeAreaVisible" width="80%">
         <MakeArea></MakeArea>
       </el-dialog>
-    </div>
-    <!-- </div> -->
+    </div>-->
   </div>
 </template>
 
@@ -357,14 +361,14 @@ import * as Api from '../api/api'
 import * as DEFAULT from '../json/default'
 import { Message, Loading } from 'element-ui'
 import Upload from '../components/upload.vue'
-import MakeArea from '../components/makeArea.vue'
+// import MakeArea from "../components/makeArea.vue";
 
 export default {
   name: 'coralWork',
-  components: {
-    Upload,
-    MakeArea
-  },
+  //  components: {
+  //   Upload,
+  //   MakeArea,
+  // },
   data() {
     return {
       bodySize: {

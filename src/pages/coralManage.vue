@@ -27,85 +27,147 @@
       </div>
 
       <div style="display: flex;height:85%;background-color: white;margin-top:1%;">
-        <div style="margin-left:1%;width: 10%;">
-          <div style="height:10%">
+        <!-- 列表 -->
+        <div class="list-width">
+          <div v-show="!isShowRecord" style="height:10%">
             <el-row style="color:#0090FF;font-weight:300;font-size=1.1rem">
-              <el-col :offset="6" :span="18">珊瑚档案</el-col>
+              <el-col :offset="6" :span="18">
+                <span>珊瑚档案</span>
+              </el-col>
             </el-row>
           </div>
-          <div class="MyDivider" style="margin-top:5%"></div>
-          <div style="height: 88%;overflow-y: scroll;">
-            <el-row v-for="(coral, index) in coralList" :key="index" class="one-list">
-              <el-col :offset="6" :span="18">
-                <span
-                  style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);"
-                  @click="VTree(3)"
-                >{{coral.title}}</span>
+          <!-- <div class="MyDivider" style="margin-top:5%"></div> -->
+          <div v-show="!isShowRecord" style="height: 88%;overflow-y: scroll;">
+            <el-row
+              v-for="(coral, index) in coralList"
+              :key="index"
+              class="one-list"
+              @dblclick.native="showRecord"
+            >
+              <el-col :offset="3" :span="22">
+                <el-col :span="4">
+                  <span :style="coral.star?'visibility: visible;':'visibility: hidden;'">
+                    <!-- <span v-show="coral.star"> -->
+                    <img src="../assets/images/star.png" alt />
+                  </span>
+                </el-col>
+                <el-col :span="20">
+                  <span
+                    style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);"
+                  >{{coral.title}}</span>
+                </el-col>
+              </el-col>
+            </el-row>
+          </div>
+          <div v-show="isShowRecord" style="height:10%">
+            <el-row style="color:#0090FF;font-weight:300;font-size=1.1rem; cursor: pointer;">
+              <el-col>
+                <span @click="isShowRecord = false;">珊瑚档案</span>
+
+                <span style="width:0.8rem">
+                  <img width="5%" src="../assets/images/seeMore.svg" alt />
+                </span>
+                <span>{{currentCoral}}</span>
+              </el-col>
+            </el-row>
+          </div>
+          <div v-show="isShowRecord" style="height: 88%;overflow-y: scroll;">
+            <el-row v-for="(re, index) in record" :key="index" class="one-list">
+              <el-col>
+                <span style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);">{{re.name}}</span>
               </el-col>
             </el-row>
           </div>
 
           <div></div>
         </div>
-        <el-row style="margin-left:1%;width: 86%;">
-          <el-col class="exampleCarousel" :offset="1" :span="22">
-            <el-row>
-              <el-col :offset="2" :span="9">
-                <div>
-                  <el-carousel
-                    height="400px"
-                    :autoplay="false"
-                    arrow="never"
-                    indicator-position="none"
-                  >
-                    <el-carousel-item v-for="(item,index) in exampleData" :key="index">
-                      <img :src="item.url" alt />
-                    </el-carousel-item>
-                  </el-carousel>
-                </div>
-              </el-col>
-
-              <el-col :offset="2" :span="10">
-                <div>
-                  <div class="coral-informations">
-                    <div
-                      v-for="(item,index) in coralInformations"
-                      :key="index"
-                      class="exampleOneMsg"
+        <!-- 详情 -->
+        <div v-if="!isShowRecord" style="width: 100%;">
+          <el-row style="margin-left:1%;width: 86%;">
+            <el-col class="exampleCarousel" :offset="1" :span="22">
+              <el-row>
+                <el-col :offset="2" :span="9">
+                  <div>
+                    <el-carousel
+                      height="300px"
+                      :autoplay="false"
+                      arrow="never"
+                      indicator-position="none"
                     >
-                      <span v-show="index==0" class="marRight">
-                        <img class="oneImg" src="../assets/home/coral.png" alt />
-                      </span>
-                      <span v-show="index==1" class="marRight">
-                        <img class="oneImg" src="../assets/home/positon.png" alt />
-                      </span>
-                      <span :class="index>1?'exampleOneMargin':''">
-                        <span>{{item.infor}}：</span>
-                        <span
-                          v-show="index==3"
-                          class="rgb-coral"
-                          :style="'background-color:'+item.msg"
-                        ></span>
-                        <span style="color:rgba(126,126,126);">{{item.msg}}</span>
-                        <span v-show="index==4">
-                          com
-                          <sup>2</sup>
+                      <el-carousel-item v-for="(item,index) in exampleData" :key="index">
+                        <img :src="item.url" alt />
+                      </el-carousel-item>
+                    </el-carousel>
+                  </div>
+                </el-col>
+
+                <el-col :offset="2" :span="10">
+                  <div style="position: absolute;top: 0px;left: 50%;">
+                    <span>
+                      <img src="../assets/images/star.png" alt />
+                    </span>
+                  </div>
+                  <div>
+                    <div class="coral-informations" style="position:relative">
+                      <div
+                        v-for="(item,index) in coralInformations"
+                        :key="index"
+                        class="exampleOneMsg"
+                      >
+                        <!-- 
+                       <span v-if="index==0||index==1" class="marRight">
+                        <img
+                          class="oneImg"
+                          :src="index===0?'../assets/images/number.png':'../assets/home/coral.png' "
+                          alt
+                        />
+                        </span>-->
+                        <span v-if="index==0" class="marRight">
+                          <img class="oneImg" src="../assets/images/number.png" alt />
                         </span>
-                      </span>
-                      <div v-show="index==1" class="A-line"></div>
+                        <span v-if="index==1" class="marRight">
+                          <img class="oneImg" src="../assets/home/coral.png" alt />
+                        </span>
+                        <span
+                          :style="index>1?'margin-left: 2rem;':''"
+                          :class="index==coralInformations.length-2||index==coralInformations.length-4?'which-on-right':''"
+                        >
+                          <span>{{item.infor}}：</span>
+                          <span v-if="/颜色/.test(item.infor)">
+                            <span class="rgb-coral" :style="'background-color:'+item.color1"></span>
+                            <span style="color:rgba(126,126,126);">{{item.msg2}}</span>
+                            <span>—</span>
+                            <span class="rgb-coral" :style="'background-color:'+item.color2"></span>
+                          </span>
+                          <span style="color:rgba(126,126,126);">{{item.msg}}</span>
+                          <span v-if="item.infor.search(/尺寸/)>0">
+                            cm
+                            <sup>2</sup>
+                          </span>
+                        </span>
+                        <div v-if="index==1" class="A-line"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </el-col>
-            </el-row>
-            <div class="see-more">
-              查看详情
-              <span style="width:1.2rem">
-                <img width="20%" src="../assets/images/seeMore.svg" alt />
-              </span>
-            </div>
-          </el-col>
-        </el-row>
+                </el-col>
+              </el-row>
+              <div @click="showRecord" class="see-more">
+                查看详情
+                <span style="width:1.2rem">
+                  <img width="20%" src="../assets/images/seeMore.svg" alt />
+                </span>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <coralTimeLine></coralTimeLine>
+          </el-row>
+        </div>
+        <div v-if="isShowRecord" style="width: 100%;">
+          <el-row style="margin-left:1%;width: 86%;">
+            <inforSwiper></inforSwiper>
+          </el-row>
+        </div>
       </div>
     </div>
   </div>
@@ -115,9 +177,12 @@
 import * as Api from '../api/api'
 import * as DEFAULT from '../json/default'
 import { Message, Loading } from 'element-ui'
+import coralTimeLine from '@/components/chart/coralTimeLine.vue'
+import inforSwiper from '@/components/inforSwiper.vue'
+// import getArea from "../components/getArea.vue";
 
 export default {
-  name: 'coralWork',
+  components: { coralTimeLine, inforSwiper },
   data() {
     return {
       bodySize: {
@@ -130,19 +195,23 @@ export default {
       SelectionTable: [
         {
           tips: '测量',
-          width: 7,
-          choose: '暂未测量',
-          label: [{ name: '有过测量', value: 11 }, { name: '全部', value: 12 }]
-        },
-        {
-          tips: '测量时间顺序',
-          width: 11,
-          choose: '最终测量时间升序',
+          width: 10,
+          choose: '所有测量状态',
           label: [
-            { name: '最终测量时间升序', value: 21 },
-            { name: '最终测量时间降序', value: 22 }
+            { name: '有过测量', value: 11 },
+            { name: '从未测量', value: 13 },
+            { name: '所有测量状态', value: 12 }
           ]
         },
+        // {
+        //   tips: "最终记录时间",
+        //   width: 11,
+        //   choose: "最终测量时间升序",
+        //   label: [
+        //     { name: "最终测量时间升序", value: 21 },
+        //     { name: "最终测量时间降序", value: 22 }
+        //   ]
+        // },
         {
           tips: '时间',
           width: 11,
@@ -158,7 +227,7 @@ export default {
         {
           tips: '种类',
           width: 7,
-          choose: '所有种类',
+          choose: '所有属种',
           label: [
             { name: '所有种类', value: 41 },
             { name: '盔型珊瑚科', value: 42 }
@@ -169,21 +238,22 @@ export default {
           width: 7,
           choose: '所有状态',
           label: [
-            { name: '死亡', value: 51 },
-            { name: '部分死亡', value: 52 },
-            { name: '良好', value: 53 },
+            { name: '良好', value: 51 },
+            { name: '部分百化', value: 52 },
+            { name: '部分死亡', value: 53 },
+            { name: '死亡', value: 56 },
             { name: '失踪', value: 54 },
             { name: '所有状态', value: 55 }
           ]
         },
         {
-          tips: '阶段',
+          tips: '标记',
           width: 7,
-          choose: '全部',
+          choose: '所有标记',
           label: [
-            { name: '全部', value: 61 },
-            { name: '未完结', value: 62 },
-            { name: '已完结', value: 63 }
+            { name: '样本档案', value: 61 },
+            { name: '普通档案', value: 62 },
+            { name: '所有标记', value: 63 }
           ]
         }
       ],
@@ -198,17 +268,36 @@ export default {
       ],
       nursery: ['苗圃1', '苗圃2', '苗圃3', '苗圃4', '苗圃5', '苗圃6'],
       coralInformations: [
-        { infor: '珊瑚编号', msg: 'B-红-01' },
-        { infor: '现处位置', msg: '惠州三门岛-宇宙号-1区' },
-        { infor: '珊瑚品种', msg: '盔型珊瑚科目' },
-        { infor: '珊瑚颜色', msg: 'rgb(150,119,46)' },
-        { infor: '最终尺寸', msg: '5.66' },
-        { infor: '相处状态', msg: '部分死亡' },
-        { infor: '相处阶段', msg: '回播' }
+        { infor: '珊瑚编号', msg: 'A-宇宙号-1区-蓝-07' },
+        { infor: '属种', msg: '盔型珊瑚科目' },
+        { infor: '时间', msg: '2018.9.10.10' },
+        { infor: '现处位置', msg: 'A-样线1-1-5m' },
+        { infor: '状态', msg: '部分白化' },
+        { infor: '阶段类型', msg: '回播' },
+        {
+          infor: '颜色',
+          msg: 'D5',
+          msg2: 'D2',
+          color1: 'rgb(247,218,159)',
+          color2: 'rgb(143,65,36)'
+        },
+        { infor: '珊瑚尺寸', msg: '5.66' },
+        { infor: '备注', msg: '有少量污损生物' }
       ],
       secondTitle: '苗圃1',
       area: ['分区1', '分区2', '分区3', '分区4'],
       coralList: DEFAULT.coralList,
+      record: [
+        { name: 'A1-大鹏大澳湾-2018090910' },
+        { name: 'A2-大鹏大澳湾-20180100910' },
+        { name: 'A2-大鹏大澳湾-20180110910' },
+        { name: 'A2-大鹏大澳湾-20180120910' },
+        { name: 'A3-大鹏大澳湾-2019010910' },
+        { name: 'A4-大鹏大澳湾-2019020910' },
+        { name: 'A4-大鹏大澳湾-2019030910' }
+      ],
+      isShowRecord: false,
+      currentCoral: 'A1-大鹏大澳湾-2018090910',
       thirdTitle: '首次暂养',
       keyword: '',
       showMiaoPu: DEFAULT.miaoPu,
@@ -326,33 +415,10 @@ export default {
     //   (document.body.clientHeight - 90) * 0.96 * 0.8 + "px";
   },
   methods: {
-    chooseMiaoPu(value) {
-      let checkedCount = value.length
-      this.checkAll = checkedCount === this.nursery.length
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount >= this.nursery.length
-    },
-    handleAllMiaoPu(val) {
-      this.checkedMiaopu = val ? this.nursery : []
-      this.isIndeterminate = false
-    },
-    chooseQu(value) {
-      let checkedCount = value.length
-      this.checkAll = checkedCount === this.area.length
-      this.isIndeterminate2 =
-        checkedCount > 0 && checkedCount >= this.area.length
-    },
-    handleAllQu(val) {
-      this.checkedQu = val ? this.area : []
-      this.isIndeterminate2 = false
+    showRecord() {
+      this.isShowRecord = !this.isShowRecord
     },
 
-    chooseFirst2(index) {
-      this.secondTitle = this.nursery2[index]
-    },
-    chooseSecond(index) {
-      this.thirdTitle = this.area[index]
-    },
     getKeyword(keyword, cb) {
       let _this = this
       _this.cardLoading = true
@@ -414,39 +480,6 @@ export default {
     },
     callUpload() {
       this.$store.commit('uploadV')
-    },
-    HTree(index) {
-      console.log(index)
-      if (index == 1) {
-        this.tree1 = false
-        this.tree2 = false
-        this.tree3 = false
-        this.tree4 = false
-      } else if (index == 2) {
-        this.tree2 = false
-        this.tree3 = false
-        this.tree4 = false
-      }
-      if (index == 3) {
-        this.tree3 = false
-        this.tree4 = false
-      }
-      if (index == 4) {
-        this.tree4 = false
-      }
-    },
-    VTree(index) {
-      console.log(index)
-      if (index == 1) {
-        this.tree1 = true
-      } else if (index == 2) {
-        this.tree2 = true
-      } else if (index == 3) {
-        this.tree3 = true
-      } else if (index == 4) {
-        this.tree4 = true
-        this.$store.commit('uploadV')
-      }
     }
   }
 }
@@ -455,6 +488,7 @@ export default {
 <style>
 .workPage {
   width: 100%;
+  font-size: 0.8em;
   display: flex;
 }
 
@@ -575,8 +609,22 @@ export default {
 }
 .see-more {
   position: absolute;
-  right: 6rem;
+  right: 2rem;
   top: 2rem;
   color: rgba(126, 126, 126, 1);
+  cursor: pointer;
 }
+.which-on-right {
+  position: absolute;
+  left: 15rem;
+  margin: 0 0 1rem 0;
+}
+.list-width {
+  margin-left: 1%;
+  width: 25%;
+}
+/* .list-width-b {
+  margin-left: 1%;
+  width: 25%;
+} */
 </style>
