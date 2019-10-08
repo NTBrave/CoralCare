@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-row style="height:28rem;margin-top: 2rem;  border: 1px solid rgba(172, 172, 172, 1);overflow: hidden;   ">
+    <el-row
+      v-if="!doMeasuring"
+      style="height:28rem;margin-top: 2rem;  border: 1px solid rgba(172, 172, 172, 1);overflow: hidden;"
+    >
       <el-col :span="8" class="mian-size">
         <el-row>
           <el-col>
@@ -53,14 +56,21 @@
         </el-row>
       </el-col>
     </el-row>
-    <div class="edit-img">编辑</div>
+    <div v-show="!doMeasuring" class="edit-img">编辑</div>
+    <div  v-show="!doMeasuring" class="measuring" @click="goMessuring">开始测量</div>
+    <div v-show="doMeasuring" class="measuring"  style="background: #DBDBDB;margin: 0 0 1rem 0;" @click="goMessuring">取消测量</div>
+    <div v-if="doMeasuring">
+      <swiper></swiper>
+      <getArea></getArea>
+    </div>
   </div>
 </template>
 
 <script>
 import swiper from "@/components/swiper.vue";
+import getArea from "@/components/getArea.vue";
 export default {
-  components: { swiper },
+  components: { swiper,getArea },
   data() {
     return {
       recordName: "A-宇宙号-1区-蓝-07",
@@ -82,8 +92,14 @@ export default {
         { title: "时间", msg: "2018.9.10.10" },
         { title: "珊瑚尺寸", msg: "5.66" },
         { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
-      ]
+      ],
+      doMeasuring: false
     };
+  },
+  methods: {
+    goMessuring() {
+      this.doMeasuring = !this.doMeasuring;
+    }
   }
 };
 </script>
@@ -125,5 +141,18 @@ export default {
   font-weight: 300;
 
   color: rgba(63, 193, 203, 1);
+}
+.measuring {
+  width: 6rem;
+  background: rgba(255, 107, 107, 1);
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 5px;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
 }
 </style>

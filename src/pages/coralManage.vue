@@ -28,7 +28,7 @@
 
       <div style="display: flex;height:85%;background-color: white;margin-top:1%;">
         <!-- 列表 -->
-        <div :class="isShowRecord?'list-width-b':'list-width'">
+        <div class="list-width">
           <div v-show="!isShowRecord" style="height:10%">
             <el-row style="color:#0090FF;font-weight:300;font-size=1.1rem">
               <el-col :offset="6" :span="18">
@@ -44,17 +44,25 @@
               class="one-list"
               @dblclick.native="showRecord"
             >
-              <el-col :offset="6" :span="18">
-                <span
-                  style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);"
-                >{{coral.title}}</span>
+              <el-col :offset="3" :span="22">
+                <el-col :span="4">
+                  <span :style="coral.star?'visibility: visible;':'visibility: hidden;'">
+                  <!-- <span v-show="coral.star"> -->
+                    <img src="../assets/images/star.png" alt />
+                  </span>
+                </el-col>
+                <el-col  :span="20">
+                  <span
+                    style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);"
+                  >{{coral.title}}</span>
+                </el-col>
               </el-col>
             </el-row>
           </div>
           <div v-show="isShowRecord" style="height:10%">
-            <el-row style="color:#0090FF;font-weight:300;font-size=1.1rem">
+            <el-row style="color:#0090FF;font-weight:300;font-size=1.1rem; cursor: pointer;">
               <el-col>
-                <span>珊瑚档案</span>
+                <span @click="isShowRecord = false;">珊瑚档案</span>
 
                 <span style="width:0.8rem">
                   <img width="5%" src="../assets/images/seeMore.svg" alt />
@@ -74,7 +82,7 @@
           <div></div>
         </div>
         <!-- 详情 -->
-        <div v-show="!isShowRecord" style="width: 100%;">
+        <div v-if="!isShowRecord" style="width: 100%;">
           <el-row style="margin-left:1%;width: 86%;">
             <el-col class="exampleCarousel" :offset="1" :span="22">
               <el-row>
@@ -94,6 +102,11 @@
                 </el-col>
 
                 <el-col :offset="2" :span="10">
+                  <div style="position: absolute;top: 0px;left: 50%;">
+                    <span>
+                      <img src="../assets/images/star.png" alt />
+                    </span>
+                  </div>
                   <div>
                     <div class="coral-informations" style="position:relative">
                       <div
@@ -150,7 +163,7 @@
             <coralTimeLine></coralTimeLine>
           </el-row>
         </div>
-        <div v-show="isShowRecord" style="width: 100%;">
+        <div v-if="isShowRecord" style="width: 100%;">
           <el-row style="margin-left:1%;width: 86%;">
             <inforSwiper></inforSwiper>
           </el-row>
@@ -169,8 +182,7 @@ import inforSwiper from "@/components/inforSwiper.vue";
 // import getArea from "../components/getArea.vue";
 
 export default {
- 
-  components: { coralTimeLine,inforSwiper },
+  components: { coralTimeLine, inforSwiper },
   data() {
     return {
       bodySize: {
@@ -597,7 +609,7 @@ export default {
 }
 .see-more {
   position: absolute;
-  right: 6rem;
+  right: 2rem;
   top: 2rem;
   color: rgba(126, 126, 126, 1);
   cursor: pointer;
@@ -609,10 +621,10 @@ export default {
 }
 .list-width {
   margin-left: 1%;
-  width: 10%;
-}
-.list-width-b {
-  margin-left: 1%;
   width: 25%;
 }
+/* .list-width-b {
+  margin-left: 1%;
+  width: 25%;
+} */
 </style>

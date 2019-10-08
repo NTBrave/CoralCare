@@ -1,56 +1,97 @@
 <template>
-  <div>
-    <div style="float:left;width:90%">
+  <div style="display: flex;">
+    <div>
       <canvas id="mycanvas" @mousedown="setPoint"></canvas>
     </div>
-    <div style="float:right;width:10%">
+    <div style="margin-left: 2rem;color:#000">
       <div>
-        <span>
-          图片像素：
-          <span v-if="img!=null">{{img.width}}&nbsp;&nbsp;{{img.height}}</span>
-        </span>
+        <label @click="checkedType(0)" class="elRadio">
+          <span class="elInput">
+            <span class="elInner"></span>
+          </span>
+          <span class="elLabel">测量面积</span>
+        </label>
       </div>
-      <a-button size="small" type="primary" @click.stop="undoPoint">撤销</a-button>
-      <a-button
-        size="small"
-        type="primary"
-        style="margin-left:20px;"
-        @click.stop="delectAllPoint"
-      >重画</a-button>
       <div>
-        <div>X &nbsp;&nbsp;&nbsp;&nbsp;Y</div>
-        <div v-for="(item,index) in pointList" :key="index">
-          {{ parseInt(item.x)}}&nbsp;&nbsp;
-          <span>{{parseInt(item.y)}}</span>
+        <label @click="checkedType(1)" class="elRadio">
+          <span class="elInput">
+            <span class="elInner"></span>
+          </span>
+          <span class="elLabel">测量高度</span>
+        </label>
+      </div>
+
+      <div>
+        上次测量值：
+        <span><span>cm<sup>2</sup></span></span>
+      </div>
+      <div>
+        本次测量值：
+        <span>{{coralAreaActual}}<span>cm<sup>2</sup></span></span>
+      </div>
+
+      <div>
+        <span>号牌直径：</span>
+        <input
+          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+          size="mini"
+          v-model="diameter"
+        />cm
+      </div>
+      <div style="display:flex">
+        <div>1、号牌长轴：</div>
+        <input
+          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+          size="mini"
+          v-model="longAxis"
+        />
+        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;"  @click="calcuLongAxis">
+          <span>测量</span>
         </div>
       </div>
+      <div style="display:flex">
+        <div>2、号牌短轴：</div>
+        <input
+          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+          size="mini"
+          v-model="shortAxis"
+        />
+        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;"  @click="calcuShortAxis">
+          <span>测量</span>
+        </div>
+      </div>
+      <div style="display:flex">
+        <div>3、珊瑚轮廓：</div>
+        <input
+          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+          size="mini"
+          v-model="coralAreaInImg"
+        />
+        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuCoralAreaInImg">
+          <span>测量</span>
+        </div>
+        <!-- <span>cm<sup>2</sup></span> -->
+      </div>
+      <div class="my-btn" style="background: #3FC1CB;" @click.stop="undoPoint">
+        <span class="el-icon-refresh-left">撤销</span>
+      </div>
+      <div class="my-btn" style="background: #3FC1CB;" @click.stop="delectAllPoint">
+        <span class="el-icon-delete">重画</span>
+      </div>
+
+      <!-- <div class="my-btn" style="background: #DBDBDB;">
+        <span>取消测量</span>
+      </div> -->
+      <div class="my-btn">
+        <span>
+          <span @click.stop="mackImg">确认提交</span>
+        </span>
+      </div>
+
+      <!-- <span>
+      <span style="margin-left:20px;" size="small" type="primary" @click.stop="getArea"></span>
+      </span>-->
     </div>
-    <el-input style="width:60%" v-model="newUrl" placeholder="输入图片网址"></el-input>
-    <span>
-      <a-button size="small" type="primary" @click.stop="mackImg">确认</a-button>
-    </span>
-
-    <a-button
-      style="margin-left:20px;"
-      size="small"
-      type="primary"
-      @click="newUrl='https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1819615429,3216219056&fm=26&gp=0.jpg';mackImg"
-    >
-      <span @click="mackImg"></span>图片2
-    </a-button>
-    <a-button
-      style="margin-left:20px;"
-      size="small"
-      type="primary"
-      @click="newUrl='http://pic1.win4000.com/wallpaper/0/57f9a4800a3ee.jpg';mackImg"
-    >
-      <span @click="mackImg"></span>图片3
-    </a-button>
-    <span>
-      <a-button style="margin-left:20px;" size="small" type="primary" @click.stop="getArea">求面积</a-button>
-    </span>
-
-    <span style="margin-left:20px;background-color: #f0f0f0;color: brown">{{area}}</span>
   </div>
 </template>
 
@@ -61,27 +102,34 @@ export default {
   name: "essay",
   data() {
     return {
-      //   dialogJPG: true,
       canvas: null,
       newUrl: "http://dayy.xyz/resource/1.jpg",
-      imageUrl: "http://dayy.xyz/resource/1.jpg",
+      imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
       pointY: [],
       area: 0,
-      //   width: null,
-      //   height: null,
-      //   executionArray: [],
+      type: "1",
+
       context: null,
       img: null,
-      canvasW:0,
+      canvasW: 0,
+      diameter: 3,
+      checkeId: 0,
+      shortAxis: 0,
+      longAxis: 0,
+      coralAreaInImg:0,
+      coralAreaActual:0
     };
   },
   mounted: function() {
     this.canvas = document.getElementById("mycanvas");
     this.context = this.canvas.getContext("2d");
-
+    this.elRadio = document.getElementsByClassName("elRadio");
+    this.elInput = document.getElementsByClassName("elInput");
+    this.elRadio[this.checkeId].classList.add("isChecked");
+    this.elInput[this.checkeId].classList.add("isChecked");
     this.doDraw(this.imageUrl);
   },
   methods: {
@@ -101,9 +149,11 @@ export default {
           if (_this.img.complete) {
             // console.log(_this.img.width, _this.img.height);
             //  根据图像重新设定了canvas的长宽
-            if(_this.img.width>700){
-              _this.canvasW = 700}
-              else{_this.canvasW = _this.img.width}
+            if (_this.img.width > 700) {
+              _this.canvasW = 700;
+            } else {
+              _this.canvasW = _this.img.width;
+            }
             // _this.canvas.setAttribute("width", 700);
             // _this.canvas.setAttribute("height", _this.img.height*(700/_this.img.width));
 
@@ -150,15 +200,15 @@ export default {
     //获取实际的像素坐标
     windowToCanvas(x, y) {
       let _this = this;
-    // console.log("canvas:", _this.canvasW);
+      // console.log("canvas:", _this.canvasW);
 
       //方法返回元素的大小及其相对于视口的位置
       var bbox = _this.canvas.getBoundingClientRect();
       // console.log("bbox:", bbox.left, bbox.top);
-        return {
-          x: (x - bbox.left)*(_this.img.width/_this.canvasW),
-          y: (y - bbox.top)*(_this.img.width/_this.canvasW)
-        };
+      return {
+        x: (x - bbox.left) * (_this.img.width / _this.canvasW),
+        y: (y - bbox.top) * (_this.img.width / _this.canvasW)
+      };
     },
     //撤销上一步
     undoPoint() {
@@ -218,12 +268,66 @@ export default {
       //   //  console.log(response);
       //   this.area = response.data;
       // });
-    }
+    },
+    checkedType(i) {
+      this.elRadio[this.checkeId].classList.remove("isChecked");
+      this.elInput[this.checkeId].classList.remove("isChecked");
+      this.checkeId = i;
+      this.elRadio[this.checkeId].classList.add("isChecked");
+      this.elInput[this.checkeId].classList.add("isChecked");
+    },
+    calcuLongAxis(){
+      if(this.pointList.length!=2){
+        alert("请在图中标两个点");
+      }else{
+        let a2 = Math.pow(this.pointList[0].x-this.pointList[1].x,2);
+        let b2 = Math.pow(this.pointList[0].y-this.pointList[1].y,2);
+        this.longAxis = Math.sqrt(a2+b2).toFixed(2);
+      };
+      this.delectAllPoint();
+    },
+    calcuShortAxis(){
+       if(this.pointList.length!=2){
+        alert("请在图中标两个点");
+      }else{
+        let a2 = Math.pow(this.pointList[0].x-this.pointList[1].x,2);
+        let b2 = Math.pow(this.pointList[0].y-this.pointList[1].y,2);
+        this.shortAxis = Math.sqrt(a2+b2).toFixed(2);
+      };
+      this.delectAllPoint();
+    },
+    calcuCoralAreaInImg(){
+       if(this.pointList.length<3){
+        alert("至少需要3个点，才能计算");
+      }else{
+        // console.log(this.pointList);
+        let allHelen = 0;
+        //此版本计算面积方式 不够完善
+        for(let i =2;i<this.pointList.length;++i){
+          //海伦公式 三点计算三角形面积
+          let aLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i-1].x,2)+Math.pow(this.pointList[0].y-this.pointList[i-1].y,2));
+          let bLen = Math.sqrt(Math.pow(this.pointList[i-1].x-this.pointList[i].x,2)+Math.pow(this.pointList[i-1].y-this.pointList[i].y,2));
+          let cLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i].x,2)+Math.pow(this.pointList[0].y-this.pointList[i].y,2));
+          let helen =  Math.sqrt((aLen+bLen+cLen)*(aLen+bLen-cLen)*(aLen-bLen+cLen)*(-aLen+bLen+cLen))/4;
+          // console.log(helen);
+          allHelen += helen;
+        }
+        // console.log(allHelen);
+        this.coralAreaInImg = allHelen.toFixed(2);
+      };
+      this.delectAllPoint();
+      if(this.longAxis!=0&&this.shortAxis!=0){
+        let ellipse = Math.PI*this.longAxis*this.shortAxis/4;
+        let actualEllipse = Math.PI*this.diameter*(this.shortAxis*(this.diameter/this.longAxis))/4;
+        this.coralAreaActual = (this.coralAreaInImg*actualEllipse/ellipse).toFixed(2);
+      }
+
+    },
   }
 };
 </script>
 
-<style>
+<style scoped>
 #content-essay {
   /* margin-left: 15%; */
   /* box-shadow: 0 0 7px rgba(0, 0, 0, 0.16), 0 0 9px rgba(0, 0, 0, 0.08); */
@@ -235,5 +339,64 @@ export default {
 #mycanvas {
   max-width: 700px;
   border: 1px solid rgb(199, 198, 198);
+}
+
+.my-btn {
+  width: 6rem;
+  background: rgba(255, 107, 107, 1);
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 0.7rem;
+  font-weight: 400;
+  text-align: center;
+  /* margin: 0 auto; */
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  font-size: 1rem;
+}
+.my-btn:hover {
+  opacity: 0.8;
+}
+.elRadio {
+  color: #000;
+  cursor: pointer;
+  margin-right: 0;
+  font-size: 1rem;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  outline: 0;
+  white-space: nowrap;
+  font-weight: 500;
+  touch-action: manipulation;
+}
+.elInput.isChecked .elInner {
+  border-color: #3fc1cb !important;
+  background: #ff6b6b !important;
+}
+
+.elInner {
+  border: 2px solid #dcdfe6;
+  border-radius: 100%;
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+}
+.elOriginal {
+  opacity: 0;
+  outline: 0;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
 }
 </style>

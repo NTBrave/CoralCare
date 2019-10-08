@@ -192,7 +192,7 @@ body {
   /* border: 1px solid rebeccapurple; */
   /* 盒子大小为一张图片的大小，超出部分隐藏 */
   overflow: hidden;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   /* margin: 0 auto; */
   /* 水平居中*/
 }
