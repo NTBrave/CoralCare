@@ -359,9 +359,9 @@ export default {
 
     // 设置当前月视图有活动的日期
     setActivityDays(yearMonth) {
-      getActivityDays(yearMonth).then(res => {
-        console.log(res)
-      })
+      // getActivityDays(yearMonth).then(res => {
+      //   console.log(res)
+      // })
     }
 
     // 图片首次加载方法

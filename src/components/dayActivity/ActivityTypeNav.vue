@@ -11,6 +11,7 @@
       @click="change(item.idx)"
     ></activity-card>
     <el-dialog
+      width="30%"
       :title="form.title"
       :visible.sync="dialogFormVisible"
       append-to-body
@@ -31,7 +32,7 @@
           <el-input v-model="form.members"></el-input>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input type="textarea" v-model="form.remarks"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" v-model="form.remarks"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

@@ -67,6 +67,20 @@ export const baseUrl2 = "http://39.108.210.48:8089/v2";
 //     data: form
 //   });
 
+// 创建一个珊瑚档案
+// export const newActivityType = form =>
+//   new axios({
+//     url: `${baseUrl}/#`,
+//     data: form
+//   });
+
+// 录入或修改一个珊瑚档案
+// export const newActivityType = form =>
+//   new axios({
+//     url: `${baseUrl}/#`,
+//     data: form
+//   });
+
 // 用户模块
 // U1	新建用户
 export const newUser = (work_no, username, password, email) => {

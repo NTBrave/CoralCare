@@ -105,5 +105,6 @@ footer {
   right: 0;
   left: 0;
   bottom: 0;
+  z-index: -1;
 }
 </style>

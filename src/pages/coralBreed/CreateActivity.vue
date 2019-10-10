@@ -6,23 +6,27 @@
       <div class="info">
         <file-list v-if="activityFiles" :fileNameList="activityFiles"></file-list>
         <div class="form">
-          <form-one v-if="true"></form-one>
+          <activity-form></activity-form>
         </div>
       </div>
     </div>
 
-    <div></div>
+    <div>
+      <picture-swiper></picture-swiper>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
-import ActivityOneVue from '../../components/dayActivity/ActivityOne.vue'
+import ActivityFormVue from '../../components/dayActivity/ActivityForm.vue'
+import swiperVue from '../../components/swiper.vue'
 export default {
   components: {
     'file-list': FileListVue,
-    'form-one': ActivityOneVue
+    'activity-form': ActivityFormVue,
+    'picture-swiper': swiperVue
   },
   data() {
     return {
@@ -68,8 +72,9 @@ export default {
       display: flex;
       justify-content: space-between;
 
+      // width: 80%;
       .form {
-        width: 50%;
+        width: 40%;
         min-width: 350px;
         max-width: 400px;
         margin-right: 100px;

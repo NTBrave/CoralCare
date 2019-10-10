@@ -154,8 +154,8 @@ export default {
   z-index: 1000;
   font-size: 1rem;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.16);
-  overflow: auto;
 
+  // overflow: auto;
   .logoArea {
     display: flex;
     justify-content: center;
