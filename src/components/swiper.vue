@@ -1,5 +1,5 @@
 <template>
-  <div id="container" :style="'width:'+(imgWidth+2*imgMargin)*num+'px;height:'+(imgHeight)+'px'">
+  <div id="container" :style="'height:'+(imgHeight)+'px'">
     <div
       id="list"
       :style="'left:0px;width:'+imgWidth*(imgUrl.length+1)+'px;height:'+imgHeight+'px'"
@@ -13,7 +13,7 @@
         <img :src="images.url" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;'" />
         <span
           class="img-name"
-          :style="'width:'+imgWidth+';top:'+(imgHeight-20)+'px'"
+          :style="'width:'+imgWidth+';bottom:0px'"
         >{{images.name}}</span>
         <span class="delete-img">
           <span class="el-icon-close"></span>
@@ -34,6 +34,7 @@
 <script >
 export default {
   name: "swiperper",
+  props:['imgHeight','imgWidth','imgMargin'],
   data() {
     return {
       imgUrl: [
@@ -124,9 +125,9 @@ export default {
       ],
       list: null,
       index: 0,
-      imgWidth: 180,
-      imgHeight: 90,
-      imgMargin: 2,
+      // imgWidth: 180,
+      // imgHeight: 90,
+      // imgMargin: 2,
       allImg: null,
       num: 4
     };
@@ -252,6 +253,8 @@ body {
   color: #000000;
   position: absolute;
   left: 0;
+  right: 0;
+  text-align: center;
   background: rgba(255, 255, 255, 0.45);
 }
 .img-swiper {

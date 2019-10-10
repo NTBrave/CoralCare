@@ -359,9 +359,9 @@ export default {
 
     // 设置当前月视图有活动的日期
     setActivityDays(yearMonth) {
-      getActivityDays(yearMonth).then(res => {
-        console.log(res)
-      })
+      // getActivityDays(yearMonth).then(res => {
+      //   console.log(res)
+      // })
     }
 
     // 图片首次加载方法
@@ -379,7 +379,7 @@ export default {
     // this.imgLoad(this.addressIndex)
     // window.addEventListener('resize', () => {
     //   this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
-    //   this.imgLoad(this.addressIndex)
+    //   this.imgLoad(thils.addressIndex)
     // })
 
     this.onSelect(moment())
