@@ -1,6 +1,9 @@
 <template>
-  <div id="container" :style="'width:'+(imgWidth+imgMargin)*num+'px;height:'+(imgHeight)+'px'">
-    <div id="list" :style="'left:0px;width:'+imgWidth*(imgUrl.length)+'px;height:'+imgHeight+'px'">
+  <div id="container" :style="'height:'+(imgHeight)+'px'">
+    <div
+      id="list"
+      :style="'left:0px;width:'+imgWidth*(imgUrl.length+1)+'px;height:'+imgHeight+'px'"
+    >
       <div
         class="img-swiper"
         v-for="(images,index) in imgUrl"
@@ -8,7 +11,7 @@
         :style="'width:'+imgWidth+';margin-right: '+imgMargin+'px'"
       >
         <img :src="images.url" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;'" />
-        <span class="img-name" :style="'width:'+imgWidth+';bottom: 0px;'">{{images.name}}</span>
+        <span class="img-name" :style="'width:'+imgWidth+';bottom:0px'">{{images.name}}</span>
         <span class="delete-img">
           <span class="el-icon-close"></span>
         </span>
@@ -28,6 +31,7 @@
 <script >
 export default {
   name: 'swiperper',
+  props: ['imgHeight', 'imgWidth', 'imgMargin'],
   data() {
     return {
       imgUrl: [
@@ -118,9 +122,9 @@ export default {
       ],
       list: null,
       index: 0,
-      imgWidth: 180,
-      imgHeight: 90,
-      imgMargin: 2,
+      // imgWidth: 180,
+      // imgHeight: 90,
+      // imgMargin: 2,
       allImg: null,
       num: 4
     }

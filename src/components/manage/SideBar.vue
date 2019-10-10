@@ -4,7 +4,7 @@
       <img src="../../assets/logo.png" />
     </div>
     <el-menu
-      style="height: 100%"
+
       :default-active="selectedKeys"
       mode="vertical"
       background-color="#fff"

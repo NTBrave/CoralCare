@@ -146,7 +146,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 nav {
-  height: 60px;
+  height: 8vh;
   width: 100%;
 }
 
@@ -157,7 +157,7 @@ nav {
   left: 9rem;
   padding: 0 20px;
   background-color: white;
-  height: 4rem;
+  height: 8vh;
   display: flex;
   box-shadow: 0px 5px 6px 0 rgba(0, 0, 0, 0.07);
   align-items: center;

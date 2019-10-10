@@ -90,10 +90,13 @@ export default {
 .manage-box {
   position: fixed;
   overflow: auto;
-  top: 4rem;
+  top: 8vh;
   left: 9rem;
   right: 0;
   bottom: 0;
+  width: 90rem;
+    height: 90vh;
+    display: block;
 }
 
 footer {

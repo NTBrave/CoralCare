@@ -379,7 +379,7 @@ export default {
     // this.imgLoad(this.addressIndex)
     // window.addEventListener('resize', () => {
     //   this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
-    //   this.imgLoad(this.addressIndex)
+    //   this.imgLoad(thils.addressIndex)
     // })
 
     this.onSelect(moment())
