@@ -25,7 +25,8 @@ export default {
 .fileItem {
   width: 20rem;
   height: 5rem;
-  border: 1px solid red;
+  // border: 1px solid red;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   display: flex;
   align-items: center;
   justify-content: space-around;

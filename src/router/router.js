@@ -81,9 +81,8 @@ export default new Router({
               component: () => import("../pages/coralBreed/CreateActivity.vue")
             },
             {
-              path: "/manage/coralBreed/newActivity/:ActivityType/success",
-              name: "success",
-
+              path: "/manage/coralBreed/newActivity/:ActivityType/:check",
+              name: "result",
               component: () => import("../pages/coralBreed/SuccessActivity.vue")
             }
           ]

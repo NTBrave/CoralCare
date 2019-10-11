@@ -392,10 +392,10 @@ export default {
         remark: '' // 备注
       },
 
-      beforeCreateFile: true,
-      buttonText: '',
-      remarkRows: -1,
-      refresh: 1
+      beforeCreateFile: true, // 首次暂养时需要先创建档案才能录入记录
+      buttonText: '', // “录入**数据”
+      remarkRows: -1, // 备注文本框高度
+      refresh: 1 // 监听路由参数重新渲染表单
     }
   },
   methods: {
@@ -404,7 +404,14 @@ export default {
       this.beforeCreateFile = false
     },
     submitRecorder() {
-      // 提交记录接口
+      // 提交记录接口，成功后跳转到查看详情页面
+      this.$router.push({
+        path: `/manage/coralBreed/newActivity/${this.$route.params.ActivityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address
+        }
+      })
     },
     // 根据在哪个阶段改变表单及按钮样式
     changeForm() {

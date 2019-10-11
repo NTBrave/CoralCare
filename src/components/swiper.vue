@@ -1,28 +1,33 @@
 <template>
-  <div id="container" :style="'height:'+(imgHeight)+'px'">
+  <div id="container" :style="'width:' + imgWidth * num + 'vw; height:'+imgHeight+'vh'">
     <div
       id="list"
-      :style="'left:0px;width:'+imgWidth*(imgUrl.length+1)+'px;height:'+imgHeight+'px'"
+      :style="'left:0px;width:'+imgWidth*(imgUrl.length+1)+'vw;height:'+imgHeight+'vh'"
     >
       <div
         class="img-swiper"
         v-for="(images,index) in imgUrl"
         :key="index"
-        :style="'width:'+imgWidth+';margin-right: '+imgMargin+'px'"
+        :style="'width:'+imgWidth"
       >
-        <img :src="images.url" :style="'width:'+imgWidth+'px;height:'+imgHeight+'px;'" />
-        <span class="img-name" :style="'width:'+imgWidth+';bottom:0px'">{{images.name}}</span>
+        <img :src="images.url" :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;'" />
+        <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
         <span class="delete-img">
           <span class="el-icon-close"></span>
         </span>
       </div>
     </div>
-    <a :style="'height:'+imgHeight+'px'" id="prev" class="arrow" @click="prevOnclick">
+    <div
+      :style="'width:'+ imgWidth/5 + 'vw;height:'+imgHeight+'vh'"
+      id="prev"
+      class="arrow"
+      @click="prevOnclick"
+    >
       <span class="el-icon-arrow-left"></span>
-    </a>
-    <a :style="'height:'+imgHeight+'px'" id="next" class="arrow" @click="nextOnclick">
+    </div>
+    <div :style="'height:'+imgHeight+'vh'" id="next" class="arrow" @click="nextOnclick">
       <span class="el-icon-arrow-right"></span>
-    </a>
+    </div>
   </div>
 </template>
 
@@ -31,7 +36,7 @@
 <script >
 export default {
   name: 'swiperper',
-  props: ['imgHeight', 'imgWidth', 'imgMargin'],
+  props: ['imgHeight', 'imgWidth'],
   data() {
     return {
       imgUrl: [
@@ -141,16 +146,15 @@ export default {
     move(offset) {
       //获取的是style.left，是相对左边获取距离，所以第一张图后style.left都为负值，
       if (this.index == 0) {
-        this.list.style.left = 0 + 'px'
+        this.list.style.left = 0 + 'vw'
       } else if (this.index > this.imgLen - this.num) {
         this.list.style.left =
-          -(this.imgWidth + this.imgMargin) * (this.imgUrl.length - this.num) +
-          'px'
+          -this.imgWidth * (this.imgUrl.length - this.num) + 'vw'
       } else {
         console.log(this.list.style.left)
         var newLeft = parseInt(this.list.style.left) + offset
 
-        this.list.style.left = newLeft + 'px'
+        this.list.style.left = newLeft + 'vw'
         console.log('newLeft:', newLeft)
       }
     },
@@ -158,21 +162,21 @@ export default {
       this.allImg[this.index].classList.remove('current-img')
       this.index = this.index > 0 ? this.index - 1 : 0
       this.allImg[this.index].classList.add('current-img')
-      this.move(this.imgWidth + this.imgMargin)
+      this.move(this.imgWidth)
       console.log(this.index)
     },
     nextOnclick() {
       this.allImg[this.index].classList.remove('current-img')
       this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen
       this.allImg[this.index].classList.add('current-img')
-      this.move(-(this.imgWidth + this.imgMargin))
+      this.move(-this.imgWidth)
       console.log(this.index)
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 * {
   margin: 0;
   padding: 0;
@@ -185,13 +189,12 @@ body {
 
 #container {
   position: relative;
-  border: 1px solid rgba(172, 172, 172, 1);
   /* border: 1px solid rebeccapurple; */
   /* 盒子大小为一张图片的大小，超出部分隐藏 */
   overflow: hidden;
   /* margin: 0 auto; */
   /* margin: 0 auto; */
-  /* 水平居中*/
+  /* 水平居中 */
 }
 
 /* 图片盒子要足够宽，放得下所有图片 */
@@ -218,14 +221,23 @@ body {
   width: 2rem;
   font-size: 2rem;
   font-weight: bold;
-
   color: rgb(0, 0, 0);
-  background: rgba(255, 255, 255);
+  background: rgba(255, 255, 255 1);
   opacity: 0.35;
   cursor: pointer;
-  /* 垂直居中*/
-  top: 50%;
-  transform: translateY(-50%);
+
+  /* 垂直居中 */
+  span {
+    display: block;
+    width: 100%;
+    height: 50%;
+    margin: auto auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
 
 .arrow:hover {
@@ -244,6 +256,7 @@ body {
 #next {
   right: 0;
 }
+
 .img-name {
   font-size: 9px;
   color: #000000;
@@ -253,10 +266,12 @@ body {
   text-align: center;
   background: rgba(255, 255, 255, 0.45);
 }
+
 .img-swiper {
   position: relative;
   opacity: 0.8;
 }
+
 .delete-img {
   width: 1rem;
   height: 1rem;
@@ -269,8 +284,9 @@ body {
   border-radius: 50%;
   display: flex;
 }
+
 .current-img {
-  border: 1px solid rebeccapurple;
+  // border: 1px solid rebeccapurple;
   opacity: 1;
 }
 </style>

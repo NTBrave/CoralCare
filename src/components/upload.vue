@@ -1,9 +1,9 @@
 <template>
-  <div width="250px" :closable="false" @close="close" v-show="uploadVisiable">
-    <el-upload style="text-align: center;" drag multiple action :http-request="uploadProcess">
-      <i class="el-icon-upload"></i>
+  <div :closable="false" @close="close" v-show="uploadVisiable" class="uploadRoot">
+    <el-upload class="avatar-upload" drag multiple action :http-request="uploadProcess">
+      <i class="el-icon-plus"></i>
       <div>
-        将文件拖到此处，或
+        批量上传图片，
         <span class="em">点击上传</span>
       </div>
     </el-upload>
@@ -173,12 +173,31 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
+.uploadRoot {
+  width: 100%;
+  height: 100%;
+
+  .avatar-upload {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+  }
+}
+</style>
+<style lang="stylus">
 .em {
   color: #409eff;
   font-style: normal;
 }
+
 .el-upload-dragger {
-  width: 250px !important ;
+  /* width: 250px !important ; */
+  height: 45vh !important;
+  text-align: center;
+  padding-top: 18vh;
+  border: none;
 }
 </style>
+
+

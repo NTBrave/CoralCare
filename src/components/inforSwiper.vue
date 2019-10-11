@@ -1,5 +1,6 @@
 <template>
   <div class="all-infor">
+    <div v-show="!doMeasuring" class="edit-img">编辑</div>
     <div v-if="!doMeasuring" class="inforSwiper">
       <div class="mian-size">
         <el-row>
@@ -44,17 +45,20 @@
           </el-col>
         </el-row>
       </div>
-      <div style="width:37rem">
-        <swiper :imgHeight="90" :imgWidth="180" :imgMargin="2"></swiper>
+      <div style="width:40rem">
+        <swiper :imgHeight="9.5" :imgWidth="10"></swiper>
         <div style="    height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
-
-            <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
-            <img class="showOneImg" width="100%" src="https://misc.aotu.io/Tingglelaoo/viewport.jpg" alt />
-
+          <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
+          <img
+            class="showOneImg"
+            width="100%"
+            src="https://misc.aotu.io/Tingglelaoo/viewport.jpg"
+            alt
+          />
         </div>
       </div>
     </div>
-    <div v-show="!doMeasuring" class="edit-img">编辑</div>
+
     <div v-show="!doMeasuring" class="measuring" @click="goMessuring">开始测量</div>
     <div
       v-show="doMeasuring"
@@ -63,48 +67,48 @@
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
-      <swiper :imgHeight="90" :imgWidth="180" :imgMargin="2"></swiper>
+      <swiper :imgHeight="9.5" :imgWidth="10"></swiper>
       <getArea></getArea>
     </div>
   </div>
 </template>
 
 <script>
-import swiper from "@/components/swiper.vue";
-import getArea from "@/components/plantFile/getArea.vue";
+import swiper from '@/components/swiper.vue'
+import getArea from '@/components/plantFile/getArea.vue'
 export default {
   components: { swiper, getArea },
   data() {
     return {
-      recordName: "A-宇宙号-1区-蓝-07",
+      recordName: 'A-宇宙号-1区-蓝-07',
       recordInfor: [
-        { title: "活动编号", msg: "A2-大鹏大澳湾-2019090910" },
-        { title: "属种", msg: "盔型珊瑚科目" },
-        { title: "状态", msg: "部分白化" },
-        { title: "阶段类型", msg: "回播" },
-        { title: "暂养区域", msg: "A-宇宙号-1区" },
-        { title: "透光度", msg: "180cm" },
-        { title: "温度", msg: "31℃" },
+        { title: '活动编号', msg: 'A2-大鹏大澳湾-2019090910' },
+        { title: '属种', msg: '盔型珊瑚科目' },
+        { title: '状态', msg: '部分白化' },
+        { title: '阶段类型', msg: '回播' },
+        { title: '暂养区域', msg: 'A-宇宙号-1区' },
+        { title: '透光度', msg: '180cm' },
+        { title: '温度', msg: '31℃' },
         {
-          title: "颜色",
-          msg: "D2",
-          color: "rgb(247,218,159)",
-          msg2: "D5",
-          color2: "rgb(143,65,36)"
+          title: '颜色',
+          msg: 'D2',
+          color: 'rgb(247,218,159)',
+          msg2: 'D5',
+          color2: 'rgb(143,65,36)'
         },
-        { title: "时间", msg: "2018.9.10.10" },
-        { title: "珊瑚尺寸", msg: "5.66" },
-        { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
+        { title: '时间', msg: '2018.9.10.10' },
+        { title: '珊瑚尺寸', msg: '5.66' },
+        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
       ],
       doMeasuring: false
-    };
+    }
   },
   methods: {
     goMessuring() {
-      this.doMeasuring = !this.doMeasuring;
+      this.doMeasuring = !this.doMeasuring
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -114,12 +118,14 @@ export default {
   border: 0.5px solid #acacac;
 }
 .edit-img {
-  position: absolute;
-    top: 0;
-    left: 1060px;
-    cursor: pointer;
-    color: #ff6b6b;
-    font-size: 1rem;
+  /* position: absolute; */
+  /* top: 0; */
+  /* left: 1060px; */
+  cursor: pointer;
+  color: #ff6b6b;
+  font-size: 1rem;
+  width: 55rem;
+  text-align: right;
 }
 .color-block {
   width: 2rem;
@@ -161,15 +167,15 @@ export default {
 }
 .inforSwiper {
   width: 55rem;
- display: flex;
+  display: flex;
   height: 30rem;
-  margin-top: 2vh;
+  /* margin-top: 2vh; */
   border: 1px solid rgba(172, 172, 172, 1);
   overflow: hidden;
 }
-.all-infor{
+.all-infor {
   padding-top: 1.5rem;
-    position: relative;
+  position: relative;
 }
 /* @media screen and (max-width:1600px) {
   .inforSwiper {width: 1000px;height: 62vh;}

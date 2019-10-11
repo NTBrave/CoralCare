@@ -4,15 +4,27 @@
       <div class="activityNum">活动编号：{{activityNum}}</div>
 
       <div class="info">
-        <file-list v-if="activityFiles" :fileNameList="activityFiles"></file-list>
+        <file-list
+          :style="{'marginTop': '4.5vh'}"
+          v-if="activityFiles"
+          :fileNameList="activityFiles"
+        ></file-list>
         <div class="form">
+          <p>A-宇宙号-1区-蓝-07</p>
           <activity-form></activity-form>
         </div>
       </div>
     </div>
 
-    <div>
-      <picture-swiper></picture-swiper>
+    <div class="uploadArea">
+      <el-row>
+        <picture-swiper :imgHeight="9.5" :imgWidth="10"></picture-swiper>
+      </el-row>
+      <el-row :style="{'margin':'0 auto'}">
+        <upload-border>
+          <upload></upload>
+        </upload-border>
+      </el-row>
     </div>
   </div>
 </template>
@@ -22,11 +34,15 @@ import { mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
 import ActivityFormVue from '../../components/dayActivity/ActivityForm.vue'
 import swiperVue from '../../components/swiper.vue'
+import UploadBorderVue from '../../components/dayActivity/UploadBorder.vue'
+import uploadVue from '../../components/upload.vue'
 export default {
   components: {
     'file-list': FileListVue,
     'activity-form': ActivityFormVue,
-    'picture-swiper': swiperVue
+    'picture-swiper': swiperVue,
+    'upload-border': UploadBorderVue,
+    upload: uploadVue
   },
   data() {
     return {
@@ -53,7 +69,7 @@ export default {
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 40%;
 
     .activityNum {
       width: 40%;
@@ -74,10 +90,38 @@ export default {
 
       // width: 80%;
       .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         width: 40%;
         min-width: 350px;
         max-width: 400px;
-        margin-right: 100px;
+
+        p {
+          height: 1.8rem;
+          font-size: 1.2rem;
+          color: #3FC1CB;
+          margin-bottom: 1vh;
+        }
+      }
+    }
+  }
+
+  .uploadArea {
+    width: 40vw;
+    margin-left: 5vw;
+    margin-top: 2.3rem;
+  }
+}
+
+@media screen and (min-width: 1680px) {
+  .createBoard {
+    .infoArea {
+      .info {
+        // width: 80%;
+        .form {
+          margin-right: 5vw;
+        }
       }
     }
   }
