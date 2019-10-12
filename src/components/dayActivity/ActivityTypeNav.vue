@@ -17,6 +17,7 @@
       append-to-body
       center
       :show-close="false"
+      @close="back"
     >
       <el-form :model="form" class="formBoard">
         <el-form-item label="活动编号" style="{color: #7e7e7e}" :label-width="formLabelWidth">
@@ -37,7 +38,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="danger" round @click="newAnActivity()" size="medium">确定新建</el-button>
-        <el-button type="info" round @click="dialogFormVisible = false" size="medium">&nbsp;取消&nbsp;</el-button>
+        <el-button type="info" round @click="back()" size="medium">&nbsp;取消&nbsp;</el-button>
       </div>
     </el-dialog>
   </div>
@@ -130,6 +131,12 @@ export default {
     showActive() {
       let temp = this.$route.params.ActivityType.slice(1) - 0
       this.setActiveId(temp - 1)
+    },
+
+    // 点击取消关闭对话框
+    back() {
+      this.showActive()
+      this.dialogFormVisible = false
     },
 
     // 点击选择具体活动时显示对应的对话框
