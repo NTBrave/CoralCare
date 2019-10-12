@@ -19,7 +19,7 @@
                   :key="index"
                   class
                 >
-                  <span style="color:#7E7E7E;">{{item.title}}：</span>
+                  <span style="color:#7E7E7E;">{{item.title}}：<span v-if="index==0"><br></span></span>
                   <span>
                     <span v-if="item.title.match(/备注/g)!=null">
                       <br />
@@ -46,13 +46,13 @@
         </el-row>
       </div>
       <div style="width:40rem">
-        <swiper :imgHeight="9.5" :imgWidth="10"></swiper>
+        <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
         <div style="    height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
           <img
             class="showOneImg"
             width="100%"
-            src="https://misc.aotu.io/Tingglelaoo/viewport.jpg"
+            :src="imgUrlFormSwiper"
             alt
           />
         </div>
@@ -67,7 +67,7 @@
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
-      <swiper :imgHeight="9.5" :imgWidth="10"></swiper>
+      <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
       <getArea></getArea>
     </div>
   </div>
@@ -100,12 +100,19 @@ export default {
         { title: '珊瑚尺寸', msg: '5.66' },
         { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
       ],
-      doMeasuring: false
+      doMeasuring: false,
+      imgUrlFormSwiper:'',
     }
   },
   methods: {
     goMessuring() {
       this.doMeasuring = !this.doMeasuring
+    },
+    chooseSwiperImg(url){
+      this.imgUrlFormSwiper = url;
+      console.log(this.imgUrlFormSwiper)
+ 
+
     }
   }
 }
