@@ -9,14 +9,6 @@ import ECharts from "vue-echarts";
 export default {
   data() {
     return {
-      // data: [
-      //   { time: "2012", size: 2141 },
-      //   { time: "2013", size: 1499 },
-      //   { time: "2014", size: 3260 },
-      //   { time: "2015", size: 1170 },
-      //   { time: "2016", size: 970 },
-      //   { time: "2017", size: 2350 }
-      // ],
       data: [
         {
           url: "http://dayy.xyz/resource/example/1.png",
@@ -178,10 +170,14 @@ export default {
     drawAnimation: function() {
       // console.log(timeBegin, timeEnd);
       for (var i = 0; i < this.dataLength; i++) {
-        var x = Math.ceil(
-          ((this.data[i].size * this.current) / 100) * this.yRatio
-        );
+        // var x = Math.ceil(
+        //   ((this.data[i].size * this.current) / 100) * this.yRatio
+        // );
+        var x = 
+          (((this.data[i].size * this.current) / 100) * this.yRatio
+        ).toFixed(2);
         var y = this.height - this.padding - x;
+        
         //横坐标位置计算
         let OneData = this.data[i].time.match(/\d+/g);
         let timeLeft =
@@ -240,11 +236,12 @@ export default {
             i == 0 ? this.data[i].left - 4 : this.data[i].left + 4;
           this.ctx.arc(pointLeft, this.data[i].top, 5, 0, Math.PI * 2); //标点
         } else {
-          // this.ctx.strokeStyle = "#000";
-          // let pointLeft =
-          //   i == 0 ? this.data[i].left - 4 : this.data[i].left + 4;
-          // this.ctx.arc(pointLeft, this.data[i].top, 3, 0, Math.PI * 2); //标点
-          // this.ctx.fill();
+          this.ctx.strokeStyle = "#000";
+          let pointLeft =
+            i == 0 ? this.data[i].left - 4 : this.data[i].left + 4;
+            console.log(i,this.data[i].top);
+          this.ctx.arc(pointLeft, this.data[i].top, 3, 0, Math.PI * 2); //标点
+          this.ctx.fill();
         }
         this.ctx.stroke();
         this.ctx.closePath();
@@ -289,7 +286,7 @@ export default {
         this.width - this.padding / 2 + 0.5,
         this.height - this.padding + 0.5
       );
-      this.ctx.lineCap  = "round";
+      this.ctx.lineCap = "round";
       this.ctx.stroke();
     },
     //画轴上坐标
@@ -334,45 +331,45 @@ export default {
       this.ctx.stroke();
 
       // y轴坐标点
-      // this.ctx.beginPath();
-      // this.ctx.font = "12px Microsoft YaHei";
-      // this.ctx.textAlign = "right";
-      // this.ctx.fillStyle = this.axisColor;
-      // this.ctx.moveTo(this.padding + 0.5, this.height - this.padding + 0.5);
-      // this.ctx.lineTo(this.padding - 4.5, this.height - this.padding + 0.5);
-      // this.ctx.fillText(0, this.padding - 10, this.height - this.padding + 5);
-      // for (var i = 0; i < this.yEqual; i++) {
-      //   var y = this.yFictitious * (i + 1);
-      //   var ylen = this.yLength * (i + 1);
-      //   this.ctx.beginPath();
-      //   this.ctx.strokeStyle = this.axisColor;
-      //   this.ctx.moveTo(
-      //     this.padding + 0.5,
-      //     this.height - this.padding - ylen + 0.5
-      //   );
-      //   this.ctx.lineTo(
-      //     this.padding - 4.5,
-      //     this.height - this.padding - ylen + 0.5
-      //   );
-      //   this.ctx.stroke();
-      //   this.ctx.fillText(
-      //     y,
-      //     this.padding - 10,
-      //     this.height - this.padding - ylen + 5
-      //   );
-      //画多个横线
-      // this.ctx.beginPath();
-      // this.ctx.strokeStyle = this.contentColor;
-      // this.ctx.moveTo(
-      //   this.padding + 0.5,
-      //   this.height - this.padding - ylen + 0.5
-      // );
-      // this.ctx.lineTo(
-      //   this.width - this.padding / 2 + 0.5,
-      //   this.height - this.padding - ylen + 0.5
-      // );
-      // this.ctx.stroke();
-      // }
+      this.ctx.beginPath();
+      this.ctx.font = "12px Microsoft YaHei";
+      this.ctx.textAlign = "right";
+      this.ctx.fillStyle = this.axisColor;
+      this.ctx.moveTo(this.padding + 0.5, this.height - this.padding + 0.5);
+      this.ctx.lineTo(this.padding - 4.5, this.height - this.padding + 0.5);
+      this.ctx.fillText(0, this.padding - 10, this.height - this.padding + 5);
+      for (var i = 0; i < this.yEqual; i++) {
+        var y = this.yFictitious * (i + 1);
+        var ylen = this.yLength * (i + 1);
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.axisColor;
+        this.ctx.moveTo(
+          this.padding + 0.5,
+          this.height - this.padding - ylen + 0.5
+        );
+        this.ctx.lineTo(
+          this.padding - 4.5,
+          this.height - this.padding - ylen + 0.5
+        );
+        this.ctx.stroke();
+        this.ctx.fillText(
+          y,
+          this.padding - 10,
+          this.height - this.padding - ylen + 5
+        );
+        //画多个横线
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.contentColor;
+        this.ctx.moveTo(
+          this.padding + 0.5,
+          this.height - this.padding - ylen + 0.5
+        );
+        this.ctx.lineTo(
+          this.width - this.padding / 2 + 0.5,
+          this.height - this.padding - ylen + 0.5
+        );
+        this.ctx.stroke();
+      }
     },
     // drawTitle: function() {
     //   if (this.title) {

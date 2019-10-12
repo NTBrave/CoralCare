@@ -182,7 +182,7 @@
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
 import { Message, Loading } from "element-ui";
-import coralTimeLine from "@/components/chart/coralTimeLine.vue";
+import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
 import inforSwiper from "@/components/inforSwiper.vue";
 // import getArea from "../components/getArea.vue";
 
