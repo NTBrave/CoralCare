@@ -54,7 +54,7 @@
       </el-col>
       <el-col :span="16" :style="{'padding':'0'}">
         <el-row>
-          <swiper :imgHeight="9.5" :imgWidth="10"></swiper>
+          <swiper :imgHeight="9.5" :imgWidth="10"  @selectOneImg="chooseSwiperImg"></swiper>
         </el-row>
         <el-row>
           <div style="height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
@@ -62,7 +62,7 @@
             <img
               class="showOneImg"
               width="100%"
-              src="https://misc.aotu.io/Tingglelaoo/viewport.jpg"
+              :src="imgUrlFormSwiper"
               alt
             />
           </div>
@@ -74,9 +74,9 @@
 
 <script>
 import swiper from '@/components/swiper.vue'
-import getArea from '@/components/plantFile/getArea.vue'
+// import getArea from '@/components/plantFile/getArea.vue'
 export default {
-  components: { swiper, getArea },
+  components: { swiper},
   data() {
     return {
       recordName: 'A-宇宙号-1区-蓝-07',
@@ -97,11 +97,20 @@ export default {
         },
         { title: '时间', msg: '2018.9.10.10' },
         { title: '珊瑚尺寸', msg: '5.66' },
-        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
-      ]
+        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' },
+        
+      ],
+      imgUrlFormSwiper:'',
     }
   },
-  methods: {}
+  methods: {
+    chooseSwiperImg(url){
+      this.imgUrlFormSwiper = url;
+      // console.log(this.imgUrlFormSwiper)
+ 
+
+    }
+  }
 }
 </script>
 
