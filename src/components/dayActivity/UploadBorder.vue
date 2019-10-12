@@ -162,10 +162,10 @@ export default {
   },
   computed: {
     reverseD_color() {
-      return this.colorList.D_color.reverse()
+      return colorList.D_color.reverse()
     },
     reverseE_color() {
-      return this.colorList.E_color.reverse()
+      return colorList.E_color.reverse()
     }
   },
   methods: {}

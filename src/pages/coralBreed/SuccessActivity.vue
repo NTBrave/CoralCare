@@ -12,7 +12,10 @@
       </div>
     </div>
     <div class="successResult">
-      <infor-swiper></infor-swiper>
+      <result-form></result-form>
+      <div class="buttonSpan">
+        <el-button type="danger" round>继续录入数据</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -20,11 +23,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
-import inforSwiperVue from '../../components/inforSwiper.vue'
+import ResultFormVue from '../../components/dayActivity/ResultForm.vue'
+
 export default {
   components: {
     'file-list': FileListVue,
-    'infor-swiper': inforSwiperVue
+    'result-form': ResultFormVue
   },
   computed: {
     ...mapGetters({
@@ -46,7 +50,7 @@ export default {
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 25%;
+    width: 20%;
 
     .activityNum {
       width: 40%;
@@ -63,6 +67,12 @@ export default {
   }
 
   .successResult {
+    margin-top: 7vh;
+
+    .buttonSpan {
+      text-align: center;
+      margin: 2vh auto;
+    }
   }
 }
 </style>
