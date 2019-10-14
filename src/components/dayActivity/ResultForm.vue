@@ -32,7 +32,6 @@
               </span>
               <span v-if="/颜色/.test(item.title)">
                 <span class="color-block" :style="'background-color:'+item.color"></span>
-
                 <span>—</span>
                 <span>{{item.msg2}}</span>
                 <span class="color-block" :style="'background-color:'+item.color2"></span>
@@ -54,17 +53,12 @@
       </el-col>
       <el-col :span="16" :style="{'padding':'0'}">
         <el-row>
-          <swiper :imgHeight="9.5" :imgWidth="10"  @selectOneImg="chooseSwiperImg"></swiper>
+          <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
         </el-row>
         <el-row>
           <div style="height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
             <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
-            <img
-              class="showOneImg"
-              width="100%"
-              :src="imgUrlFormSwiper"
-              alt
-            />
+            <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
           </div>
         </el-row>
       </el-col>
@@ -76,7 +70,8 @@
 import swiper from '@/components/swiper.vue'
 // import getArea from '@/components/plantFile/getArea.vue'
 export default {
-  components: { swiper},
+  components: { swiper },
+  props: {},
   data() {
     return {
       recordName: 'A-宇宙号-1区-蓝-07',
@@ -97,19 +92,22 @@ export default {
         },
         { title: '时间', msg: '2018.9.10.10' },
         { title: '珊瑚尺寸', msg: '5.66' },
-        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' },
-        
+        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
       ],
-      imgUrlFormSwiper:'',
+      imgUrlFormSwiper: ''
     }
   },
   methods: {
-    chooseSwiperImg(url){
-      this.imgUrlFormSwiper = url;
+    // 展示图片
+    chooseSwiperImg(url) {
+      this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)
- 
-
     }
+
+    // 删除档案
+    // deleteFile() {
+    //   // {activityNumcoralFileId} 根据档案id删除
+    // }
   }
 }
 </script>
@@ -121,6 +119,7 @@ export default {
     font-size: 1rem;
     width: 60vw;
     text-align: right;
+    margin-bottom: 1vh;
 
     span:nth-child(1) {
       margin-right: 2vw;

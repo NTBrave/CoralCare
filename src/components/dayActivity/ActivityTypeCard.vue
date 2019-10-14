@@ -72,6 +72,8 @@ export default {
     border-radius: 20px;
     text-align: center;
     line-height: 18vw;
+    font-size: 2rem;
+    color: white;
 
     // display: flex;
     // justify-content: center;
@@ -79,7 +81,8 @@ export default {
       width: 100%;
       height: 100%;
       line-height: 19vw;
-      font-size: 1.5rem;
+      font-size: 2.5rem;
+      color: white;
     }
   }
 }

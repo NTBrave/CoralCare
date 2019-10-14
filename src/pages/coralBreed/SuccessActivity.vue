@@ -2,7 +2,6 @@
   <div class="successRoot">
     <div class="infoArea">
       <div class="activityNum">活动编号：{{activityNum}}</div>
-
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
@@ -40,6 +39,9 @@ export default {
   data() {
     return {}
   }
+  // beforeRouteEnter(to, from, next) {
+  //   // ...
+  // }
 }
 </script>
 

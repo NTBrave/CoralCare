@@ -19,6 +19,10 @@
             >
               <span>{{item.label}}</span>
               <span class="colorCircle" :style="{backgroundColor: item.value}"></span>
+              <div
+                v-if="item.value"
+                :style="{'backgroundColor':item.value, 'width':'5vw','height':'5vw','borderRadius':'5vw'}"
+              >2r3ddde</div>
             </el-option>
           </el-select>
         </el-col>
@@ -338,7 +342,7 @@ const colorList = [
 ]
 
 import {} from '../../api/api'
-
+import { mapMutations } from 'vuex'
 export default {
   watch: {
     '$route.params': function() {
@@ -399,14 +403,20 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+
     createFile() {
       // 创建档案接口
+      this.setOperateFile('A-宇宙号-1区-蓝-10')
+
       this.beforeCreateFile = false
     },
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
+      // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
+      console.log('11111')
       this.$router.push({
-        path: `/manage/coralBreed/newActivity/${this.$route.params.ActivityType}/success`,
+        path: `/manage/coralBreed/${this.$route.params.ActivityType}/success`,
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address

@@ -10,7 +10,7 @@
           :fileNameList="activityFiles"
         ></file-list>
         <div class="form">
-          <p>A-宇宙号-1区-蓝-07</p>
+          <p>{{operateFile}}</p>
           <activity-form></activity-form>
         </div>
       </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
 import ActivityFormVue from '../../components/dayActivity/ActivityForm.vue'
 import swiperVue from '../../components/swiper.vue'
@@ -53,7 +53,9 @@ export default {
     ...mapGetters({
       activityNum: 'getNowDivingActivity',
       activityFiles: 'getActivityFiles'
-    })
+    }),
+
+    ...mapState(['operateFile'])
   },
   mounted() {
     console.log(this.$route.params)

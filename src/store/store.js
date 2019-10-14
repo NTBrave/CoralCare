@@ -58,7 +58,8 @@ const state = {
   nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表
   nowDivingActivity: "", // 当前的活动编号
 
-  activityFiles: ["A-宇宙号-1区-蓝-07", "A-宇宙号-1区-蓝-10"], // 活动下对应的植株档案记录
+  activityFiles: [], // 活动下对应的植株档案记录
+  operateFile: "", // 当前正在操作的植株档案
 
   divingList: [], // 选择的日期下对应的下水作业列表
   divingActivitiesList: [], // 选择的日期下对应的下水作业的活动类型列表

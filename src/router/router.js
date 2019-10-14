@@ -75,13 +75,12 @@ export default new Router({
           component: () => import("../pages/coralBreed/ActivitySelect.vue"),
           children: [
             {
-              path: "/manage/coralBreed/newActivity/:ActivityType/create",
-              name: "create",
-              alias: "/manage/coralBreed/newActivity/:ActivityType",
+              path: "/manage/coralBreed/newActivity/:ActivityType/:build",
+              name: "build",
               component: () => import("../pages/coralBreed/CreateActivity.vue")
             },
             {
-              path: "/manage/coralBreed/newActivity/:ActivityType/:check",
+              path: "/manage/coralBreed/:ActivityType/:result",
               name: "result",
               component: () => import("../pages/coralBreed/SuccessActivity.vue")
             }

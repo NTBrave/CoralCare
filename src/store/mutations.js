@@ -103,6 +103,16 @@ const mutations = {
   // 缓存当前页面对应的活动类型导航栏id
   setActiveId(state, id) {
     state.activeId = id;
+  },
+
+  // 缓存当前活动下对应的植株档案列表
+  setActivityFiles(state, filesList) {
+    state.activityFiles = filesList;
+  },
+
+  // 缓存当前正在操作的植株档案
+  setOperateFile(state, fileName) {
+    state.operateFile = fileName;
   }
 };
 

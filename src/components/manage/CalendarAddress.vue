@@ -27,7 +27,7 @@
       </div>
       <div class="calendar-cnt">
         <el-input placeholder="请选择日期" v-model="chooseDate" :disabled="true">
-          <template slot="prepend">活动日期</template>
+          <template slot="prepend">残枝作业日期</template>
         </el-input>
         <div class="calendar-board" v-if="true">
           <a-calendar
@@ -48,8 +48,8 @@
       </div>
       <div class="button-area">
         <div class="activity-button" v-if="ifNewActivity">
-          <el-button round @click="dayActivity">查看下水作业</el-button>
-          <el-button round @click="newActivity">新建下水作业</el-button>
+          <el-button round @click="dayActivity">查看残枝作业</el-button>
+          <el-button round @click="newActivity">新建残枝作业</el-button>
         </div>
         <div class="hour-choose" v-else>
           <el-input
@@ -61,7 +61,7 @@
             @change="timeReady(selectHour)"
           >
             <template slot="prepend">
-              <span style="cursor: pointer" @click="newActivity">活动时间</span>
+              <span style="cursor: pointer" @click="newActivity">残枝作业时间</span>
             </template>
           </el-input>
         </div>
@@ -73,7 +73,7 @@
         v-if="!ifNewActivity"
         :disabled="isTimeReady"
         @click="submitTimeAddress"
-      >确认新建活动</el-button>
+      >确认新建作业</el-button>
     </show-drawer>
   </div>
 </template>
@@ -228,11 +228,15 @@ export default {
 
     // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
     requestBeforeHideDrawer() {
-      if (!this.isTimeReady) {
-        this.submitTimeAddress()
-      } else {
+      // if (!this.isTimeReady) {
+      //   this.submitTimeAddress()
+      // } else {
+      //   this.dayActivity()
+      // }
+      if (this.$route.path === '/manage/coralBreed/dayActivity') {
         this.dayActivity()
       }
+      this.$refs.drawer.close()
     },
 
     selectAddress(pre, next) {
@@ -399,6 +403,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   border-radius: 30px;
+  cursor: pointer;
 
   div {
     font-size: 0.8rem;

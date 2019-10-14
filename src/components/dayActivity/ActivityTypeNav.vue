@@ -11,7 +11,7 @@
       @click="change(item.idx)"
     ></activity-card>
     <el-dialog
-      width="30%"
+      width="40%"
       :title="form.title"
       :visible.sync="dialogFormVisible"
       append-to-body
@@ -37,8 +37,14 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="danger" round @click="newAnActivity()" size="medium">确定新建</el-button>
-        <el-button type="info" round @click="back()" size="medium">&nbsp;取消&nbsp;</el-button>
+        <el-button
+          :style="{'width': '8vw'}"
+          type="danger"
+          round
+          @click="newAnActivity()"
+          size="medium"
+        >确定新建</el-button>
+        <el-button :style="{'width': '8vw'}" type="info" round @click="back()" size="medium">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -109,7 +115,10 @@ export default {
 
   watch: {
     '$route.params': function() {
+      // if (this.$route.params === true) {
+      //   console.log(this.$route.params.ActivityType)
       this.showActive()
+      // }
     }
   },
   computed: {
@@ -129,8 +138,11 @@ export default {
 
     // 监听活动路由变化，显示对应导航栏样式
     showActive() {
-      let temp = this.$route.params.ActivityType.slice(1) - 0
-      this.setActiveId(temp - 1)
+      if (this.$route.params.ActivityType !== '') {
+        console.log('----------------------')
+        // let temp = parseInt(this.$route.params.ActivityType.slice(1))
+        // this.setActiveId(temp - 1)
+      }
     },
 
     // 点击取消关闭对话框
@@ -154,8 +166,8 @@ export default {
         this.setNowDivingActivity(activityNum)
         // 如果当前已创建的下水作业中已存在相应的作业类型
         this.$router.push({
-          // name: `activityType`,
-          path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}`,
+          path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}/create`,
+
           query: {
             time: this.activityTimeAddress.timeNum,
             address: this.activityTimeAddress.address
@@ -194,15 +206,14 @@ export default {
       this.setNowDivingActivitiesList(this.activitiesList)
       this.setNowDivingActivity(this.activitiesList)
 
-      console.log(this.$store.state.nowDivingActivitiesList)
+      // console.log(this.$store.state.nowDivingActivitiesList)
       console.log(this.$route.params)
 
       this.$router.push({
-        // name: `activityType`,
         path: `/manage/coralBreed/newActivity/${this.form.activityNum.slice(
           0,
           2
-        )}`,
+        )}/create`,
         query: {
           time: this.activityTimeAddress.timeNum,
           address: this.activityTimeAddress.address
@@ -237,6 +248,12 @@ export default {
   .cardItem {
     flex: 0 1 auto;
   }
+}
+
+.dialog-footer {
+  text-align: right;
+  margin-top: -3vh;
+  margin-bottom: 2vh;
 }
 </style>
 <style lang="stylus">
