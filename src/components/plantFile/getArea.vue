@@ -3,7 +3,7 @@
     <div>
       <canvas id="mycanvas" @mousedown="setPoint"></canvas>
     </div>
-    <div style="margin-left: 2rem;color:#000">
+    <div style="margin-left: 3rem;color:#000">
       <div>
         <label @click="checkedType(0)" class="elRadio">
           <span class="elInput">
@@ -21,11 +21,11 @@
         </label>
       </div>
 
-      <div>
+      <div style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem; margin: 1rem 0 1rem 0;">
         上次测量值：
         <span><span>cm<sup>2</sup></span></span>
       </div>
-      <div>
+      <div style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem;margin: 1rem 0 1rem 0;">
         本次测量值：
         <span>{{coralAreaActual}}<span>cm<sup>2</sup></span></span>
       </div>
@@ -100,11 +100,14 @@
 
 export default {
   name: "essay",
+  props:{
+    imageUrl: String
+    },
   data() {
     return {
       canvas: null,
       newUrl: "http://dayy.xyz/resource/1.jpg",
-      imageUrl: "http://dayy.xyz/resource/test.jpg",
+      // imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
@@ -131,6 +134,13 @@ export default {
     this.elRadio[this.checkeId].classList.add("isChecked");
     this.elInput[this.checkeId].classList.add("isChecked");
     this.doDraw(this.imageUrl);
+  },
+  watch:{
+    'imageUrl':function() {
+      // console.log(this.imageUrl);
+      // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.doDraw(this.imageUrl);
+    }
   },
   methods: {
     //  imageUrl为后台提供图片地址
@@ -302,18 +312,33 @@ export default {
       }else{
         // console.log(this.pointList);
         let allHelen = 0;
-        //此版本计算面积方式 不够完善
-        for(let i =2;i<this.pointList.length;++i){
-          //海伦公式 三点计算三角形面积
-          let aLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i-1].x,2)+Math.pow(this.pointList[0].y-this.pointList[i-1].y,2));
-          let bLen = Math.sqrt(Math.pow(this.pointList[i-1].x-this.pointList[i].x,2)+Math.pow(this.pointList[i-1].y-this.pointList[i].y,2));
-          let cLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i].x,2)+Math.pow(this.pointList[0].y-this.pointList[i].y,2));
-          let helen =  Math.sqrt((aLen+bLen+cLen)*(aLen+bLen-cLen)*(aLen-bLen+cLen)*(-aLen+bLen+cLen))/4;
+        
+        for(let i =0;i<this.pointList.length;++i){
+          //海伦公式 三点计算三角形面积 此版本计算面积方式 不够完善
+          // let aLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i-1].x,2)+Math.pow(this.pointList[0].y-this.pointList[i-1].y,2));
+          // let bLen = Math.sqrt(Math.pow(this.pointList[i-1].x-this.pointList[i].x,2)+Math.pow(this.pointList[i-1].y-this.pointList[i].y,2));
+          // let cLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i].x,2)+Math.pow(this.pointList[0].y-this.pointList[i].y,2));
+          // let helen =  Math.sqrt((aLen+bLen+cLen)*(aLen+bLen-cLen)*(aLen-bLen+cLen)*(-aLen+bLen+cLen))/4;
           // console.log(helen);
+
+          //原理网址：https://www.shuxuele.com/geometry/area-irregular-polygons.html
+          if(i!=this.pointList.length-1){
+            var h = (this.pointList[i+1].y+this.pointList[i].y)/2;
+            var w = this.pointList[i+1].x-this.pointList[i].x;
+           
+          }else{
+            var h = (this.pointList[i].y+this.pointList[0].y)/2;
+            var w = this.pointList[0].x-this.pointList[i].x;
+          }
+          console.log(h*w)
+          let helen = h*w;
+
+
+
           allHelen += helen;
         }
         // console.log(allHelen);
-        this.coralAreaInImg = allHelen.toFixed(2);
+        this.coralAreaInImg =Math.abs(allHelen.toFixed(2));
       };
       this.delectAllPoint();
       if(this.longAxis!=0&&this.shortAxis!=0){

@@ -5,8 +5,8 @@
         <div v-if="pageRoute.search(/coralBreed/) !== -1">
           <calendar-view></calendar-view>
         </div>
-        <div v-else-if="pageRoute === '/manage/coralManage'">&nbsp;&nbsp;jdaklsfjlaksjf</div>
-        <div v-else-if="pageRoute === '/manage/chart'">wer;qweriojm</div>
+        <!-- <div v-else-if="pageRoute === '/manage/coralManage'">&nbsp;&nbsp;jdaklsfjlaksjf</div> -->
+        <!-- <div v-else-if="pageRoute === '/manage/chart'">wer;qweriojm</div> -->
       </div>
       <div v-if="noSearchPage">
         <el-autocomplete

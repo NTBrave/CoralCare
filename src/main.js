@@ -10,8 +10,10 @@ import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 // import "ant-design-vue/lib/calendar/style";
 import "echarts/lib/chart/bar";
+import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
-import ECharts from "vue-echarts";
+import 'echarts/lib/component/toolbox'; //引入工具箱组件
+import ECharts from "echarts";
 import globalDirective from "./util/directive";
 
 Vue.config.productionTip = false;

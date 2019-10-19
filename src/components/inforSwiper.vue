@@ -63,12 +63,12 @@
     <div
       v-show="doMeasuring"
       class="measuring"
-      style="background: #DBDBDB;margin: 0 0 1rem 0;"
+      style="background: #DBDBDB;margin: 0 0 1rem 0;color:#000"
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
       <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
-      <getArea></getArea>
+      <getArea :imageUrl="imgUrlFormSwiper" ></getArea>
     </div>
   </div>
 </template>
@@ -102,7 +102,14 @@ export default {
       ],
       doMeasuring: false,
       imgUrlFormSwiper:'',
+      key: 0,
     }
+  },
+  watch:{
+    // imgUrlFormSwiper(){
+      // ++this.key;
+      // console.log(11)
+    // }
   },
   methods: {
     goMessuring() {
@@ -110,7 +117,8 @@ export default {
     },
     chooseSwiperImg(url){
       this.imgUrlFormSwiper = url;
-      console.log(this.imgUrlFormSwiper)
+
+      // console.log(this.imgUrlFormSwiper)
  
 
     }

@@ -53,7 +53,7 @@
               </el-col>
               <el-col :span="20">
                 <span
-                  style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);"
+                  class="one-list-title"
                 >{{coral.title}}</span>
               </el-col>
             </el-col>
@@ -78,7 +78,7 @@
         <div v-show="isShowRecord" class="list-width-g">
           <el-row v-for="(re, index) in record" :key="index" class="one-list">
             <el-col>
-              <span style="font-weight:400;font-size=1rem;color:rgba(126,126,126,1);">{{re.name}}</span>
+              <span class="one-list-title" >{{re.name}}</span>
             </el-col>
           </el-row>
         </div>
@@ -90,13 +90,14 @@
         <el-row style="margin-left:1%;width: 100%;">
           <el-col class="exampleCarousel" :offset="1" :span="22">
             <el-row>
-              <el-col :span="9">
+              <el-col :span="8">
                 <div>
                   <el-carousel
                     height="300px"
                     :autoplay="false"
                     arrow="never"
                     indicator-position="none"
+                     ref="carousel"
                   >
                     <el-carousel-item v-for="(item,index) in exampleData" :key="index">
                       <img :src="item.url" alt />
@@ -105,7 +106,7 @@
                 </div>
               </el-col>
 
-              <el-col :offset="1" :span="14">
+              <el-col :offset="2" :span="14">
                 <div style="position: absolute;top: 0px;left: 37.5%;">
                   <span>
                     <img src="../assets/images/star.png" alt />
@@ -165,7 +166,9 @@
         </el-row>
         <el-row>
           <el-col :offset="1" :span="22">
-            <coralTimeLine></coralTimeLine>
+            <!-- <coralTimeLine></coralTimeLine> -->
+            <timeChar @index="currentIndex"></timeChar>
+            
           </el-col>
         </el-row>
       </div>
@@ -182,21 +185,16 @@
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
 import { Message, Loading } from "element-ui";
-import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
+// import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
+import timeChar from "@/components/plantFile/timeChar.vue";
 import inforSwiper from "@/components/inforSwiper.vue";
 // import getArea from "../components/getArea.vue";
 
 export default {
-  components: { coralTimeLine, inforSwiper },
+  components: { inforSwiper ,timeChar},
   data() {
     return {
-      bodySize: {
-        height: " ",
-        width: " "
-      },
-      resoultSize: {
-        height: " "
-      },
+    
       SelectionTable: [
         {
           tips: "测量",
@@ -211,7 +209,7 @@ export default {
       
         {
           tips: "时间",
-          width: 11,
+          width: 12,
           choose: "所有最终记录时间",
           label: [
             { name: "所有最终记录时间", value: 30 },
@@ -223,7 +221,7 @@ export default {
         },
         {
           tips: "种类",
-          width: 7,
+          width: 10,
           choose: "所有属种",
           label: [
             { name: "所有种类", value: 41 },
@@ -232,7 +230,7 @@ export default {
         },
         {
           tips: "状态",
-          width: 7,
+          width: 8,
           choose: "所有状态",
           label: [
             { name: "良好", value: 51 },
@@ -245,25 +243,29 @@ export default {
         },
         {
           tips: "标记",
-          width: 7,
+          width: 8,
           choose: "所有标记",
           label: [
             { name: "样本档案", value: 61 },
             { name: "普通档案", value: 62 },
             { name: "所有标记", value: 63 }
           ]
+        },
+        {
+          tips: "阶段",
+          width: 8,
+          choose: "所有阶段",
+          label: [
+            { name: "首次暂养", value: 71 },
+            { name: "暂养巡检", value: 72 },
+            { name: "首次回播", value: 73 },
+            { name: "回播巡检", value: 74 }
+          ]
         }
       ],
 
-      nursery1: [
-        { label: "苗圃1", value: 1 },
-        { label: "苗圃2", value: 2 },
-        { label: "苗圃3", value: 3 },
-        { label: "苗圃4", value: 4 },
-        { label: "苗圃5", value: 5 },
-        { label: "苗圃6", value: 6 }
-      ],
-      nursery: ["苗圃1", "苗圃2", "苗圃3", "苗圃4", "苗圃5", "苗圃6"],
+      
+    
       coralInformations: [
         { infor: "珊瑚编号", msg: "A-宇宙号-1区-蓝-07" },
         { infor: "属种", msg: "盔型珊瑚科目" },
@@ -281,8 +283,8 @@ export default {
         { infor: "珊瑚尺寸", msg: "5.66" },
         { infor: "备注", msg: "有少量污损生物" }
       ],
-      secondTitle: "苗圃1",
-      area: ["分区1", "分区2", "分区3", "分区4"],
+     
+      
       coralList: DEFAULT.coralList,
       record: [
         { name: "A1-大鹏大澳湾-2018090910-01" },
@@ -292,15 +294,13 @@ export default {
       ],
       isShowRecord: false,
       currentCoral: "A1-样线1-蓝-07",
-      thirdTitle: "首次暂养",
+     
       keyword: "",
-      showMiaoPu: DEFAULT.miaoPu,
-      showFenQu: DEFAULT.fenQu,
-      radio: 1,
-      radio2: 1,
+     
+   
       // 结果展示
       resultItems: [],
-      imageList: DEFAULT.imageList,
+      
       sizeForm: {
         name: "",
         region: "",
@@ -312,16 +312,8 @@ export default {
         desc: ""
       },
      activityNum:"A1-大鹏大澳湾-2018090910",
-      firstValue: [],
-      secondValue: [],
+     recordIndex:0,
 
-      isIndeterminate: false,
-      isIndeterminate2: false,
-
-      checkAllMiaoPu: false,
-      checkAllFenQu: false,
-      checkedMiaopu: [],
-      checkedQu: [],
       exampleData: [
         {
           url: "http://dayy.xyz/resource/example/1.png",
@@ -470,6 +462,13 @@ export default {
     },
     callUpload() {
       this.$store.commit("uploadV");
+    },
+    //接收从图表传过来的下标
+    currentIndex(ind){
+      
+      // console.log(ind)
+      this.recordIndex = ind;
+      this.$refs.carousel.setActiveItem(this.recordIndex);
     }
   }
 };
@@ -488,16 +487,27 @@ export default {
   height: 60px;
 }
 
-.one-list:hover {
-  background-color: #eaeef3;
+.one-list-title{
+  font-weight:400;
+  /* font-size:1rem; */
+  color:rgba(126,126,126,1);
 }
+.one-list-title:hover{
+color: #3FC1CB 
+}
+
+/* .one-list:hover { */
+  /* background-color: #eaeef3; */
+  
+/* } */
 
 .one-list {
   height: 40px;
   width: 90%;
   overflow: hidden;
-  margin: 1.5rem auto;
+  margin: 1rem auto;
   border-radius: 1rem;
+
   cursor: pointer;
 }
 
@@ -562,7 +572,7 @@ export default {
 }
 
 .exampleOneMsg {
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   font-size: 0.9em;
 }
 .exampleOneMargin {

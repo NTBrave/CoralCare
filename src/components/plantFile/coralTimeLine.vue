@@ -1,6 +1,9 @@
 <template>
   <div>
-    <canvas class="time-chart" id="canvas" width="1000" height="200"></canvas>
+    <canvas class="time-chart" id="canvas" @mousedown="msDown" @mousemove="msMove" @mouseup="msUp" width="1000" height="200">
+      <p>您的浏览器不支持此图表!</p>
+     
+    </canvas>
   </div>
 </template>
 
@@ -80,10 +83,14 @@ export default {
           size: "288.1",
           time: "2019.08.24"
         }
-      ]
+      ],
+      imgUrl: "http://dayy.xyz/resource/time_choose.png",
+      img: null
     };
   },
   mounted() {
+      this.img = new Image();
+    this.img.src = this.imgUrl;
     this.sBarChart("canvas", this.data, {
       // title: "xxx公司年度盈利",
       bgColor: "#fff",
@@ -93,6 +100,7 @@ export default {
       axisColor: "#000000", // 坐标轴颜色
       contentColor: "#000000" // 内容横线颜色
     });
+  
   },
   methods: {
     sBarChart(canvas, data, options) {
@@ -132,6 +140,7 @@ export default {
         parseInt(endDate[2]);
 
       this.init(options);
+
     },
 
     init: function(options) {
@@ -141,10 +150,7 @@ export default {
         this.bgColor = options.bgColor || "#ffffff";
         this.fillColor = options.fillColor || "#1E9FFF";
         this.axisColor = options.axisColor || "#666666";
-        this.contentColor = options.contentColor || "#eeeeee";
-        // this.titleColor = options.titleColor || "#000000";
-        // this.title = options.title;
-        // this.titlePosition = options.titlePosition || "top";
+        this.contentColor = options.contentColor || "#eeeeee"
       }
       this.yLength = Math.floor(
         (this.height - this.padding * 2 - 10) / this.yEqual
@@ -153,31 +159,29 @@ export default {
         (this.width - this.padding * 1.5 - 10) / this.dataLength
       );
       this.yFictitious = this.getYFictitious(this.data);
+      console.log(this.yFictitious);
       this.yRatio = this.yLength / this.yFictitious;
       this.looping();
     },
-    looping: function() {
-      this.looped = requestAnimationFrame(this.looping.bind(this));
-      if (this.current < 100) {
-        this.current = this.current + 3 > 100 ? 100 : this.current + 3;
+    looping() {
+        this.current = 100;
         this.drawAnimation();
-      } else {
-        window.cancelAnimationFrame(this.looped);
-        this.looped = null;
-        this.watchHover();
-      }
     },
+    //横坐标计算
     drawAnimation: function() {
-      // console.log(timeBegin, timeEnd);
+      var min = this.data[0].size - 30;
+      var max = this.data[this.data.length - 1].size;
+      var len = max - min;
       for (var i = 0; i < this.dataLength; i++) {
         // var x = Math.ceil(
         //   ((this.data[i].size * this.current) / 100) * this.yRatio
         // );
-        var x = 
-          (((this.data[i].size * this.current) / 100) * this.yRatio
+        var x = (
+          (((this.data[i].size - min) * this.current) / 100) *
+          this.yRatio
         ).toFixed(2);
         var y = this.height - this.padding - x;
-        
+
         //横坐标位置计算
         let OneData = this.data[i].time.match(/\d+/g);
         let timeLeft =
@@ -198,20 +202,20 @@ export default {
         this.drawUpdate();
       }
     },
-    drawUpdate: function() {
-      this.ctx.fillStyle = this.bgColor;
-      this.ctx.fillRect(0, 0, this.width, this.height);
+    //画
+    drawUpdate() {
       this.drawAxis();
       this.drawPoint();
-      // this.drawTitle();
       this.drawChart();
+      this.drawImage();
     },
-    drawChart: function() {
+    drawChart() {
       this.ctx.fillStyle = this.fillColor;
 
       for (var i = 0; i < this.dataLength; i++) {
+        //画线
         this.ctx.beginPath();
-        this.ctx.lineWidth = 4;
+        this.ctx.lineWidth = 3;
         this.ctx.strokeStyle = "#FF836B";
         this.ctx.moveTo(this.data[i].left, this.data[i].top);
         //二次贝塞尔曲线
@@ -234,40 +238,21 @@ export default {
           this.ctx.strokeStyle = "#FF836B";
           let pointLeft =
             i == 0 ? this.data[i].left - 4 : this.data[i].left + 4;
-          this.ctx.arc(pointLeft, this.data[i].top, 5, 0, Math.PI * 2); //标点
+          this.ctx.arc(pointLeft, this.data[i].top, 5, 0, Math.PI * 2); //前后两个标点
         } else {
           this.ctx.strokeStyle = "#000";
           let pointLeft =
             i == 0 ? this.data[i].left - 4 : this.data[i].left + 4;
-            console.log(i,this.data[i].top);
-          this.ctx.arc(pointLeft, this.data[i].top, 3, 0, Math.PI * 2); //标点
+          // console.log(i,this.data[i].top);
+          // this.ctx.arc(pointLeft, this.data[i].top, 3, 0, Math.PI * 2); //标所有点
           this.ctx.fill();
         }
         this.ctx.stroke();
-        this.ctx.closePath();
-        // this.ctx.fillRect(
-        //   this.data[i].left,
-        //   this.data[i].top,
-        //   this.data[i].right - this.data[i].left,
-        //   this.data[i].bottom - this.data[i].top
-        // );
-        this.ctx.font = "12px Arial";
-        this.ctx.fillText(
-          (this.data[i].size * this.current) / 100,
-          this.data[i].left + this.xLength / 4,
-          this.data[i].top - 5
-        );
+       
       }
     },
     //画x、y轴
     drawAxis: function() {
-      // this.ctx.beginPath();
-      // this.ctx.lineWidth = 2;
-      // this.ctx.strokeStyle = this.axisColor;
-      // // y轴线, +0.5是为了解决canvas画1像素会显示成2像素的问题
-      // this.ctx.moveTo(this.padding + 0.5, this.height - this.padding + 0.5);
-      // this.ctx.lineTo(this.padding + 0.5, this.padding + 0.5);
-      // this.ctx.stroke();
       // x轴线
       this.ctx.beginPath();
       this.ctx.lineWidth = 25;
@@ -278,6 +263,7 @@ export default {
         this.width - this.padding / 2 + 0.5,
         this.height - this.padding + 0.5
       );
+      //画x轴
       linear.addColorStop(0, "#FFEEDD");
       linear.addColorStop(1, "#FF6B6B");
       this.ctx.strokeStyle = linear;
@@ -290,30 +276,10 @@ export default {
       this.ctx.stroke();
     },
     //画轴上坐标
-    drawPoint: function() {
+    drawPoint() {
       // x轴坐标点
       this.ctx.beginPath();
-      this.ctx.font = "12px Microsoft YaHei";
-      this.ctx.textAlign = "center";
-      this.ctx.fillStyle = this.axisColor;
       for (var i = 0; i < this.dataLength; i++) {
-        //  this.ctx.lineWidth = 1;
-        // var time = this.data[i].time;
-        // var xlen = this.xLength * (i + 1);
-        // this.ctx.moveTo(
-        //   this.padding + xlen + 0.5,
-        //   this.height - this.padding + 0.5
-        // );
-        // this.ctx.lineTo(
-        //   this.padding + xlen + 0.5,
-        //   this.height - this.padding + 5.5
-        // );
-        // this.ctx.fillText(
-        //   time,
-        //   this.padding + xlen - this.xLength / 2,
-        //   this.height - this.padding + 15
-        // );
-
         //画竖的虚线
         this.ctx.beginPath();
         this.ctx.strokeStyle = "#7E7E7E";
@@ -330,47 +296,8 @@ export default {
       this.ctx.setLineDash([]);
       this.ctx.stroke();
 
-      // y轴坐标点
-      this.ctx.beginPath();
-      this.ctx.font = "12px Microsoft YaHei";
-      this.ctx.textAlign = "right";
-      this.ctx.fillStyle = this.axisColor;
-      this.ctx.moveTo(this.padding + 0.5, this.height - this.padding + 0.5);
-      this.ctx.lineTo(this.padding - 4.5, this.height - this.padding + 0.5);
-      this.ctx.fillText(0, this.padding - 10, this.height - this.padding + 5);
-      for (var i = 0; i < this.yEqual; i++) {
-        var y = this.yFictitious * (i + 1);
-        var ylen = this.yLength * (i + 1);
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = this.axisColor;
-        this.ctx.moveTo(
-          this.padding + 0.5,
-          this.height - this.padding - ylen + 0.5
-        );
-        this.ctx.lineTo(
-          this.padding - 4.5,
-          this.height - this.padding - ylen + 0.5
-        );
-        this.ctx.stroke();
-        this.ctx.fillText(
-          y,
-          this.padding - 10,
-          this.height - this.padding - ylen + 5
-        );
-        //画多个横线
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = this.contentColor;
-        this.ctx.moveTo(
-          this.padding + 0.5,
-          this.height - this.padding - ylen + 0.5
-        );
-        this.ctx.lineTo(
-          this.width - this.padding / 2 + 0.5,
-          this.height - this.padding - ylen + 0.5
-        );
-        this.ctx.stroke();
-      }
     },
+
     // drawTitle: function() {
     //   if (this.title) {
     //     this.ctx.beginPath();
@@ -384,40 +311,45 @@ export default {
     //     }
     //   }
     // },
+
     /**
      * 监听鼠标移动事件
      */
-    watchHover: function() {
-      var self = this;
-      self.canvas.addEventListener("mousemove", function(ev) {
-        ev = ev || window.event;
-        self.currentIndex = -1;
-        for (var i = 0; i < self.data.length; i++) {
-          if (
-            ev.offsetX > self.data[i].left &&
-            ev.offsetX < self.data[i].right &&
-            ev.offsetY > self.data[i].top &&
-            ev.offsetY < self.data[i].bottom
-          ) {
-            self.currentIndex = i;
-          }
-        }
-        self.drawHover();
-      });
-    },
-    drawHover: function() {
-      if (this.currentIndex !== -1) {
-        if (this.onceMove === -1) {
-          this.onceMove = this.currentIndex;
-          this.canvas.style.cursor = "pointer";
-        }
-      } else {
-        if (this.onceMove !== -1) {
-          this.onceMove = -1;
-          this.canvas.style.cursor = "inherit";
-        }
-      }
-    },
+    // watchHover: function() {
+    //   var self = this;
+    //   // self.drawPointerImg();
+    //   self.canvas.addEventListener("mousemove", function(ev) {
+    //     ev = ev || window.event;
+    //     self.currentIndex = -1;
+    //     for (var i = 0; i < self.data.length; i++) {
+    //       if (
+    //         ev.offsetX > self.data[i].left - 5 &&
+    //         ev.offsetX < self.data[i].left + 5 &&
+    //         ev.offsetY > self.data[i].top - 20 &&
+    //         ev.offsetY < self.data[i].bottom
+    //       ) {
+    //         self.currentIndex = i;
+    //       }
+    //     }
+    //     // console.log(self.currentIndex)
+    //     self.drawHover();
+    //   });
+    // },
+    // drawHover: function() {
+    //   if (this.currentIndex !== -1) {
+    //     if (this.onceMove === -1) {
+    //       this.onceMove = this.currentIndex;
+    //       this.canvas.style.cursor = "pointer";
+    //       // this.drawPointerImg();
+    //     }
+    //   } else {
+    //     if (this.onceMove !== -1) {
+    //       this.onceMove = -1;
+    //       this.canvas.style.cursor = "inherit";
+    //     }
+    //   }
+    // },
+  
     /**
      * y轴坐标点之间显示的间距
      * @param data
@@ -428,11 +360,58 @@ export default {
       arr.sort(function(a, b) {
         return -(a.size - b.size);
       });
-      var len = Math.ceil(arr[0].size / this.yEqual);
+      //求最大最小差
+      var len = Math.ceil(
+        (arr[0].size - arr[arr.length - 1].size) / this.yEqual
+      );
       var pow = len.toString().length - 1;
       pow = pow > 2 ? 2 : pow;
       return Math.ceil(len / Math.pow(10, pow)) * Math.pow(10, pow);
-    }
+    },
+
+      drawPointerImg() {
+      this.ctx.drawImage(
+        this.img,
+        this.data[0].left - this.img.width / 2.45,
+        0,
+        this.img.width * 0.8,
+        this.img.height * 0.8
+      );
+    },
+    msMove(e){ 
+      if(this.isDown){
+
+        var bbox = this.canvas.getBoundingClientRect().left;
+          let x = e.clientX;
+          //限制移动不能超出画布
+          // (x<173)? ax=75 : ax=425;
+          // (y<148)? ay=50 : ay=350;
+          // (x < 425 && x >75)? x =e.clientX : x =ax;
+          // (y > 50 && y <350) ? y=e.clientY : y=ay;
+
+          x < 1900 && x > 75 ? (x = e.clientX) : (x = 0);
+          console.log(bbox,x-bbox);
+          // (y > 50 && y <350) ? y=e.clientY : y=ay;
+          //先清除之前的然后重新绘制
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.drawUpdate()
+
+          // this.ctx.drawImage(
+          //   this.img,
+          //   x - this.img.width / 2.45,
+          //   0,
+          //   this.img.width * 0.8,
+          //   this.img.height * 0.8
+          // );
+      }
+        
+     },
+    msUp(){this.isDown =false;},
+    msDown(){ 
+      this.isDown=true;
+      //console.log(123)
+    },
+
   }
 };
 </script>
