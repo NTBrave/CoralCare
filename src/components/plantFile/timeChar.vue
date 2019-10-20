@@ -137,7 +137,9 @@ export default {
             handle: {
               //拖拽按钮
               show: true,
-              icon: "image://http://dayy.xyz/resource/select.png"
+              icon: "image://http://dayy.xyz/resource/select.png"    
+              // icon: require('../../assets/images/select.png')
+
             }
           },
           splitLine: {

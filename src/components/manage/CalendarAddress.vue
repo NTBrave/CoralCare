@@ -20,7 +20,7 @@
             <div
               class="image-cnt"
               :style="{backgroundImage: 'url(' + item.img + ')', backgroundRepeat:'no-repeat', backgroundPosition:'center center', backgroundSize: 'contain'}"
-            >{{item.id + item.name}}</div>
+            ><span style="color: rgb(255, 255, 255);background-color: rgba(0,0,0,0.6);padding: 0.5rem;font-weight: 600;">{{item.id + item.name}}</span></div>
             <!-- </div> -->
           </el-carousel-item>
         </el-carousel>
@@ -89,19 +89,24 @@ const address = [
   {
     id: 'A',
     name: '大鹏大澳湾',
-    img: require('../../assets/logo.png')
+    img: require('../../assets/images/A.jpg')
     // img: '../../assets/logo.png'
   },
   {
     id: 'B',
     name: '大亚湾核电站',
-    img: require('../../assets/logo.png')
+    img: require('../../assets/images/B.jpg')
     // img: '../../assets/logo.png'
   },
   {
     id: 'C',
     name: '三门岛鬼湾',
-    img: require('../../assets/images/4.png')
+    img: require('../../assets/images/C.jpg')
+    // img: '../../assets/images/4.png'
+  },{
+     id: 'D',
+    name: '菲律宾',
+    img: require('../../assets/images/D.jpg')
     // img: '../../assets/images/4.png'
   }
 ]
