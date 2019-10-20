@@ -144,7 +144,7 @@ export default {
   // }
 }
 </script>
-<style lang="stylus" scoped>
+<style>
 nav {
   height: 8vh;
   width: 100%;
@@ -176,5 +176,12 @@ nav {
   font-size: 1rem;
   min-width: 180px;
   justify-content: space-around;
+}
+/* 设置搜索框样式 */
+.nav-box .el-autocomplete .el-input__inner{
+  border-radius: 20px 0 0 20px !important;
+}
+.nav-box .el-autocomplete .el-input-group__append{
+  border-radius: 0 20px 20px 0;
 }
 </style>

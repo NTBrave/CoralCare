@@ -330,7 +330,7 @@ export default {
             var h = (this.pointList[i].y+this.pointList[0].y)/2;
             var w = this.pointList[0].x-this.pointList[i].x;
           }
-          console.log(h*w)
+          // console.log(h*w)
           let helen = h*w;
 
 

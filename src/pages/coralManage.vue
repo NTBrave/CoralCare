@@ -1,8 +1,10 @@
 <template>
   <div class="workPage">
     <div class="selectItem">
-      <div>
-        <input class="search-input" placeholder />
+      <div style="display: flex;justify-content: center;">
+        <div class="search-input">
+          <input style="width: 95%;border: 0;outline: none;" placeholder />
+        </div>
       </div>
       <div>
         <el-select
@@ -34,7 +36,6 @@
               <span>珊瑚档案</span>
             </el-col>
           </el-row>
-         
         </div>
 
         <div v-show="!isShowRecord" class="list-width-g">
@@ -52,9 +53,7 @@
                 </span>
               </el-col>
               <el-col :span="20">
-                <span
-                  class="one-list-title"
-                >{{coral.title}}</span>
+                <span class="one-list-title">{{coral.title}}</span>
               </el-col>
             </el-col>
           </el-row>
@@ -70,15 +69,17 @@
               <span>{{currentCoral}}</span>
             </el-col>
           </el-row>
-           <el-row>
-            <div style="background: #00ADBA;color: white;border-radius: 5px;"><span style="font-size: 0.9rem;">活动编号：</span>{{activityNum}}</div>
+          <el-row>
+            <div style="background: #00ADBA;color: white;border-radius: 5px;">
+              <span style="font-size: 0.9rem;">活动编号：</span>
+              {{activityNum}}
+            </div>
           </el-row>
-
         </div>
         <div v-show="isShowRecord" class="list-width-g">
           <el-row v-for="(re, index) in record" :key="index" class="one-list">
             <el-col>
-              <span class="one-list-title" >{{re.name}}</span>
+              <span class="one-list-title">{{re.name}}</span>
             </el-col>
           </el-row>
         </div>
@@ -97,7 +98,7 @@
                     :autoplay="false"
                     arrow="never"
                     indicator-position="none"
-                     ref="carousel"
+                    ref="carousel"
                   >
                     <el-carousel-item v-for="(item,index) in exampleData" :key="index">
                       <img :src="item.url" alt />
@@ -168,7 +169,6 @@
           <el-col :offset="1" :span="22">
             <!-- <coralTimeLine></coralTimeLine> -->
             <timeChar @index="currentIndex"></timeChar>
-            
           </el-col>
         </el-row>
       </div>
@@ -191,10 +191,9 @@ import inforSwiper from "@/components/inforSwiper.vue";
 // import getArea from "../components/getArea.vue";
 
 export default {
-  components: { inforSwiper ,timeChar},
+  components: { inforSwiper, timeChar },
   data() {
     return {
-    
       SelectionTable: [
         {
           tips: "测量",
@@ -206,7 +205,7 @@ export default {
             { name: "所有测量状态", value: 12 }
           ]
         },
-      
+
         {
           tips: "时间",
           width: 12,
@@ -264,8 +263,6 @@ export default {
         }
       ],
 
-      
-    
       coralInformations: [
         { infor: "珊瑚编号", msg: "A-宇宙号-1区-蓝-07" },
         { infor: "属种", msg: "盔型珊瑚科目" },
@@ -283,24 +280,21 @@ export default {
         { infor: "珊瑚尺寸", msg: "5.66" },
         { infor: "备注", msg: "有少量污损生物" }
       ],
-     
-      
+
       coralList: DEFAULT.coralList,
       record: [
         { name: "A1-大鹏大澳湾-2018090910-01" },
-          { name: "A1-大鹏大澳湾-2018090910-02" },
-            { name: "A1-大鹏大澳湾-2018090910-03" },
-        
+        { name: "A1-大鹏大澳湾-2018090910-02" },
+        { name: "A1-大鹏大澳湾-2018090910-03" }
       ],
       isShowRecord: false,
       currentCoral: "A1-样线1-蓝-07",
-     
+
       keyword: "",
-     
-   
+
       // 结果展示
       resultItems: [],
-      
+
       sizeForm: {
         name: "",
         region: "",
@@ -311,8 +305,8 @@ export default {
         resource: "",
         desc: ""
       },
-     activityNum:"A1-大鹏大澳湾-2018090910",
-     recordIndex:0,
+      activityNum: "A1-大鹏大澳湾-2018090910",
+      recordIndex: 0,
 
       exampleData: [
         {
@@ -464,8 +458,7 @@ export default {
       this.$store.commit("uploadV");
     },
     //接收从图表传过来的下标
-    currentIndex(ind){
-      
+    currentIndex(ind) {
       // console.log(ind)
       this.recordIndex = ind;
       this.$refs.carousel.setActiveItem(this.recordIndex);
@@ -487,18 +480,18 @@ export default {
   height: 60px;
 }
 
-.one-list-title{
-  font-weight:400;
+.one-list-title {
+  font-weight: 400;
   /* font-size:1rem; */
-  color:rgba(126,126,126,1);
+  color: rgba(126, 126, 126, 1);
 }
-.one-list-title:hover{
-color: #3FC1CB 
+.one-list-title:hover {
+  color: #3fc1cb;
 }
 
 /* .one-list:hover { */
-  /* background-color: #eaeef3; */
-  
+/* background-color: #eaeef3; */
+
 /* } */
 
 .one-list {
@@ -550,6 +543,7 @@ color: #3FC1CB
   border: 1px solid rgba(112, 112, 112, 1);
   opacity: 1;
   border-radius: 38px;
+  padding: 8px 0 0 0;
 }
 #select-option {
   background: #3fc1cb;
@@ -637,6 +631,5 @@ color: #3FC1CB
   border-left: 14px solid #3fc1cb;
   border-top: 14px solid transparent;
   border-bottom: 14px solid transparent;
-  
 }
 </style>
