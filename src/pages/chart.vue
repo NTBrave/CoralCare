@@ -1,6 +1,6 @@
 <template>
   <div class="all-chart" :style="bodySize">
-    <div style="height:1px;"></div>
+    <!-- <div style="height:1px;"></div>
     <div class="dropdown-style">
       <span style="margin-right:20px;">选择区域</span>
       <el-dropdown @command="handleCommand">
@@ -16,7 +16,7 @@
           <el-dropdown-item command="菲律宾某地">菲律宾某地</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    </div>
+    </div> -->
     <div style="position:relative;z-index:100">
       <div class="coralNumber" @click="clickCoral(0)">
         <div :class="coralClickStyle[0]">
@@ -34,20 +34,20 @@
       </div>
       <div class="coralNumber" @click="clickCoral(2)">
         <div :class="coralClickStyle[2]">
-          当前回播
+          回播
           <span class="innerNum">{{coralNumber[2]}}</span>株珊瑚
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[2]"></div>
       </div>
-      <div class="coralNumber" @click="clickCoral(3)">
+      <!-- <div class="coralNumber" @click="clickCoral(3)">
         <div :class="coralClickStyle[3]">
           历史回播
           <span class="innerNum">{{coralNumber[3]}}</span>株珊瑚
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[3]"></div>
-      </div>
+      </div> -->
     </div>
-    <div style="height:135px;position:relative"></div>
+    <div style="height:155px;position:relative"></div>
 
     <component :is="graphId" style></component>
   </div>
@@ -67,7 +67,7 @@ import 'echarts/lib/chart/pie'
 import firstGraph from '@/components/chart/firstGraph.vue'
 import secondGraph from '@/components/chart/secondGraph.vue'
 import thirdGraph from '@/components/chart/thirdGraph.vue'
-import fourthGraph from '@/components/chart/fourthGraph.vue'
+
 export default {
   // components: {
   //   "v-chart": ECharts
@@ -89,14 +89,13 @@ export default {
       dropdownKey: '所有区域',
       checkList: ['深圳大鹏'],
       graphId: 'firstGraph',
-      coralNumber: [17, 52, 76, 2], //新增珊瑚数量
+      coralNumber: [17, 52, 76], //新增珊瑚数量
       coralClickStyle: [
         'coralNumber3',
         'coralNumber2',
-        'coralNumber2',
         'coralNumber2'
       ],
-      coralBottomJudge: [true, false, false, false],
+      coralBottomJudge: [true, false, false],
       master_dirs: [],
       resource_id: '',
       resource_name: '',
@@ -313,10 +312,10 @@ export default {
     //     (document.body.clientHeight - 90) * 0.475 + "px";
     // }
   },
-  components: { firstGraph, secondGraph, thirdGraph, fourthGraph },
+  components: { firstGraph, secondGraph, thirdGraph },
   methods: {
     clickCoral(num) {
-      for (var i = 0; i <= 3; i++) {
+      for (var i = 0; i <= 2; i++) {
         this.coralBottomJudge[i] = false
         this.coralClickStyle[i] = 'coralNumber2'
       }
@@ -329,11 +328,8 @@ export default {
         case 1:
           this.graphId = 'secondGraph'
           break
-        case 2:
-          this.graphId = 'thirdGraph'
-          break
         default:
-          this.graphId = 'fourthGraph'
+          this.graphId = 'thirdGraph'
           break
       }
     },
@@ -361,10 +357,8 @@ export default {
 
 .all-chart {
   width: 800px;
-  height: 600px;
-  /* margin: 60px 0 0 0; */
-  background-color: rgba(0, 0, 0, 0.08);
-  /* border: 1px solid seagreen; */
+  height: 800px;
+  /* background-color: rgba(0, 0, 0, 0.08); */
 }
 .echarts {
   width: 420px;
@@ -380,33 +374,34 @@ canvas {
 .coralNumber {
   height: 150px;
   float: left;
-  width: 25%;
+  font-size:17px;
+  width: 33.3%;
   text-align: center;
   color: white;
 }
 .coralNumber2 {
-  height: 100px;
+  height: 110px;
   width: 100%;
   border-right: 1px white solid;
-  line-height: 100px;
+  line-height: 110px;
   background-color: #00c8c8;
 }
 .coralNumber3 {
-  height: 100px;
+  height: 110px;
   width: 100%;
   border-right: 1px white solid;
-  line-height: 100px;
-  background-color: red;
+  line-height: 110px;
+  background-color: #FF6B6B;
 }
 .innerNum {
-  font-size: 26px;
+  font-size: 30px;
   margin: 15px;
 }
 .bottomTriangle {
   height: 0px;
   border-style: solid;
   border-width: 20px 20px 0 20px;
-  border-color: red transparent transparent transparent;
+  border-color: #FF6B6B transparent transparent transparent;
   width: 0px;
   box-sizing: content-box;
   margin: auto;
