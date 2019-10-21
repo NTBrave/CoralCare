@@ -46,7 +46,7 @@
         </el-row>
       </div>
       <div style="width:40rem">
-        <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
+        <swiper  :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
         <div style="    height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
           <img
@@ -67,7 +67,7 @@
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
-      <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
+      <swiper :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
       <getArea :imageUrl="imgUrlFormSwiper" ></getArea>
     </div>
   </div>
@@ -76,6 +76,7 @@
 <script>
 import swiper from '@/components/swiper.vue'
 import getArea from '@/components/plantFile/getArea.vue'
+import * as Default from "../json/default"
 export default {
   components: { swiper, getArea },
   data() {
@@ -103,6 +104,7 @@ export default {
       doMeasuring: false,
       imgUrlFormSwiper:'',
       key: 0,
+      inforImgUrl:Default.imgUrl,
     }
   },
   watch:{
