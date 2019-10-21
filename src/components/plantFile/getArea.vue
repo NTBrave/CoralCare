@@ -21,57 +21,108 @@
         </label>
       </div>
 
-      <div style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem; margin: 1rem 0 1rem 0;">
+      <div
+        style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem; margin: 1rem 0 1rem 0;"
+      >
         上次测量值：
-        <span><span>cm<sup>2</sup></span></span>
+        <span>
+          <span>
+            cm
+            <sup>2</sup>
+          </span>
+        </span>
       </div>
-      <div style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem;margin: 1rem 0 1rem 0;">
+      <div
+        style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem;margin: 1rem 0 1rem 0;"
+      >
         本次测量值：
-        <span>{{coralAreaActual}}<span>cm<sup>2</sup></span></span>
+        <span>
+          {{coralAreaActual}}
+          <span>
+            cm
+            <sup>2</sup>
+          </span>
+        </span>
+      </div>
+      <!-- 测量高度 -->
+      <div v-show="checkeId==1">
+        <div>
+          <span>号牌直径：</span>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="diameter"
+          />cm
+        </div>
+        <div style="display:flex">
+          <div>号牌长轴：</div>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="longAxis"
+          />
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+            <span>测量</span>
+          </div>
+        </div>
+         <div style="display:flex">
+          <div>珊瑚高度：</div>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="coralHight"
+          />
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+            <span>测量</span>
+          </div>
+        </div>
+      </div>
+      <!-- 测量面积 -->
+      <div v-show="checkeId==0">
+        <div>
+          <span>号牌直径：</span>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="diameter"
+          />cm
+        </div>
+        <div style="display:flex">
+          <div>1、号牌长轴：</div>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="longAxis"
+          />
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+            <span>测量</span>
+          </div>
+        </div>
+        <div style="display:flex">
+          <div>2、号牌短轴：</div>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="shortAxis"
+          />
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuShortAxis">
+            <span>测量</span>
+          </div>
+        </div>
+        <div style="display:flex">
+          <div>3、珊瑚轮廓：</div>
+          <input
+            style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
+            size="mini"
+            v-model="coralAreaInImg"
+          />
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuCoralAreaInImg">
+            <span>测量</span>
+          </div>
+          <!-- <span>cm<sup>2</sup></span> -->
+        </div>
       </div>
 
-      <div>
-        <span>号牌直径：</span>
-        <input
-          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
-          size="mini"
-          v-model="diameter"
-        />cm
-      </div>
-      <div style="display:flex">
-        <div>1、号牌长轴：</div>
-        <input
-          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
-          size="mini"
-          v-model="longAxis"
-        />
-        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;"  @click="calcuLongAxis">
-          <span>测量</span>
-        </div>
-      </div>
-      <div style="display:flex">
-        <div>2、号牌短轴：</div>
-        <input
-          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
-          size="mini"
-          v-model="shortAxis"
-        />
-        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;"  @click="calcuShortAxis">
-          <span>测量</span>
-        </div>
-      </div>
-      <div style="display:flex">
-        <div>3、珊瑚轮廓：</div>
-        <input
-          style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
-          size="mini"
-          v-model="coralAreaInImg"
-        />
-        <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuCoralAreaInImg">
-          <span>测量</span>
-        </div>
-        <!-- <span>cm<sup>2</sup></span> -->
-      </div>
       <div class="my-btn" style="background: #3FC1CB;" @click.stop="undoPoint">
         <span class="el-icon-refresh-left">撤销</span>
       </div>
@@ -81,7 +132,7 @@
 
       <!-- <div class="my-btn" style="background: #DBDBDB;">
         <span>取消测量</span>
-      </div> -->
+      </div>-->
       <div class="my-btn">
         <span>
           <span @click.stop="mackImg">确认提交</span>
@@ -100,9 +151,9 @@
 
 export default {
   name: "essay",
-  props:{
+  props: {
     imageUrl: String
-    },
+  },
   data() {
     return {
       canvas: null,
@@ -122,8 +173,9 @@ export default {
       checkeId: 0,
       shortAxis: 0,
       longAxis: 0,
-      coralAreaInImg:0,
-      coralAreaActual:0
+      coralAreaInImg: 0,
+      coralAreaActual: 0,
+      coralHight:0,
     };
   },
   mounted: function() {
@@ -135,8 +187,8 @@ export default {
     this.elInput[this.checkeId].classList.add("isChecked");
     this.doDraw(this.imageUrl);
   },
-  watch:{
-    'imageUrl':function() {
+  watch: {
+    imageUrl: function() {
       // console.log(this.imageUrl);
       // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       this.doDraw(this.imageUrl);
@@ -286,34 +338,34 @@ export default {
       this.elRadio[this.checkeId].classList.add("isChecked");
       this.elInput[this.checkeId].classList.add("isChecked");
     },
-    calcuLongAxis(){
-      if(this.pointList.length!=2){
+    calcuLongAxis() {
+      if (this.pointList.length != 2) {
         alert("请在图中标两个点");
-      }else{
-        let a2 = Math.pow(this.pointList[0].x-this.pointList[1].x,2);
-        let b2 = Math.pow(this.pointList[0].y-this.pointList[1].y,2);
-        this.longAxis = Math.sqrt(a2+b2).toFixed(2);
-      };
+      } else {
+        let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
+        let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
+        this.longAxis = Math.sqrt(a2 + b2).toFixed(2);
+      }
       this.delectAllPoint();
     },
-    calcuShortAxis(){
-       if(this.pointList.length!=2){
+    calcuShortAxis() {
+      if (this.pointList.length != 2) {
         alert("请在图中标两个点");
-      }else{
-        let a2 = Math.pow(this.pointList[0].x-this.pointList[1].x,2);
-        let b2 = Math.pow(this.pointList[0].y-this.pointList[1].y,2);
-        this.shortAxis = Math.sqrt(a2+b2).toFixed(2);
-      };
+      } else {
+        let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
+        let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
+        this.shortAxis = Math.sqrt(a2 + b2).toFixed(2);
+      }
       this.delectAllPoint();
     },
-    calcuCoralAreaInImg(){
-       if(this.pointList.length<3){
+    calcuCoralAreaInImg() {
+      if (this.pointList.length < 3) {
         alert("至少需要3个点，才能计算");
-      }else{
+      } else {
         // console.log(this.pointList);
         let allHelen = 0;
-        
-        for(let i =0;i<this.pointList.length;++i){
+
+        for (let i = 0; i < this.pointList.length; ++i) {
           //海伦公式 三点计算三角形面积 此版本计算面积方式 不够完善
           // let aLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i-1].x,2)+Math.pow(this.pointList[0].y-this.pointList[i-1].y,2));
           // let bLen = Math.sqrt(Math.pow(this.pointList[i-1].x-this.pointList[i].x,2)+Math.pow(this.pointList[i-1].y-this.pointList[i].y,2));
@@ -322,32 +374,35 @@ export default {
           // console.log(helen);
 
           //原理网址：https://www.shuxuele.com/geometry/area-irregular-polygons.html
-          if(i!=this.pointList.length-1){
-            var h = (this.pointList[i+1].y+this.pointList[i].y)/2;
-            var w = this.pointList[i+1].x-this.pointList[i].x;
-           
-          }else{
-            var h = (this.pointList[i].y+this.pointList[0].y)/2;
-            var w = this.pointList[0].x-this.pointList[i].x;
+          if (i != this.pointList.length - 1) {
+            var h = (this.pointList[i + 1].y + this.pointList[i].y) / 2;
+            var w = this.pointList[i + 1].x - this.pointList[i].x;
+          } else {
+            var h = (this.pointList[i].y + this.pointList[0].y) / 2;
+            var w = this.pointList[0].x - this.pointList[i].x;
           }
           // console.log(h*w)
-          let helen = h*w;
-
-
+          let helen = h * w;
 
           allHelen += helen;
         }
         // console.log(allHelen);
-        this.coralAreaInImg =Math.abs(allHelen.toFixed(2));
-      };
-      this.delectAllPoint();
-      if(this.longAxis!=0&&this.shortAxis!=0){
-        let ellipse = Math.PI*this.longAxis*this.shortAxis/4;
-        let actualEllipse = Math.PI*this.diameter*(this.shortAxis*(this.diameter/this.longAxis))/4;
-        this.coralAreaActual = (this.coralAreaInImg*actualEllipse/ellipse).toFixed(2);
+        this.coralAreaInImg = Math.abs(allHelen.toFixed(2));
       }
-
-    },
+      this.delectAllPoint();
+      if (this.longAxis != 0 && this.shortAxis != 0) {
+        let ellipse = (Math.PI * this.longAxis * this.shortAxis) / 4;
+        let actualEllipse =
+          (Math.PI *
+            this.diameter *
+            (this.shortAxis * (this.diameter / this.longAxis))) /
+          4;
+        this.coralAreaActual = (
+          (this.coralAreaInImg * actualEllipse) /
+          ellipse
+        ).toFixed(2);
+      }
+    }
   }
 };
 </script>

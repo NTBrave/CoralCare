@@ -51,7 +51,6 @@ export const searchData = {
     ]
 }
 
-
 //Where (ExtendType=’CZZY’ AND ExtendData.create_at <‘2019-10-1’)  OR ExtendType=’***’
 export const operatorData = {
 
@@ -69,7 +68,7 @@ export const operatorData = {
                     haopai_number: "",
                     mengang_spaid: "",
                     muke_spaid: "",
-                    shuzhpng_spaid: "",
+                    shuzhong_spaid: "",
                     zhandian_spaid: "",
                     quyu_spaid: "",
                     miaopu_spaid: "",
@@ -95,3 +94,39 @@ export const operatorData = {
 
     ]
 }
+
+
+//O-01 获取所有站点
+export const ZhandianReq = 
+    {
+        JobType: "flow",
+        Jobs: [
+            {
+                Method: "ChildSelect",
+                MasterSpaId: "MasterId",
+                MasterExtendType: "CZPY",		//残枝培育
+                Where: [
+                    {
+                        Type: "Condition",
+                        Key: "spa_id",
+                        Opetator: {
+                            Operator: "=",
+                            Value: "MasterId"
+                        }
+                    }
+                ],
+                Order: [
+                    {
+                        Key: "",
+                        Order: ""
+                    }
+                ],
+                GroupBy: [
+                    {}
+                ]
+            }
+        ]
+}
+
+//W-01 获取指定月份作业数据
+// export const 

@@ -153,7 +153,7 @@ export default {
           axisTick: {
             inside: true
           },
-          splitLine: {
+          splitLine: {//分割竖杠
             show: false
           },
           axisLabel: {
@@ -168,7 +168,7 @@ export default {
           right: 15,
           height: 160
         },
-        dataZoom: [
+        dataZoom: [//鼠标滚动缩放
           {
             type: "inside",
             throttle: 50
