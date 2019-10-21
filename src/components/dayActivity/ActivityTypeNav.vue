@@ -114,8 +114,8 @@ export default {
   },
 
   watch: {
-    '$route.params': function() {
-      // if (this.$route.params === true) {
+    '$route.path': function() {
+      // if (this.$route.path.indexOf(this.form.activityType) !== -1) {
       //   console.log(this.$route.params.ActivityType)
       this.showActive()
       // }
@@ -138,10 +138,9 @@ export default {
 
     // 监听活动路由变化，显示对应导航栏样式
     showActive() {
-      if (this.$route.params.ActivityType !== '') {
-        console.log('----------------------')
-        // let temp = parseInt(this.$route.params.ActivityType.slice(1))
-        // this.setActiveId(temp - 1)
+      if (this.$route.query.activityType) {
+        let temp = parseInt(this.$route.query.activityType.slice(1))
+        this.setActiveId(temp - 1)
       }
     },
 
@@ -170,9 +169,11 @@ export default {
 
           query: {
             time: this.activityTimeAddress.timeNum,
-            address: this.activityTimeAddress.address
+            address: this.activityTimeAddress.address,
+            activityType: this.activityTypes[index].typeId
           }
         })
+        // console.log(this.$route.params)
       } else {
         // 不存在相应作业类型
 
@@ -207,7 +208,7 @@ export default {
       this.setNowDivingActivity(this.activitiesList)
 
       // console.log(this.$store.state.nowDivingActivitiesList)
-      console.log(this.$route.params)
+      // console.log(this.$route.params)
 
       this.$router.push({
         path: `/manage/coralBreed/newActivity/${this.form.activityNum.slice(
@@ -216,7 +217,8 @@ export default {
         )}/create`,
         query: {
           time: this.activityTimeAddress.timeNum,
-          address: this.activityTimeAddress.address
+          address: this.activityTimeAddress.address,
+          activityType: this.form.activityNum.slice(0, 2)
         }
       })
       this.dialogFormVisible = false
@@ -231,10 +233,9 @@ export default {
     }
 
     this.setActivity(buildActivity)
-    console.log(this.$route.params)
-    if (this.$route.params.ActivityType) {
-      this.showActive()
-    }
+    // console.log(this.$route.params)
+
+    this.showActive()
   }
 }
 </script>

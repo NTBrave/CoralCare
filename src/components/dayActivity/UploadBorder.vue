@@ -3,7 +3,7 @@
     <el-row :gutter="0">
       <el-col
         :span="2"
-        :style="{'borderTop': '1px solid #707070','borderLeft':'1px solid #707070'}"
+        :style="{'borderTop': '1px solid lightgray','borderLeft':'1px solid lightgray'}"
       >
         <div :style="{'textAlign':'center'}">B1</div>
       </el-col>
@@ -11,13 +11,13 @@
         :span="4"
         v-for="(item, idx) in colorList.B_color"
         :key="idx"
-        :style="{'borderTop': '1px solid #707070'}"
+        :style="{'borderTop': '1px solid lightgray'}"
       >
         <div :style="{'background': item.color,'textAlign': 'center','color':'white'}">{{item.name}}</div>
       </el-col>
       <el-col
         :span="2"
-        :style="{'borderTop': '1px solid #707070', 'borderRight':'1px solid #707070'}"
+        :style="{'borderTop': '1px solid lightgray', 'borderRight':'1px solid lightgray'}"
       >
         <div :style="{'textAlign':'center'}">C1</div>
       </el-col>
@@ -27,7 +27,7 @@
         <div
           v-for="(item, idx) in reverseE_color"
           :key="idx"
-          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderLeft': '1px solid #707070'}"
+          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderLeft': '1px solid lightgray'}"
         >{{item.name}}</div>
       </el-col>
       <el-col :span="22">
@@ -39,24 +39,24 @@
         <div
           v-for="(item, idx) in colorList.C_color"
           :key="idx"
-          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderRight': '1px solid #707070'}"
+          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderRight': '1px solid lightgray'}"
         >{{item.name}}</div>
       </el-col>
     </el-row>
     <el-row :gutter="0">
       <el-col :span="2">
         <div
-          :style="{'textAlign':'center','borderLeft': '1px solid #707070','borderBottom':'1px solid #707070'}"
+          :style="{'textAlign':'center','borderLeft': '1px solid lightgray','borderBottom':'1px solid lightgray'}"
         >E1</div>
       </el-col>
       <el-col :span="4" v-for="(item, idx) in reverseD_color" :key="idx">
         <div
-          :style="{'background': item.color,'textAlign': 'center','color':'white','borderBottom': '1px solid #707070'}"
+          :style="{'background': item.color,'textAlign': 'center','color':'white','borderBottom': '1px solid lightgray'}"
         >{{item.name}}</div>
       </el-col>
       <el-col :span="2">
         <div
-          :style="{'textAlign':'center','borderRight': '1px solid #707070','borderBottom':'1px solid #707070'}"
+          :style="{'textAlign':'center','borderRight': '1px solid lightgray','borderBottom':'1px solid lightgray'}"
         >D1</div>
       </el-col>
     </el-row>
@@ -172,10 +172,4 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.borderRoot {
-  .upload-border {
-    border: 1px solid #707070;
-  }
-}
-</style>
+<style lang="stylus" scoped></style>

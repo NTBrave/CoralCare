@@ -75,14 +75,44 @@ export default new Router({
           component: () => import("../pages/coralBreed/ActivitySelect.vue"),
           children: [
             {
-              path: "/manage/coralBreed/newActivity/:ActivityType/:build",
-              name: "build",
-              component: () => import("../pages/coralBreed/CreateActivity.vue")
+              path: "/manage/coralBreed/newActivity/A1/:build",
+              name: "buildA1",
+              component: () => import("../pages/coralBreed/CreateA1.vue")
             },
             {
-              path: "/manage/coralBreed/:ActivityType/:result",
-              name: "result",
-              component: () => import("../pages/coralBreed/SuccessActivity.vue")
+              path: "/manage/coralBreed/A1/:result",
+              name: "resultA1",
+              component: () => import("../pages/coralBreed/SuccessA1.vue")
+            },
+            {
+              path: "/manage/coralBreed/newActivity/A2/:build",
+              name: "buildA2",
+              component: () => import("../pages/coralBreed/CreateA2.vue")
+            },
+            {
+              path: "/manage/coralBreed/A2/:result",
+              name: "resultA2",
+              component: () => import("../pages/coralBreed/SuccessA2.vue")
+            },
+            {
+              path: "/manage/coralBreed/newActivity/A3/:build",
+              name: "buildA3",
+              component: () => import("../pages/coralBreed/CreateA3.vue")
+            },
+            {
+              path: "/manage/coralBreed/A3/:result",
+              name: "resultA3",
+              component: () => import("../pages/coralBreed/SuccessA3.vue")
+            },
+            {
+              path: "/manage/coralBreed/newActivity/A4/:build",
+              name: "buildA4",
+              component: () => import("../pages/coralBreed/CreateA4.vue")
+            },
+            {
+              path: "/manage/coralBreed/A4/:result",
+              name: "resultA4",
+              component: () => import("../pages/coralBreed/SuccessA4.vue")
             }
           ]
         },

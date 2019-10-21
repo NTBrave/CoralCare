@@ -12,6 +12,7 @@
             :key="idx_2"
             @click="showActivityInfo(activityEach_sub, key, idx_2)"
           >{{activityEach_sub}}</div>
+          <div v-if="canAddActivity">qqq</div>
         </div>
       </div>
       <div>
@@ -37,6 +38,15 @@ export default {
   components: {
     'activity-info': ActivityInfoVue,
     'file-item': FileItemVue
+  },
+  computed: {
+    canAddActivity() {
+      for (let key in this.activityList) {
+        if (key.length < 6) {
+          return true
+        } else return false
+      }
+    }
   },
   data() {
     return {
@@ -84,180 +94,6 @@ export default {
           }
         ]
       },
-      // {
-      //   activityInfo: {
-      //     activityNum: 'A2-大鹏-2019090910', //活动编号
-      //     activityTime: '2019年 9月 9日 10点', // 活动时间
-      //     totalMembers: '张建国 李若然 陈小华', // 参与人员
-      //     activityType: '首次暂养', // 活动类型
-      //     gatherArea: '深圳大鹏', // 采集区域
-      //     coralQuantity: 4, //珊瑚数量
-      //     varietyQuantity: 3, // 品种数量
-      //     translucency: '-', // 透光度
-      //     temperature: '-', // 温度
-      //     remarks: '-' // 备注
-      //   },
-      //   coralList: [
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     }
-      //   ]
-      // },
-      // {
-      //   activityInfo: {
-      //     activityNum: 'A3-大鹏-2019090910', //活动编号
-      //     activityTime: '2019年 9月 9日 10点', // 活动时间
-      //     totalMembers: '张建国 李若然 陈小华', // 参与人员
-      //     activityType: '首次暂养', // 活动类型
-      //     gatherArea: '深圳大鹏', // 采集区域
-      //     coralQuantity: 4, //珊瑚数量
-      //     varietyQuantity: 3, // 品种数量
-      //     translucency: '-', // 透光度
-      //     temperature: '-', // 温度
-      //     remarks: '-' // 备注
-      //   },
-      //   coralList: [
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华'
-      //     }
-      //   ]
-      // },
-      // {
-      //   activityInfo: {
-      //     activityNum: 'A4-大鹏-2019090910', //活动编号
-      //     activityTime: '2019年 9月 9日 10点', // 活动时间
-      //     totalMembers: '张建国 李若然 陈小华', // 参与人员
-      //     activityType: '首次暂养', // 活动类型
-      //     gatherArea: '深圳大鹏', // 采集区域
-      //     coralQuantity: 4, //珊瑚数量
-      //     varietyQuantity: 3, // 品种数量
-      //     translucency: '-', // 透光度
-      //     temperature: '-', // 温度
-      //     remarks: '-' // 备注
-      //   },
-      //   coralList: [
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华',
-      //       image:
-      //         'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华',
-      //       image:
-      //         'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //     },
-      //     {
-      //       coralNum: 'A-蓝-10',
-      //       maintenancePartition: '宇宙号-1区',
-      //       members: '张建国 李小华',
-      //       image:
-      //         'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //     }
-      //   ]
-      // },
-      //   {
-      //     activityInfo: {
-      //       activityNum: 'A1-大鹏-2019090911', //活动编号
-      //       activityTime: '2019年 9月 9日 10点', // 活动时间
-      //       totalMembers: '张建国 李若然 陈小华', // 参与人员
-      //       activityType: '首次暂养', // 活动类型
-      //       gatherArea: '深圳大鹏', // 采集区域
-      //       coralQuantity: 4, //珊瑚数量
-      //       varietyQuantity: 3, // 品种数量
-      //       translucency: '-', // 透光度
-      //       temperature: '-', // 温度
-      //       remarks: '-' // 备注
-      //     },
-      //     coralList: [
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       },
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       },
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     activityInfo: {
-      //       activityNum: 'A2-大鹏-2019090911', //活动编号
-      //       activityTime: '2019年 9月 9日 10点', // 活动时间
-      //       totalMembers: '张建国 李若然 陈小华', // 参与人员
-      //       activityType: '首次暂养', // 活动类型
-      //       gatherArea: '深圳大鹏', // 采集区域
-      //       coralQuantity: 4, //珊瑚数量
-      //       varietyQuantity: 3, // 品种数量
-      //       translucency: '-', // 透光度
-      //       temperature: '-', // 温度
-      //       remarks: '-' // 备注
-      //     },
-      //     coralList: [
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       },
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       },
-      //       {
-      //         coralNum: 'A-蓝-10',
-      //         maintenancePartition: '宇宙号-1区',
-      //         members: '张建国 李小华',
-      //         image:
-      //           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-      //       }
-      //     ]
-      //   }
-      // ],
 
       activityFirstIndex: 0,
       activityKey: '',
