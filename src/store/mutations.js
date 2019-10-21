@@ -92,7 +92,6 @@ const mutations = {
   // 缓存当前创建的下水作业对应的活动
   setNowDivingActivitiesList(state, data) {
     state.nowDivingActivitiesList.push(data);
-    console.log("***************");
   },
 
   // 缓存当前的活动编号

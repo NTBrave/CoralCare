@@ -34,7 +34,7 @@ export default {
     //   address: sessionStorage.getItem('selectedAddress')
     // }
     // this.setActivity(buildActivity)
-    console.log(this.$route.params)
+    // console.log(this.$route.params)
   }
 }
 </script>

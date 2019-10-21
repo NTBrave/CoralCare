@@ -35,8 +35,7 @@ export default {
       //   this.$router.push('/manage/main')
       // }
       // this.showDifferentNav()
-
-      console.log('111')
+      // console.log('111')
     }
   },
   computed: {
@@ -95,8 +94,8 @@ export default {
   right: 0;
   bottom: 0;
   width: 90rem;
-    height: 90vh;
-    display: block;
+  height: 90vh;
+  display: block;
 }
 
 footer {

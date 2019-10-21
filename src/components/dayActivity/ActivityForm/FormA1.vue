@@ -1,16 +1,12 @@
 <template>
   <div class="formRoot">
-    <el-form
-      v-if="this.$route.params.ActivityType === 'A1'"
-      :disabled="!beforeCreateFile"
-      size="mini"
-    >
+    <el-form :disabled="isCreated && !beforeCreateFile" size="mini">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">牌色</span>
         </el-col>
         <el-col :span="8">
-          <el-select v-model="breedForm.signColor" placeholder="请选择">
+          <el-select v-model="fileForm.signColor" placeholder="请选择">
             <el-option
               v-for="(item, idx) in signColorList"
               :key="idx"
@@ -19,15 +15,11 @@
             >
               <span>{{item.label}}</span>
               <span class="colorCircle" :style="{backgroundColor: item.value}"></span>
-              <div
-                v-if="item.value"
-                :style="{'backgroundColor':item.value, 'width':'5vw','height':'5vw','borderRadius':'5vw'}"
-              >2r3ddde</div>
             </el-option>
           </el-select>
         </el-col>
         <el-col :span="12">
-          <el-input v-model="breedForm.signNumber" placeholder="请输入">
+          <el-input v-model="fileForm.signNumber" placeholder="请输入">
             <template slot="prepend">号码</template>
           </el-input>
         </el-col>
@@ -59,16 +51,16 @@
           <span :style="{marginLeft:'15px'}">暂养区域</span>
         </el-col>
         <el-col :span="6">
-          <el-select v-model="breedForm.breedArea.firstArea" disabled></el-select>
+          <el-select v-model="fileForm.breedArea.firstArea" disabled></el-select>
         </el-col>
         <el-col :span="6">
-          <el-select v-model="breedForm.breedArea.nursery" placeholder="苗圃">
+          <el-select v-model="fileForm.breedArea.nursery" placeholder="苗圃">
             <el-option label="宇宙号" value="c"></el-option>
             <el-option label="银河号" value="d"></el-option>
           </el-select>
         </el-col>
         <el-col :span="6">
-          <el-select v-model="breedForm.breedArea.partition" placeholder="分区">
+          <el-select v-model="fileForm.breedArea.partition" placeholder="分区">
             <el-option label="1区" value="e"></el-option>
             <el-option label="2区" value="f"></el-option>
           </el-select>
@@ -76,66 +68,18 @@
       </el-form-item>
     </el-form>
 
-    <el-form class="A-Two">
-      <el-form-item
-        v-if="this.$route.params.ActivityType === 'A3' || this.$route.params.ActivityType === 'A4'"
-      >
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.line" placeholder="样线"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.segmentation" placeholder="分段"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="sowForm.signColor" placeholder="牌色"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="sowForm.signNumber" placeholder="号码"></el-select>
-        </el-col>
-      </el-form-item>
-
-      <el-form-item
-        v-if="this.$route.params.ActivityType === 'A2' || this.$route.params.ActivityType === 'A3'"
-      >
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.firstArea" disabled placeholder></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.nursery" placeholder="苗圃"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.partition" placeholder="分区"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="breedForm.signColor" placeholder="牌色"></el-select>
-        </el-col>
-        <el-col :span="4">
-          <el-select v-model="breedForm.signNumber" placeholder="号码"></el-select>
-        </el-col>
-      </el-form-item>
-    </el-form>
-
-    <el-form :disabled="beforeCreateFile" ref="recorderForm" size="mini">
+    <el-form :disabled="isCreated && beforeCreateFile" ref="recorderForm" size="mini">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
         </el-col>
         <el-col :span="20">
-          <el-select v-model="recorderForm.state" placeholder="请选择">
-            <el-option label="良好" value="0"></el-option>
-            <el-option label="部分白化" value="1"></el-option>
-            <el-option label="部分死亡" value="2"></el-option>
-            <el-option label="死亡" value="3"></el-option>
-            <el-option label="失踪" value="4"></el-option>
+          <el-select v-model="recordForm.state" placeholder="请选择">
+            <el-option label="良好" value="良好"></el-option>
+            <el-option label="部分白化" value="部分白化"></el-option>
+            <el-option label="部分死亡" value="部分死亡"></el-option>
+            <el-option label="死亡" value="死亡"></el-option>
+            <el-option label="失踪" value="失踪"></el-option>
           </el-select>
         </el-col>
       </el-form-item>
@@ -145,7 +89,7 @@
             <span :style="{marginLeft:'10px'}">透光度</span>
           </el-col>
           <el-col :span="13">
-            <el-input v-model="recorderForm.penetrability" placeholder="请输入"></el-input>
+            <el-input v-model="recordForm.penetrability" placeholder="请输入"></el-input>
           </el-col>
         </el-col>
         <el-col :span="2">&nbsp;</el-col>
@@ -154,7 +98,7 @@
             <span :style="{marginLeft:'15px'}">温度</span>
           </el-col>
           <el-col :span="16">
-            <el-input v-model="recorderForm.temperature" placeholder="请输入"></el-input>
+            <el-input v-model="recordForm.temperature" placeholder="请输入"></el-input>
           </el-col>
         </el-col>
       </el-form-item>
@@ -163,7 +107,7 @@
           <span :style="{marginLeft:'5px'}">暂养区域</span>
         </el-col>
         <el-col :span="9">
-          <el-select v-model="recorderForm.coralColor.shallowColor" placeholder="选择最浅颜色">
+          <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
             <el-option
               v-for="(item, idx) in colorList"
               :key="idx"
@@ -177,7 +121,7 @@
         </el-col>
         <el-col :span="1">&nbsp;&nbsp;-</el-col>
         <el-col :span="9">
-          <el-select v-model="recorderForm.coralColor.deepColor" placeholder="选择最深颜色">
+          <el-select v-model="recordForm.coralColor.deepColor" placeholder="选择最深颜色">
             <el-option
               v-for="(item, idx) in colorList"
               :key="idx"
@@ -190,12 +134,12 @@
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item :key="refresh">
+      <el-form-item>
         <el-input
           type="textarea"
-          :autosize="{ minRows: remarkRows, maxRows: 10}"
+          :autosize="{ minRows: 3, maxRows: 10}"
           placeholder="备注"
-          v-model="recorderForm.remark"
+          v-model="recordForm.remark"
         ></el-input>
       </el-form-item>
     </el-form>
@@ -203,18 +147,25 @@
     <div class="buttonArea">
       <el-button
         class="beforeCreate"
-        v-if="beforeCreateFile"
+        v-if="isCreated && beforeCreateFile"
         type="danger"
         round
         @click="createFile"
       >创建珊瑚档案</el-button>
       <el-button
         class="afterCreate"
-        v-else
+        v-if="isCreated && !beforeCreateFile"
         type="danger"
         round
         @click="submitRecorder"
-      >{{buttonText}}</el-button>
+      >录入首次暂养数据</el-button>
+      <el-button
+        class="afterCreate"
+        v-if="!isCreated"
+        type="danger"
+        round
+        @click="submitEdit"
+      >修改首次暂养数据</el-button>
     </div>
   </div>
 </template>
@@ -341,65 +292,24 @@ const colorList = [
   }
 ]
 
-import {} from '../../api/api'
+// import {} from '../../api/api'
 import { mapMutations } from 'vuex'
 export default {
-  watch: {
-    '$route.params': function() {
-      this.changeForm()
-    }
+  props: {
+    fileData: Object,
+    recordData: Object,
+    isCreated: Boolean
   },
+  watch: {},
   data() {
     return {
       signColorList, // 牌色列表
       colorList,
 
-      fileForm: {
-        species: {
-          first: '', // 门纲
-          second: '', // 科目
-          third: '' // 属种
-        },
-        collectSite: 'A大鹏大澳湾'
-      },
+      fileForm: this.fileData, // 接受父页面传来的档案信息
+      recordForm: this.recordData, // 接受父页面传来的记录信息
 
-      breedForm: {
-        // 创建档案表单
-        signColor: '',
-        signNumber: '',
-        breedArea: {
-          firstArea: 'A',
-          nursery: '', // 苗圃
-          partition: '' // 分区
-        }
-      },
-
-      sowForm: {
-        signColor: '',
-        signNumber: '',
-        sowArea: {
-          firstArea: 'A',
-          line: '', // 样线
-          segmentation: '' // 分段
-        }
-      },
-
-      recorderForm: {
-        // 更新记录表单
-        state: '', // 状态
-        penetrability: '', // 透光度
-        temperature: '', // 温度
-        coralColor: {
-          shallowColor: '', // 最浅颜色
-          deepColor: '' // 最深颜色
-        },
-        remark: '' // 备注
-      },
-
-      beforeCreateFile: true, // 首次暂养时需要先创建档案才能录入记录
-      buttonText: '', // “录入**数据”
-      remarkRows: -1, // 备注文本框高度
-      refresh: 1 // 监听路由参数重新渲染表单
+      beforeCreateFile: true // 首次暂养时需要先创建档案才能录入记录
     }
   },
   methods: {
@@ -410,64 +320,48 @@ export default {
       this.setOperateFile('A-宇宙号-1区-蓝-10')
 
       this.beforeCreateFile = false
+      // console.log(this.fileForm)
     },
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
-      console.log('11111')
+      this.$message({
+        showClose: true,
+        message: '数据已成功录入！',
+        type: 'success'
+      })
       this.$router.push({
-        path: `/manage/coralBreed/${this.$route.params.ActivityType}/success`,
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
         query: {
           time: this.$route.query.time,
-          address: this.$route.query.address
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
         }
       })
     },
-    // 根据在哪个阶段改变表单及按钮样式
-    changeForm() {
-      switch (this.$route.params.ActivityType) {
-        case 'A1':
-          this.buttonText = '录入首次暂养数据'
-          this.beforeCreateFile = true
-          this.remarkRows = 3
-          ++this.refresh
-          break
-        case 'A2':
-          this.buttonText = '录入暂养巡检数据'
-          this.beforeCreateFile = false
-          this.remarkRows = 10
-          ++this.refresh
-          break
-        case 'A3':
-          this.buttonText = '录入首次回播数据'
-          this.beforeCreateFile = false
-          this.remarkRows = 6
-          ++this.refresh
-          break
-        case 'A4':
-          this.buttonText = '录入回播巡检数据'
-          this.beforeCreateFile = false
-          this.remarkRows = 10
-          ++this.refresh
-          break
-        default:
-          return
-      }
+    submitEdit() {
+      // 修改成功接口
+      this.$message({
+        showClose: true,
+        message: '数据修改成功！',
+        type: 'success'
+      })
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
     }
   },
 
-  mounted() {
-    this.changeForm()
-  }
+  mounted() {}
 }
 </script>
 
 <style lang="stylus" scoped>
-// .formRoot {
-// width: 100%;
-// height: 100%;
-// margin-bottom: 0;
-// }
 .colorCircle {
   width: 10px;
   height: 10px;
