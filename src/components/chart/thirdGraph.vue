@@ -115,7 +115,7 @@ export default {
   },
   mounted(){
   },
-  components:{'v-chart':ECharts}
+//   components:{'v-chart':ECharts}
     }
   
 </script>

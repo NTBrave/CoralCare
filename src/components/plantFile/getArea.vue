@@ -3,7 +3,37 @@
     <div>
       <canvas id="mycanvas" @mousedown="setPoint"></canvas>
     </div>
-    <div style="margin-left: 3rem;color:#000">
+    <div style="margin-left:1rem;color:#000;position: relative;">
+      <!-- 说明 -->
+      <div style="position:absolute;right:0">
+        <el-popover trigger="hover" title="测量说明：" placement="top" width="350">
+          <ul>
+            <span>1、输入参考物的实际直径,默认3cm</span>
+          </ul>
+          <ul style="width:100%;list-style:none">
+            <li>
+              <span>2、测量面积</span>
+            </li>
+            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(2)在图中标出参考物短轴的端点，测量</li>
+            <li>(3)在图中标出目标的轮廓点，测量。得出计算结果</li>
+          </ul>
+          <ul style="width:100%;list-style:none">
+            <li>
+              <span>3、测量高度</span>
+            </li>
+            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(2)在图中标出目标的端点，测量。得出计算结果</li>
+            <li></li>
+          </ul>
+          <ul style="width:100%;list-style:none">
+            <li>4、测量面积时，图中参考物必须是圆形或椭圆形。</li>
+          </ul>
+          <p slot="reference" style="text-align: center; padding-top:5px" type="text">
+            <a class="el-icon-info" style="font-size: 25px;color: #ff6b6b;"></a>
+          </p>
+        </el-popover>
+      </div>
       <div>
         <label @click="checkedType(0)" class="elRadio">
           <span class="elInput">
@@ -21,31 +51,8 @@
         </label>
       </div>
 
-      <div
-        style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem; margin: 1rem 0 1rem 0;"
-      >
-        上次测量值：
-        <span>
-          <span>
-            cm
-            <sup v-show="checkeId==0">2</sup>
-          </span>
-        </span>
-      </div>
-      <div
-        style="border: 1px solid rgba(112,112,112,1);padding: 0.5rem;line-height: 2rem;margin: 1rem 0 1rem 0;"
-      >
-        本次测量值：
-        <span>
-          {{coralInActual}}
-          <span>
-            cm
-            <sup v-show="checkeId==0">2</sup>
-          </span>
-        </span>
-      </div>
       <!-- 测量高度 -->
-      <div v-show="checkeId==1">
+      <div class="operStep" v-show="checkeId==1">
         <div>
           <span>号牌直径：</span>
           <input
@@ -54,31 +61,39 @@
             v-model="diameter"
           />cm
         </div>
-        <div style="display:flex">
+        <div style="display:flex;margin-top: 0.5rem;">
           <div>号牌长轴：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="longAxis"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+          <div
+            class="my-btn"
+            style="margin:0 0 0 1rem;width: 3rem;background: #3FC1CB;"
+            @click="calcuLongAxis"
+          >
             <span>测量</span>
           </div>
         </div>
-        <div style="display:flex">
+        <div style="display:flex;margin-top: 0.5rem;">
           <div>珊瑚高度：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="coralHight"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuHeight">
+          <div
+            class="my-btn"
+            style="margin:0 0 0 1rem;width: 3rem;background: #3FC1CB;"
+            @click="calcuHeight"
+          >
             <span>测量</span>
           </div>
         </div>
       </div>
       <!-- 测量面积 -->
-      <div v-show="checkeId==0">
+      <div class="operStep" v-show="checkeId==0">
         <div>
           <span>号牌直径：</span>
           <input
@@ -87,61 +102,92 @@
             v-model="diameter"
           />cm
         </div>
-        <div style="display:flex">
-          <div>1、号牌长轴：</div>
+        <div style="display:flex;margin-top: 0.5rem;">
+          <div>号牌长轴：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="longAxis"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+          <div
+            class="my-btn"
+            style="margin:0 0 0 1rem;width: 3rem;background: #3FC1CB;"
+            @click="calcuLongAxis"
+          >
             <span>测量</span>
           </div>
         </div>
-        <div style="display:flex">
-          <div>2、号牌短轴：</div>
+        <div style="display:flex;margin-top: 0.5rem;">
+          <div>号牌短轴：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="shortAxis"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuShortAxis">
+          <div
+            class="my-btn"
+            style="margin:0 0 0 1rem;width: 3rem;background: #3FC1CB;"
+            @click="calcuShortAxis"
+          >
             <span>测量</span>
           </div>
         </div>
-        <div style="display:flex">
-          <div>3、珊瑚轮廓：</div>
+        <div style="display:flex;margin-top: 0.5rem;">
+          <div>目标轮廓：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="coralAreaInImg"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuCoralAreaInImg">
+          <div
+            class="my-btn"
+            style="margin:0 0 0 1rem;width: 3rem;background: #3FC1CB;"
+            @click="calcuCoralAreaInImg"
+          >
             <span>测量</span>
           </div>
           <!-- <span>cm<sup>2</sup></span> -->
         </div>
       </div>
-
-      <div class="my-btn" style="background: #3FC1CB;" @click.stop="undoPoint">
-        <span class="el-icon-refresh-left">撤销</span>
-      </div>
-      <div class="my-btn" style="background: #3FC1CB;" @click.stop="delectAllPoint">
-        <span class="el-icon-delete">重画</span>
-      </div>
-
-      <!-- <div class="my-btn" style="background: #DBDBDB;">
-        <span>取消测量</span>
-      </div>-->
-      <div class="my-btn">
-        <span>
-          <span @click.stop="mackImg">确认提交</span>
-        </span>
+      <div style="    display: flex;justify-content: space-around;">
+        <div class="my-btn" style="background: #3FC1CB;" @click.stop="undoPoint">
+          <span class="el-icon-refresh-left">撤销</span>
+        </div>
+        <div class="my-btn" style="background: #3FC1CB;" @click.stop="delectAllPoint">
+          <span class="el-icon-delete">重画</span>
+        </div>
       </div>
 
-      <!-- <span>
-      <span style="margin-left:20px;" size="small" type="primary" @click.stop="getArea"></span>
-      </span>-->
+      <div class="dataForm">
+        <div>
+          本次测量值：
+          <span>
+            {{coralInActual}}
+            <span style=" float: right;">
+              cm
+              <sup v-show="checkeId==0">2</sup>
+            </span>
+          </span>
+        </div>
+
+        <div style="font-size: 0.7rem;color: rgba(0,0,0,0.7);">
+          上次测量值：
+          <span>
+            <span style="    float: right;">
+              cm
+              <sup v-show="checkeId==0">2</sup>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div style="display: flex;justify-content: center;">
+        <div class="my-btn">
+          <span>
+            <span @click.stop="mackImg">确认提交</span>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -169,12 +215,12 @@ export default {
       context: null,
       img: null,
       canvasW: 0,
-      diameter: 3,
+      diameter: 3, //参考物实际长度
       checkeId: 0,
-      shortAxis: 0,
-      longAxis: 0,
-      coralAreaInImg: 0,
-      coralInActual: 0,
+      shortAxis: 0, //图中短轴
+      longAxis: 0, //图中长轴
+      coralAreaInImg: 0, //图中轮廓点的面积
+      coralInActual: 0, //计算出来的实际结果
       coralHight: 0
     };
   },
@@ -340,7 +386,11 @@ export default {
     },
     calcuLongAxis() {
       if (this.pointList.length != 2) {
-        alert("请在图中标两个点");
+        this.$notify({
+          title: "",
+          message: "请在图中标两个点",
+          type: "warning"
+        });
       } else {
         let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
         let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
@@ -350,7 +400,11 @@ export default {
     },
     calcuShortAxis() {
       if (this.pointList.length != 2) {
-        alert("请在图中标两个点");
+        this.$notify({
+          title: "",
+          message: "请在图中标两个点",
+          type: "warning"
+        });
       } else {
         let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
         let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
@@ -360,7 +414,17 @@ export default {
     },
     calcuCoralAreaInImg() {
       if (this.pointList.length < 3) {
-        alert("至少需要3个点，才能计算");
+        this.$notify({
+          title: "",
+          message: "至少需要3个点，才能计算",
+          type: "warning"
+        });
+      } else if (this.shortAxis == 0 || this.longAxis == 0) {
+        this.$notify({
+          title: "",
+          message: "请先测量长轴和短轴",
+          type: "warning"
+        });
       } else {
         // console.log(this.pointList);
         let allHelen = 0;
@@ -405,13 +469,26 @@ export default {
     },
     calcuHeight() {
       if (this.pointList.length != 2) {
-        alert("只能有两个点，才能计算");
+        this.$notify({
+          title: "",
+          message: "只能有2个点，才能计算",
+          type: "warning"
+        });
+      } else if (this.shortAxis == 0 || this.longAxis == 0) {
+        this.$notify({
+          title: "",
+          message: "请先测量长轴",
+          type: "warning"
+        });
       } else {
-       this.coralHight = Math.sqrt(
+        this.coralHight = Math.sqrt(
           Math.pow(this.pointList[0].x - this.pointList[1].x, 2) +
             Math.pow(this.pointList[0].y - this.pointList[1].y, 2)
         );
-        this.coralInActual = ((this.diameter / this.longAxis) *this.coralHight).toFixed(2);
+        this.coralInActual = (
+          (this.diameter / this.longAxis) *
+          this.coralHight
+        ).toFixed(2);
       }
       this.delectAllPoint();
     }
@@ -490,5 +567,19 @@ export default {
   right: 0;
   bottom: 0;
   margin: 0;
+}
+.dataForm {
+  border: 1px solid #ff6b6b;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  line-height: 2rem;
+  margin: 1rem 0 1rem 0;
+  width: 14rem;
+}
+.operStep {
+  border-radius: 1rem;
+  margin-top: 1rem;
+  border: 1px solid rgb(63, 193, 203);
+  padding: 0.5rem;
 }
 </style>

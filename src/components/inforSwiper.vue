@@ -19,7 +19,12 @@
                   :key="index"
                   class
                 >
-                  <span style="color:#7E7E7E;">{{item.title}}：<span v-if="index==0"><br></span></span>
+                  <span style="color:#7E7E7E;">
+                    {{item.title}}：
+                    <span v-if="index==0">
+                      <br />
+                    </span>
+                  </span>
                   <span>
                     <span v-if="item.title.match(/备注/g)!=null">
                       <br />
@@ -46,15 +51,15 @@
         </el-row>
       </div>
       <div style="width:40rem">
-        <swiper  :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
+        <swiper
+          :imgUrl="inforImgUrl"
+          :imgHeight="9.5"
+          :imgWidth="10"
+          @selectOneImg="chooseSwiperImg"
+        ></swiper>
         <div style="    height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
-          <img
-            class="showOneImg"
-            width="100%"
-            :src="imgUrlFormSwiper"
-            alt
-          />
+          <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
         </div>
       </div>
     </div>
@@ -63,69 +68,67 @@
     <div
       v-show="doMeasuring"
       class="measuring"
-      style="background: #DBDBDB;margin: 0 0 1rem 0;color:#000"
+      style="background: #DBDBDB;margin: 0 0 1rem 0;color:#000;position:absolute;right: 10%;"
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
       <swiper :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
-      <getArea :imageUrl="imgUrlFormSwiper" ></getArea>
+      <getArea :imageUrl="imgUrlFormSwiper"></getArea>
     </div>
   </div>
 </template>
 
 <script>
-import swiper from '@/components/swiper.vue'
-import getArea from '@/components/plantFile/getArea.vue'
-import * as Default from "../json/default"
+import swiper from "@/components/swiper.vue";
+import getArea from "@/components/plantFile/getArea.vue";
+import * as Default from "../json/default";
 export default {
   components: { swiper, getArea },
   data() {
     return {
-      recordName: 'A-宇宙号-1区-蓝-07',
+      recordName: "A-宇宙号-1区-蓝-07",
       recordInfor: [
-        { title: '活动编号', msg: 'A2-大鹏大澳湾-2019090910' },
-        { title: '属种', msg: '盔型珊瑚科目' },
-        { title: '状态', msg: '部分白化' },
-        { title: '阶段类型', msg: '回播' },
-        { title: '暂养区域', msg: 'A-宇宙号-1区' },
-        { title: '透光度', msg: '180cm' },
-        { title: '温度', msg: '31℃' },
+        { title: "活动编号", msg: "A2-大鹏大澳湾-2019090910" },
+        { title: "属种", msg: "盔型珊瑚科目" },
+        { title: "状态", msg: "部分白化" },
+        { title: "阶段类型", msg: "回播" },
+        { title: "暂养区域", msg: "A-宇宙号-1区" },
+        { title: "透光度", msg: "180cm" },
+        { title: "温度", msg: "31℃" },
         {
-          title: '颜色',
-          msg: 'D2',
-          color: 'rgb(247,218,159)',
-          msg2: 'D5',
-          color2: 'rgb(143,65,36)'
+          title: "颜色",
+          msg: "D2",
+          color: "rgb(247,218,159)",
+          msg2: "D5",
+          color2: "rgb(143,65,36)"
         },
-        { title: '时间', msg: '2018.9.10.10' },
-        { title: '珊瑚尺寸', msg: '5.66' },
-        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
+        { title: "时间", msg: "2018.9.10.10" },
+        { title: "珊瑚尺寸", msg: "5.66" },
+        { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
       ],
       doMeasuring: false,
-      imgUrlFormSwiper:'',
+      imgUrlFormSwiper: "",
       key: 0,
-      inforImgUrl:Default.imgUrl,
-    }
+      inforImgUrl: Default.imgUrl
+    };
   },
-  watch:{
+  watch: {
     // imgUrlFormSwiper(){
-      // ++this.key;
-      // console.log(11)
+    // ++this.key;
+    // console.log(11)
     // }
   },
   methods: {
     goMessuring() {
-      this.doMeasuring = !this.doMeasuring
+      this.doMeasuring = !this.doMeasuring;
     },
-    chooseSwiperImg(url){
+    chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url;
 
       // console.log(this.imgUrlFormSwiper)
- 
-
     }
   }
-}
+};
 </script>
 
 <style scoped>

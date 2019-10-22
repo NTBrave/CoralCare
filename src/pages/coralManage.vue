@@ -1,9 +1,9 @@
 <template>
-<!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
+  <!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
       <span>
         <img src="../assets/images/ComingSoon.gif" alt />
       </span>
-    </div> -->
+  </div>-->
   <div class="workPage">
     <div class="selectItem">
       <div style="display: flex;justify-content: center;">
@@ -33,7 +33,6 @@
     </div>
 
     <div style="display: flex;height:84%;background-color: white;margin-top:1%;">
-
       <div class="list-width">
         <div v-show="!isShowRecord" style="height:10%">
           <el-row style="color:#0090FF;font-size=1.1rem">
@@ -53,7 +52,6 @@
             <el-col :offset="3" :span="22">
               <el-col :span="4">
                 <span :style="coral.star?'visibility: visible;':'visibility: hidden;'">
-               
                   <img src="../assets/images/star.png" alt />
                 </span>
               </el-col>
@@ -75,10 +73,14 @@
             </el-col>
           </el-row>
           <el-row>
-            <div style="background: #00ADBA;color: white;border-radius: 5px;">
-              <span style="font-size: 0.9rem;">活动编号：</span>
+            <el-col
+              :offset="1"
+              :span="22"
+              style="background: #00ADBA;color: white;border-radius: 5px;"
+            >
+              <span style="font-size: 0.9rem;"></span>
               {{activityNum}}
-            </div>
+            </el-col>
           </el-row>
         </div>
         <div v-show="isShowRecord" class="list-width-g">
@@ -91,7 +93,7 @@
 
         <div></div>
       </div>
-     
+
       <div v-if="!isShowRecord" style="width: 70rem;">
         <el-row style="margin-left:1%;width: 100%;">
           <el-col class="exampleCarousel" :offset="1" :span="22">
@@ -125,7 +127,6 @@
                       :key="index"
                       class="exampleOneMsg"
                     >
-                    
                       <span v-if="index==0" class="marRight">
                         <img class="oneImg" src="../assets/images/number.png" alt />
                       </span>
@@ -164,8 +165,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :offset="1" :span="22">
-           
+          <el-col :offset="1" :span="22" style="display: flex; justify-content: center;">
             <timeChar @index="currentIndex"></timeChar>
           </el-col>
         </el-row>
@@ -306,78 +306,7 @@ export default {
       activityNum: "A1-大鹏大澳湾-2018090910",
       recordIndex: 0,
 
-      exampleData: [
-        {
-          url: "http://dayy.xyz/resource/example/1.png",
-          size: "223.4",
-          time: "2018.4.10"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/2.jpg",
-          size: "235.6",
-          time: "2018.5.09"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/3.jpg",
-          size: "240.2",
-          time: "2018.6.09"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/4.jpg",
-          size: "242.5",
-          time: "2018.6.17"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/5.jpg",
-          size: "243.2",
-          time: "2018.7.01"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/6.jpg",
-          size: "250.4",
-          time: "2018.7.28"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/7.jpg",
-          size: "254.6",
-          time: "2018.11.17"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/8.jpg",
-          size: "260.3",
-          time: "2018.12.29"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/9.jpg",
-          size: "268.4",
-          time: "2019.3.02"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/10.jpg",
-          size: "278.5",
-          time: "2019.3.17"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/11.jpg",
-          size: "279.1",
-          time: "2019.4.06"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/12.jpg",
-          size: "280.5",
-          time: "2019.6.02"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/13.jpg",
-          size: "284.6",
-          time: "2019.6.22"
-        },
-        {
-          url: "http://dayy.xyz/resource/example/14.jpg",
-          size: "288.1",
-          time: "2019.8.24"
-        }
-      ]
+      exampleData: DEFAULT.imgUrl
     };
   },
 
@@ -622,12 +551,12 @@ export default {
   content: "";
   position: absolute;
   top: 50%;
-  right: -14px;
+  right: -10px;
   z-index: 1;
   /* transition: all 0.2s ease-out; */
   /* transform: translateY(-50%); */
-  border-left: 14px solid #3fc1cb;
-  border-top: 14px solid transparent;
-  border-bottom: 14px solid transparent;
+  border-left: 10px solid #3fc1cb;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
 }
 </style>
