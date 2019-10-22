@@ -1,22 +1,10 @@
 <template>
-  <div class="all-chart" :style="bodySize">
-    <!-- <div style="height:1px;"></div>
-    <div class="dropdown-style">
-      <span style="margin-right:20px;">选择区域</span>
-      <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-          {{dropdownKey}}
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="所有区域">所有区域</el-dropdown-item>
-          <el-dropdown-item command="深圳大鹏">深圳大鹏</el-dropdown-item>
-          <el-dropdown-item command="镇江某地">镇江某地</el-dropdown-item>
-          <el-dropdown-item command="惠州某地">惠州某地</el-dropdown-item>
-          <el-dropdown-item command="菲律宾某地">菲律宾某地</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+<!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
+      <span>
+        <img src="../assets/images/ComingSoon.gif" alt />
+      </span>
     </div> -->
+  <div class="all-chart" :style="bodySize">
     <div style="position:relative;z-index:100">
       <div class="coralNumber" @click="clickCoral(0)">
         <div :class="coralClickStyle[0]">
@@ -39,13 +27,6 @@
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[2]"></div>
       </div>
-      <!-- <div class="coralNumber" @click="clickCoral(3)">
-        <div :class="coralClickStyle[3]">
-          历史回播
-          <span class="innerNum">{{coralNumber[3]}}</span>株珊瑚
-        </div>
-        <div class="bottomTriangle" v-show="coralBottomJudge[3]"></div>
-      </div> -->
     </div>
     <div style="height:155px;position:relative"></div>
 

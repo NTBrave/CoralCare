@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
+      <span>
+        <img src="../assets/images/ComingSoon.gif" alt />
+      </span>
+    </div> -->
     <div class="cnt_back" :style="searchPage">
       <el-container class="cnt_width">
         <el-header>
@@ -215,7 +220,7 @@
                   >{{item.title_highlight + '.' + item.ext}}</span>
                 </el-card>
 
-                <!-- 简介popover -->
+    
 
                 <div class="popover_content">
                   <el-row style="margin-top: 10px;">
@@ -312,22 +317,22 @@
 </template>
 
 <script>
-import * as Api from '../api/api'
-import * as DEFAULT from '../json/default'
+import * as Api from "../api/api";
+import * as DEFAULT from "../json/default";
 
 export default {
-  name: 'Search',
+  name: "Search",
   data() {
     return {
       // header搜索栏
       searchType: [],
-      keyword: '',
-      keyword_backup: '',
+      keyword: "",
+      keyword_backup: "",
       isKeywordChanged: false,
       searchSuggestions: [],
       searchTypes: DEFAULT.typeOptions,
-      typeOnshow: '全部',
-      typeCommand: 'all',
+      typeOnshow: "全部",
+      typeCommand: "all",
 
       // 后缀名时间单多选
       types: DEFAULT.extOptions,
@@ -338,13 +343,13 @@ export default {
       defaultCTime: 0,
       defaultETime: 0,
       // 自定义时间
-      CTime: '',
-      ETime: '',
+      CTime: "",
+      ETime: "",
       // 结果展示
       resultItems: [],
       // 类目和标签搜索和展示
-      category: '',
-      tag: '',
+      category: "",
+      tag: "",
       categorySuggestions: [],
       tagSuggestions: [],
       categoryBackup: [],
@@ -355,7 +360,7 @@ export default {
       checkedTags: [],
       showTags: DEFAULT.tg,
       // 已选条件展示（废弃
-      selectedOptions: ['XXXXX', 'AAAAA', 'GGGGGGGGGG'],
+      selectedOptions: ["XXXXX", "AAAAA", "GGGGGGGGGG"],
       // 分页
       currentPage: 1,
       currentPageSize: 10,
@@ -373,98 +378,98 @@ export default {
       // Searching: false,
 
       //页面宽度 为解决浏览器适配问题
-      searchPage: { width: '' }
-    }
+      searchPage: { width: "" }
+    };
   },
   mounted: function() {
     // 路由检测
     if (this.$route.query.keyword != null) {
-      this.keyword = this.$route.query.keyword
-      this.currentResourceId = this.$route.query.resourceId
-      this.search()
+      this.keyword = this.$route.query.keyword;
+      this.currentResourceId = this.$route.query.resourceId;
+      this.search();
     }
 
-    this.searchPage.width = document.body.clientWidth - 250 + 'px'
+    this.searchPage.width = document.body.clientWidth - 250 + "px";
   },
   watch: {},
   methods: {
     itemClicked() {},
     handleCheckAllChange(value) {
       // console.log(value);
-      let temp = []
+      let temp = [];
       for (let i = 0; i < this.types.length; ++i) {
-        temp.push(this.types[i].key)
+        temp.push(this.types[i].key);
       }
-      this.defaultTypes = value ? temp : []
+      this.defaultTypes = value ? temp : [];
 
-      this.search()
+      this.search();
     },
     handleCheckedTypesChange(value) {
-      let checkedCount = value.length
-      if (checkedCount < this.types.length) this.allTypes = false
+      let checkedCount = value.length;
+      if (checkedCount < this.types.length) this.allTypes = false;
 
-      this.search()
+      this.search();
     },
     handleSizeChange(val) {
-      this.currentPageSize = val
-      this.search()
+      this.currentPageSize = val;
+      this.search();
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.search()
+      this.currentPage = val;
+      this.search();
     },
     // 搜索建议部分
     querySearchAsync(queryString, cb) {
       // cb(results);网络请求部分
-      let _this = this
+      let _this = this;
       Api.Suggestions(this.typeCommand, this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            _this.searchSuggestions.splice(0, _this.searchSuggestions.length)
+            _this.searchSuggestions.splice(0, _this.searchSuggestions.length);
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              }
-              _this.searchSuggestions.push(temp)
+              };
+              _this.searchSuggestions.push(temp);
             }
-            cb(_this.searchSuggestions)
+            cb(_this.searchSuggestions);
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     handleSelect(item) {
       // 点击后处理
-      this.keyword = item.value
-      this.search()
+      this.keyword = item.value;
+      this.search();
     },
     search() {
       // loading动画
-      this.loading = true
-      this.Searching = true
+      this.loading = true;
+      this.Searching = true;
 
-      if (this.keyword != this.keyword_backup) this.isKeywordChanged = true
-      else this.isKeywordChanged = false
-      this.keyword_backup = this.keyword
+      if (this.keyword != this.keyword_backup) this.isKeywordChanged = true;
+      else this.isKeywordChanged = false;
+      this.keyword_backup = this.keyword;
 
-      if (this.isKeywordChanged) this.dataInit()
+      if (this.isKeywordChanged) this.dataInit();
 
       // 点击后处理
-      let _this = this
-      let exts = []
-      if (this.allTypes) exts = ['all']
-      else exts = this.defaultTypes
+      let _this = this;
+      let exts = [];
+      if (this.allTypes) exts = ["all"];
+      else exts = this.defaultTypes;
 
-      let created_time
+      let created_time;
       if (this.defaultCTime == this.CTimes.length - 1) {
         created_time = {
           from: this.CTime[0],
           to: this.CTime[1]
-        }
+        };
       } else {
         created_time = {
           from:
@@ -475,15 +480,15 @@ export default {
             this.CTimes[this.defaultCTime] != null
               ? this.CTimes[this.defaultCTime].to_as_string
               : null
-        }
+        };
       }
 
-      let modified_time
+      let modified_time;
       if (this.defaultETime == this.ETimes.length - 1) {
         modified_time = {
           from: this.ETime[0],
           to: this.ETime[1]
-        }
+        };
       } else {
         modified_time = {
           from:
@@ -494,7 +499,7 @@ export default {
             this.ETimes[this.defaultETime] != null
               ? this.ETimes[this.defaultETime].to_as_string
               : null
-        }
+        };
       }
 
       Api.Results(
@@ -505,32 +510,32 @@ export default {
         exts,
         created_time,
         modified_time,
-        '+8',
+        "+8",
         this.currentPage,
         this.currentPageSize
       )
         .then(res => {
           if (res.data.status === 200) {
             // 结果数组
-            _this.itemTotal = res.data.data.total
-            _this.resultItems.splice(0, _this.resultItems.length)
-            _this.resultItems = res.data.data.results
+            _this.itemTotal = res.data.data.total;
+            _this.resultItems.splice(0, _this.resultItems.length);
+            _this.resultItems = res.data.data.results;
 
             // 后缀名数组更新
-            _this.types.splice(0, _this.types.length)
+            _this.types.splice(0, _this.types.length);
             if (_this.isKeywordChanged) {
-              _this.defaultTypes.splice(0, _this.defaultTypes.length)
-              _this.allTypes = true
-              _this.types = res.data.data.group_by_ext.slice(1)
+              _this.defaultTypes.splice(0, _this.defaultTypes.length);
+              _this.allTypes = true;
+              _this.types = res.data.data.group_by_ext.slice(1);
 
               for (let i = 0; i < _this.types.length; ++i)
-                _this.defaultTypes.push(_this.types[i].key)
+                _this.defaultTypes.push(_this.types[i].key);
             } else {
-              _this.updateExts(res.data.data.group_by_ext)
+              _this.updateExts(res.data.data.group_by_ext);
             }
 
             // 创建时间数组更新
-            let reset = true
+            let reset = true;
             for (let j = 0; j < res.data.data.group_by_created_time.length; ++j)
               if (
                 !_this.isKeywordChanged &&
@@ -538,16 +543,16 @@ export default {
                 _this.CTimes[_this.defaultCTime].key ==
                   res.data.data.group_by_created_time[j].key
               ) {
-                _this.defaultCTime = j
-                reset = false
-                break
+                _this.defaultCTime = j;
+                reset = false;
+                break;
               }
-            if (reset) _this.defaultCTime = 0
-            _this.CTimes.splice(0, _this.CTimes.length)
-            _this.CTimes = res.data.data.group_by_created_time
+            if (reset) _this.defaultCTime = 0;
+            _this.CTimes.splice(0, _this.CTimes.length);
+            _this.CTimes = res.data.data.group_by_created_time;
 
             // 修改时间数组更新
-            reset = true
+            reset = true;
             for (
               let j = 0;
               j < res.data.data.group_by_modified_time.length;
@@ -559,198 +564,198 @@ export default {
                 this.ETimes[_this.defaultETime].key ==
                   res.data.data.group_by_modified_time[j].key
               ) {
-                _this.defaultETime = j
-                reset = false
-                break
+                _this.defaultETime = j;
+                reset = false;
+                break;
               }
-            if (reset) _this.defaultETime = 0
-            _this.ETimes.splice(0, _this.ETimes.length)
-            _this.ETimes = res.data.data.group_by_modified_time
+            if (reset) _this.defaultETime = 0;
+            _this.ETimes.splice(0, _this.ETimes.length);
+            _this.ETimes = res.data.data.group_by_modified_time;
 
-            if (_this.isKeywordChanged) _this.getTAG()
-            else _this.loading = false
+            if (_this.isKeywordChanged) _this.getTAG();
+            else _this.loading = false;
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     // 下拉框选择
     dropdownClick(searchType) {
-      this.typeOnshow = searchType.value
-      this.typeCommand = searchType.command
+      this.typeOnshow = searchType.value;
+      this.typeCommand = searchType.command;
 
-      this.search()
+      this.search();
     },
     getTAG() {
-      let _this = this
+      let _this = this;
       // 获取类目和标签
       Api.Associations(this.keyword, 5, 5)
         .then(res => {
           if (res.data.status === 200) {
             // 类目数组清空
-            _this.showCategories.splice(0, _this.showCategories.length)
-            _this.checkedCtgr.splice(0, _this.checkedCtgr.length)
-            _this.showCategories = res.data.data.categories
+            _this.showCategories.splice(0, _this.showCategories.length);
+            _this.checkedCtgr.splice(0, _this.checkedCtgr.length);
+            _this.showCategories = res.data.data.categories;
 
             // 标签数组清空
-            _this.checkedTags.splice(0, _this.checkedTags.length)
-            _this.showTags.splice(0, _this.showTags.length)
-            _this.showTags = res.data.data.tags
+            _this.checkedTags.splice(0, _this.checkedTags.length);
+            _this.showTags.splice(0, _this.showTags.length);
+            _this.showTags = res.data.data.tags;
 
-            _this.loading = false
+            _this.loading = false;
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     // 关键字不改变的情况下更新后缀名数组
     updateExts(arr) {
-      let originLength = arr.length
-      arr = arr.slice(1)
+      let originLength = arr.length;
+      arr = arr.slice(1);
 
-      let temp = []
-      let defaultKeys = this.defaultTypes
-      let arrKeys = []
-      for (let i = 0; i < arr.length; ++i) arrKeys.push(arr[i].key)
+      let temp = [];
+      let defaultKeys = this.defaultTypes;
+      let arrKeys = [];
+      for (let i = 0; i < arr.length; ++i) arrKeys.push(arr[i].key);
       for (let i = 0; i < defaultKeys.length; ++i) {
         if (arrKeys.indexOf(defaultKeys[i]) != -1) {
-          temp.push(this.defaultTypes[i])
+          temp.push(this.defaultTypes[i]);
         }
       }
       // console.log("originLength" + originLength);
       // console.log(defaultKeys);
       // console.log(temp);
-      this.defaultTypes = temp
+      this.defaultTypes = temp;
 
-      this.types = arr
+      this.types = arr;
     },
     dataInit() {
       // 数据初始化
-      this.allTypes = true
-      this.defaultTypes = []
-      this.CTimes = []
-      this.ETimes = []
-      this.defaultCTime = null
-      this.defaultETime = null
-      this.CTime = []
-      this.ETime = []
+      this.allTypes = true;
+      this.defaultTypes = [];
+      this.CTimes = [];
+      this.ETimes = [];
+      this.defaultCTime = null;
+      this.defaultETime = null;
+      this.CTime = [];
+      this.ETime = [];
 
-      this.showCategories = []
-      this.showTags = []
-      this.checkedCtgr = []
-      this.checkedTags = []
+      this.showCategories = [];
+      this.showTags = [];
+      this.checkedCtgr = [];
+      this.checkedTags = [];
     },
     queryCategories(queryString, cb) {
       // 网络请求部分
-      let _this = this
+      let _this = this;
       Api.Categories(this.category, 5)
         .then(res => {
           if (res.data.status === 200) {
-            _this.categoryBackup = res.data.data
+            _this.categoryBackup = res.data.data;
             // 数组清空
-            _this.categorySuggestions.splice(0, _this.searchSuggestions.length)
+            _this.categorySuggestions.splice(0, _this.searchSuggestions.length);
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i].title,
                 id: res.data.data[i].id,
                 desc: res.data.data[i].desc,
                 index: i
-              }
-              _this.categorySuggestions.push(temp)
+              };
+              _this.categorySuggestions.push(temp);
             }
-            cb(_this.categorySuggestions)
+            cb(_this.categorySuggestions);
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     addCategories(item) {
       // 选中值是否在原数组里
-      let isContain = false
-      let i
+      let isContain = false;
+      let i;
       for (i = 0; i < this.showCategories.length; ++i)
         if (this.showCategories[i].title == item.value) {
-          isContain = true
-          break
+          isContain = true;
+          break;
         }
 
       // 在就将原数组的对应值选上（已经选上就不用选了
       // 不在就添加然后选上
       if (isContain) {
         if (this.checkedCtgr.indexOf(item.id) == -1)
-          this.checkedCtgr.push(item.id)
+          this.checkedCtgr.push(item.id);
       } else {
-        this.showCategories.push(this.categoryBackup[item.index])
-        this.checkedCtgr.push(item.id)
+        this.showCategories.push(this.categoryBackup[item.index]);
+        this.checkedCtgr.push(item.id);
       }
 
-      this.search()
+      this.search();
     },
     queryTags(queryString, cb) {
       // 网络请求部分
-      let _this = this
+      let _this = this;
       Api.Tags(this.tag, 5)
         .then(res => {
           if (res.data.status === 200) {
-            _this.tagBackup = res.data.data
+            _this.tagBackup = res.data.data;
             // 数组清空
-            _this.tagSuggestions.splice(0, _this.searchSuggestions.length)
+            _this.tagSuggestions.splice(0, _this.searchSuggestions.length);
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i].title,
                 id: res.data.data[i].id,
                 desc: res.data.data[i].desc,
                 index: i
-              }
-              _this.tagSuggestions.push(temp)
+              };
+              _this.tagSuggestions.push(temp);
             }
-            cb(_this.tagSuggestions)
+            cb(_this.tagSuggestions);
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     addTags(item) {
       // 选中值是否在原数组里
-      let isContain = false
-      let i
+      let isContain = false;
+      let i;
       for (i = 0; i < this.showTags.length; ++i)
         if (this.showTags[i].title == item.value) {
-          isContain = true
-          break
+          isContain = true;
+          break;
         }
 
       // 在就将原数组的对应值选上（已经选上就不用选了
       // 不在就添加然后选上
       if (isContain) {
         if (this.checkedTags.indexOf(item.id) == -1)
-          this.checkedTags.push(item.id)
+          this.checkedTags.push(item.id);
       } else {
-        this.showTags.push(this.tagBackup[item.index])
-        this.checkedTags.push(item.id)
+        this.showTags.push(this.tagBackup[item.index]);
+        this.checkedTags.push(item.id);
       }
 
-      this.search()
+      this.search();
     },
     turnToDoc() {
       this.$router.push({
-        path: '/doc'
-      })
+        path: "/doc"
+      });
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -923,7 +928,7 @@ export default {
 }
 
 .cnt_back {
-  background: url('https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg')
+  background: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg")
     no-repeat 50%;
   background-size: 100%;
   background-origin: padding-box;

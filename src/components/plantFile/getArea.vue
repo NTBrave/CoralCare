@@ -28,7 +28,7 @@
         <span>
           <span>
             cm
-            <sup>2</sup>
+            <sup v-show="checkeId==0">2</sup>
           </span>
         </span>
       </div>
@@ -37,10 +37,10 @@
       >
         本次测量值：
         <span>
-          {{coralAreaActual}}
+          {{coralInActual}}
           <span>
             cm
-            <sup>2</sup>
+            <sup v-show="checkeId==0">2</sup>
           </span>
         </span>
       </div>
@@ -65,14 +65,14 @@
             <span>测量</span>
           </div>
         </div>
-         <div style="display:flex">
+        <div style="display:flex">
           <div>珊瑚高度：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
             size="mini"
             v-model="coralHight"
           />
-          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuLongAxis">
+          <div class="my-btn" style="margin:0 0 0 1rem;width: 3rem;" @click="calcuHeight">
             <span>测量</span>
           </div>
         </div>
@@ -151,14 +151,14 @@
 
 export default {
   name: "essay",
-  props: {
-    imageUrl: String
-  },
+  // props: {
+  //   imageUrl: String
+  // },
   data() {
     return {
       canvas: null,
-      newUrl: "http://dayy.xyz/resource/1.jpg",
-      // imageUrl: "http://dayy.xyz/resource/test.jpg",
+      // newUrl: "http://dayy.xyz/resource/1.jpg",
+      imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
@@ -174,8 +174,8 @@ export default {
       shortAxis: 0,
       longAxis: 0,
       coralAreaInImg: 0,
-      coralAreaActual: 0,
-      coralHight:0,
+      coralInActual: 0,
+      coralHight: 0
     };
   },
   mounted: function() {
@@ -397,11 +397,23 @@ export default {
             this.diameter *
             (this.shortAxis * (this.diameter / this.longAxis))) /
           4;
-        this.coralAreaActual = (
+        this.coralInActual = (
           (this.coralAreaInImg * actualEllipse) /
           ellipse
         ).toFixed(2);
       }
+    },
+    calcuHeight() {
+      if (this.pointList.length != 2) {
+        alert("只能有两个点，才能计算");
+      } else {
+       this.coralHight = Math.sqrt(
+          Math.pow(this.pointList[0].x - this.pointList[1].x, 2) +
+            Math.pow(this.pointList[0].y - this.pointList[1].y, 2)
+        );
+        this.coralInActual = ((this.diameter / this.longAxis) *this.coralHight).toFixed(2);
+      }
+      this.delectAllPoint();
     }
   }
 };

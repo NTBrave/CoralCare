@@ -106,10 +106,9 @@
         <el-row class="intro-text">
           <el-col :offset="3" :span="13" class="line-height">
             <div class="text-width">
-              &nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”，是由大鹏新区管委会和磨房网共同发起的民间珊瑚保育组织，倡导并践行珊瑚礁生态的自然恢复，构建海洋意识教育体系，传播海洋保护理念和方法，激发公众、企业、政府个各类社会组织的跨界参与。共同推进珊瑚保护机制的建设，为珊瑚礁生态的恢复营造更好的条件。
+              &nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”，是由大鹏新区管委会和磨房网共同发起的民间珊瑚保育组织，倡导并践行珊瑚礁生态的自然恢复，构建海洋意识教育体系，传播海洋保护理念和方法，激发公众、企业、政府等各类社会组织的跨界参与。共同推进珊瑚保护机制的建设，为珊瑚礁生态的恢复营造更好的条件。
               <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”经过7年的珊瑚保育实践探索，以“种珊瑚，种人心”为口号，
-              衍生了“潜爱护礁”和”潜爱课堂“两大核心公益项目，以此领跑海洋意
-              识教育传播，成为珊瑚保育的民间专业组织。
+              衍生了“潜爱护礁”和”潜爱课堂“两大核心公益项目，以此领跑海洋意识教育传播，成为珊瑚保育的民间专业组织。
               <br />&nbsp;&nbsp;&nbsp;&nbsp;“潜爱大鹏”项目落地于2012年，正式注册于2014年。
             </div>
           </el-col>
@@ -179,7 +178,7 @@
         <el-col class="zuoYe" :offset="2" :span="11">
           <div
             class="text-width"
-          >“潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁保护区建立等三个部分的珊瑚保育项目。目前项目正在建立一条百米长的珊瑚观光带为目标，通过创建歉岁员珊瑚保护参与体系，同时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊瑚，最终建设有深圳特色的珊瑚礁保护区域提供和范例。</div>
+          >“潜爱护礁”是由珊瑚作业、促进渔村海上观光发展和推进珊瑚礁保护区建立等三个部分组成的珊瑚保育项目。目前项目正在以建立一条百米长的珊瑚观光带为目标，通过创建潜水员珊瑚保护参与体系，同时配合渔业转型，将渔民收入导向珊瑚观光，推动渔村主动保护珊瑚，最终为建设有深圳特色的珊瑚礁保护区域提供范例。</div>
         </el-col>
         <el-col class="zuoYe" :offset="1" :span="10">
           <div>
@@ -296,7 +295,7 @@
             <el-col :offset="4" :span="9">
               <div>
                 <el-carousel
-                  height="400px"
+                  height="300px"
                   :autoplay="false"
                   arrow="never"
                   indicator-position="none"
@@ -344,8 +343,10 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :offset="2" :span="20">
-          <div id="time-char-div" @click="setPoint">
+        <el-col style="justify-content: space-around;display: flex;margin-top: -80px;">
+          <timeChar @index="currentIndex"></timeChar>
+
+          <!-- <div id="time-char-div" @click="setPoint">
             <img class="time-chart" src="../assets/home/time_char.png" alt />
             <img id="time-line" src="../assets/home/time_choose.png" alt />
             <div id="time-msg">
@@ -353,7 +354,7 @@
               <br />
               {{examSize}}
             </div>
-          </div>
+          </div>-->
         </el-col>
       </el-row>
     </el-row>
@@ -401,13 +402,13 @@
           <span class="mar-right">
             <img src="../assets/home/yuan2.png" alt />
           </span>回播成活率
-          <span class="konw-big-text">20.2%</span>
+          <span class="konw-big-text">80.2%</span>
         </el-col>
       </el-row>
     </el-row>
     <el-row>
       <el-col class="com-to-us" :offset="9" :span="6">
-        <span class="regist-btn comToUs-btn">立即加入我们</span>
+        <span class="regist-btn comToUs-btn"  @click="dialogVisible = true">立即加入我们</span>
       </el-col>
     </el-row>
     <el-row>
@@ -529,6 +530,31 @@
         </div>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialogVisible" custom-class="comeInImg" width="80%">
+     
+      <div style="    height: 200px;display: flex;justify-content: space-around;">
+        <!-- <el-col :span="12" class="fen-height" style="display:flex"> -->
+          <div class="weixin-svg" style="background: rgba(0, 0, 0,0.5);">
+            <img src="../assets/home/weixin.svg" alt />
+          </div>
+          <div class="e-wei-ma" style="margin: 0;">
+            <img src="../assets/home/wx120.jpg" alt />
+          </div>
+        <!-- </el-col> -->
+        <!-- <el-col :span="12" class="fen-height" style="display:flex"> -->
+          <div class="weibo-svg"  style="background: rgba(0, 0, 0,0.5);">
+            <img src="../assets/home/weibo.svg" alt />
+          </div>
+          <div class="e-wei-ma"  style="margin: 0;" >
+            <img src="../assets/home/wb120.jpg" alt />
+          </div>
+        <!-- </el-col> -->
+        <!-- <el-button @click="dialogVisible = false">取 消</el-button>
+        -->
+      </div>
+    </el-dialog>
+
     <div>
       <a-back-top />
       <strong style="color: rgba(64, 64, 64, 0.6)"></strong>
@@ -538,10 +564,10 @@
         style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
         src="../assets/home/bubble.svg"
       >
-      </iframe> -->
+      </iframe>-->
       <!-- use -->
-        <!-- <object style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
-        data="../assets/home/bubble.svg" type="image/svg+xml"></object> -->
+      <!-- <object style="pointer-events: none; position: fixed; top: 0; left: 0; height: 100vh; width: 100vw;"
+      data="../assets/home/bubble.svg" type="image/svg+xml"></object>-->
     </div>
   </div>
 </template>
@@ -551,12 +577,14 @@ import seaWave from "../components/seaWave.vue";
 import { Message, Loading } from "element-ui";
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import timeChar from "./homeChart.vue";
 export default {
   name: "login",
   components: {
     seaWave,
     swiper,
-    swiperSlide
+    swiperSlide,
+    timeChar
   },
 
   data() {
@@ -583,6 +611,9 @@ export default {
       showTheBg4: false,
       showTheBg5: false,
       fixStyle: "",
+
+      //弹窗
+      dialogVisible: false,
 
       //loading动画
       LoginLoading: false,
@@ -958,6 +989,7 @@ export default {
     },
     setPoint(event) {
       let _this = this;
+
       var theCharImg = document.getElementById("time-char-div");
       var time = document.getElementById("time-line");
       var timeMsg = document.getElementById("time-msg");
@@ -1026,6 +1058,15 @@ export default {
         _this.examSize = "";
         _this.examTime = "这天无活动";
       }
+    },
+    currentIndex(ind) {
+      // console.log(ind)
+      this.recordIndex = ind;
+      this.examSize = this.exampleData[ind].size;
+      this.examTime = this.exampleData[ind].time;
+      //设置图片的url
+      let activityImg = document.getElementsByClassName("is-active");
+      activityImg[0].children[0].src = this.exampleData[ind].url;
     }
   },
   mounted: function() {
@@ -1079,8 +1120,8 @@ export default {
       let scrolDis =
         document.documentElement.scrollTop || document.body.scrollTop;
       let videoE = $(".app-header")[0];
-      let prevBtn = $(".swiper-button-prev")[0];
-      let nextBtn = $(".swiper-button-next")[0];
+      // let prevBtn = $(".swiper-button-prev")[0];
+      // let nextBtn = $(".swiper-button-next")[0];
       // if (scrolDis > document.body.scrollHeight - preAndNext) {
       //   prevBtn.style.display = "block";
       //   nextBtn.style.display = "block";
@@ -1098,12 +1139,12 @@ export default {
       // }
     };
     //设置 3d 海浪
-    let bgCanvas = document.getElementsByTagName("canvas")[0];
+    let bgCanvas = document.getElementsByTagName("canvas")[1];
     bgCanvas.style.height = "600px";
   }
 };
 </script>
-<style scoped src="./home.css">
+  <style scoped src="./home.css">
 </style>
 
 

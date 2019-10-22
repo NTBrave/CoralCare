@@ -218,7 +218,7 @@ width: 20px;
     font-size: 0.75em;
 }
 .example-one-margin{
-    margin-left:27px
+    margin-left:34px
 }
 .example-one-img{
   width:20px
@@ -313,7 +313,7 @@ width:100%;
   /*font-size: unset!important;
   width: 40%;
   height:40%;
-  */border-radius: 20px !important;
+  */border-radius: 20px ;
   -webkit-border-radius: 20px ;
   -moz-border-radius: 20px ;
   -ms-border-radius: 20px ;
@@ -669,6 +669,22 @@ width: 100%;
     width: 100vw;
     background: url(../assets/home/bubble.svg)
   }
+
+  /* .comeInImg{
+    background-color: rgba(204, 82, 75) !important;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+} */
+
+
+
+
+
+
+
   /* 适配 */
   @media screen and (max-width:1750px){
     .the-home{font-size: 22px;}
@@ -677,7 +693,7 @@ width: 100%;
     .the-home{font-size: 20px;}
     .weixin-weibo{margin-top: 28.6%;}
     .intro-logo{top: 50%;}
-    .swiper-container{width: 79%;}
+    .swiper-container{width: 80%;}
     .fen-height{height:220px;}
     .e-wei-ma img{ height:  20px; animation: mama2 1s forwards; -webkit-animation: mama2 1s forwards; }
     .wexin-weibo-first img{height:  180px;}
@@ -745,7 +761,7 @@ width: 100%;
     .intro-logo{top: 20%;}
   }
   @media screen and (max-width: 479px) {
-    .the-home{font-size: 12px;}
+    .the-home{font-size: 1vw;}
     .shouye{margin-left: 40%;}
     .login-btn[data-v-63055906] {border: 0 ; padding: 0 0; }
     .intro-logo{top: 17%;}

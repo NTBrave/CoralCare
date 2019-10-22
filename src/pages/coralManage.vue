@@ -1,4 +1,9 @@
 <template>
+<!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
+      <span>
+        <img src="../assets/images/ComingSoon.gif" alt />
+      </span>
+    </div> -->
   <div class="workPage">
     <div class="selectItem">
       <div style="display: flex;justify-content: center;">
@@ -28,7 +33,7 @@
     </div>
 
     <div style="display: flex;height:84%;background-color: white;margin-top:1%;">
-      <!-- 列表 -->
+
       <div class="list-width">
         <div v-show="!isShowRecord" style="height:10%">
           <el-row style="color:#0090FF;font-size=1.1rem">
@@ -48,7 +53,7 @@
             <el-col :offset="3" :span="22">
               <el-col :span="4">
                 <span :style="coral.star?'visibility: visible;':'visibility: hidden;'">
-                  <!-- <span v-show="coral.star"> -->
+               
                   <img src="../assets/images/star.png" alt />
                 </span>
               </el-col>
@@ -86,7 +91,7 @@
 
         <div></div>
       </div>
-      <!-- 详情 -->
+     
       <div v-if="!isShowRecord" style="width: 70rem;">
         <el-row style="margin-left:1%;width: 100%;">
           <el-col class="exampleCarousel" :offset="1" :span="22">
@@ -120,14 +125,7 @@
                       :key="index"
                       class="exampleOneMsg"
                     >
-                      <!-- 
-                       <span v-if="index==0||index==1" class="marRight">
-                        <img
-                          class="oneImg"
-                          :src="index===0?'../assets/images/number.png':'../assets/home/coral.png' "
-                          alt
-                        />
-                      </span>-->
+                    
                       <span v-if="index==0" class="marRight">
                         <img class="oneImg" src="../assets/images/number.png" alt />
                       </span>
@@ -167,7 +165,7 @@
         </el-row>
         <el-row>
           <el-col :offset="1" :span="22">
-            <!-- <coralTimeLine></coralTimeLine> -->
+           
             <timeChar @index="currentIndex"></timeChar>
           </el-col>
         </el-row>
