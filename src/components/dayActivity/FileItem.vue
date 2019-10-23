@@ -1,12 +1,12 @@
 <template>
-  <div class="fileItem">
-    <div>
-      <el-image style="width: 90px; height: 70px" :src="showActivityData.image" fit="fill" lazy></el-image>
+  <div class="fileItem" @click="$emit('click')">
+    <div class="imgArea">
+      <el-image style="width: 6rem; height: 4.5rem" :src="showActivityData.imgUrl" fit="fill" lazy></el-image>
     </div>
     <div class="information">
       <span>珊瑚编号：{{showActivityData.coralNum}}</span>
-      <span>暂养分区：{{showActivityData.maintenancePartition}}</span>
-      <span>参与人员：{{showActivityData.members}}</span>
+      <span>属种：{{showActivityData.species}}</span>
+      <span>状态：{{showActivityData.state}}</span>
     </div>
     <span class="detail">详情&nbsp;></span>
   </div>
@@ -23,22 +23,29 @@ export default {
 
 <style lang="stylus" scoped>
 .fileItem {
-  width: 20rem;
-  height: 5rem;
+  // min-width: 350px;
+  // width: 27rem;
+  // height: 6rem;
   // border: 1px solid red;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   display: flex;
   align-items: center;
   justify-content: space-around;
+  cursor: pointer;
+
+  .imgArea {
+    margin: 0.8rem 0 0.6rem 0.6rem;
+  }
 
   .information {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
+    margin-left: 1rem;
 
     span:nth-child(1) {
       color: #FF6B6B;
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
       margin-bottom: 0.4rem;
     }
 
@@ -47,15 +54,16 @@ export default {
     }
 
     span {
-      font-size: 14px;
+      font-size: 1rem;
       margin-bottom: 0.1rem;
     }
   }
 
   .detail {
+    margin-left: 1rem;
     align-self: flex-start;
-    margin-top: 0.4rem;
-    font-size: 14px;
+    // margin-top: 0.4rem;
+    font-size: 1rem;
   }
 }
 </style>

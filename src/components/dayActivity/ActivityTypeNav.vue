@@ -63,11 +63,11 @@ export default {
     navType: {
       type: String,
       default: 'card'
+    },
+    existActivity: {
+      type: Array,
+      default: () => []
     }
-    // subNavType: {
-    //   type: String,
-    //   default: 'subCard'
-    // }
   },
   data() {
     return {
@@ -234,6 +234,11 @@ export default {
 
     this.setActivity(buildActivity)
     // console.log(this.$route.params)
+
+    // 将路由传来的已创建活动并入当前作业下已有的作业列表
+    if (this.$route.params.existActivity) {
+      this.activityList = this.$route.params.existActivity
+    }
 
     this.showActive()
   }

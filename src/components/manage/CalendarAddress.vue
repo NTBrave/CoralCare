@@ -7,20 +7,24 @@
     <show-drawer ref="drawer" @hide="requestBeforeHideDrawer">
       <div class="addressSlide">
         <el-carousel
-          height="180px"
+          height="200px"
           :autoplay="false"
           trigger="click"
           indicator-position="none"
           @change="((pre, next) => {selectAddress(pre, next)})"
         >
-          <el-carousel-item v-for="(item, idx) in address" :key="idx">
+          <el-carousel-item v-for="(item, idx) in address" :key="idx" :style="{'height':'100%'}">
             <!-- <div class="image-cnt"> -->
             <!-- <img :src="item.img" ref="bannerHeight" @load="imgLoad(item.id)" />
             <span>{{item.name}}</span>-->
             <div
               class="image-cnt"
-              :style="{backgroundImage: 'url(' + item.img + ')', backgroundRepeat:'no-repeat', backgroundPosition:'center center', backgroundSize: 'contain'}"
-            ><span style="color: rgb(255, 255, 255);background-color: rgba(0,0,0,0.6);padding: 0.5rem;font-weight: 600;">{{item.id + item.name}}</span></div>
+              :style="{'backgroundImage': 'url(' + item.img + ')', 'backgroundRepeat':'no-repeat', 'backgroundPosition':'center center', 'backgroundSize': 'contain', }"
+            >
+              <p
+                style="color: rgb(20, 20, 20);background-color: rgba(255,255,255,0.4);padding: 5px;width: 250px;margin-bottom: 0"
+              >{{item.id + item.name}}</p>
+            </div>
             <!-- </div> -->
           </el-carousel-item>
         </el-carousel>
@@ -103,8 +107,9 @@ const address = [
     name: '三门岛鬼湾',
     img: require('../../assets/images/C.jpg')
     // img: '../../assets/images/4.png'
-  },{
-     id: 'D',
+  },
+  {
+    id: 'D',
     name: '菲律宾',
     img: require('../../assets/images/D.jpg')
     // img: '../../assets/images/4.png'
@@ -206,8 +211,6 @@ export default {
         this.$refs.drawer.close()
       } else {
         this.showDrawer()
-
-        // this.showDrawer()
       }
     },
     showActivity: function() {
@@ -417,22 +420,25 @@ export default {
 }
 
 .addressSlide {
-  width: 70%;
-  height: 9rem;
-  background-color: rgba(255 255 255 0.9);
+  // width: 300px;
+  // height: 200px;
+  // background-color: rgba(255 255 255 0.9);
   border-radius: 10px;
   // position: absolute;
   // left: 0;
   // top: 5%;
   // bottom: 0;
   // right: 0;
-  margin: 10% auto;
+  margin: 10% auto 5% auto;
+  overflow: auto;
 
   .image-cnt {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
     width: 100%;
-    height: 100%;
-    text-align: center;
-    line-height: 9rem;
+    height: 94%;
+    // text-align: center;
   }
 }
 
