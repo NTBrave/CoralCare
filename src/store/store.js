@@ -7,8 +7,6 @@ import mutations from "./mutations.js";
 Vue.use(Vuex);
 
 const state = {
-
-
   /**
    *  后台管理端
    *
@@ -16,6 +14,7 @@ const state = {
    */
 
   ifLogin: true, // 判断是否登录
+  uploadVisiable: true,
 
   // 新建一次下水作业的时间地点
   activity: {

@@ -99,7 +99,7 @@
 <script>
 const testObj = {
   activityInfo: {
-    activityNum: 'A1-大鹏-2019090910', //活动编号
+    activityNum: 'A1-A大鹏大澳湾-2019090910', //活动编号
     activityTime: '2019年 9月 9日 10点', // 活动时间
     totalMembers: '张建国 李若然 陈小华', // 参与人员
     activityType: '首次暂养', // 活动类型
