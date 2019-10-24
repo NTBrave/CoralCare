@@ -18,11 +18,20 @@
 
     <div class="uploadArea">
       <el-row :style="{'height': '9.5vh'}">
-        <picture-swiper v-if="imgUrl.length" :imgHeight="9.5" :imgWidth="10" :imgUrl="imgUrl"></picture-swiper>
+        <picture-swiper
+          v-if="imgUrl.length"
+          :imgHeight="9.5"
+          :imgWidth="10"
+          :imgUrl="imgUrl"
+          @selectOneImg="chooseSwiperImg"
+        ></picture-swiper>
       </el-row>
       <el-row :style="{'position':'','margin':'0 auto'}">
         <upload-border>
-          <upload></upload>
+          <div class="imgUpload">
+            <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
+            <up-load></up-load>
+          </div>
         </upload-border>
       </el-row>
     </div>
@@ -42,7 +51,7 @@ export default {
     'activity-form': ActivityFormVue,
     'picture-swiper': swiperVue,
     'upload-border': UploadBorderVue,
-    upload: uploadVue
+    'up-load': uploadVue
   },
   data() {
     return {
@@ -153,7 +162,8 @@ export default {
         //   name: 'A4-大鹏大澳湾-2019082410-01'
         // }
       ],
-      isCreated: true
+      isCreated: true,
+      imgUrlFormSwiper: ''
     }
   },
   computed: {
@@ -166,6 +176,10 @@ export default {
   },
 
   methods: {
+    chooseSwiperImg(url) {
+      this.imgUrlFormSwiper = url
+      // console.log(this.imgUrlFormSwiper)
+    },
     setIsCreated(res) {
       this.isCreated = res
     },
@@ -239,6 +253,15 @@ export default {
     width: 40vw;
     margin-left: 5vw;
     margin-top: 2.3rem;
+
+    .imgUpload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
+    }
   }
 }
 

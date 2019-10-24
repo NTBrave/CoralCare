@@ -175,13 +175,14 @@ export default {
 
 <style lang="stylus" scoped>
 .uploadRoot {
-  width: 100%;
-  height: 100%;
-
   .avatar-upload {
-    width: 100%;
-    height: 100%;
     text-align: center;
+    margin-top: 1vw;
+
+    .el-icon-plus {
+      margin-top: 1vw;
+      font-size: 1.8rem;
+    }
   }
 }
 </style>
@@ -189,14 +190,15 @@ export default {
 .em {
   color: #409eff;
   font-style: normal;
+  margin: auto;
 }
 
 .el-upload-dragger {
-  /* width: 250px !important ; */
-  height: 45vh !important;
+  height: 6vw !important;
+  // width: 250px !important ;
   text-align: center;
-  padding-top: 18vh;
-  border: none;
+  // padding-top: 18vh;
+  // border: none;
 }
 </style>
 
