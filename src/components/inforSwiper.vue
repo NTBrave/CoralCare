@@ -1,6 +1,9 @@
 <template>
   <div class="all-infor">
-    <div v-show="!doMeasuring" class="edit-img">编辑</div>
+    <div v-show="!doMeasuring" class="edit-img">
+      <div class="measuring" style="margin-left:14rem;width:3rem;background: #3FC1CB;">编辑</div>
+      <div class="measuring" style="margin-left: 20rem;" @click="goMessuring">测量图片</div>
+    </div>
     <div v-if="!doMeasuring" class="inforSwiper">
       <div class="mian-size">
         <el-row>
@@ -8,7 +11,7 @@
             <div>
               <div style="display:flex;">
                 <span>
-                  <img src="../assets/images/star.png" alt />
+                  <img src="../assets/images/star.png" width="80%" alt />
                 </span>
                 <span class="record-name">{{recordName}}</span>
               </div>
@@ -64,7 +67,6 @@
       </div>
     </div>
 
-    <div v-show="!doMeasuring" class="measuring" @click="goMessuring">开始测量</div>
     <div
       v-show="doMeasuring"
       class="measuring"
@@ -138,14 +140,12 @@ export default {
   border: 0.5px solid #acacac;
 }
 .edit-img {
-  /* position: absolute; */
-  /* top: 0; */
-  /* left: 1060px; */
   cursor: pointer;
   color: #ff6b6b;
   font-size: 1rem;
   width: 55rem;
-  text-align: right;
+  margin-bottom: 0.5rem;
+  display: flex;
 }
 .color-block {
   width: 2rem;
@@ -163,7 +163,7 @@ export default {
   width: 18rem;
 }
 .record-name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 
   font-weight: 300;
 
@@ -177,8 +177,8 @@ export default {
   border-radius: 5px;
   font-weight: 400;
   text-align: center;
-  margin: 0 auto;
-  margin-top: 1rem;
+  /* margin: 0 auto; */
+  /* margin-top: 1rem; */
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
 }

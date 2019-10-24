@@ -44,20 +44,32 @@ module.exports = {
       msTileImage: "./LOGO57.png"
     }
   },
-
   configureWebpack: config => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === 'production') {
+      //GZIP压缩
       return {
-        plugins: [
-          new CompressionPlugin({
-            test: /\.js$|\.html$|\.css/,
-            threshold: 10240,
-            deleteOriginalAssets: false
-          })
-        ]
+        plugins: [new CompressionWebpackPlugin({
+          test: /\.(js|css)(\?.*)?$/i,//需要压缩的文件正则
+          threshold: 10240,//文件大小大于这个值时启用压缩
+          deleteOriginalAssets: false//压缩后保留原文件
+        })]
       };
     }
   },
+
+  // configureWebpack: config => {
+  //   if (process.env.NODE_ENV === "production") {
+  //     return {
+  //       plugins: [
+  //         new CompressionPlugin({
+  //           test: /\.js$|\.html$|\.css/,
+  //           threshold: 10240,
+  //           deleteOriginalAssets: false
+  //         })
+  //       ]
+  //     };
+  //   }
+  // },
   configureWebpack: {
     devtool: "source-map"
   },

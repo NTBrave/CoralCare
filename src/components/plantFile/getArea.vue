@@ -197,14 +197,14 @@
 
 export default {
   name: "essay",
-  // props: {
-  //   imageUrl: String
-  // },
+  props: {
+    imageUrl: String
+  },
   data() {
     return {
       canvas: null,
       // newUrl: "http://dayy.xyz/resource/1.jpg",
-      imageUrl: "http://dayy.xyz/resource/test.jpg",
+      // imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],

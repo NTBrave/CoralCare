@@ -52,7 +52,7 @@
             <el-col :offset="3" :span="22">
               <el-col :span="4">
                 <span :style="coral.star?'visibility: visible;':'visibility: hidden;'">
-                  <img src="../assets/images/star.png" alt />
+                  <img src="../assets/images/star.png" width="80%" alt />
                 </span>
               </el-col>
               <el-col :span="20">
@@ -63,33 +63,39 @@
         </div>
         <div v-show="isShowRecord" style="height:10%">
           <el-row style="color:#0090FF;font-size=1.1rem; cursor: pointer;">
-            <el-col :offset="1">
+            <el-col :offset="1" style="width:160%">
               <span @click="isShowRecord = false;">珊瑚档案</span>
 
               <span style="width:0.8rem">
                 <img width="5%" src="../assets/images/seeMore.svg" alt />
               </span>
               <span>{{currentCoral}}</span>
+              <span style="width:0.8rem">
+                <img width="5%" src="../assets/images/seeMore.svg" alt />
+              </span>
+              <span
+                style="font-size: 0.9rem;background: #00ADBA;color: white;border-radius: 5px;"
+              >{{activityNum}}</span>
             </el-col>
           </el-row>
-          <el-row>
+          <!-- <el-row>
             <el-col
               :offset="1"
               :span="22"
               style="background: #00ADBA;color: white;border-radius: 5px;"
             >
-              <span style="font-size: 0.9rem;"></span>
-              {{activityNum}}
             </el-col>
-          </el-row>
+          </el-row>-->
         </div>
-        <div v-show="isShowRecord" class="list-width-g">
+
+        <!-- 珊瑚的最新记录图片 -->
+        <!-- <div v-show="isShowRecord" class="list-width-g">
           <el-row v-for="(re, index) in record" :key="index" class="one-list">
             <el-col>
               <span class="one-list-title">{{re.name}}</span>
             </el-col>
           </el-row>
-        </div>
+        </div>-->
 
         <div></div>
       </div>
@@ -117,7 +123,7 @@
               <el-col :offset="2" :span="14">
                 <div style="position: absolute;top: 0px;left: 37.5%;">
                   <span>
-                    <img src="../assets/images/star.png" alt />
+                    <img src="../assets/images/star.png" width="80%" alt />
                   </span>
                 </div>
                 <div>
@@ -262,7 +268,7 @@ export default {
       ],
 
       coralInformations: [
-        { infor: "珊瑚编号", msg: "A-宇宙号-1区-蓝-07" },
+        { infor: "珊瑚编号", msg: "A-样线1-蓝-07" },
         { infor: "属种", msg: "盔型珊瑚科目" },
         { infor: "时间", msg: "2018.9.10.10" },
         { infor: "现处位置", msg: "A-样线1-1-5m" },
@@ -303,7 +309,7 @@ export default {
         resource: "",
         desc: ""
       },
-      activityNum: "A1-大鹏大澳湾-2018090910",
+      activityNum: "A2-大鹏大澳湾-2019090910",
       recordIndex: 0,
 
       exampleData: DEFAULT.imgUrl
@@ -396,7 +402,7 @@ export default {
 
 <style>
 .workPage {
-  width: 90rem;
+  width: 89rem;
   height: 90vh;
   display: block;
 }
