@@ -188,6 +188,7 @@
 <script>
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
+import * as RNTITY from "../json/entity";
 import { Message, Loading } from "element-ui";
 // import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
 import timeChar from "@/components/plantFile/timeChar.vue";
@@ -318,10 +319,7 @@ export default {
 
   mounted: function() {
     let _this = this;
-    // _this.bodySize.height = document.body.clientHeight - 110 + "px";
-    // _this.bodySize.width = document.body.clientWidth - 200 + "px";
-    // _this.resoultSize.height =
-    //   (document.body.clientHeight - 90) * 0.96 * 0.8 + "px";
+    let AllData = RNTITY.D02;
   },
   methods: {
     showRecord() {

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import axios from "axios";
-import router from "./router/router";
+
 import store from "./store/store";
 import "element-ui/lib/theme-chalk/index.css";
 import ElementUI from "element-ui";
@@ -15,7 +15,7 @@ import "echarts/lib/component/tooltip";
 import 'echarts/lib/component/toolbox'; //引入工具箱组件
 import ECharts from "echarts";
 import globalDirective from "./util/directive";
-
+import router from "./router/router";
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
 

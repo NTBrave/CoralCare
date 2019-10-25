@@ -117,7 +117,7 @@
             <span>测量</span>
           </div>
         </div>
-        <div style="display:flex;margin-top: 0.5rem;">
+        <!-- <div style="display:flex;margin-top: 0.5rem;">
           <div>号牌短轴：</div>
           <input
             style="width: 5rem;border: 1px solid rgba(112,112,112,1);border-radius: 4px;"
@@ -131,7 +131,7 @@
           >
             <span>测量</span>
           </div>
-        </div>
+        </div>-->
         <div style="display:flex;margin-top: 0.5rem;">
           <div>目标轮廓：</div>
           <input
@@ -197,14 +197,14 @@
 
 export default {
   name: "essay",
-  props: {
-    imageUrl: String
-  },
+  // props: {
+  //   imageUrl: String
+  // },
   data() {
     return {
       canvas: null,
       // newUrl: "http://dayy.xyz/resource/1.jpg",
-      // imageUrl: "http://dayy.xyz/resource/test.jpg",
+      imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
@@ -221,7 +221,8 @@ export default {
       longAxis: 0, //图中长轴
       coralAreaInImg: 0, //图中轮廓点的面积
       coralInActual: 0, //计算出来的实际结果
-      coralHight: 0
+      coralHight: 0,
+      proportion: 0 //比例=现实/图片
     };
   },
   mounted: function() {
@@ -396,33 +397,35 @@ export default {
         let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
         this.longAxis = Math.sqrt(a2 + b2).toFixed(2);
       }
+      this.proportion = this.diameter / this.longAxis;
       this.delectAllPoint();
     },
-    calcuShortAxis() {
-      if (this.pointList.length != 2) {
+    // calcuShortAxis() {
+    //   if (this.pointList.length != 2) {
+    //     this.$notify({
+    //       title: "",
+    //       message: "请在图中标两个点",
+    //       type: "warning"
+    //     });
+    //   } else {
+    //     let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
+    //     let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
+    //     this.shortAxis = Math.sqrt(a2 + b2).toFixed(2);
+    //   }
+    //   this.delectAllPoint();
+    // },
+    // 测量面积
+    calcuCoralAreaInImg() {
+      if (!this.longAxis) {
         this.$notify({
           title: "",
-          message: "请在图中标两个点",
+          message: "请先测量长轴",
           type: "warning"
         });
-      } else {
-        let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
-        let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
-        this.shortAxis = Math.sqrt(a2 + b2).toFixed(2);
-      }
-      this.delectAllPoint();
-    },
-    calcuCoralAreaInImg() {
-      if (this.pointList.length < 3) {
+      } else if (this.pointList.length < 3) {
         this.$notify({
           title: "",
           message: "至少需要3个点，才能计算",
-          type: "warning"
-        });
-      } else if (this.shortAxis == 0 || this.longAxis == 0) {
-        this.$notify({
-          title: "",
-          message: "请先测量长轴和短轴",
           type: "warning"
         });
       } else {
@@ -430,13 +433,6 @@ export default {
         let allHelen = 0;
 
         for (let i = 0; i < this.pointList.length; ++i) {
-          //海伦公式 三点计算三角形面积 此版本计算面积方式 不够完善
-          // let aLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i-1].x,2)+Math.pow(this.pointList[0].y-this.pointList[i-1].y,2));
-          // let bLen = Math.sqrt(Math.pow(this.pointList[i-1].x-this.pointList[i].x,2)+Math.pow(this.pointList[i-1].y-this.pointList[i].y,2));
-          // let cLen = Math.sqrt(Math.pow(this.pointList[0].x-this.pointList[i].x,2)+Math.pow(this.pointList[0].y-this.pointList[i].y,2));
-          // let helen =  Math.sqrt((aLen+bLen+cLen)*(aLen+bLen-cLen)*(aLen-bLen+cLen)*(-aLen+bLen+cLen))/4;
-          // console.log(helen);
-
           //原理网址：https://www.shuxuele.com/geometry/area-irregular-polygons.html
           if (i != this.pointList.length - 1) {
             var h = (this.pointList[i + 1].y + this.pointList[i].y) / 2;
@@ -453,31 +449,39 @@ export default {
         // console.log(allHelen);
         this.coralAreaInImg = Math.abs(allHelen.toFixed(2));
       }
+
       this.delectAllPoint();
-      if (this.longAxis != 0 && this.shortAxis != 0) {
-        let ellipse = (Math.PI * this.longAxis * this.shortAxis) / 4;
-        let actualEllipse =
-          (Math.PI *
-            this.diameter *
-            (this.shortAxis * (this.diameter / this.longAxis))) /
-          4;
+
+      if (this.longAxis != 0 && this.longAxis != null) {
+        // let ellipse = (Math.PI * this.longAxis * this.shortAxis) / 4;
+        // let actualEllipse =
+        //   (Math.PI *
+        //     this.diameter *
+        //     (this.shortAxis * (this.diameter / this.longAxis))) /
+        //   4;
+        // this.coralInActual = (
+        //   (this.coralAreaInImg * actualEllipse) /
+        //   ellipse
+        // ).toFixed(2);
         this.coralInActual = (
-          (this.coralAreaInImg * actualEllipse) /
-          ellipse
+          this.coralAreaInImg *
+          this.proportion *
+          this.proportion
         ).toFixed(2);
       }
     },
+    //测量高度
     calcuHeight() {
-      if (this.pointList.length != 2) {
-        this.$notify({
-          title: "",
-          message: "只能有2个点，才能计算",
-          type: "warning"
-        });
-      } else if (this.shortAxis == 0 || this.longAxis == 0) {
+      if (!this.longAxis) {
         this.$notify({
           title: "",
           message: "请先测量长轴",
+          type: "warning"
+        });
+      } else if (this.pointList.length != 2) {
+        this.$notify({
+          title: "",
+          message: "只能有2个点，才能计算",
           type: "warning"
         });
       } else {
