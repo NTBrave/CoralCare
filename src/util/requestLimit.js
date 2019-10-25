@@ -1,3 +1,11 @@
+/**
+ * 防抖
+ * @param {*} func
+ * @param {*} wait
+ * @param {*} immediate
+ */
+
+// 立即执行
 // export function debounce(func, wait) {
 //   let timeout;
 //   return function() {
@@ -19,19 +27,43 @@
 //   };
 // }
 
-export function debounce(func, wait) {
+// 非立即执行
+// export function debounce(func, wait) {
+//   let timeout;
+//   //   console.log(this);
+//   return function() {
+//     let context = this;
+//     console.log(context);
+//     let args = arguments;
+//     console.log(args);
+
+//     if (timeout) clearTimeout(timeout);
+
+//     timeout = setTimeout(() => {
+//       func.apply(context, args);
+//     }, wait);
+//   };
+// }
+
+// true表示立即执行，false表非立即执行
+export function debounce(func, wait, immediate) {
   let timeout;
-  //   console.log(this);
-  return function(a, b) {
+
+  return function() {
     let context = this;
-    console.log(context);
     let args = arguments;
-    console.log(args);
 
     if (timeout) clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-      func.apply(context, args);
-    }, wait);
+    if (immediate) {
+      var callNow = !timeout;
+      timeout = setTimeout(() => {
+        timeout = null;
+      }, wait);
+      if (callNow) func.apply(context, args);
+    } else {
+      timeout = setTimeout(function() {
+        func.apply(context, args);
+      }, wait);
+    }
   };
 }

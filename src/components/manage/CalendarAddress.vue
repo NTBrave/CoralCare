@@ -11,7 +11,7 @@
           :autoplay="false"
           trigger="click"
           indicator-position="none"
-          @change="(pre, next) => {selectAddress_debounce(pre, next)}"
+          @change="(pre, next,a, b) => {selectAddress_debounce(pre, next, a, b)}"
         >
           <el-carousel-item v-for="(item, idx) in address" :key="idx" :style="{'height':'100%'}">
             <!-- <div class="image-cnt"> -->
@@ -257,9 +257,13 @@ export default {
     },
 
     // 防抖，当选择地点稳定下来后请求数据
-    selectAddress_debounce: debounce(function(pre, next) {
-      this.selectAddress(pre, next)
-    }, 2000),
+    selectAddress_debounce: debounce(
+      function(pre, next) {
+        this.selectAddress(pre, next)
+      },
+      2000,
+      false
+    ),
 
     // 切换年月视图时更新
     onPanelChange(value) {
