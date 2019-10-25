@@ -14,7 +14,7 @@ import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
 import 'echarts/lib/component/toolbox'; //引入工具箱组件
 import ECharts from "echarts";
-import globalDirective from "./util/directive";
+// import globalDirective from "./util/directive";
 import router from "./router/router";
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;

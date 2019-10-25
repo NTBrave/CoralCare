@@ -137,7 +137,7 @@
                         <img class="oneImg" src="../assets/images/number.png" alt />
                       </span>
                       <span v-if="index==1" class="marRight">
-                        <img class="oneImg" src="../assets/home/coral.png" alt />
+                        <img class="oneImg" src="../assets/images/coral.png" alt />
                       </span>
                       <span
                         :style="index>1?'margin-left: 2rem;':''"
