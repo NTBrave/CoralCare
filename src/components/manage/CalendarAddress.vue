@@ -11,7 +11,7 @@
           :autoplay="false"
           trigger="click"
           indicator-position="none"
-          @change="((pre, next) => {selectAddress(pre, next)})"
+          @change="(pre, next) => {selectAddress_debounce(pre, next)}"
         >
           <el-carousel-item v-for="(item, idx) in address" :key="idx" :style="{'height':'100%'}">
             <!-- <div class="image-cnt"> -->
@@ -165,6 +165,7 @@ const locale = {
 import DrawerVue from './Drawer.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import { newDivingOperation } from '../../api/api'
+import { debounce } from '../../util/requestLimit'
 
 export default {
   components: {
@@ -247,14 +248,23 @@ export default {
       this.$refs.drawer.close()
     },
 
+    // 轮播图地点变动
     selectAddress(pre, next) {
       this.addressIndex = pre
       this.activityAddress = this.address[pre].id + this.address[pre].name
+      // console.log(pre, next)
+      // 请求当前月视图有作业的天数
     },
 
+    // 防抖，当选择地点稳定下来后请求数据
+    selectAddress_debounce: debounce(function(pre, next) {
+      this.selectAddress(pre, next)
+    }, 2000),
+
+    // 切换年月视图时更新
     onPanelChange(value) {
       // console.log(value.date().toString())
-      console.log(value.format('YYYYMM'))
+      // console.log(value.format('YYYYMM'))
       // 切换年月视图时更新当前月视图有活动日期
       // this.setActivityDays(value.format('YYYYMM'))
     },

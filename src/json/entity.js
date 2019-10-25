@@ -100,7 +100,7 @@ export const W04 = {
 
 }
 //A-01 获取指定作业的活动 
-export const A01
+export const A01 =
 {
 	"JobType":"single",
     "Jobs":[
