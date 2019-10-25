@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "../home/home";
+// import Home from "../home/home";
 
 Vue.use(Router);
 
@@ -9,17 +9,17 @@ export default new Router({
   // 	base: '/tool/',
   routes: [
     {
-      path: "/home",
+      path: "/login",
       name: "home",
-      component: Home
+      component: () => import("../pages/login"),
       // children: [
       // 	{ path: 'activity', component: Activity }
       // ]
     },
     {
       path: "/",
-      name: "index",
-      redirect: "/home"
+      name: "login",
+      redirect: "/login"
     },
     {
       path: "/manage",
