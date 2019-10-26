@@ -8,30 +8,22 @@ export const DELETE = "delete";
 
 axios.defaults.withCredentials = true;
 
-// export const baseUrl = "http://192.168.43.211:8089/v1";
-// export const baseUrl = "http://192.168.43.211:8080/v1";
-// export const baseUrl = "http://localhost:8080/v1";
-// export const baseUrl = "http://localhost/v1";
 
-//douban库
-export const baseUrl = "http://39.108.210.48:8089/v1";
-export const baseUrl2 = "http://39.108.210.48:8089/v2";
-
-//legal库
-// export const baseUrl = "http://39.108.210.48:18090/v1";
-
+export const baseUrl = "http://192.168.199.102:9091";
 /**
  *   统一请求接口
  */
 
-// const requestApi = (url, data, method) =>
-//   new axios({
-//     url: baseUrl + url,
-//     data,
-//     method
-//   })
+export const reqApi = (data) => {
+  // console.log( work_no, username,password,email);
+  return new axios({
+    url: baseUrl + "/tree/select",
+    data: data,
+    headers: { 'Content-Type': 'application/json' },
+    method: POST
+  });
+};
 
-// export default requestApi;
 
 /**
  *  coralBreed残枝培育部分的接口

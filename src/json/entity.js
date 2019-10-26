@@ -1,4 +1,5 @@
 
+
 //O-01 获取所有站点
 export const O01 =
 {
@@ -6,23 +7,22 @@ export const O01 =
     "Jobs": [
         {
             "Method": "select",
-            "MasterSpaId": "MasterId",
-            "MasterExtendType": "CZPY",		//父节点:[/残枝培育]
-            "NeedFK": "true",				//需要回传外键，知道站点同时要知道站点信息
+            "MasterSpaId": "05cf4699-f0dd-4c79-a051-d7f20af8fda7",
+            "MasterExtendType": "CZPY",
+            "NeedFK": "false",
             "Where": [
                 {
                     "Type": "Condition",
-                    "Key": "spa_id",
-                    "Opetator": {
+                    "Key": "master_id",
+                    "Operator": {
                         "Operator": "=",
-                        "Value": "MasterId"
+                        "Value": "05cf4699-f0dd-4c79-a051-d7f20af8fda7"
                     }
                 }
             ],
             "Order": [
                 {
-                    "Key": "",
-                    "Order": ""
+
                 }
             ],
             "GroupBy": [

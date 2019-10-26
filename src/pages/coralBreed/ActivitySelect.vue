@@ -6,17 +6,17 @@
 </template>
 
 <script>
-import uploadVue from '../../components/upload'
-import ActivityTypeNavVue from '../../components/dayActivity/ActivityTypeNav'
-import { mapGetters, mapMutations } from 'vuex'
+// import uploadVue from '../../components/upload'
+import ActivityTypeNavVue from "../../components/dayActivity/ActivityTypeNav";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
-    'up-load': uploadVue,
-    'activity-nav': ActivityTypeNavVue
+    // 'up-load': uploadVue,
+    "activity-nav": ActivityTypeNavVue
   },
 
   data() {
-    return {}
+    return {};
   },
   computed: {
     // ...mapGetters({
@@ -36,7 +36,7 @@ export default {
     // this.setActivity(buildActivity)
     // console.log(this.$route.params)
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped></style>

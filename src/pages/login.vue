@@ -31,6 +31,7 @@
 </template>
 <script>
 import * as Api from "../api/api";
+import * as ENTITY from "../json/entity";
 
 export default {
   name: "login",
@@ -67,10 +68,21 @@ export default {
       }
     };
   },
+  mounted: function() {
+    this.login();
+  },
   computed: {},
   methods: {
     login() {
-      this.$router.push("/manage");
+      // let loginData = ENTITY.O01
+      // console.log(ENTITY.O01);
+      Api.reqApi(ENTITY.O01).then(res => {
+        console.log(res);
+      });
+      // .catch(err => {
+      // console.log(err);
+      // });
+      // this.$router.push("/manage");
       // let _this = this;
       // _this.LoginLoading = true;
       // Api.Login(this.loginData.user, this.loginData.pwd)
@@ -160,8 +172,7 @@ export default {
         this.$router.push("/manage/user");
       }
     }
-  },
-  mounted: function() {}
+  }
 };
 </script>
 <style scoped >

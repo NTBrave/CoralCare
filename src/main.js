@@ -23,7 +23,7 @@ Vue.use(ElementUI);
 Vue.use(Antd);
 // Vue.component(Calendar.name, Calendar);
 Vue.component("v-chart", ECharts);
-Vue.use(globalDirective);
+// Vue.use(globalDirective);
 
 Vue.prototype.axios = axios;
 Vue.prototype.$message = ElementUI.Message;

@@ -320,6 +320,9 @@ export default {
   mounted: function() {
     let _this = this;
     let AllData = RNTITY.D02;
+    // AllData.Jobs[0].MasterSpaId = vuexId;
+    // AllData.Jobs[0].Where[0].Key = vuexId;
+
   },
   methods: {
     showRecord() {
