@@ -164,7 +164,8 @@ const locale = {
 
 import DrawerVue from './Drawer.vue'
 import { mapGetters, mapMutations } from 'vuex'
-import { newDivingOperation } from '../../api/api'
+import { reqApi } from '../../api/api'
+import { W03 } from '../../json/entity'
 import { debounce } from '../../util/requestLimit'
 
 export default {
@@ -320,7 +321,9 @@ export default {
       this.setActivity(buildActivity)
 
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
-      // newDivingOperation(buildActivity)
+      reqApi(W03, '/tree/create').then(res => {
+        console.log(res)
+      })
 
       this.$router.push({
         name: `newActivity`,

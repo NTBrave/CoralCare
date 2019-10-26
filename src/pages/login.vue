@@ -23,7 +23,6 @@
         <div style="display: flex;justify-content: center;">
           <div class="sign-in-btn" @click="login">登陆</div>
         </div>
-
         <div style="margin-top: 2%;font-size: 1rem;">手机验证码登陆</div>
       </div>
     </div>
@@ -68,9 +67,7 @@ export default {
       }
     };
   },
-  mounted: function() {
-    this.login();
-  },
+  mounted: function() {},
   computed: {},
   methods: {
     //vuex mutation
@@ -79,9 +76,9 @@ export default {
       let _this = this;
       // let loginData = ENTITY.O01
       // console.log(ENTITY.O01);
-      Api.reqApi(ENTITY.O01)
+      Api.reqApi(ENTITY.O01, "/tree/select")
         .then(res => {
-          console.log(res);
+          // console.log(res);
           //获取站点数据
           let PYZDobjects = res.data.response.PYZD.objects;
           let len = PYZDobjects.length;
@@ -96,10 +93,11 @@ export default {
           this.$message.success("获取站点失败");
           console.log(err);
         });
+
       // .catch(err => {
       // console.log(err);
       // });
-      // this.$router.push("/manage");
+      this.$router.push("/manage");
       // let _this = this;
       // _this.LoginLoading = true;
       // Api.Login(this.loginData.user, this.loginData.pwd)
