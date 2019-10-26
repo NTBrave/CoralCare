@@ -34,44 +34,44 @@ export const O01 =
 
 //W-01 获取指定月份作业数据
 export const W01 = {
-    "JobType": "single",
-    "Jobs": [
-        {
-            "Method": "select",
-            "MasterSpaId": "737ee050-7f45-4dc7-b276-59b410581cc8", // ***业务数据id
-            "MasterExtendType": "YWSJ",	//父节点:[/业务数据]
-            "NeedFK": "false",			//不需要回传外键 此时已经知道是哪个站点了
-            "Where": [
-                {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Opetator": {
-                        "Operator": "=",
-                        "Value": "737ee050-7f45-4dc7-b276-59b410581cc8"  // ***业务数据id
-                    },
-                    "LogicOperator": "AND"
-                },
-                {
-                    "Type": "Condition",
-                    "Key": "timestamp",
-                    "Operator": {
-                        "Operator": "like",			//模糊匹配
-                        "Value": "201909%"			//年-月
-                    }
-                }
-            ],
-            "Order": [
-                {
-                    "Key": "ext_data.create_at",
-                    "Order": "ASC"
-                }
-            ],
-            "GroupBy": [
-                {}
-            ]
-        }
-    ]
-}
+    "JobType":"single",
+       "Jobs":[
+           {
+               "Method":"select",
+               "MasterSpaId":"737ee050-7f45-4dc7-b276-59b410581cc8", 
+               "MasterExtendType":"YWSJ", 
+               "NeedFK":"false",   
+               "Where":[     
+                   {
+                       "Type":"Condition",
+                       "Key":"master_id",
+                       "Operator":{
+                           "Operator":"=",
+                           "Value":"737ee050-7f45-4dc7-b276-59b410581cc8"  
+                       },
+                       "LogicOperator": "AND"
+                   },
+                   {
+                       "Type":"Condition",
+                       "Key":"ext_data.timestamp",
+                       "Operator":{
+                           "Operator":"like",   
+                           "Value":"201909%"   
+                       }
+                   }
+               ],
+               "Order":[
+                   {
+                       "Key":"ext_data.timestamp",
+                       "Order":"ASC"
+                   }
+               ],
+               "GroupBy":[
+                   {}
+               ]
+           }
+       ]
+   }
 
 //W-03 新建残枝作业  
 export const W03 =
@@ -143,13 +143,13 @@ export const A02 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "Object": {
                 "ExtendType": "CZHD",	//新建节点:[/残枝活动]	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
+                    "czzy_spaid": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",		//所属残枝作业的spaid
+                    "timestamp": "2019090918",
                     "type": "首次暂养",
                     "code": "1",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
                     "participants": "张三 李四",		//参与人员
@@ -168,13 +168,13 @@ export const A03 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "Object": {
                 "ExtendType": "CZHD",	//子节点:[/残枝活动]	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
+                    "czzy_spaid": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",		//所属残枝作业的spaid
+                    "timestamp": "2019090918",
                     "type": "暂养巡检",
                     "code": "2",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
                     "participants": "张三 李四",		//参与人员
@@ -195,13 +195,13 @@ export const A04 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "Object": {
                 "ExtendType": "CZHD",	//新建节点:[/残枝活动]	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
+                    "czzy_spaid": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",		//所属残枝作业的spaid
+                    "timestamp": "2019090918",
                     "type": "首次回播",
                     "code": "3",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
                     "participants": "张三 李四",		//参与人员
@@ -221,13 +221,13 @@ export const A05 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "Object": {
                 "ExtendType": "CZHD",	//新建节点:[/残枝活动]	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
+                    "czzy_spaid": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",		//所属残枝作业的spaid
+                    "timestamp": "2019090918",
                     "type": "回播巡检",
                     "code": "4",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
                     "participants": "张三 李四",		//参与人员

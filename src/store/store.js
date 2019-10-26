@@ -16,11 +16,6 @@ const state = {
   ifLogin: true, // 判断是否登录
   uploadVisiable: true,
 
-  // 新建一次下水作业的时间地点
-  activity: {
-    timeNum: "", // 活动编号(根据日期时间生成)
-    address: "" // 活动地点
-  },
   calendarShowActivity: false, // 根据这个属性判断拉取当前月视图有活动的日期渲染
 
   nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表

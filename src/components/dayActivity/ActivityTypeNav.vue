@@ -54,7 +54,8 @@
 import moment from 'moment'
 import ActivityTypeCardVue from './ActivityTypeCard'
 import { mapGetters, mapMutations } from 'vuex'
-import { newActivityType } from '../../api/api'
+import { reqApi } from '../../api/api'
+import { A02, A03, A04, A05 } from '../../json/entity'
 export default {
   components: {
     'activity-card': ActivityTypeCardVue
@@ -201,6 +202,9 @@ export default {
       // 活动未创建，创建成功，更新当前下水作业已创建活动列表，前往活动添加记录页面
 
       // })
+      reqApi(A05, '/tree/create').then(res => {
+        console.log(res)
+      })
 
       // 创建相应类型，更新当前下水作业已创建的活动类型列表
       this.activitiesList = this.form.activityNum

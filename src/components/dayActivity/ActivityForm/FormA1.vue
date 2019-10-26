@@ -294,6 +294,8 @@ const colorList = [
 
 // import {} from '../../api/api'
 import { mapMutations } from 'vuex'
+import { reqApi } from '../../../api/api'
+import { D04, R03 } from '../../../json/entity'
 export default {
   props: {
     fileData: Object,
@@ -317,6 +319,7 @@ export default {
 
     createFile() {
       // 创建档案接口
+
       this.setOperateFile('A-宇宙号-1区-蓝-10')
 
       this.beforeCreateFile = false

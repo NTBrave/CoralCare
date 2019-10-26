@@ -1,8 +1,8 @@
 <template>
   <div class="root">
     <div class="ifShowCalendar" @click="showDrawer">
-      <div class="time">{{activity.timeNum}}</div>
-      <div class="address">{{activity.address}}</div>
+      <div class="time">{{$route.query.time}}</div>
+      <div class="address">{{$route.query.address}}</div>
     </div>
     <show-drawer ref="drawer" @hide="requestBeforeHideDrawer">
       <div class="addressSlide">
@@ -165,7 +165,7 @@ const locale = {
 import DrawerVue from './Drawer.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import { reqApi } from '../../api/api'
-import { W03 } from '../../json/entity'
+import { W01, W03 } from '../../json/entity'
 import { debounce } from '../../util/requestLimit'
 
 export default {
@@ -199,7 +199,6 @@ export default {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      activity: 'getActivity',
       showActivity: 'getCalendarShowActivity'
     })
   },
@@ -229,7 +228,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setActivity', 'setCalendarShowActivity']),
+    ...mapMutations(['setCalendarShowActivity']),
 
     // 点击打开抽屉
     showDrawer() {
@@ -308,17 +307,6 @@ export default {
     // 确定好时间地点后创建活动提交活动编号和地点，生成一次下水作业id
     submitTimeAddress() {
       // this.onSelect(moment())
-      let buildActivity = {
-        timeNum: this.dateNumber_build,
-        address: this.activityAddress
-      }
-
-      // 缓存选择的时间与地点，刷新页面时读取数据
-      sessionStorage.setItem('selectedTime', this.dateNumber_build)
-      sessionStorage.setItem('selectedAddress', this.activityAddress)
-
-      // this.$store.commit('setActivity', buildActivity)
-      this.setActivity(buildActivity)
 
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
       reqApi(W03, '/tree/create').then(res => {
@@ -330,8 +318,8 @@ export default {
         query: {
           // time: this.dateNumber_review,
           // address: this.activityAddress
-          time: this.activity.timeNum,
-          address: this.activity.address
+          time: this.dateNumber_build,
+          address: this.activityAddress
         }
       })
       this.$refs.drawer.close()
@@ -339,25 +327,13 @@ export default {
 
     // 点击查看当日活动
     dayActivity() {
-      let reviewActivity = {
-        timeNum: this.dateNumber_review,
-        address: this.activityAddress
-      }
-
-      // 缓存选择的时间与地点，刷新页面时读取数据
-      sessionStorage.setItem('selectedTime', this.dateNumber_review)
-      sessionStorage.setItem('selectedAddress', this.activityAddress)
-
-      // this.$store.commit('setActivity', reviewActivity)
-      this.setActivity(reviewActivity)
-
       this.$router.push({
         name: `dayActivity`,
         query: {
           // time: this.dateNumber_review,
           // address: this.activityAddress
-          time: this.activity.timeNum,
-          address: this.activity.address
+          time: this.dateNumber_review,
+          address: this.activityAddress
         }
       })
       this.$refs.drawer.close()
@@ -387,10 +363,17 @@ export default {
     },
 
     // 设置当前月视图有活动的日期
-    setActivityDays(yearMonth) {
-      // getActivityDays(yearMonth).then(res => {
-      //   console.log(res)
-      // })
+    setActivityDays(yearMonth, address) {
+      // W01.
+      reqApi(W01, '/tree/select').then(res => {
+        console.log(res)
+        console.log(
+          res.data.response.CZZY.objects[2].principle.extData.timestamp
+        )
+        for (let i of res.data.response.CZZY.objects) {
+          this.datesHaveActivity.push(i.principle.extData.timestamp)
+        }
+      })
     }
 
     // 图片首次加载方法
