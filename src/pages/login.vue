@@ -32,7 +32,7 @@
 <script>
 import * as Api from "../api/api";
 import * as ENTITY from "../json/entity";
-
+import { mapMutations } from "vuex";
 export default {
   name: "login",
   data() {
@@ -73,12 +73,29 @@ export default {
   },
   computed: {},
   methods: {
+    //vuex mutation
+    ...mapMutations(["setPYZD"]),
     login() {
+      let _this = this;
       // let loginData = ENTITY.O01
       // console.log(ENTITY.O01);
-      Api.reqApi(ENTITY.O01).then(res => {
-        console.log(res);
-      });
+      Api.reqApi(ENTITY.O01)
+        .then(res => {
+          console.log(res);
+          //获取站点数据
+          let PYZDobjects = res.data.response.PYZD.objects;
+          let len = PYZDobjects.length;
+          let arr = [];
+          for (let i = 0; i < len; ++i) {
+            arr.push(PYZDobjects[i].principle);
+          }
+          //把站点数据放到Vuex
+          _this.setPYZD(arr);
+        })
+        .catch(err => {
+          this.$message.success("获取站点失败");
+          console.log(err);
+        });
       // .catch(err => {
       // console.log(err);
       // });

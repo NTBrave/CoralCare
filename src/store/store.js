@@ -8,12 +8,19 @@ Vue.use(Vuex);
 
 const state = {
   /**
+    *  登陆部分
+    */
+  isLogin: false, // 判断是否登录
+  PYZD: [],//站点数据数组
+
+
+
+  /**
    *  后台管理端
-   *
    *  残枝培育部分
    */
 
-  ifLogin: true, // 判断是否登录
+
   uploadVisiable: true,
 
   // 新建一次下水作业的时间地点
