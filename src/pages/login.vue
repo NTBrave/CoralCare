@@ -30,11 +30,11 @@
   </div>
 </template>
 <script>
-import * as Api from "../api/api";
-import * as ENTITY from "../json/entity";
+import * as Api from '../api/api'
+import * as ENTITY from '../json/entity'
 
 export default {
-  name: "login",
+  name: 'login',
   data() {
     return {
       // 登陆
@@ -43,46 +43,44 @@ export default {
         visible: false,
         logoutVisible: false,
         isLogin: false,
-        currentUserName: "lintean",
-        currentUserNo: "",
-        currentUserId: "",
-        currentUserEmail: "",
-        user: "",
-        pwd: "",
+        currentUserName: 'lintean',
+        currentUserNo: '',
+        currentUserId: '',
+        currentUserEmail: '',
+        user: '',
+        pwd: '',
         rules: {
           user: [
             {
               required: true,
-              message: "请输入工号",
-              trigger: "blur"
+              message: '请输入工号',
+              trigger: 'blur'
             }
           ],
           pwd: [
             {
               required: true,
-              message: "请输入密码",
-              trigger: "blur"
+              message: '请输入密码',
+              trigger: 'blur'
             }
           ]
         }
       }
-    };
+    }
   },
-  mounted: function() {
-    this.login();
-  },
+  mounted: function() {},
   computed: {},
   methods: {
     login() {
       // let loginData = ENTITY.O01
       // console.log(ENTITY.O01);
-      Api.reqApi(ENTITY.O01).then(res => {
-        console.log(res);
-      });
+      Api.reqApi(ENTITY.O01, '/tree/select').then(res => {
+        console.log(res)
+      })
       // .catch(err => {
       // console.log(err);
       // });
-      // this.$router.push("/manage");
+      this.$router.push('/manage')
       // let _this = this;
       // _this.LoginLoading = true;
       // Api.Login(this.loginData.user, this.loginData.pwd)
@@ -126,58 +124,58 @@ export default {
     },
 
     logout() {
-      let _this = this;
+      let _this = this
       Api.Logout()
         .then(res => {
           if (res.data.status === 200) {
-            _this.loginData.isLogin = false;
-            _this.loginData.visible = true;
+            _this.loginData.isLogin = false
+            _this.loginData.visible = true
             Message({
-              message: "注销登陆 成功",
+              message: '注销登陆 成功',
               center: true,
-              type: "success",
+              type: 'success',
               showClose: true,
-              customClass: "zZindex"
-            });
+              customClass: 'zZindex'
+            })
           } else {
-            alert(res.data.msg);
+            alert(res.data.msg)
           }
         })
         .catch(err => {
           Message({
-            message: "注销登陆 失败",
+            message: '注销登陆 失败',
             center: true,
-            type: "warning",
+            type: 'warning',
             showClose: true,
-            customClass: "zZindex"
-          });
-          _this.handleError(err);
-        });
+            customClass: 'zZindex'
+          })
+          _this.handleError(err)
+        })
     },
 
     cancelLogin() {
-      this.loginData.visible = false;
+      this.loginData.visible = false
       Message({
-        message: "未登录",
+        message: '未登录',
         center: true,
         showClose: true,
-        customClass: "zZindex"
-      });
+        customClass: 'zZindex'
+      })
     },
 
     changeRoute(index) {
-      if (index == "2-1") {
-        this.$router.push("/manage");
-      } else if (index == "1") {
-        this.$router.push("/manage/user");
+      if (index == '2-1') {
+        this.$router.push('/manage')
+      } else if (index == '1') {
+        this.$router.push('/manage/user')
       }
     }
   }
-};
+}
 </script>
 <style scoped >
 .the-login {
-  font-family: "思源黑体", Arial, Helvetica, sans-serif;
+  font-family: '思源黑体', Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
   color: #000;
   overflow-x: hidden;

@@ -38,7 +38,7 @@ export const W01 = {
     "Jobs": [
         {
             "Method": "select",
-            "MasterSpaId": "MasterId",
+            "MasterSpaId": "737ee050-7f45-4dc7-b276-59b410581cc8", // ***业务数据id
             "MasterExtendType": "YWSJ",	//父节点:[/业务数据]
             "NeedFK": "false",			//不需要回传外键 此时已经知道是哪个站点了
             "Where": [
@@ -47,7 +47,7 @@ export const W01 = {
                     "Key": "spa_id",
                     "Opetator": {
                         "Operator": "=",
-                        "Value": "MasterId"
+                        "Value": "737ee050-7f45-4dc7-b276-59b410581cc8"  // ***业务数据id
                     },
                     "LogicOperator": "AND"
                 },
@@ -77,17 +77,18 @@ export const W01 = {
 export const W03 =
 {
     "JobType": "single",
-    "JobHandler": "CZZYHandler",  		//残枝作业handler
+    // "JobHandler": "CZZYHandler",  		//残枝作业handler
+    "JobHandler": "",
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "YWSJROOT",	//父节点:[/业务数据]
+            "MasterSpaId": "737ee050-7f45-4dc7-b276-59b410581cc8",  // ***
+            "MasterExtendType": "YWSJ",	//父节点:[/业务数据]
             "Object": {
                 "ExtendType": "CZZY",		//新建节点:[/残枝作业]
                 "ExtendData": {
-                    "pyzd_spaid": "pyzd_spaid",	//所属培育站点 外键 
-                    "timestamp": "2019090910",	//年-月-日-小时
+                    "pyzd_spaid": "10e489cb-aa38-47fa-ae49-fef7c2296977",	//所属培育站点 外键 
+                    "timestamp": "2019102612",	//年-月-日-小时
                     "comment": ""
                 }
             }

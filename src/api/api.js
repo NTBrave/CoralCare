@@ -6,24 +6,22 @@ export const PUT = "put";
 export const PATCH = "patch";
 export const DELETE = "delete";
 
-axios.defaults.withCredentials = true;
-
+axios.defaults.withCredentials = false;
 
 export const baseUrl = "http://192.168.199.102:9091";
 /**
  *   统一请求接口
  */
 
-export const reqApi = (data) => {
+export const reqApi = (data, url) => {
   // console.log( work_no, username,password,email);
   return new axios({
-    url: baseUrl + "/tree/select",
+    url: baseUrl + url,
     data: data,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     method: POST
   });
 };
-
 
 /**
  *  coralBreed残枝培育部分的接口
