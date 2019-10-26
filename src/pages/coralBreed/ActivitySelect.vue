@@ -6,12 +6,10 @@
 </template>
 
 <script>
-import uploadVue from '../../components/upload'
 import ActivityTypeNavVue from '../../components/dayActivity/ActivityTypeNav'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   components: {
-    'up-load': uploadVue,
     'activity-nav': ActivityTypeNavVue
   },
 

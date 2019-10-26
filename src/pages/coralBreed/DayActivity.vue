@@ -89,7 +89,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="submitNewWork">确定</el-button>
+        <el-button type="danger" @click="submitNewWork" :disabled="!newWorkForm.selectHour">确定</el-button>
         <el-button @click="showAdd = false">取消</el-button>
       </div>
     </el-dialog>
@@ -241,15 +241,7 @@ export default {
     'activity-info': ActivityInfoVue,
     'file-item': FileItemVue
   },
-  computed: {
-    // canAddActivity() {
-    //   for (let key in this.activityList) {
-    //     if (key.length < 6) {
-    //       return true
-    //     } else return false
-    //   }
-    // }
-  },
+  computed: {},
   data() {
     return {
       activityList: {

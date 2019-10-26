@@ -286,7 +286,7 @@ export default {
       this.ifNewActivity = !this.ifNewActivity
     },
 
-    // 选择具体时间后才可以确认新建活动
+    // 选择具体时间后才可以确认新建残枝作业
     timeReady(hourTime) {
       if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
         if (hourTime < 10) {
