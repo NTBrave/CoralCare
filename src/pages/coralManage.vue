@@ -188,7 +188,7 @@
 <script>
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
-import * as RNTITY from "../json/entity";
+import * as ENTITY from "../json/entity";
 import { Message, Loading } from "element-ui";
 // import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
 import timeChar from "@/components/plantFile/timeChar.vue";
@@ -319,10 +319,12 @@ export default {
 
   mounted: function() {
     let _this = this;
-    let AllData = RNTITY.D02;
+    let AllCoralData = ENTITY.D02;
     // AllData.Jobs[0].MasterSpaId = vuexId;
-    // AllData.Jobs[0].Where[0].Key = vuexId;
-
+    // AllData.Jobs[0].Where[0].Operator.Value = vuexId;
+    Api.reqApi(AllCoralData, "/tree/select").then(res => {
+      console.log(res);
+    });
   },
   methods: {
     showRecord() {

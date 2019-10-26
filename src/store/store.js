@@ -8,12 +8,24 @@ Vue.use(Vuex);
 
 const state = {
   /**
+    * 登陆部分
+    */
+  isLogin: false, // 判断是否登录
+  /**
+   * 站点数据数组
+   * .spaId:站点的主键
+   * 
+   */
+  PYZD: [],//
+
+
+
+  /**
    *  后台管理端
-   *
    *  残枝培育部分
    */
 
-  ifLogin: true, // 判断是否登录
+
   uploadVisiable: true,
 
   calendarShowActivity: false, // 根据这个属性判断拉取当前月视图有活动的日期渲染

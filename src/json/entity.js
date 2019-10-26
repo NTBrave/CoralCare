@@ -296,30 +296,29 @@ export const D01 = {
 
 // D-02 获取所有残枝档案
 export const D02 = {
-    JobType: "single",
-    Jobs: [
+    "JobType": "single",
+    "Jobs": [
         {
-            Method: "select",
-            MasterSpaId: "MasterId",
-            MasterExtendType: "CZDAROOT",	//父节点:[/残枝档案]
-            NeedFK: "false",			//不需要回传外键 需要残枝档案详情的话再发请求
-            Where: [
+            "Method": "select",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
+            "MasterExtendType": "CZDAROOT",
+            "NeedFK": "false",
+            "Where": [
                 {
-                    Type: "Condition",
-                    Key: "spa_id",
-                    Opetator: {
+                    "Type": "Condition",
+                    "Key": "spa_id",
+                    "Operator": {
                         "Operator": "=",
-                        "Value": "MasterId"
+                        "Value": "40729f96-9484-411b-b706-00925362e1f7"
                     }
                 }
             ],
-            Order: [
+            "Order": [
                 {
-                    Key: "",
-                    Order: ""
+
                 }
             ],
-            GroupBy: [
+            "GroupBy": [
                 {}
             ]
         }

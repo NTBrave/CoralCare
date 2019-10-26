@@ -1,106 +1,228 @@
-export const  imgUrl = [
-    {
-      url: 'http://dayy.xyz/resource/example/1.png',
-      size: '223.4',
-      time: '2018.4.10',
-      name: 'A1-大鹏大澳湾-2018090410-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/2.jpg',
-      size: '235.6',
-      time: '2018.5.09',
-      name: 'A2-大鹏大澳湾-2018050909-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/3.jpg',
-      size: '240.2',
-      time: '2018.6.09',
-      name: 'A2-大鹏大澳湾-2018060910-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/4.jpg',
-      size: '242.5',
-      time: '2018.6.17',
-      name: 'A2-大鹏大澳湾-2018061710-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/5.jpg',
-      size: '243.2',
-      time: '2018.7.01',
-      name: 'A2-大鹏大澳湾-2018070110-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/6.jpg',
-      size: '250.4',
-      time: '2018.7.28',
-      name: 'A2-大鹏大澳湾-2018072810-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/7.jpg',
-      size: '254.6',
-      time: '2018.11.17',
-      name: 'A2-大鹏大澳湾-2018111710-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/8.jpg',
-      size: '260.3',
-      time: '2018.12.29',
-      name: 'A2-大鹏大澳湾-2018122910-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/9.jpg',
-      size: '268.4',
-      time: '2019.3.02',
-      name: 'A2-大鹏大澳湾-2019030210-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/10.jpg',
-      size: '278.5',
-      time: '2019.3.17',
-      name: 'A3-大鹏大澳湾-2019031710-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/11.jpg',
-      size: '279.1',
-      time: '2019.4.06',
-      name: 'A4-大鹏大澳湾-2019040610-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/12.jpg',
-      size: '280.5',
-      time: '2019.6.02',
-      name: 'A4-大鹏大澳湾-2019060210-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/13.jpg',
-      size: '284.6',
-      time: '2019.6.22',
-      name: 'A4-大鹏大澳湾-2019062210-01'
-    },
-    {
-      url: 'http://dayy.xyz/resource/example/14.jpg',
-      size: '288.1',
-      time: '2019.8.24',
-      name: 'A4-大鹏大澳湾-2019082410-01'
-    }
-  ];
+export const signColorList = [
+  {
+    label: '红',
+    value: 'red'
+  },
+  {
+    label: '黄',
+    value: 'yellow'
+  },
+  {
+    label: '蓝',
+    value: 'blue'
+  },
+  {
+    label: '绿',
+    value: 'green'
+  }
+];
+export const colorList = [
+  {
+    label: 'B2',
+    value: 'B2',
+    color: '#E1EAAE'
+  },
+  {
+    label: 'B3',
+    value: 'B3',
+    color: '#C1DA83'
+  },
+  {
+    label: 'B4',
+    value: 'B4',
+    color: '#899D52'
+  },
+  {
+    label: 'B5',
+    value: 'B5',
+    color: '#586832'
+  },
+  {
+    label: 'B6',
+    value: 'B6',
+    color: '#223017'
+  },
+  {
+    label: 'C2',
+    value: 'C2',
+    color: '#F9D2BC'
+  },
+  {
+    label: 'C3',
+    value: 'C3',
+    color: '#F1915E'
+  },
+  {
+    label: 'C4',
+    value: 'C4',
+    color: '#D86430'
+  },
+  {
+    label: 'C5',
+    value: 'C5',
+    color: '#8A3820'
+  },
+  {
+    label: 'C6',
+    value: 'C6',
+    color: '#510D0C'
+  },
+  {
+    label: 'D2',
+    value: 'D2',
+    color: '#F7DA9F'
+  },
+  {
+    label: 'D3',
+    value: 'D3',
+    color: '#F2A04C'
+  },
+  {
+    label: 'D4',
+    value: 'D4',
+    color: '#CC7D3F'
+  },
+  {
+    label: 'D5',
+    value: 'D5',
+    color: '#8F4124'
+  },
+  {
+    label: 'D6',
+    value: 'D6',
+    color: '#73381C'
+  },
+  {
+    label: 'E2',
+    value: 'E2',
+    color: '#EEEDA4'
+  },
+  {
+    label: 'E3',
+    value: 'E3',
+    color: '#E2C96F'
+  },
+  {
+    label: 'E4',
+    value: 'E4',
+    color: '#AC913D'
+  },
+  {
+    label: 'E5',
+    value: 'E5',
+    color: '#764922'
+  },
+  {
+    label: 'E6',
+    value: 'E6',
+    color: '#4C200E'
+  }
+]
+
+
+export const imgUrl = [
+  {
+    url: 'http://dayy.xyz/resource/example/1.png',
+    size: '223.4',
+    time: '2018.4.10',
+    name: 'A1-大鹏大澳湾-2018090410-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/2.jpg',
+    size: '235.6',
+    time: '2018.5.09',
+    name: 'A2-大鹏大澳湾-2018050909-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/3.jpg',
+    size: '240.2',
+    time: '2018.6.09',
+    name: 'A2-大鹏大澳湾-2018060910-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/4.jpg',
+    size: '242.5',
+    time: '2018.6.17',
+    name: 'A2-大鹏大澳湾-2018061710-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/5.jpg',
+    size: '243.2',
+    time: '2018.7.01',
+    name: 'A2-大鹏大澳湾-2018070110-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/6.jpg',
+    size: '250.4',
+    time: '2018.7.28',
+    name: 'A2-大鹏大澳湾-2018072810-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/7.jpg',
+    size: '254.6',
+    time: '2018.11.17',
+    name: 'A2-大鹏大澳湾-2018111710-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/8.jpg',
+    size: '260.3',
+    time: '2018.12.29',
+    name: 'A2-大鹏大澳湾-2018122910-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/9.jpg',
+    size: '268.4',
+    time: '2019.3.02',
+    name: 'A2-大鹏大澳湾-2019030210-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/10.jpg',
+    size: '278.5',
+    time: '2019.3.17',
+    name: 'A3-大鹏大澳湾-2019031710-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/11.jpg',
+    size: '279.1',
+    time: '2019.4.06',
+    name: 'A4-大鹏大澳湾-2019040610-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/12.jpg',
+    size: '280.5',
+    time: '2019.6.02',
+    name: 'A4-大鹏大澳湾-2019060210-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/13.jpg',
+    size: '284.6',
+    time: '2019.6.22',
+    name: 'A4-大鹏大澳湾-2019062210-01'
+  },
+  {
+    url: 'http://dayy.xyz/resource/example/14.jpg',
+    size: '288.1',
+    time: '2019.8.24',
+    name: 'A4-大鹏大澳湾-2019082410-01'
+  }
+];
 
 export const coralList = [
-  { title: "A-宇宙号-2区-蓝-09", value: 1 ,star:false},
-  { title: "A-宇宙号-1区-蓝-15", value: 2 ,star:true},
-  { title: "A-样线1-红-02", value: 3 ,star:false},
-  { title: "A-样线1-蓝-10", value: 4 ,star:false},
-  { title: "A-样线1-蓝-07", value: 1 ,star:true},
-  { title: "A-样线2-红-01", value: 2 ,star:false},
-  { title: "B-样线1-绿-03", value: 3 ,star:true},
-  { title: "B-样线2-绿-04", value: 1 ,star:false},
-  { title: "A-宇宙号-3区-绿-01", value: 2 ,star:false},
-  { title: "A-宇宙号-3区-绿-02", value: 3 ,star:false},
-  { title: "B-宇宙号-3区-绿-23", value: 4 ,star:true},
-  { title: "B-宇宙号-4区-绿-25", value: 1 ,star:false},
-  { title: "B-宇宙号-4区-绿-26", value: 2 ,star:false},
-  { title: "B-宇宙号-5区-绿-27", value: 3 ,star:true},
-  { title: "B-宇宙号-5区-绿-29", value: 4 ,star:false}
+  { title: "A-宇宙号-2区-蓝-09", value: 1, star: false },
+  { title: "A-宇宙号-1区-蓝-15", value: 2, star: true },
+  { title: "A-样线1-红-02", value: 3, star: false },
+  { title: "A-样线1-蓝-10", value: 4, star: false },
+  { title: "A-样线1-蓝-07", value: 1, star: true },
+  { title: "A-样线2-红-01", value: 2, star: false },
+  { title: "B-样线1-绿-03", value: 3, star: true },
+  { title: "B-样线2-绿-04", value: 1, star: false },
+  { title: "A-宇宙号-3区-绿-01", value: 2, star: false },
+  { title: "A-宇宙号-3区-绿-02", value: 3, star: false },
+  { title: "B-宇宙号-3区-绿-23", value: 4, star: true },
+  { title: "B-宇宙号-4区-绿-25", value: 1, star: false },
+  { title: "B-宇宙号-4区-绿-26", value: 2, star: false },
+  { title: "B-宇宙号-5区-绿-27", value: 3, star: true },
+  { title: "B-宇宙号-5区-绿-29", value: 4, star: false }
 ];
 
 export const miaoPu = [
