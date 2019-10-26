@@ -137,7 +137,7 @@
                         <img class="oneImg" src="../assets/images/number.png" alt />
                       </span>
                       <span v-if="index==1" class="marRight">
-                        <img class="oneImg" src="../assets/home/coral.png" alt />
+                        <img class="oneImg" src="../assets/images/coral.png" alt />
                       </span>
                       <span
                         :style="index>1?'margin-left: 2rem;':''"
@@ -320,6 +320,9 @@ export default {
   mounted: function() {
     let _this = this;
     let AllData = RNTITY.D02;
+    // AllData.Jobs[0].MasterSpaId = vuexId;
+    // AllData.Jobs[0].Where[0].Key = vuexId;
+
   },
   methods: {
     showRecord() {
