@@ -190,8 +190,7 @@ export default {
       ifNewActivity: true, // 是否显示新建活动按钮
       isTimeReady: true, // 是否能建活动
 
-      datesHaveActivity: [], // 有作业的日期
-      workList: [] // 新建的作业信息列表
+      datesHaveActivity: [] // 有作业的日期
     }
   },
   computed: {
@@ -233,7 +232,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setCalendarShowActivity', 'setCurrentZD', 'setWorkList']),
+    ...mapMutations([
+      'setCalendarShowActivity',
+      'setCurrentZD',
+      'setWorkList',
+      'setCurrentWork'
+    ]),
 
     // 点击打开抽屉
     showDrawer() {
@@ -341,8 +345,9 @@ export default {
           newWork.timestamp =
             res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
           newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
-          this.workList.push(newWork)
-          this.setWorkList(this.workList)
+
+          this.setWorkList(newWork)
+          this.setCurrentWork(this.$route.query.time)
           console.log(this.$store.state.workList)
         }
       })

@@ -92,7 +92,7 @@ export default {
           console.log(this.$store.state.PYZD)
         })
         .catch(err => {
-          this.$message.success('获取站点失败')
+          this.$message.error('获取站点失败')
           console.log(err)
         })
 

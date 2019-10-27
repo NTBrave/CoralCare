@@ -29,16 +29,34 @@
           <span :style="{marginLeft:'15px'}">品种</span>
         </el-col>
         <el-col :span="6">
-          <el-select v-model="fileForm.species.first" placeholder="门纲">
-            <el-option label="**门" value="a"></el-option>
-            <el-option label="**纲" value="b"></el-option>
+          <el-select v-model="fileForm.species.first" placeholder="目">
+            <el-option
+              v-for="(item,idx) in species_order"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
           </el-select>
         </el-col>
         <el-col :span="7">
-          <el-select v-model="fileForm.species.second" placeholder="科目"></el-select>
+          <el-select v-model="fileForm.species.second" placeholder="科">
+            <el-option
+              v-for="(item,idx) in species_family"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="7">
-          <el-select v-model="fileForm.species.third" placeholder="属种"></el-select>
+          <el-select v-model="fileForm.species.third" placeholder="属">
+            <el-option
+              v-for="(item,idx) in species_genus"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
       </el-form-item>
       <el-form-item>
@@ -83,7 +101,7 @@
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item :style="{border: 'none'}">
+      <!-- <el-form-item :style="{border: 'none'}">
         <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
           <el-col :span="11">
             <span :style="{marginLeft:'10px'}">透光度</span>
@@ -101,10 +119,10 @@
             <el-input v-model="recordForm.temperature" placeholder="请输入"></el-input>
           </el-col>
         </el-col>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">暂养区域</span>
+          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -137,7 +155,7 @@
       <el-form-item>
         <el-input
           type="textarea"
-          :autosize="{ minRows: 3, maxRows: 10}"
+          :autosize="{ minRows: 5, maxRows: 12}"
           placeholder="备注"
           v-model="recordForm.remark"
         ></el-input>
@@ -172,21 +190,86 @@
 
 <script>
 // import {} from '../../api/api'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 import { reqApi } from '../../../api/api'
-import { D04, R03 } from '../../../json/entity'
+import { D04, R03, species_01 } from '../../../json/entity'
 import { signColorList, colorList } from '../../../json/default'
+import { requestSpecies, createR03 } from '../../../util/apiCreator'
 export default {
   props: {
     fileData: Object,
     recordData: Object,
     isCreated: Boolean
   },
-  watch: {},
+  watch: {
+    // 根据目类来请求科类
+    'fileForm.species.first': function() {
+      this.species_family = []
+      this.fileForm.species.second = ''
+      this.fileForm.species.third = ''
+
+      console.log(this.fileForm.species.first)
+      let species_family = requestSpecies(
+        species_01,
+        this.fileForm.species.first,
+        'ORDER'
+      )
+      reqApi(species_family, '/tree/select').then(res => {
+        // console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.FAMILY.objects) {
+              let order = {}
+              order.name = i.principle.ExtendData.name
+              order.spaid = i.principle.SpaId
+
+              this.species_family.push(order)
+            }
+          } else this.species_family = []
+        }
+      })
+    },
+
+    // 根据科类来请求属类
+    'fileForm.species.second': function() {
+      this.species_genus = []
+      this.fileForm.species.third = ''
+
+      let species_genus = requestSpecies(
+        species_01,
+        this.fileForm.species.second,
+        'FAMILY'
+      )
+
+      reqApi(species_genus, '/tree/select').then(res => {
+        // console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.GENUS.objects) {
+              let order = {}
+              order.name = i.principle.ExtendData.name
+              order.spaid = i.principle.SpaId
+              this.species_genus.push(order)
+              // console.log(this.species_genus)
+            }
+          } else this.species_genus = []
+        }
+      })
+    }
+  },
+  computed: {
+    ...mapGetters({
+      currentZD_data: 'getCurrentZD_data',
+      currentActivity_spaid: 'getCurrentActivity_spaid'
+    })
+  },
   data() {
     return {
       signColorList, // 牌色列表
       colorList,
+      species_order: [],
+      species_family: [],
+      species_genus: [],
 
       fileForm: this.fileData, // 接受父页面传来的档案信息
       recordForm: this.recordData, // 接受父页面传来的记录信息
@@ -201,13 +284,27 @@ export default {
       // 创建档案接口
 
       this.setOperateFile('A-宇宙号-1区-蓝-10')
-
       this.beforeCreateFile = false
-      console.log(this.fileForm)
+
+      // console.log(this.fileForm)
     },
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
+
+      let newR03 = createR03(
+        R03,
+        currentZD_data.czdaroot_spaid,
+        currentActivity_spaid,
+        currentZD_data.ZD_spaId,
+        this.$route.query.time,
+        fileForm,
+        recordForm
+      )
+
+      reqApi(newR03, '/tree/node/create').then(res => {
+        console.log(res)
+      })
       this.$message({
         showClose: true,
         message: '数据已成功录入！',
@@ -240,7 +337,22 @@ export default {
     }
   },
 
-  mounted() {}
+  mounted() {
+    reqApi(species_01, '/tree/select').then(res => {
+      // console.log(res)
+
+      if (res.data.status === 200) {
+        if (res.data.response) {
+          for (let i of res.data.response.ORDER.objects) {
+            let order = {}
+            order.name = i.principle.ExtendData.name
+            order.spaid = i.principle.SpaId
+            this.species_order.push(order)
+          }
+        }
+      } else this.species_order = []
+    })
+  }
 }
 </script>
 

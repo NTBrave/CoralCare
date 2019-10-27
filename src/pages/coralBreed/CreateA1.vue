@@ -67,7 +67,7 @@ export default {
         },
         collectSite: this.$route.query.address,
         breedArea: {
-          firstArea: 'A',
+          firstArea: this.$route.query.address[0],
           nursery: '', // 苗圃
           partition: '' // 分区
         }

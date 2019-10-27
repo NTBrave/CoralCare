@@ -58,7 +58,7 @@
           </el-select>
         </el-col>
       </el-form-item>
-      <el-form-item :style="{border: 'none'}">
+      <!-- <el-form-item :style="{border: 'none'}">
         <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
           <el-col :span="11">
             <span :style="{marginLeft:'10px'}">透光度</span>
@@ -76,10 +76,10 @@
             <el-input v-model="recordForm.temperature" placeholder="请输入"></el-input>
           </el-col>
         </el-col>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">暂养区域</span>
+          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -112,7 +112,7 @@
       <el-form-item>
         <el-input
           type="textarea"
-          :autosize="{ minRows: 6, maxRows: 10}"
+          :autosize="{ minRows: 8, maxRows: 12}"
           placeholder="备注"
           v-model="recordForm.remark"
         ></el-input>
@@ -134,8 +134,8 @@
 
 <script>
 // import {} from '../../api/api'
-import { mapMutations } from "vuex";
-import { signColorList, colorList } from "../../../json/default";
+import { mapMutations } from 'vuex'
+import { signColorList, colorList } from '../../../json/default'
 export default {
   props: {
     sowData: Object,
@@ -152,10 +152,10 @@ export default {
       sowForm: this.sowData,
       breedForm: this.breedData,
       recordForm: this.recordData
-    };
+    }
   },
   methods: {
-    ...mapMutations(["setOperateFile", "setActivityFiles"]),
+    ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
@@ -163,9 +163,9 @@ export default {
 
       this.$message({
         showClose: true,
-        message: "数据已成功录入！",
-        type: "success"
-      });
+        message: '数据已成功录入！',
+        type: 'success'
+      })
       this.$router.push({
         path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
         query: {
@@ -173,15 +173,15 @@ export default {
           address: this.$route.query.address,
           activityType: this.$route.query.activityType
         }
-      });
+      })
     },
     submitEdit() {
       // 修改成功接口
       this.$message({
         showClose: true,
-        message: "数据修改成功！",
-        type: "success"
-      });
+        message: '数据修改成功！',
+        type: 'success'
+      })
       this.$router.push({
         path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
         query: {
@@ -189,12 +189,12 @@ export default {
           address: this.$route.query.address,
           activityType: this.$route.query.activityType
         }
-      });
+      })
     }
   },
 
   mounted() {}
-};
+}
 </script>
 
 <style lang="stylus" scoped>

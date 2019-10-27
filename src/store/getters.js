@@ -34,9 +34,18 @@ const getters = {
   },
 
   //获取当前作业的spaid
-  getCurrentWork_spaid(state, timestamp) {
+  getCurrentWork_spaid(state) {
     return state.workList.filter(function(item) {
-      if ((item.timestamp = timestamp)) {
+      if (item.timestamp === state.currentWork) {
+        return item;
+      }
+    })[0].SpaId;
+  },
+
+  // 获取当前创建的活动的spaid
+  getCurrentActivity_spaid(state) {
+    return state.activityList.filter(function(item) {
+      if (item.activity_number === state.nowDivingActivity) {
         return item;
       }
     })[0].SpaId;

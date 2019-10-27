@@ -17,22 +17,28 @@ const mutations = {
     state.currentZD = addressNum;
   },
 
-  // 缓存当前的作业spaid
+  // 缓存当前的作业列表
   setWorkList(state, workList) {
-    state.workList = workList;
+    state.workList.push(workList);
+  },
+
+  // 缓存作业下的活动列表
+  setActivityList(state, activityList) {
+    state.activityList.push(activityList);
   },
 
   /**
    *   后台管理端
    */
-  // 改变在残枝培育页面时显示的时间地点按钮内容
-  setActivity(state, activity) {
-    state.activity = activity;
-  },
 
   // 设置日历发起请求渲染有活动日期
   setCalendarShowActivity(state, calendarShowActivity) {
     state.calendarShowActivity = calendarShowActivity;
+  },
+
+  // 设置当前创建的作业时间戳
+  setCurrentWork(state, timestamp) {
+    state.currentWork = timestamp;
   },
 
   // 缓存当前创建的下水作业对应的活动
