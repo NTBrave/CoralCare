@@ -269,22 +269,40 @@ export default {
       ],
 
       coralInformations: [
-        { infor: "珊瑚编号", msg: "A-样线1-蓝-07" },
-        { infor: "属种", msg: "盔型珊瑚科目" },
-        { infor: "时间", msg: "2018.9.10.10" },
-        { infor: "现处位置", msg: "A-样线1-1-5m" },
-        { infor: "状态", msg: "部分白化" },
-        { infor: "阶段类型", msg: "回播" },
+        { infor: "珊瑚编号", msg: "" },
+        { infor: "属种", msg: "" },
+        { infor: "时间", msg: "" },
+        { infor: "现处位置", msg: "" },
+        { infor: "状态", msg: "" },
+        { infor: "阶段类型", msg: "" },
         {
           infor: "颜色",
-          msg: "D5",
-          msg2: "D2",
-          color1: "rgb(247,218,159)",
-          color2: "rgb(143,65,36)"
+          msg: "",
+          msg2: "",
+          color1: "",
+          color2: ""
         },
-        { infor: "珊瑚尺寸", msg: "5.66" },
-        { infor: "备注", msg: "有少量污损生物" }
+        { infor: "珊瑚尺寸", msg: "" },
+        { infor: "备注", msg: "" }
       ],
+
+      // coralInformations: [
+      //   { infor: "珊瑚编号", msg: "A-样线1-蓝-07" },
+      //   { infor: "属种", msg: "盔型珊瑚科目" },
+      //   { infor: "时间", msg: "2018.9.10.10" },
+      //   { infor: "现处位置", msg: "A-样线1-1-5m" },
+      //   { infor: "状态", msg: "部分白化" },
+      //   { infor: "阶段类型", msg: "回播" },
+      //   {
+      //     infor: "颜色",
+      //     msg: "D5",
+      //     msg2: "D2",
+      //     color1: "rgb(247,218,159)",
+      //     color2: "rgb(143,65,36)"
+      //   },
+      //   { infor: "珊瑚尺寸", msg: "5.66" },
+      //   { infor: "备注", msg: "有少量污损生物" }
+      // ],
 
       coralList: DEFAULT.coralList,
       record: [
@@ -319,21 +337,78 @@ export default {
 
   mounted: function() {
     let _this = this;
-    let AllCoralData = ENTITY.D02;
+    let oneCoral = ENTITY.D01;
+    var CZDASpaId = "deee8562-8a6e-4fd7-87d9-bb1f6287000c";
+    oneCoral.Jobs[0].CZDASpaId = CZDASpaId;
+    oneCoral.Jobs[0].Where[0].Operator.Value =
+      "deee8562-8a6e-4fd7-87d9-bb1f6287000c";
     // AllData.Jobs[0].MasterSpaId = vuexId;
     // AllData.Jobs[0].Where[0].Operator.Value = vuexId;
-    Api.reqApi(AllCoralData, "/tree/select").then(res => {
+    Api.reqApi(oneCoral, "/tree/select").then(res => {
       console.log(res);
-      //获取并生成档案数组
-      if (res.response.CZDA.objects) {
-        let danAn = res.response.CZDA.objects;
-        _this.coralList = [];
-        for (let i = 0; i < danAn.length; i++) {
-          _this.coralList.push(danAn[i].principle);
+      if (res.data.status === 200 && res.data.response) {
+        let oneCoralMsg =
+          res.data.response.CZDA.objects[0].principle.ExtendData;
+        let fksArr = res.data.response.CZDA.objects[0].fks;
+        let fksObj = {};
+        for (let i = 0; i < fksArr.length; i++) {
+          Object.assign(fksObj, fksArr[i]);
         }
-        _this.selectCoral(_this.coralList[0]);
+
+        let forOneRecord = ENTITY.R02;
+        forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
+        forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+        Api.reqApi(forOneRecord, "/tree/select").then(res => {
+          console.log(res);
+        });
+
+        //构建珊瑚名字
+        _this.coralInformations[0].msg = fksObj.PYZD.extenddata.number + "-";
+        if (oneCoralMsg.yangxian_spaid == null) {
+          //判断名字显示 样线 还是 区域
+          _this.coralInformations[0].msg += fksObj.CJQY.extenddata.name + "-";
+        } else {
+          _this.coralInformations[0].msg += fksObj.YX.extenddata.name + "-";
+        }
+        _this.coralInformations[0].msg +=
+          oneCoralMsg.haopai_color + "-" + oneCoralMsg.haopai_number;
+
+        //构建种类
+        _this.coralInformations[1].msg =
+          fksObj.ORDER.extenddata.name +
+          "-" +
+          fksObj.FAMILY.extenddata.name +
+          "-" +
+          fksObj.GENUS.extenddata.name;
+
+        //时间
+        _this.coralInformations[2].msg =
+          res.data.response.CZDA.objects[0].principle.CreateAt;
+
+        //位置
+        _this.coralInformations[3].msg =
+          fksObj.MP.extenddata.name + "-" + fksObj.FQ.extenddata.name;
+
+        //阶段
+        _this.coralInformations[5].msg = oneCoralMsg.stage;
+
+        // console.log(fksObj);
       }
     });
+    //  let AllCoralData = ENTITY.D02;
+
+    //     Api.reqApi(AllCoralData, "/tree/select").then(res => {
+    //   console.log(res);
+    //   //获取并生成档案数组
+    //   if (res.response.CZDA.objects) {
+    //     let danAn = res.response.CZDA.objects;
+    //     _this.coralList = [];
+    //     for (let i = 0; i < danAn.length; i++) {
+    //       _this.coralList.push(danAn[i].principle);
+    //     }
+    //     _this.selectCoral(_this.coralList[0]);
+    //   }
+    // });
   },
   methods: {
     showRecord() {
@@ -409,7 +484,12 @@ export default {
       this.$refs.carousel.setActiveItem(this.recordIndex);
     },
     //展示一个档案的数据
-    selectCoral(co) {}
+    selectCoral(co) {
+      let coral_data = co.ExtendData;
+      let coral_name = "";
+
+      return;
+    }
   }
 };
 </script>

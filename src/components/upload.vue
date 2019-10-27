@@ -15,13 +15,16 @@ import { mapState } from "vuex";
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
 import { Message } from "element-ui";
+import * as ENTITY from "../json/entity";
 
 export default {
   name: "Upload",
   computed: {
     ...mapState(["uploadVisiable"])
   },
-  props: ["currentResourceId"],
+  //父节点残肢记录id、残肢档案id
+  props: ["masterid","czda_spaid"],
+  // props: ["currentResourceId"],
   data() {
     return {
       // 上传
@@ -152,7 +155,7 @@ export default {
           params.onSuccess("上传成功");
 
           // 上传成功
-          // _this.afterUpload(params, uploadData);
+          _this.afterUpload(params, uploadData);
         } else {
           _this.handleError();
         }
@@ -161,45 +164,55 @@ export default {
     afterUpload(params, uploadData) {
       let _this = this;
       let file = params.file;
+      //上传成功之后 新建照片节点 
+      let imgNodeData =  ENTITY.P01;
+      imgNodeData.Jobs[0].MasterSpaId = _this.masterid;
+      imgNodeData.Jobs[0].Object.ExtendData.czjl_spaid = _this.masterid;
+      imgNodeData.Jobs[0].Object.ExtendData.czda_spaid = _this.czda_spaid;
+      imgNodeData.Jobs[0].Object.ExtendFileData.file_id = uploadData.url;
+       imgNodeData.Jobs[0].Object.ExtendFileData.mine_type = uploadData.fileExtension;
+       Api.reqApi(imgNodeData,"/tree/create").then(res=>{
+         console.log(res)
+       })
       // 上传成功后更新meta
-      let data = JSON.stringify({
-        title: file.name.substring(0, file.name.lastIndexOf(".")),
-        store_key: uploadData.objectName,
-        doc_id: this.currentResourceId,
-        parentId: "",
-        ext: uploadData.fileExtension,
-        creator: uploadData.currentUserId,
-        size: Math.floor(file.size.toFixed(1))
-      });
+      // let data = JSON.stringify({
+      //   title: file.name.substring(0, file.name.lastIndexOf(".")),
+      //   store_key: uploadData.objectName,
+      //   doc_id: this.currentResourceId,
+      //   parentId: "",
+      //   ext: uploadData.fileExtension,
+      //   creator: uploadData.currentUserId,
+      //   size: Math.floor(file.size.toFixed(1))
+      // });
 
-      $.ajax({
-        type: "post",
-        url:
-          Api.baseUrl +
-          "/files/" +
-          uploadData.file_id.substring(0, uploadData.file_id.lastIndexOf(".")),
-        data: data,
-        contentType: "application/json",
-        xhrFields: {
-          withCredentials: true
-        },
-        crossDomain: true,
-        //关闭上传组件显示
-        success: function(datas) {
-          conosle.log(datas);
-          _this.$parent.itemDBClicked(-1);
-          setTimeout(function() {
-            _this.close();
-          }, 500);
-        }
-        // error: _this.handleError() 有点忘了是不是这个函数。。
-      });
+      // $.ajax({
+      //   type: "post",
+      //   url:
+      //     Api.baseUrl +
+      //     "/files/" +
+      //     uploadData.file_id.substring(0, uploadData.file_id.lastIndexOf(".")),
+      //   data: data,
+      //   contentType: "application/json",
+      //   xhrFields: {
+      //     withCredentials: true
+      //   },
+      //   crossDomain: true,
+      //   //关闭上传组件显示
+      //   success: function(datas) {
+      //     conosle.log(datas);
+      //     _this.$parent.itemDBClicked(-1);
+      //     setTimeout(function() {
+      //       _this.close();
+      //     }, 500);
+      //   }
+      //   // error: _this.handleError() 有点忘了是不是这个函数。。
+      // });
     },
-    close() {
-      this.$store.commit({
-        type: "uploadH"
-      });
-    },
+    // close() {
+    //   this.$store.commit({
+    //     type: "uploadH"
+    //   });
+    // },
     handleError(err) {
       console.log(err);
       Message.warning(DEFAULT.defaultNetwordError);
