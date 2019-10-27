@@ -38,7 +38,7 @@ export const W01 = {
        "Jobs":[
            {
                "Method":"select",
-               "MasterSpaId":"737ee050-7f45-4dc7-b276-59b410581cc8", 
+               "MasterSpaId":"", 
                "MasterExtendType":"YWSJ", 
                "NeedFK":"false",   
                "Where":[     
@@ -47,7 +47,7 @@ export const W01 = {
                        "Key":"master_id",
                        "Operator":{
                            "Operator":"=",
-                           "Value":"737ee050-7f45-4dc7-b276-59b410581cc8"  
+                           "Value":""  
                        },
                        "LogicOperator": "AND"
                    },
@@ -56,7 +56,7 @@ export const W01 = {
                        "Key":"ext_data.timestamp",
                        "Operator":{
                            "Operator":"like",   
-                           "Value":"201909%"   
+                           "Value":""   
                        }
                    }
                ],
@@ -82,13 +82,13 @@ export const W03 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "737ee050-7f45-4dc7-b276-59b410581cc8",  // ***
+            "MasterSpaId": "",  // ***
             "MasterExtendType": "YWSJ",	//父节点:[/业务数据]
             "Object": {
                 "ExtendType": "CZZY",		//新建节点:[/残枝作业]
                 "ExtendData": {
-                    "pyzd_spaid": "10e489cb-aa38-47fa-ae49-fef7c2296977",	//所属培育站点 外键 
-                    "timestamp": "2019102612",	//年-月-日-小时
+                    "pyzd_spaid": "",	//所属培育站点 外键 
+                    "timestamp": "",	//年-月-日-小时
                     "comment": ""
                 }
             }
@@ -143,17 +143,17 @@ export const A02 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",
+            "MasterSpaId": "",
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "Object": {
                 "ExtendType": "CZHD",	//新建节点:[/残枝活动]	
                 "ExtendData": {
-                    "czzy_spaid": "297841a9-eb29-4d45-aa3a-9a41c8c78e92",		//所属残枝作业的spaid
-                    "timestamp": "2019090918",
-                    "type": "首次暂养",
-                    "code": "1",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
-                    "participants": "张三 李四",		//参与人员
-                    "activity_number": "A1-深圳大澳湾-2019090919",	//活动编号
+                    "czzy_spaid": "",		//所属残枝作业的spaid
+                    "timestamp": "",
+                    "type": "",
+                    "code": "",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
+                    "participants": "",		//参与人员
+                    "activity_number": "",	//活动编号
                     "comment": ""
                 }
             }

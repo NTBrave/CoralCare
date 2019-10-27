@@ -8,23 +8,22 @@ Vue.use(Vuex);
 
 const state = {
   /**
-    * 登陆部分
-    */
+   * 登陆部分
+   */
   isLogin: false, // 判断是否登录
   /**
    * 站点数据数组
    * .spaId:站点的主键
-   * 
+   *
    */
-  PYZD: [],//
-
-
+  PYZD: [], // 所有站点信息
+  currentZD: "", // 当前选择的站点编号
+  workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
 
   /**
    *  后台管理端
    *  残枝培育部分
    */
-
 
   uploadVisiable: true,
 

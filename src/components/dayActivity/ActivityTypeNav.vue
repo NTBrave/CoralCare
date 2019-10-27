@@ -56,6 +56,7 @@ import ActivityTypeCardVue from './ActivityTypeCard'
 import { mapGetters, mapMutations } from 'vuex'
 import { reqApi } from '../../api/api'
 import { A02, A03, A04, A05 } from '../../json/entity'
+import { createActivity } from '../../util/apiCreator'
 export default {
   components: {
     'activity-card': ActivityTypeCardVue
@@ -105,8 +106,8 @@ export default {
         activityNum: '',
         activityType: '',
         activityTime: '',
-        members: '-',
-        remarks: '-'
+        members: '',
+        remarks: ''
       },
       formLabelWidth: '100px',
 
@@ -124,9 +125,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activityTimeAddress: 'getActivity',
       acticityHadCreated: 'getNowDivingActivitiesList',
-      activeItem: 'getActiveId'
+      activeItem: 'getActiveId',
+      work_spaid: 'getCurrentWork_spaid'
     })
   },
   methods: {
@@ -158,9 +159,9 @@ export default {
       let activityNum =
         this.activityTypes[index].typeId +
         '-' +
-        this.activityTimeAddress.address +
+        this.$route.query.address +
         '-' +
-        this.activityTimeAddress.timeNum
+        this.$route.query.time
 
       if (this.acticityHadCreated.indexOf(activityNum) !== -1) {
         this.setNowDivingActivity(activityNum)
@@ -169,8 +170,8 @@ export default {
           path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}/create`,
 
           query: {
-            time: this.activityTimeAddress.timeNum,
-            address: this.activityTimeAddress.address,
+            time: this.$route.query.time,
+            address: this.$route.query.address,
             activityType: this.activityTypes[index].typeId
           }
         })
@@ -185,10 +186,11 @@ export default {
           title: this.activityTypes[index].title,
           activityNum,
           activityType: this.activityTypes[index].activityType,
-          activityTime: moment(
-            this.activityTimeAddress.timeNum,
-            'YYYYMMDDHH'
-          ).format('YYYY年MM月DD日HH点')
+          activityTime: moment(this.$route.query.time, 'YYYYMMDDHH').format(
+            'YYYY年MM月DD日HH点'
+          ),
+          members: '',
+          remarks: ''
         }
       }
     },
@@ -202,7 +204,9 @@ export default {
       // 活动未创建，创建成功，更新当前下水作业已创建活动列表，前往活动添加记录页面
 
       // })
-      reqApi(A05, '/tree/create').then(res => {
+      let requestObj = createActivity(A02, this.work_spaid, this.form)
+      console.log(this.form)
+      reqApi(requestObj, '/tree/create').then(res => {
         console.log(res)
       })
 
@@ -220,8 +224,8 @@ export default {
           2
         )}/create`,
         query: {
-          time: this.activityTimeAddress.timeNum,
-          address: this.activityTimeAddress.address,
+          time: this.$route.query.time,
+          address: this.$route.query.address,
           activityType: this.form.activityNum.slice(0, 2)
         }
       })

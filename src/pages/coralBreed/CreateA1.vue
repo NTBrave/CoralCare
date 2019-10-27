@@ -65,7 +65,7 @@ export default {
           second: '', // 科目
           third: '' // 属种
         },
-        collectSite: 'A大鹏大澳湾',
+        collectSite: this.$route.query.address,
         breedArea: {
           firstArea: 'A',
           nursery: '', // 苗圃

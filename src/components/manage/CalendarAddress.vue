@@ -11,7 +11,7 @@
           :autoplay="false"
           trigger="click"
           indicator-position="none"
-          @change="(pre, next,a, b) => {selectAddress_debounce(pre, next, a, b)}"
+          @change="(pre) => {selectAddress_debounce(pre)}"
         >
           <el-carousel-item v-for="(item, idx) in address" :key="idx" :style="{'height':'100%'}">
             <!-- <div class="image-cnt"> -->
@@ -85,7 +85,6 @@
 // 日历语言
 import moment from 'moment'
 import 'moment/locale/zh-cn'
-import { getActivityDays } from '../../api/api'
 moment.locale('zh-cn')
 
 // 地点
@@ -163,7 +162,7 @@ const locale = {
 // ]
 
 import DrawerVue from './Drawer.vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { reqApi } from '../../api/api'
 import { W01, W03 } from '../../json/entity'
 import { debounce } from '../../util/requestLimit'
@@ -191,7 +190,8 @@ export default {
       ifNewActivity: true, // 是否显示新建活动按钮
       isTimeReady: true, // 是否能建活动
 
-      datesHaveActivity: []
+      datesHaveActivity: [], // 有作业的日期
+      workList: [] // 新建的作业信息列表
     }
   },
   computed: {
@@ -199,8 +199,17 @@ export default {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      showActivity: 'getCalendarShowActivity'
-    })
+      showActivity: 'getCalendarShowActivity',
+      currentZD_data: 'getCurrentZD_data'
+    }),
+
+    ...mapState(['currentWork_spaid']),
+
+    yearMonth() {
+      return (
+        this.dateNumber_review.slice(0, 6) || this.dateNumber_build.slice(0, 6)
+      )
+    }
   },
   watch: {
     selectHour: function() {
@@ -209,7 +218,7 @@ export default {
     },
     '$route.path': function() {
       if (this.$route.path !== '/manage/coralBreed/dayActivity') {
-        this.$refs.drawer.close()
+        this.closeDrawer()
       } else {
         this.showDrawer()
       }
@@ -218,21 +227,25 @@ export default {
       if (this.showActivity === true) {
         // 请求有活动的日期
         // console.log(this.dateNumber_review.slice(0, 6))
-        // this.setActivityDays(
-        //   this.dateNumber_review.slice(),
-        //   this.activityAddress
-        // )
+        this.setActivityDays(this.yearMonth)
         this.setCalendarShowActivity(false)
       }
-      // console.log(this.showActivity)
     }
   },
   methods: {
-    ...mapMutations(['setCalendarShowActivity']),
+    ...mapMutations(['setCalendarShowActivity', 'setCurrentZD', 'setWorkList']),
 
     // 点击打开抽屉
     showDrawer() {
+      this.setActivityDays(this.yearMonth)
+      this.todayHasActivity(moment())
       this.$refs.drawer.open()
+    },
+
+    // 关闭抽屉时清空selectHour
+    closeDrawer() {
+      this.$refs.drawer.close()
+      this.selectHour = ''
     },
 
     // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
@@ -244,22 +257,26 @@ export default {
       // }
       if (this.$route.path === '/manage/coralBreed/dayActivity') {
         this.dayActivity()
+      } else {
+        this.closeDrawer()
       }
-      this.$refs.drawer.close()
     },
 
     // 轮播图地点变动
-    selectAddress(pre, next) {
+    selectAddress(pre) {
       this.addressIndex = pre
       this.activityAddress = this.address[pre].id + this.address[pre].name
-      // console.log(pre, next)
-      // 请求当前月视图有作业的天数
+
+      this.setCurrentZD(this.address[pre].id) // 缓存选择的站点
+
+      this.setActivityDays(moment().format('YYYYMM')) // 站点改变，月视图改变
+      this.todayHasActivity(moment())
     },
 
     // 防抖，当选择地点稳定下来后请求数据
     selectAddress_debounce: debounce(
-      function(pre, next) {
-        this.selectAddress(pre, next)
+      function(pre) {
+        this.selectAddress(pre)
       },
       2000,
       false
@@ -267,10 +284,10 @@ export default {
 
     // 切换年月视图时更新
     onPanelChange(value) {
-      // console.log(value.date().toString())
-      // console.log(value.format('YYYYMM'))
-      // 切换年月视图时更新当前月视图有活动日期
-      // this.setActivityDays(value.format('YYYYMM'))
+      // 切换年月视图时更新当前月视图有作业日期
+
+      this.setActivityDays(value.format('YYYYMM'))
+      this.todayHasActivity(value)
     },
 
     // 日历时间选择
@@ -278,6 +295,7 @@ export default {
       // console.log(value)
       this.onPanelChange(value)
       this.chooseDate = value.format('M月D日  YYYY年')
+      this.dateNumber_build = value.format('YYYYMMDD')
       this.dateNumber_review = value.format('YYYYMMDD')
     },
 
@@ -307,10 +325,26 @@ export default {
     // 确定好时间地点后创建活动提交活动编号和地点，生成一次下水作业id
     submitTimeAddress() {
       // this.onSelect(moment())
-
+      // W03.Jobs[0].MasterSpaId = this.currentZD_data.ywsj_spaid;
+      // W03.Jobs[0].Object.ExtendData.pyzd_spaid = this.currentZD_data.ZD_spaId;
+      W03.Jobs[0].Object.ExtendData.timestamp = this.dateNumber_build
+      W03.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
+      W03.Jobs[0].Object.ExtendData.pyzd_spaid =
+        '10e489cb-aa38-47fa-ae49-fef7c2296977'
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
       reqApi(W03, '/tree/create').then(res => {
-        console.log(res)
+        if (res.data.status === 200) {
+          console.log(res)
+          let newWork = {}
+          newWork.pyzd_spaid =
+            res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
+          newWork.timestamp =
+            res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
+          newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
+          this.workList.push(newWork)
+          this.setWorkList(this.workList)
+          console.log(this.$store.state.workList)
+        }
       })
 
       this.$router.push({
@@ -322,7 +356,7 @@ export default {
           address: this.activityAddress
         }
       })
-      this.$refs.drawer.close()
+      this.closeDrawer()
     },
 
     // 点击查看当日活动
@@ -336,42 +370,56 @@ export default {
           address: this.activityAddress
         }
       })
-      this.$refs.drawer.close()
+      this.closeDrawer()
     },
 
     // 当前月视图有活动的日期列表（需渲染不同样式）
     todayHasActivity(value) {
       let dateList
-      for (let i = 0; i < this.datesHaveActivity.length; i++) {
-        let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
-          'MMDD'
-        )
-        // console.log(date)
-        if (value.format('MMDD') === date) {
-          switch (this.datesHaveActivity[i].state) {
-            case 0:
-              dateList = {
-                color: 'rgba(255,255,255,1)'
-                // content: date.slice(2)
-              }
-              break
-            default:
+      if (this.datesHaveActivity.length > 0) {
+        for (let i = 0; i < this.datesHaveActivity.length; i++) {
+          let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
+            'MMDD'
+          )
+          if (value.format('MMDD') === date) {
+            switch (this.datesHaveActivity[i].state) {
+              case 0:
+                dateList = {
+                  color: 'rgba(255,255,255,1)'
+                  // content: date.slice(2)
+                }
+                break
+              default:
+            }
           }
         }
+        return dateList || null
       }
-      return dateList || null
+      // else {
+      //   return null
+      // }
     },
 
     // 设置当前月视图有活动的日期
-    setActivityDays(yearMonth, address) {
-      // W01.
+    setActivityDays(yearMonth) {
+      // 逻辑赋值
+      // W01.Jobs[0].MasterSpaId = this.currentZD_data.ywsj_spaid;
+      // W01.Jobs[0].Where[0].Operator.Value = this.currentZD_data.ywsj_spaid;
+      W01.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
+      W01.Jobs[0].Where[0].Operator.Value =
+        '737ee050-7f45-4dc7-b276-59b410581cc8'
+      W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`
       reqApi(W01, '/tree/select').then(res => {
-        console.log(res)
-        console.log(
-          res.data.response.CZZY.objects[2].principle.extData.timestamp
-        )
-        for (let i of res.data.response.CZZY.objects) {
-          this.datesHaveActivity.push(i.principle.extData.timestamp)
+        // console.log(res)
+        if (res.data.response) {
+          for (let i of res.data.response.CZZY.objects) {
+            let obj = {}
+            obj.date = i.principle.ExtendData.timestamp
+            obj.state = 0
+            this.datesHaveActivity.push(obj)
+          }
+        } else {
+          this.datesHaveActivity = []
         }
       })
     }
@@ -395,6 +443,7 @@ export default {
     // })
 
     this.onSelect(moment())
+
     if (this.$route.path === '/manage/coralBreed/dayActivity') {
       this.showDrawer()
     }

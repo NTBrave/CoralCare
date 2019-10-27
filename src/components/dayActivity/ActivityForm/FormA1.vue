@@ -203,7 +203,7 @@ export default {
       this.setOperateFile('A-宇宙号-1区-蓝-10')
 
       this.beforeCreateFile = false
-      // console.log(this.fileForm)
+      console.log(this.fileForm)
     },
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面

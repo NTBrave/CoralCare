@@ -8,8 +8,18 @@ const mutations = {
   },
   //设置培育站点
   setPYZD(state, arr) {
-    console.log(arr);
-    state.isLogin = arr;
+    // console.log(arr);
+    state.PYZD = arr;
+  },
+
+  // 缓存当前选择的站点编号
+  setCurrentZD(state, addressNum) {
+    state.currentZD = addressNum;
+  },
+
+  // 缓存当前的作业spaid
+  setWorkList(state, workList) {
+    state.workList = workList;
   },
 
   /**

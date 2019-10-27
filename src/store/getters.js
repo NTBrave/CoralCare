@@ -3,9 +3,43 @@ const getters = {
     return state.ifLogin;
   },
 
-  // 获取活动(时间编号及地点)
-  getActivity(state) {
-    return state.activity;
+  // 将当前站点转化为当前站点的所有spaId
+  getCurrentZD_data(state) {
+    let currentZD_data = {};
+    let targetArr = state.PYZD.filter(function(item) {
+      if (item.ExtendData.number === state.currentZD) {
+        return item;
+      }
+    });
+    currentZD_data.ZD_spaId = targetArr[0].SpaId; // 站点spaid
+    currentZD_data.cjqy_spaid = targetArr[0].cjqy_spaid; //采集区域spaid
+    currentZD_data.zyqy_spaid = targetArr[0].zyqy_spaid; //暂养区域spaid
+    currentZD_data.hbqy_spaid = targetArr[0].hbqy_spaid; //回播区域spaid
+    currentZD_data.ywsj_spaid = targetArr[0].ywsj_spaid; //业务数据spaid
+    currentZD_data.czdaroot_spaid = targetArr[0].czdaroot_spaid; //残枝档案spaid
+    return currentZD_data;
+  },
+
+  // 获取站点资源
+  getAddress(state) {
+    let addressList = [];
+    for (let i of state.PYZD) {
+      let address = {};
+      address.id = i.ExtendData.number;
+      address.name = i.ExtendData.name;
+      address.img = i.ExtendData.image_url;
+      addressList.push(address);
+    }
+    return addressList;
+  },
+
+  //获取当前作业的spaid
+  getCurrentWork_spaid(state, timestamp) {
+    return state.workList.filter(function(item) {
+      if ((item.timestamp = timestamp)) {
+        return item;
+      }
+    })[0].SpaId;
   },
 
   // 根据这个属性判断拉取当前月视图有活动的日期渲染
