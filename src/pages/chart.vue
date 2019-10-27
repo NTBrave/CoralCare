@@ -1,56 +1,73 @@
 <template>
   <div class="all-chart" :style="bodySize">
-    <!-- <div style="height:1px;"></div>
-    <div class="dropdown-style">
-      <span style="margin-right:20px;">选择区域</span>
-      <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-          {{dropdownKey}}
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="所有区域">所有区域</el-dropdown-item>
-          <el-dropdown-item command="深圳大鹏">深圳大鹏</el-dropdown-item>
-          <el-dropdown-item command="镇江某地">镇江某地</el-dropdown-item>
-          <el-dropdown-item command="惠州某地">惠州某地</el-dropdown-item>
-          <el-dropdown-item command="菲律宾某地">菲律宾某地</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div> -->
     <div style="position:relative;z-index:100">
       <div class="coralNumber" @click="clickCoral(0)">
         <div :class="coralClickStyle[0]">
           当前暂养
-          <span class="innerNum">{{coralNumber[0]}}</span>株珊瑚
+          <span class="innerNum">{{statistic.now}}</span>株珊瑚
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[0]" id="ss"></div>
       </div>
       <div class="coralNumber" @click="clickCoral(1)">
         <div :class="coralClickStyle[1]">
           历史暂养
-          <span class="innerNum">{{coralNumber[1]}}</span>株珊瑚
+          <span class="innerNum">{{statistic.history}}</span>株珊瑚
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[1]"></div>
       </div>
       <div class="coralNumber" @click="clickCoral(2)">
         <div :class="coralClickStyle[2]">
           回播
-          <span class="innerNum">{{coralNumber[2]}}</span>株珊瑚
+          <span class="innerNum">{{statistic.return}}</span>株珊瑚
         </div>
         <div class="bottomTriangle" v-show="coralBottomJudge[2]"></div>
       </div>
-      <!-- <div class="coralNumber" @click="clickCoral(3)">
-        <div :class="coralClickStyle[3]">
-          历史回播
-          <span class="innerNum">{{coralNumber[3]}}</span>株珊瑚
-        </div>
-        <div class="bottomTriangle" v-show="coralBottomJudge[3]"></div>
-      </div> -->
     </div>
     <div style="height:155px;position:relative"></div>
 
-    <component :is="graphId" style></component>
+
+
+    <div>
+        <div class="dropdown-style2" style="display:inline-block">
+            <span style="margin-right:20px;color:gray;">选择区域</span>
+            <el-dropdown @command="handleCommand1" style="font-size:16px;color:black;">
+            <span class="el-dropdown-link">
+                {{this.$store.state.dropdownKey1}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" class="dropdown-item">
+                <el-dropdown-item command="所有区域">所有区域</el-dropdown-item>
+                <el-dropdown-item v-for="area in this.$store.state.area" :key="area" :command="area">{{area}}</el-dropdown-item>              
+            </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+        <div class="dropdown-style2" style="display:inline-block">
+            <span style="margin-right:20px;color:gray;">选择苗圃</span>
+            <el-dropdown @command="handleCommand2" style="font-size:16px;color:black;">
+            <span class="el-dropdown-link">
+                {{this.$store.state.dropdownKey2}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" class="dropdown-item">
+                <el-dropdown-item command="所有苗圃">所有苗圃</el-dropdown-item>
+                <el-dropdown-item v-for="mp in this.$store.state.mp" :key="mp" :command="mp">{{mp}}</el-dropdown-item>
+            </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+        <div class="dropdown-style2" style="display:inline-block">
+            <span style="margin-right:20px;color:gray;">选择分区</span>
+            <el-dropdown @command="handleCommand3" style="font-size:16px;color:black;">
+            <span class="el-dropdown-link">
+                {{this.$store.state.dropdownKey3}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" class="dropdown-item">
+                <el-dropdown-item command="所有分区">所有分区</el-dropdown-item>
+                <el-dropdown-item v-for="group in this.$store.state.group" :key="group" :command="group">{{group}}</el-dropdown-item>
+            </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+</div>
+    <component :is="graphId" ref="comp"></component>
   </div>
+  
 </template>
 
 <script>
@@ -69,248 +86,23 @@ import secondGraph from '@/components/chart/secondGraph.vue'
 import thirdGraph from '@/components/chart/thirdGraph.vue'
 
 export default {
-  // components: {
-  //   "v-chart": ECharts
-  // },
+ 
   name: 'chart',
   data() {
-    let data = []
-
-    for (let i = 0; i <= 360; i++) {
-      let t = (i / 180) * Math.PI
-      let r = Math.sin(2 * t) * Math.cos(2 * t)
-      data.push([r, i])
-    }
-
-    return {
-      work_no: '',
-      email: '',
-      username: '',
-      dropdownKey: '所有区域',
-      checkList: ['深圳大鹏'],
+    return {   
       graphId: 'firstGraph',
-      coralNumber: [17, 52, 76], //新增珊瑚数量
+      statistic:{'now':17,'history':87,'return':76},
       coralClickStyle: [
         'coralNumber3',
         'coralNumber2',
         'coralNumber2'
       ],
       coralBottomJudge: [true, false, false],
-      master_dirs: [],
-      resource_id: '',
-      resource_name: '',
-      //验证 store.js中是否有userInformatio
-      hava_infot: false,
-
-      userLoading: true,
-
-      group: [],
-      bodySize: {
-        height: '',
-        width: ''
-      },
-
-      polar1: {
-        title: {
-          text: '各区域暂养+回播总数'
-        },
-        tooltip: {},
-
-        grid: {
-          left: '20%'
-        },
-        xAxis: {
-          data: ['深圳大鹏', '湛江徐闻']
-        },
-        yAxis: {},
-        series: [
-          {
-            name: '数量',
-            type: 'bar',
-            data: [57, 46]
-          }
-        ]
-      },
-
-      polar2: {
-        title: {
-          text: '珊瑚档案中的种类',
-          subtext: ''
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-
-        series: [
-          {
-            name: '',
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: [
-              { value: 25, name: '厚板表孔珊瑚' },
-              { value: 13, name: '隐形角菊珊瑚' },
-              { value: 21, name: '团状滨珊瑚' },
-              { value: 5, name: '板叶角菊珊瑚' },
-              { value: 8, name: '风信子鹿角珊瑚' },
-              { value: 4, name: '其他种类' }
-            ],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  formatter: '{b} :\r\n\r\n {c} ({d}%)'
-                },
-                labelLine: { show: true }
-              },
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      },
-
-      polar3: {
-        title: {
-          text: '各个分区的珊瑚数量'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        legend: {
-          orient: 'horizontal',
-          bottom: '1',
-          data: ['1区', '2区', '3区', '4区', '5区']
-        },
-        series: [
-          {
-            name: '',
-            type: 'pie',
-            radius: ['30%', '50%'],
-            // avoidLabelOverlap: false,
-            // hoverAnimation: false,
-            // silent: true,
-            // label: {
-            //   normal: {
-            //     show: true,
-            //     position: "center",
-            //     formatter: function() {
-            //       return "总数：76";
-            //     },
-            //     textStyle: {
-            //       fontSize: 30,
-            //       color: "#D64728"
-            //     }
-            //   },
-            //   emphasis: {
-            //     show: true,
-            //     textStyle: {
-            //       fontSize: "30",
-            //       fontWeight: "bold"
-            //     }
-            //   }
-            // },
-            labelLine: {
-              normal: {
-                show: false
-              }
-            },
-            data: [
-              { value: 25, name: '1区' },
-              { value: 13, name: '2区' },
-              { value: 21, name: '3区' },
-              { value: 5, name: '4区' },
-              { value: 8, name: '5区' }
-            ],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  formatter: '{b} :{c} ({d}%)'
-                },
-                labelLine: { show: true }
-              },
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      },
-
-      polar4: {
-        title: {
-          text: '珊瑚生长情况'
-        },
-        xAxis: {
-          type: 'category',
-          data: [
-            '2019/5/12',
-            '2019/5/30',
-            '2019/6/15',
-            '2019/6/27',
-            '2019/7/12',
-            '2019/7/22',
-            '2019/8/17'
-          ]
-        },
-        yAxis: {
-          type: 'value'
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        grid: {
-          left: '20%'
-        },
-        series: [
-          {
-            data: [20, 32, 41, 45, 50, 70, 90],
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true,
-                  formatter: '{c}'
-                },
-                labelLine: { show: true }
-              },
-              emphasis: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            type: 'line'
-          }
-        ]
-      }
     }
   },
   mounted: function() {
-    let _this = this
-    //从store.js中获取数据
     this.bodySize.height = document.body.clientHeight - 90 + 'px'
     this.bodySize.width = document.body.clientWidth - 200 + 'px'
-    // console.log(_this.bodySize.height, _this.bodySize.width);
-
-    // window.addEventListener("resize", function() {
-    //   _this.echarts.resize(); //初始化的
-    // });
-    // let echartsElement = document.getElementsByClassName("echarts");
-    // for (let i = 0; i < echartsElement.length; i++) {
-    //   echartsElement[i].style.width =
-    //     (document.body.clientWidth - 200) * 0.8 * 0.485 + "px";
-    //   echartsElement[i].style.height =
-    //     (document.body.clientHeight - 90) * 0.475 + "px";
-    // }
   },
   components: { firstGraph, secondGraph, thirdGraph },
   methods: {
@@ -333,44 +125,63 @@ export default {
           break
       }
     },
-    handleCommand(command) {
-      this.dropdownKey = command
+    handleCommand2(command){
+      this.$store.commit('setDropdownKey2',command);
+    },
+    handleCommand1(command){
+      this.$store.commit('setDropdownKey1',command);
+    },
+    handleCommand3(command){
+      if(command=='所有分区'&&this.$store.state.dropdownKey3=='所有分区'){
+            return;
+        }
+      if(command=='所有分区'){
+            let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
+            this.$store.commit('setDropdownKey3',command);
+            this.$refs.comp.helpHandleCommand(num);
+            return;
+        }
+      if(this.graphId=='firstGraph'){
+        this.$store.commit('setDropdownKey3',command);
+        return;
+      }
+      let count=parseInt(command.substring(1).substring(1));
+      this.$refs.comp.chooseBlock(count);
+     
     }
   }
 }
 </script>
 
-
 <style scoped>
-.dropdown-style {
-  background-color: #00c8c8;
-  border-radius: 14px;
-  line-height: 28px;
-  width: 200px;
-  text-align: center;
-  margin: 10px;
+.dropdown-style2{
+  background-color:#00c8c8;
+  border-radius:14px;
+  line-height:28px;
+  width:240px;
+  text-align:center;
+  margin-left:20px;
 }
-
+.dropdown-item{
+  overflow-y:auto;
+  max-height:300px;
+}
 .el-dropdown-link {
   cursor: pointer;
 }
-
 .all-chart {
-  width: 800px;
+  width: 1400px;
   height: 800px;
-  /* background-color: rgba(0, 0, 0, 0.08); */
 }
 .echarts {
   width: 420px;
   height: 280px;
-  /* margin: 0 auto; */
 }
 canvas {
   display: block;
   margin: 0 auto;
   border: 1px solid red;
 }
-
 .coralNumber {
   height: 150px;
   float: left;
