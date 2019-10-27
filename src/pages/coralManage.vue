@@ -324,6 +324,15 @@ export default {
     // AllData.Jobs[0].Where[0].Operator.Value = vuexId;
     Api.reqApi(AllCoralData, "/tree/select").then(res => {
       console.log(res);
+      //获取并生成档案数组
+      if (res.response.CZDA.objects) {
+        let danAn = res.response.CZDA.objects;
+        _this.coralList = [];
+        for (let i = 0; i < danAn.length; i++) {
+          _this.coralList.push(danAn[i].principle);
+        }
+        _this.selectCoral(_this.coralList[0]);
+      }
     });
   },
   methods: {
@@ -398,7 +407,9 @@ export default {
       // console.log(ind)
       this.recordIndex = ind;
       this.$refs.carousel.setActiveItem(this.recordIndex);
-    }
+    },
+    //展示一个档案的数据
+    selectCoral(co) {}
   }
 };
 </script>

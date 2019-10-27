@@ -28,6 +28,18 @@ export default {
     };
   },
   methods: {
+    uploadProcess(params) {
+      // 通用变量 初始化
+      let uploadData = {
+        url: "",
+        objectName: "",
+        file_id: "",
+        fileExtension: "",
+        currentUserId: ""
+      };
+
+      this.beforeUpload(params, uploadData);
+    },
     beforeUpload(params, uploadData) {
       let _this = this;
       uploadData.fileExtension = params.file.name.split(".")[
@@ -41,51 +53,72 @@ export default {
     policy(params, uploadData) {
       let _this = this;
 
+      // var data = JSON.stringify({
+      //   ext: uploadData.fileExtension,
+      //   cur_id: this.currentResourceId
+      // });
       var data = JSON.stringify({
-        ext: uploadData.fileExtension,
-        cur_id: this.currentResourceId
+        ext: uploadData.fileExtension
       });
+      console.log(data);
 
       $.ajax({
         type: "post",
-        url: Api.baseUrl + "/files/url",
+        url: Api.baseUrl + "/file/upload",
         data: data,
         async: false,
         contentType: "application/json",
         xhrFields: {
-          withCredentials: true
+          withCredentials: false //跨域记得该改这里
         },
         crossDomain: true,
         success: function(datas) {
-          uploadData.url = datas.data.url;
-          uploadData.currentUserId = datas.data.creator;
+          console.log(datas);
+          uploadData.url = datas.response.url;
+          console.log(uploadData.url);
+
+          // uploadData.currentUserId = datas.data.creator;
 
           let strings = uploadData.url.split("/");
           uploadData.objectName = "";
           for (var i = 4; i < strings.length - 1; i++) {
             uploadData.objectName += strings[i] + "/";
           }
+
+          //  let newURl = "http:";
+          // for (var i = 1; i < strings.length; i++) {
+          //   if (i === 2) {
+          //     newURl += "/192.168.199.107:9091";
+          //     continue;
+          //   }
+          //   newURl = newURl + "/" + strings[i];
+          // }
+          // uploadData.url = newURl;
+
           uploadData.file_id = strings[strings.length - 1].split("?")[0];
           // 存储在oss里的key
           uploadData.objectName += uploadData.file_id;
+          console.log(uploadData.file_id, uploadData.objectName);
 
           // 上传文件
           _this.uploadFile(params, uploadData);
+          // uploadData.url = datas.data.url;
+          // uploadData.currentUserId = datas.data.creator;
+
+          // let strings = uploadData.url.split("/");
+          // uploadData.objectName = "";
+          // for (var i = 4; i < strings.length - 1; i++) {
+          //   uploadData.objectName += strings[i] + "/";
+          // }
+          // uploadData.file_id = strings[strings.length - 1].split("?")[0];
+          // // 存储在oss里的key
+          // uploadData.objectName += uploadData.file_id;
+
+          // // 上传文件
+          // _this.uploadFile(params, uploadData);
         }
         // error: _this.handleError() 有点忘了是不是这个函数。。
       });
-    },
-    uploadProcess(params) {
-      // 通用变量 初始化
-      let uploadData = {
-        url: "",
-        objectName: "",
-        file_id: "",
-        fileExtension: "",
-        currentUserId: ""
-      };
-
-      this.beforeUpload(params, uploadData);
     },
     //覆盖默认的上传行为，可以自定义上传的实现
     uploadFile(params, uploadData) {
@@ -119,7 +152,7 @@ export default {
           params.onSuccess("上传成功");
 
           // 上传成功
-          _this.afterUpload(params, uploadData);
+          // _this.afterUpload(params, uploadData);
         } else {
           _this.handleError();
         }
@@ -153,6 +186,7 @@ export default {
         crossDomain: true,
         //关闭上传组件显示
         success: function(datas) {
+          conosle.log(datas);
           _this.$parent.itemDBClicked(-1);
           setTimeout(function() {
             _this.close();

@@ -10,8 +10,8 @@ export const DELETE = "delete";
 axios.defaults.withCredentials = false;
 
 
-export const baseUrl = "http://192.168.199.102:9091";
-// export const baseUrl = "http://192.168.199.107:9091";
+// export const baseUrl = "http://192.168.199.102:9091";
+export const baseUrl = "http://192.168.199.107:9091";
 /**
  *   统一请求接口
  */
@@ -23,6 +23,15 @@ export const reqApi = (data, url) => {
     data: data,
     headers: { "Content-Type": "application/json" },
     method: POST
+  });
+};
+export const delApi = (data, url) => {
+  // console.log( work_no, username,password,email);
+  return new axios({
+    url: baseUrl + url,
+    data: data,
+    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    method: DELETE
   });
 };
 

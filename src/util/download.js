@@ -6,11 +6,11 @@
 export function getBlob(url) {
   return new Promise(resolve => {
     const xhr = new XMLHttpRequest()
-
     xhr.open('GET', url, true)
     xhr.responseType = 'blob'
     xhr.onload = () => {
       if (xhr.status === 200) {
+        console.log(xhr.response)
         resolve(xhr.response)
       }
     }
