@@ -34,44 +34,44 @@ export const O01 =
 
 //W-01 获取指定月份作业数据
 export const W01 = {
-    "JobType":"single",
-       "Jobs":[
-           {
-               "Method":"select",
-               "MasterSpaId":"", 
-               "MasterExtendType":"YWSJ", 
-               "NeedFK":"false",   
-               "Where":[     
-                   {
-                       "Type":"Condition",
-                       "Key":"master_id",
-                       "Operator":{
-                           "Operator":"=",
-                           "Value":""  
-                       },
-                       "LogicOperator": "AND"
-                   },
-                   {
-                       "Type":"Condition",
-                       "Key":"ext_data.timestamp",
-                       "Operator":{
-                           "Operator":"like",   
-                           "Value":""   
-                       }
-                   }
-               ],
-               "Order":[
-                   {
-                       "Key":"ext_data.timestamp",
-                       "Order":"ASC"
-                   }
-               ],
-               "GroupBy":[
-                   {}
-               ]
-           }
-       ]
-   }
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "YWSJ",
+            "NeedFK": "false",
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "master_id",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.timestamp",
+                    "Operator": {
+                        "Operator": "like",
+                        "Value": ""
+                    }
+                }
+            ],
+            "Order": [
+                {
+                    "Key": "ext_data.timestamp",
+                    "Order": "ASC"
+                }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
 
 //W-03 新建残枝作业  
 export const W03 =
@@ -115,7 +115,7 @@ export const A01 =
                 {
                     "Type": "Condition",
                     "Key": "spa_id",
-                    "Opetator": {
+                    "Operator": {
                         "Operator": "=",
                         "Value": "MasterId"
                     }
@@ -272,6 +272,7 @@ export const D01 = {
     Jobs: [
         {
             Method: "select",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
             CZDASpaId: "czdaspaid",	//要查询的残枝档案spaid
             NeedFK: "true",			//需要回传外键 
             Where: [
@@ -410,7 +411,7 @@ export const R01 =
                 {
                     "Type": "Condition",
                     "Key": "spa_id",
-                    "Opetator": {
+                    "Operator": {
                         "Operator": "=",
                         "Value": "MasterId"
                     }
@@ -440,7 +441,7 @@ export const R02 = {
                 {
                     "Type": "Condition",
                     "Key": "spa_id",
-                    "Opetator": {
+                    "Operator": {
                         "Operator": "=",
                         "Value": "MasterId"
                     }
@@ -677,6 +678,70 @@ export const R07 =
 //R-08 删除指定记录
 export const R08 = {}
 
+//P-01 新建残枝照片节点
+export const P01 = {
+    "JobType": "single",
+    "JobHandler": "CZZPHandler",  		//残枝照片handler
+    "Jobs": [
+        {
+            "Method": "create",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZJL",	//父节点:[/残枝记录]
+            "Object": {
+                "ExtendType": "CZZP",		//新建节点:[/残枝照片]
+                "ExtendData": {
+                    "czjl_spaid": "",
+                    "czda_spaid": "",
+                    "comment": ""
+                },
+                "ExtendFileData": {
+                    "file_id": "url",		//照片在minio里的url
+                    "mine_type": "",			//文件类型 jpeg png等
+                    "thumbnail": "url"		//缩略图路径
+                }
+            }
+        }
+    ]
+}
+
+//P-02 获取残枝图片节点
+export const P02 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "CZZPSpaId": "czzp_spaid",		//残枝照片的spaid
+            "NeedFK": "false",				//不回传外键 
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "spa_id",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "czzp_spaid"
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+// P-03 删除残枝图片节点
+export const P03 = {
+    "JobType": "single",
+    "JobHandler": "CZZPHandler",		//残枝照片Handler
+    "Jobs": [
+        {
+            "Method": "delete",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZJL",		//父节点:[/残枝记录]
+            "Object": {
+                "SpaId": "spaid",			//要删除的节点spaid
+                "ExtendType": "CZZP"			//删除节点:[/残枝照片]	
+            }
+        }
+    ]
+}
 
 // 获取珊瑚品种
 export const species_01 = {

@@ -71,14 +71,33 @@ export default {
   computed: {},
   methods: {
     //vuex mutation
-    ...mapMutations(['setPYZD']),
+    ...mapMutations(['setPYZD', 'setIsLogin']),
     login() {
+      let _this = this
+      Api.reqApi(
+        { username: _this.loginData.user, password: _this.loginData.pwd },
+        '/tree/login'
+      )
+        .then(res => {
+          if (res.data.status === 200) {
+            _this.setIsLogin(true)
+            _this.getAllZhan()
+            this.$router.push('/manage')
+            // console.log(this.$store.state.isLogin);
+          }
+        })
+        .catch(err => {
+          this.$message.success('登陆失败')
+          console.log(err)
+        })
+    },
+    getAllZhan() {
       let _this = this
       // let loginData = ENTITY.O01
       // console.log(ENTITY.O01);
       Api.reqApi(ENTITY.O01, '/tree/select')
         .then(res => {
-          console.log(res)
+          // console.log(res);
           //获取站点数据
           let PYZDobjects = res.data.response.PYZD.objects
           let len = PYZDobjects.length
