@@ -1,7 +1,10 @@
 <template>
 <div style="margin-top:30px;">
     <div style="height:400px;width:400px;display:inline-block;float:left;">
-        <div style="text-align:center;color:#00c8c8;font-size:30px;">{{this.$store.state.dropdownKey3}}</div>
+        <div style="text-align:center;color:#00c8c8;font-size:30px;"  v-if="$store.state.dropdownKey2!='所有苗圃'">
+            {{this.$store.state.dropdownKey2+'-'+this.$store.state.dropdownKey3}}
+        </div>
+        <div style="text-align:center;color:#C0C4CC;font-size:30px;" v-if="$store.state.dropdownKey2=='所有苗圃'">苗圃未选定</div>
         <div style="height:300px;width:300px;margin:auto;">         
             <div v-for="count in groupNumber" :key="count" @click="chooseBlock(count)" class="blocks"
             :style="blockStyle">

@@ -84,6 +84,7 @@ import 'echarts/lib/chart/pie'
 import firstGraph from '@/components/chart/firstGraph.vue'
 import secondGraph from '@/components/chart/secondGraph.vue'
 import thirdGraph from '@/components/chart/thirdGraph.vue'
+import Axios from 'axios';
 
 export default {
  
@@ -101,8 +102,19 @@ export default {
     }
   },
   mounted: function() {
-    this.bodySize.height = document.body.clientHeight - 90 + 'px'
-    this.bodySize.width = document.body.clientWidth - 200 + 'px'
+    this.bodySize.height = document.body.clientHeight - 90 + 'px';
+    this.bodySize.width = document.body.clientWidth - 200 + 'px';
+    //初始化statistics和接口一,以及area
+    //Axios.post('',{}).then(response=>{}).catch(error=>{});
+    Axios.post('',{}).then(response=>{
+      this.statistic=JSON.parse(response.data);
+    }).catch(error=>{});
+    Axios.post('',{area:'所有区域',mp:'所有苗圃',group:'所有分区'}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+    }).catch(error=>{});
+    Axios.post('',{}).then(response=>{
+      this.$store.commit('setArea',JSON.parse(response.data));
+    }).catch(error=>{});
   },
   components: { firstGraph, secondGraph, thirdGraph },
   methods: {
@@ -125,16 +137,52 @@ export default {
           break
       }
     },
-    handleCommand2(command){
-      this.$store.commit('setDropdownKey2',command);
-    },
     handleCommand1(command){
-      this.$store.commit('setDropdownKey1',command);
-    },
-    handleCommand3(command){
-      if(command=='所有分区'&&this.$store.state.dropdownKey3=='所有分区'){
+      //处理接口二
+      if(command==this.$store.state.dropdownKey1){
             return;
         }
+      this.$store.commit('setDropdownKey1',command);
+      this.$store.commit('setDropdownKey2','所有苗圃');
+      if(this.$store.state.dropdownKey3!='所有分区'){
+        let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
+        this.$store.commit('setDropdownKey3','所有分区');
+        this.$refs.comp.helpHandleCommand(num);
+      }
+      this.$store.commit('setGroup',[]);
+      Axios.post('',{area:command}).then(response=>{
+        this.$store.commit('setMp',JSON.parse(response.data));
+      }).catch(error=>{});
+      Axios.post('',{area:command,mp:'所有苗圃',group:'所有分区'}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+      }).catch(error=>{});
+
+    },
+     handleCommand2(command){
+      if(command==this.$store.state.dropdownKey2){
+            return;
+        }
+      this.$store.commit('setDropdownKey2',command);
+      if(this.$store.state.dropdownKey3!='所有分区'){
+        let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
+        this.$store.commit('setDropdownKey3','所有分区');
+        this.$refs.comp.helpHandleCommand(num);
+      }
+      Axios.post('',{area:this.$store.state.dropdownKey1,mp:command}).then(response=>{
+        this.$store.commit('setGroup',JSON.parse(response.data));
+      }).catch(error=>{});
+      Axios.post('',{area:this.$store.state.dropdownKey1,mp:command,group:'所有分区'}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+      }).catch(error=>{});
+    },
+    handleCommand3(command){
+      if(command==this.$store.state.dropdownKey3){
+            return;
+        }
+      //处理接口二
+      Axios.post('',{area:this.$store.state.dropdownKey1,mp:this.$store.state.dropdownKey2,group:command}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+      }).catch(error=>{});
       if(command=='所有分区'){
             let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
             this.$store.commit('setDropdownKey3',command);
@@ -147,6 +195,7 @@ export default {
       }
       let count=parseInt(command.substring(1).substring(1));
       this.$refs.comp.chooseBlock(count);
+      
      
     }
   }
