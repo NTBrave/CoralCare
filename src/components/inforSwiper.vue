@@ -37,7 +37,7 @@
                   <span v-if="/颜色/.test(item.title)">
                     <span class="color-block" :style="'background-color:'+item.color"></span>
 
-                    <span>—</span>
+                    <span style="margin:0 0.5rem">—</span>
                     <span>{{item.msg2}}</span>
                     <span class="color-block" :style="'background-color:'+item.color2"></span>
                   </span>
@@ -75,7 +75,11 @@
     >取消测量</div>
     <div v-if="doMeasuring">
       <swiper :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
-      <getArea :imageUrl="imgUrlFormSwiper"></getArea>
+      <getArea
+        @givaASize="setRecordSize"
+        :imageUrl="imgUrlFormSwiper"
+        :lastSize="recordObj.ExtendData.area"
+      ></getArea>
     </div>
   </div>
 </template>
@@ -83,35 +87,60 @@
 <script>
 import swiper from "@/components/swiper.vue";
 import getArea from "@/components/plantFile/getArea.vue";
-import * as Default from "../json/default";
+import * as DEFAULT from "../json/default";
+import * as ENTITY from "../json/entity";
+import * as Api from "../api/api";
+import moment from "moment";
 export default {
   components: { swiper, getArea },
+  props: {
+    recordObj: Object,
+    recordName: String,
+    activty: Object,
+    type: String
+  },
   data() {
     return {
-      recordName: "A-宇宙号-1区-蓝-07",
+      // recordName: "A-宇宙号-1区-蓝-07",
       recordInfor: [
-        { title: "活动编号", msg: "A2-大鹏大澳湾-2019090910" },
-        { title: "属种", msg: "盔型珊瑚科目" },
-        { title: "状态", msg: "部分白化" },
-        { title: "阶段类型", msg: "回播" },
-        { title: "暂养区域", msg: "A-宇宙号-1区" },
-        { title: "透光度", msg: "180cm" },
-        { title: "温度", msg: "31℃" },
+        { title: "活动编号", msg: "" },
+        { title: "属种", msg: "" },
+        { title: "状态", msg: "" },
+        { title: "阶段类型", msg: "" },
+        { title: "暂养区域", msg: "" },
         {
           title: "颜色",
-          msg: "D2",
-          color: "rgb(247,218,159)",
-          msg2: "D5",
-          color2: "rgb(143,65,36)"
+          msg: "",
+          color: "",
+          msg2: "",
+          color2: ""
         },
-        { title: "时间", msg: "2018.9.10.10" },
-        { title: "珊瑚尺寸", msg: "5.66" },
-        { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
+        { title: "时间", msg: "" },
+        { title: "珊瑚尺寸", msg: "" },
+        { title: "备注", msg: "" }
       ],
+      // recordInfor: [
+      //   { title: "活动编号", msg: "A2-大鹏大澳湾-2019090910" },
+      //   { title: "属种", msg: "盔型珊瑚科目" },
+      //   { title: "状态", msg: "部分白化" },
+      //   { title: "阶段类型", msg: "回播" },
+      //   { title: "暂养区域", msg: "A-宇宙号-1区" },
+      //   {
+      //     title: "颜色",
+      //     msg: "D2",
+      //     color: "rgb(247,218,159)",
+      //     msg2: "D5",
+      //     color2: "rgb(143,65,36)"
+      //   },
+      //   { title: "时间", msg: "2018.9.10.10" },
+      //   { title: "珊瑚尺寸", msg: "5.66" },
+      //   { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
+      // ],
       doMeasuring: false,
       imgUrlFormSwiper: "",
       key: 0,
-      inforImgUrl: Default.imgUrl
+      inforImgUrl: []
+      // inforImgUrl: DEFAULT.imgUrl
     };
   },
   watch: {
@@ -119,6 +148,41 @@ export default {
     // ++this.key;
     // console.log(11)
     // }
+  },
+  mounted: function() {
+    //构造表单数据
+    this.recordInfor[0].msg = this.activty.activity_number;
+    this.recordInfor[1].msg = this.type;
+    this.recordInfor[2].msg = this.recordObj.ExtendData.status;
+    this.recordInfor[3].msg = this.activty.type;
+    let positonArr = this.recordName.split("-");
+    positonArr.length = positonArr.length - 2;
+    this.recordInfor[4].msg = positonArr.join("-");
+    //构建颜色
+    let light = this.recordObj.ExtendData.lightest_color;
+    let darkest = this.recordObj.ExtendData.darkest_color;
+
+    this.recordInfor[5].msg = light;
+    this.recordInfor[5].msg2 = darkest;
+    this.recordInfor[5].color = DEFAULT.colorObj[light];
+    this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
+    //构建时间
+    this.recordInfor[6].msg = moment(
+      this.recordObj.ExtendData.timestamp,
+      "YYYYMMDDHH"
+    ).format("YYYY-MM-DD HH");
+    //构建尺寸
+    if (this.recordObj.ExtendData.height_area_both == 0) {
+      this.recordInfor[7].msg = this.recordObj.ExtendData.height + "cm";
+    } else {
+      this.recordInfor[7].msg = this.recordObj.ExtendData.area;
+    }
+    //构建备注
+    this.recordInfor[8].msg = this.recordObj.ExtendData.comment;
+
+    // console.log(this.recordObj);
+    //获取这个记录的图片啦
+    this.getImgUrl();
   },
   methods: {
     goMessuring() {
@@ -128,6 +192,54 @@ export default {
       this.imgUrlFormSwiper = url;
 
       // console.log(this.imgUrlFormSwiper)
+    },
+    //更新记录
+    setRecordSize(sizeData) {
+      //从测面积组件拿到两个数据
+      let _this = this;
+      // console.log("接收到的", sizeData);
+      _this.goMessuring();
+      //构造请求体
+      let recordData = ENTITY.R07;
+      for (let item in recordData.Jobs[0].Object.ExtendData) {
+        recordData.Jobs[0].Object.ExtendData[item] =
+          _this.recordObj.ExtendData[item];
+      }
+      recordData.Jobs[0].MasterSpaId = _this.activty.activityID;
+      recordData.Jobs[0].Object.SpaId = _this.recordObj.SpaId;
+      recordData.Jobs[0].Object.ExtendData.height_area_both = sizeData.type;
+      if (sizeData.type == 0) {
+        recordData.Jobs[0].Object.ExtendData.height = sizeData.size;
+      } else {
+        recordData.Jobs[0].Object.ExtendData.area = sizeData.size;
+      }
+
+      // console.log(recordData);
+      Api.reqApi(recordData, "/tree/update").then(res => {
+        console.log("----:", res);
+        if (res.data.status === 200 && res.data.response) {
+          //设置新的尺寸
+          this.recordInfor[7].msg = sizeData.size;
+        }
+      });
+    },
+    //获取记录节点下的图片节点
+    getImgUrl() {
+      //构造请求体
+      let _this = this;
+      let imgNodeData = ENTITY.P04;
+      imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
+      imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
+      Api.reqApi(imgNodeData, "/tree/select").then(res => {
+        console.log("图片节点:", res);
+        if (res.data.status === 200 && res.data.response) {
+          let nodeArr = res.response.CZZP.objects;
+          for (let i = 0; i < nodeArr.length; ++i) {
+            let obj = { url: nodeArr.principle.ExtendFileData.file_id };
+            _this.inforImgUrl.push(obj);
+          }
+        }
+      });
     }
   }
 };
@@ -151,7 +263,7 @@ export default {
   width: 2rem;
   height: 1rem;
   display: inline-block;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 .mian-size {
   padding: 1rem;

@@ -149,8 +149,8 @@ export const colorList = [
     value: "E6",
     color: "#4C200E"
   }
-<<<<<<< HEAD
-]
+];
+
 export const colorObj = {
   B2: '#E1EAAE',
   B3: '#C1DA83',
@@ -172,11 +172,8 @@ export const colorObj = {
   E4: '#AC913D',
   E5: '#764922',
   E6: '#4C200E'
-}
+};
 
-=======
-];
->>>>>>> 0da4629b55a74547a806a6fcb48c764cb030ff88
 
 export const imgUrl = [
   {

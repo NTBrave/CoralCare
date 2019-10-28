@@ -8,33 +8,31 @@
       <div style="position:absolute;right:0">
         <el-popover trigger="hover" title="测量说明：" placement="top" width="350">
           <ul>
-            <span>1、输入参考物的实际直径,默认3cm</span>
+            <span>1、输入参考物的实际直径或长度,默认3cm</span>
           </ul>
           <ul style="width:100%;list-style:none">
             <li>
               <span>2、测量面积</span>
             </li>
-            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(1)在图中标出参考物的两个端点，测量</li>
             <li>(2)在图中标出目标的轮廓点，测量。得出计算结果</li>
           </ul>
           <ul style="width:100%;list-style:none">
             <li>
               <span>3、测量高度</span>
             </li>
-            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(1)在图中标出参考物的两个端点，测量</li>
             <li>(2)在图中标出目标的端点，测量。得出计算结果</li>
             <li></li>
           </ul>
-          <ul style="width:100%;list-style:none">
-            <li>4、测量面积时，图中参考物必须是圆形或椭圆形。</li>
-          </ul>
+
           <p slot="reference" style="text-align: center; padding-top:5px" type="text">
             <a class="el-icon-info" style="font-size: 25px;color: #ff6b6b;"></a>
           </p>
         </el-popover>
       </div>
       <div>
-        <label @click="checkedType(0)" class="elRadio">
+        <label @click="checkedType(1)" class="elRadio">
           <span class="elInput">
             <span class="elInner"></span>
           </span>
@@ -42,7 +40,7 @@
         </label>
       </div>
       <div>
-        <label @click="checkedType(1)" class="elRadio">
+        <label @click="checkedType(0)" class="elRadio">
           <span class="elInput">
             <span class="elInner"></span>
           </span>
@@ -51,7 +49,7 @@
       </div>
 
       <!-- 测量高度 -->
-      <div class="operStep" v-show="checkeId==1">
+      <div class="operStep" v-show="checkeId==0">
         <div>
           <span>号牌直径：</span>
           <input
@@ -92,7 +90,7 @@
         </div>
       </div>
       <!-- 测量面积 -->
-      <div class="operStep" v-show="checkeId==0">
+      <div class="operStep" v-show="checkeId==1">
         <div>
           <span>号牌直径：</span>
           <input
@@ -164,7 +162,7 @@
             {{coralInActual}}
             <span style=" float: right;">
               cm
-              <sup v-show="checkeId==0">2</sup>
+              <sup v-show="checkeId==1">2</sup>
             </span>
           </span>
         </div>
@@ -173,8 +171,9 @@
           上次测量值：
           <span>
             <span style="    float: right;">
+              {{lastSize}}
               cm
-              <sup v-show="checkeId==0">2</sup>
+              <sup v-show="checkeId==1">2</sup>
             </span>
           </span>
         </div>
@@ -183,7 +182,7 @@
       <div style="display: flex;justify-content: center;">
         <div class="my-btn">
           <span>
-            <span @click.stop="mackImg">确认提交</span>
+            <span @click="giveTheSize">确认提交</span>
           </span>
         </div>
       </div>
@@ -196,14 +195,15 @@
 
 export default {
   name: "essay",
-  // props: {
-  //   imageUrl: String
-  // },
+  props: {
+    imageUrl: String,
+    lastSize: String
+  },
   data() {
     return {
       canvas: null,
       // newUrl: "http://dayy.xyz/resource/1.jpg",
-      imageUrl: "http://dayy.xyz/resource/test.jpg",
+      // imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
@@ -215,7 +215,7 @@ export default {
       img: null,
       canvasW: 0,
       diameter: 3, //参考物实际长度
-      checkeId: 0,
+      checkeId: 1,
       shortAxis: 0, //图中短轴
       longAxis: 0, //图中长轴
       coralAreaInImg: 0, //图中轮廓点的面积
@@ -229,9 +229,11 @@ export default {
     this.context = this.canvas.getContext("2d");
     this.elRadio = document.getElementsByClassName("elRadio");
     this.elInput = document.getElementsByClassName("elInput");
-    this.elRadio[this.checkeId].classList.add("isChecked");
-    this.elInput[this.checkeId].classList.add("isChecked");
+    this.elRadio[0].classList.add("isChecked");
+    this.elInput[0].classList.add("isChecked");
     this.doDraw(this.imageUrl);
+
+    // console.log("旧值：", this.lastSize);
   },
   watch: {
     imageUrl: function() {
@@ -378,11 +380,11 @@ export default {
       // });
     },
     checkedType(i) {
-      this.elRadio[this.checkeId].classList.remove("isChecked");
-      this.elInput[this.checkeId].classList.remove("isChecked");
+      this.elRadio[this.checkeId === 0 ? 1 : 0].classList.remove("isChecked");
+      this.elInput[this.checkeId === 0 ? 1 : 0].classList.remove("isChecked");
       this.checkeId = i;
-      this.elRadio[this.checkeId].classList.add("isChecked");
-      this.elInput[this.checkeId].classList.add("isChecked");
+      this.elRadio[this.checkeId === 0 ? 1 : 0].classList.add("isChecked");
+      this.elInput[this.checkeId === 0 ? 1 : 0].classList.add("isChecked");
     },
     calcuLongAxis() {
       if (this.pointList.length != 2) {
@@ -494,6 +496,13 @@ export default {
         ).toFixed(2);
       }
       this.delectAllPoint();
+    },
+    giveTheSize() {
+      // console.log("传出测量值：", this.coralInActual);
+      this.$emit("givaASize", {
+        size: this.coralInActual,
+        type: this.checkeId
+      });
     }
   }
 };
