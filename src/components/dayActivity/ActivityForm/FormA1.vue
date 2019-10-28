@@ -190,12 +190,12 @@
 // import {} from '../../api/api'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { reqApi } from '../../../api/api'
-import { D04, R03, species_01, ZYQY_01 } from '../../../json/entity'
+import { D04, R03, species_01, ZYQY_HBQY } from '../../../json/entity'
 import { signColorList, colorList } from '../../../json/default'
 import {
   requestSpecies,
   createR03,
-  requestZYQY
+  requestZYQY_HBQY
 } from '../../../util/apiCreator'
 export default {
   props: {
@@ -264,7 +264,11 @@ export default {
       this.ZY_fenqu = []
       this.fileForm.breedArea.partition = ''
 
-      let fenqu = requestZYQY(ZYQY_01, this.fileForm.breedArea.nursery, 'MP')
+      let fenqu = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.fileForm.breedArea.nursery,
+        'MP'
+      )
       reqApi(fenqu, '/tree/select').then(res => {
         console.log(res)
         if (res.data.status === 200) {
@@ -292,13 +296,19 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      // 珊瑚品种（目科属）
       species_order: [],
       species_family: [],
       species_genus: [],
 
+      // 暂养区域（区域、苗圃、分区）
       ZY_quyu: [],
       ZY_miaopu: [],
       ZY_fenqu: [],
+
+      // 创建档案和首次暂养记录成功之后返回的 档案spaid 和 记录spaid
+      file_spaid: '',
+      record_spaid: '',
 
       fileForm: this.fileData, // 接受父页面传来的档案信息
       recordForm: this.recordData, // 接受父页面传来的记录信息
@@ -317,6 +327,12 @@ export default {
 
       // console.log(this.fileForm)
     },
+
+    // 向父组件传递 档案spaid 和 记录spaid
+    sendSpaid() {
+      this.$emit('func', this.file_spaid, this.record_spaid)
+    },
+
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
@@ -332,29 +348,38 @@ export default {
       )
 
       console.log(newR03)
-      reqApi(newR03, '/tree/flow')
-        .then(res => {
-          console.log(res)
-          if (res.data.status === 200) {
-            this.$message({
-              showClose: true,
-              message: '数据已成功录入！',
-              type: 'success'
-            })
-          }
-        })
-        .then(e => {
-          console.log(e)
-        })
+      reqApi(newR03, '/tree/flow').then(res => {
+        console.log(res)
 
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+        if (res.data.status === 200) {
+          this.file_spaid = res.data.response.CZDA.objects[0].principle.SpaId
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
+          this.sendSpaid() // 向父组件传spaid
+
+          // 数据成功录入提醒
+          this.$message({
+            showClose: true,
+            message: '数据已成功录入！',
+            type: 'success'
+          })
+
+          // 携带参数路由跳转
+          this.$router.push({
+            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+            query: {
+              time: this.$route.query.time,
+              address: this.$route.query.address,
+              activityType: this.$route.query.activityType
+            }
+          })
         }
+        // else if(res.data.status === 406){
+
+        // }
       })
+      // .then(e => {
+      //   console.log(e)
+      // })
     },
     submitEdit() {
       // 修改成功接口
@@ -403,8 +428,8 @@ export default {
         }
       ]
       console.log(this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid)
-      let miaopu = requestZYQY(
-        ZYQY_01,
+      let miaopu = requestZYQY_HBQY(
+        ZYQY_HBQY,
         this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid,
         'ZYQYROOT'
       )

@@ -17,10 +17,13 @@ const state = {
    *
    */
   PYZD: [], // 所有站点信息
-  currentZD: "B", // 当前选择的站点编号
-  workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
-  activityList: [], // 本次已创建的活动列表(activity_number, czzy_spaid, SpaId)
+  currentZD: "A", // 当前选择的站点编号
 
+  workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
+  // currentWork: "", // 当前的作业编号
+
+  activityList: [], // 本次已创建的活动列表(activity_number, czzy_spaid, SpaId)
+  nowDivingActivity: "", // 当前的活动编号
   /**
    *  后台管理端
    *  残枝培育部分
@@ -28,10 +31,7 @@ const state = {
 
   uploadVisiable: true,
 
-  currentWork: "", // 当前的作业编号
-
   nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表
-  nowDivingActivity: "", // 当前的活动编号
 
   activityFiles: [], // 活动下对应的植株档案记录
   operateFile: "", // 当前正在操作的植株档案

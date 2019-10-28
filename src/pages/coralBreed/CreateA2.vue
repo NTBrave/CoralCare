@@ -30,7 +30,7 @@
         <upload-border>
           <div class="imgUpload">
             <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load></up-load>
+            <up-load :masterid.sync="record_spaid" :czda_spaid.sync="file_spaid"></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -60,7 +60,7 @@ export default {
         signColor: '',
         signNumber: '',
         breedArea: {
-          firstArea: 'A',
+          firstArea: '',
           nursery: '', // 苗圃
           partition: '' // 分区
         }
@@ -68,8 +68,7 @@ export default {
       recordData: {
         // 更新记录表单
         state: '', // 状态
-        penetrability: '', // 透光度
-        temperature: '', // 温度
+
         coralColor: {
           shallowColor: '', // 最浅颜色
           deepColor: '' // 最深颜色
@@ -163,7 +162,10 @@ export default {
         // }
       ],
       isCreated: true,
-      imgUrlFormSwiper: ''
+      imgUrlFormSwiper: '',
+
+      file_spaid: '',
+      record_spaid: ''
     }
   },
   computed: {
@@ -176,6 +178,12 @@ export default {
   },
 
   methods: {
+    // 接收表单组件回传的 档案spaid 和 记录spaid
+    getSpaid(fileSpaid, recordSpaid) {
+      this.file_spaid = fileSpaid
+      this.record_spaid = recordSpaid
+    },
+
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)

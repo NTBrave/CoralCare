@@ -37,15 +37,8 @@ const getters = {
   },
 
   //获取当前作业的spaid
-  getCurrentWork_spaid(state) {
-    console.log(state.currentWork);
-    console.log(state.workList);
-
-    return state.workList.filter(function(item) {
-      if (item.timestamp === state.currentWork) {
-        return item;
-      }
-    })[0].SpaId;
+  getCurrentWork: state => time => {
+    return state.workList.find(todo => todo.timestamp === time);
   },
 
   // 获取当前创建的活动的spaid
