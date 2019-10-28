@@ -9,7 +9,6 @@ export const DELETE = "delete";
 //当前端配置withCredentials=true时, 后端配置Access-Control-Allow-Origin不能为*, 必须是相应地址
 axios.defaults.withCredentials = false;
 
-
 export const baseUrl = "http://192.168.199.102:9091";
 // export const baseUrl = "http://192.168.199.107:9091";
 /**
@@ -30,7 +29,10 @@ export const delApi = (data, url) => {
   return new axios({
     url: baseUrl + url,
     data: data,
-    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    },
     method: DELETE
   });
 };

@@ -18,7 +18,6 @@ export default {
   },
   mounted() {
     this.existActivity = this.$route.params.existActivity
-    console.log(this.$route.params.existActivity)
   }
 }
 </script>

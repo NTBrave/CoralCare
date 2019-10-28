@@ -67,7 +67,9 @@ export default {
       }
     };
   },
-  mounted: function() {},
+  mounted: function() {
+    this.getAllZhan();
+  },
   computed: {},
   methods: {
     //vuex mutation
@@ -82,7 +84,7 @@ export default {
           if (res.data.status === 200) {
             _this.setIsLogin(true);
             _this.getAllZhan();
-            this.$router.push("/manage");
+            // this.$router.push('/manage')
             // console.log(this.$store.state.isLogin);
           } else {
             this.$message.success("账号或密码错误");
@@ -113,9 +115,102 @@ export default {
           console.log(this.$store.state.PYZD);
         })
         .catch(err => {
-          this.$message.success("获取站点失败");
+          this.$message.error("获取站点失败");
           console.log(err);
         });
+
+      // .catch(err => {
+      // console.log(err);
+      // });
+      this.$router.push("/manage");
+      // let _this = this;
+      // _this.LoginLoading = true;
+      // Api.Login(this.loginData.user, this.loginData.pwd)
+      // .then(res => {
+      //   _this.$store.commit("setUserInforFromAppVue", res.data.data);
+      //   if (res.data.status === 200) {
+      //     _this.loginData.isLogin = true;
+      //     _this.loginData.visible = false;
+      //     _this.loginData.currentUserName = res.data.data.userInfo.username;
+      //     _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
+      //     _this.loginData.currentUserEmail = res.data.data.userInfo.email;
+      //     _this.loginData.isLogin = true;
+      //     Message({
+      //       message: "用户登陆 成功",
+      //       center: true,
+      //       type: "success",
+      //       showClose: true,
+      //       customClass: "zZindex"
+      //     });
+      //   } else {
+      //     Message({
+      //       message: res.data.msg,
+      //       center: true,
+      //       type: "warning",
+      //       showClose: true,
+      //       customClass: "zZindex"
+      //     });
+      //   }
+      // })
+      // .catch(err => {
+      //   console.log(err);
+      //   this.LoginLoading = false;
+      //   Message({
+      //     message: "账号密码不正确 " + err,
+      //     center: true,
+      //     type: "warning",
+      //     showClose: true,
+      //     customClass: "zZindex"
+      //   });
+      // });
+    },
+
+    logout() {
+      let _this = this;
+      Api.Logout()
+        .then(res => {
+          if (res.data.status === 200) {
+            _this.loginData.isLogin = false;
+            _this.loginData.visible = true;
+            Message({
+              message: "注销登陆 成功",
+              center: true,
+              type: "success",
+              showClose: true,
+              customClass: "zZindex"
+            });
+          } else {
+            alert(res.data.msg);
+          }
+        })
+        .catch(err => {
+          Message({
+            message: "注销登陆 失败",
+            center: true,
+            type: "warning",
+            showClose: true,
+            customClass: "zZindex"
+          });
+          _this.handleError(err);
+        });
+    },
+
+    cancelLogin() {
+      this.loginData.visible = false;
+      Message({
+        message: "未登录",
+        center: true,
+        showClose: true,
+        customClass: "zZindex"
+      });
+    },
+
+    changeRoute(index) {
+      if (index == "2-1") {
+        this.$router.push("/manage");
+      } else if (index == "1") {
+        this.$router.push("/manage/user");
+      }
     }
   }
 };

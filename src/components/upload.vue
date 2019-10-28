@@ -1,5 +1,5 @@
 <template>
-  <div :closable="false" @close="close" v-show="uploadVisiable" class="uploadRoot">
+  <div :closable="false" v-show="uploadVisiable" class="uploadRoot">
     <el-upload class="avatar-upload" drag multiple action :http-request="uploadProcess">
       <i class="el-icon-plus"></i>
       <div>
@@ -11,50 +11,54 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import * as Api from "../api/api";
-import * as DEFAULT from "../json/default";
-import { Message } from "element-ui";
-import * as ENTITY from "../json/entity";
+import { mapState } from 'vuex'
+import * as Api from '../api/api'
+import * as DEFAULT from '../json/default'
+import { Message } from 'element-ui'
+import * as ENTITY from '../json/entity'
 
 export default {
-  name: "Upload",
+  name: 'Upload',
   computed: {
-    ...mapState(["uploadVisiable"])
+    ...mapState(['uploadVisiable'])
   },
   //父节点残肢记录id、残肢档案id
+<<<<<<< HEAD
   props: ["masterid", "czda_spaid"],
+=======
+  props: ['masterid', 'czda_spaid'],
+>>>>>>> 0da4629b55a74547a806a6fcb48c764cb030ff88
   // props: ["currentResourceId"],
   data() {
     return {
       // 上传
-    };
+    }
   },
   methods: {
     uploadProcess(params) {
       // 通用变量 初始化
       let uploadData = {
-        url: "",
-        objectName: "",
-        file_id: "",
-        fileExtension: "",
-        currentUserId: ""
-      };
+        url: '',
+        objectName: '',
+        file_id: '',
+        fileExtension: '',
+        currentUserId: ''
+      }
 
-      this.beforeUpload(params, uploadData);
+      this.beforeUpload(params, uploadData)
     },
     beforeUpload(params, uploadData) {
-      let _this = this;
-      uploadData.fileExtension = params.file.name.split(".")[
-        params.file.name.split(".").length - 1
-      ];
+      let _this = this
+      uploadData.fileExtension = params.file.name.split('.')[
+        params.file.name.split('.').length - 1
+      ]
 
       // 从服务器获取一个URL
-      this.policy(params, uploadData);
+      this.policy(params, uploadData)
     },
     // 从服务器获取一个URL
     policy(params, uploadData) {
-      let _this = this;
+      let _this = this
 
       // var data = JSON.stringify({
       //   ext: uploadData.fileExtension,
@@ -62,30 +66,41 @@ export default {
       // });
       var data = JSON.stringify({
         ext: uploadData.fileExtension
+<<<<<<< HEAD
       });
       console.log(uploadData);
+=======
+      })
+      console.log(data)
+>>>>>>> 0da4629b55a74547a806a6fcb48c764cb030ff88
 
       $.ajax({
-        type: "post",
-        url: Api.baseUrl + "/file/upload",
+        type: 'post',
+        url: Api.baseUrl + '/file/upload',
         data: data,
         async: false,
-        contentType: "application/json",
+        contentType: 'application/json',
         xhrFields: {
           withCredentials: false //跨域记得该改这里
         },
         crossDomain: true,
         success: function(datas) {
+<<<<<<< HEAD
           console.log(datas.response);
           uploadData.url = datas.response;
           console.log(uploadData.url);
+=======
+          console.log(datas)
+          uploadData.url = datas.response.url
+          console.log(uploadData.url)
+>>>>>>> 0da4629b55a74547a806a6fcb48c764cb030ff88
 
           // uploadData.currentUserId = datas.data.creator;
 
-          let strings = uploadData.url.split("/");
-          uploadData.objectName = "";
+          let strings = uploadData.url.split('/')
+          uploadData.objectName = ''
           for (var i = 4; i < strings.length - 1; i++) {
-            uploadData.objectName += strings[i] + "/";
+            uploadData.objectName += strings[i] + '/'
           }
 
           //  let newURl = "http:";
@@ -98,13 +113,13 @@ export default {
           // }
           // uploadData.url = newURl;
 
-          uploadData.file_id = strings[strings.length - 1].split("?")[0];
+          uploadData.file_id = strings[strings.length - 1].split('?')[0]
           // 存储在oss里的key
-          uploadData.objectName += uploadData.file_id;
-          console.log(uploadData.file_id, uploadData.objectName);
+          uploadData.objectName += uploadData.file_id
+          console.log(uploadData.file_id, uploadData.objectName)
 
           // 上传文件
-          _this.uploadFile(params, uploadData);
+          _this.uploadFile(params, uploadData)
           // uploadData.url = datas.data.url;
           // uploadData.currentUserId = datas.data.creator;
 
@@ -121,47 +136,48 @@ export default {
           // _this.uploadFile(params, uploadData);
         }
         // error: _this.handleError() 有点忘了是不是这个函数。。
-      });
+      })
     },
     //覆盖默认的上传行为，可以自定义上传的实现
     uploadFile(params, uploadData) {
       // 临时变量
-      let _this = this;
-      let file = params.file;
-      let xhr = new XMLHttpRequest();
+      let _this = this
+      let file = params.file
+      let xhr = new XMLHttpRequest()
 
       // 监听上传进度 中间函数计算已经上传的进度 大小/总量
       //
       xhr.upload.addEventListener(
-        "progress",
+        'progress',
         function(evt) {
-          var percentComplete = Math.round((evt.loaded * 100) / evt.total);
+          var percentComplete = Math.round((evt.loaded * 100) / evt.total)
           if (percentComplete > 50) {
-            percentComplete -= 2;
+            percentComplete -= 2
           }
           params.onProgress({
             //减少2 永不显示100% 避免后端响应太慢产生100%误会
             percent: percentComplete
-          });
+          })
         },
         false
-      );
-      xhr.open("PUT", uploadData.url, true);
-      xhr.send(file);
+      )
+      xhr.open('PUT', uploadData.url, true)
+      xhr.send(file)
       xhr.onload = () => {
         if (xhr.status == 200) {
           // console.log("uploadFile ",xhr.status);
           // 调用afterUpload
-          params.onSuccess("上传成功");
+          params.onSuccess('上传成功')
 
           // 上传成功
-          _this.afterUpload(params, uploadData);
+          _this.afterUpload(params, uploadData)
         } else {
-          _this.handleError();
+          _this.handleError()
         }
-      };
+      }
     },
     afterUpload(params, uploadData) {
+<<<<<<< HEAD
       let _this = this;
       let file = params.file;
       //上传成功之后 新建照片节点
@@ -176,6 +192,21 @@ export default {
       Api.reqApi(imgNodeData, "/tree/create").then(res => {
         console.log(res);
       });
+=======
+      let _this = this
+      let file = params.file
+      //上传成功之后 新建照片节点
+      let imgNodeData = ENTITY.P01
+      imgNodeData.Jobs[0].MasterSpaId = _this.masterid
+      imgNodeData.Jobs[0].Object.ExtendData.czjl_spaid = _this.masterid
+      imgNodeData.Jobs[0].Object.ExtendData.czda_spaid = _this.czda_spaid
+      imgNodeData.Jobs[0].Object.ExtendFileData.file_id = uploadData.url
+      imgNodeData.Jobs[0].Object.ExtendFileData.mine_type =
+        uploadData.fileExtension
+      Api.reqApi(imgNodeData, '/tree/create').then(res => {
+        console.log(res)
+      })
+>>>>>>> 0da4629b55a74547a806a6fcb48c764cb030ff88
       // 上传成功后更新meta
       // let data = JSON.stringify({
       //   title: file.name.substring(0, file.name.lastIndexOf(".")),
@@ -217,11 +248,11 @@ export default {
       // });
     },
     handleError(err) {
-      console.log(err);
-      Message.warning(DEFAULT.defaultNetwordError);
+      console.log(err)
+      Message.warning(DEFAULT.defaultNetwordError)
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

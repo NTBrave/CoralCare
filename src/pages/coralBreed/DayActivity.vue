@@ -378,8 +378,6 @@ export default {
     // console.log(from)
     // console.log(next)
     next(vm => {
-      vm.setCalendarShowActivity(true)
-
       // console.log(vm.$store.getters.getCalendarShowActivity)
     })
     // console.log('333')

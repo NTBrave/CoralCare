@@ -455,104 +455,51 @@ export const R02 = {
 export const R03 =
 
 {
-    "JobType": "flow",
-    "JobHandler": "CZJLHandler",		//残枝记录Handler
-    "Jobs": [
+    "JobType":"flow",
+    "JobHandler":"SCZYJobHandler",		//残枝记录Handler
+    "Jobs":[
         {							//创建首次暂养记录之前必须先创建残枝档案
-            "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZDAROOT",
-            "Object": {
-                "ExtendType": "CZDA",
-                "ExtendData": {
-                    "haopai_color": "",
-                    "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
+            "Method":"create",
+            "MasterSpaId":"masterid",
+            "MasterExtendType":"CZDAROOT",		//父节点:[/残枝档案]
+            "Object":{
+                "ExtendType":"CZDA",			//新建节点:[/残枝1]
+                "ExtendData":{
+                    "haopai_color":"",
+                    "haopai_number":"",
+                    "order_spaid":"",		//外键 所属珊瑚目
+                    "family_spaid":"",		//外键 所属珊瑚科
+                    "genus_spaid":"",		//外键 所属珊瑚属
+                    "pyzd_spaid":"",	//外键 所属培育站点
+                    "stage":"暂养",		//培育阶段 暂养|回播
+                    "quyu_spaid":"",		//外键 所属采集区域
+                    "miaopu_spaid":"",		//外键 所属（暂养）苗圃
+                    "fenqu_spaid":"",		//外键 所属（暂养）分区
+                    "yangxian_spaid":"",	//外键 所属（回播）样线
+                    "fenduan_spaid":"",		//外键 所属（回播）分段
+                    "starred":"",	//是否关注 0 1
+                    "ended":"",		//是否完结 0 1
+                    "label":"",
+                    "comment":""
                 }
             }
         },
         {
-            "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
-            "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
-                "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
-                    "height": "",
-                    "area": "",
-                    "comment": ""
-                }
-            }
-        }
-    ]
-}
-//R-04 新建暂养巡检记录
-export const R04 =
-{
-    "JobType": "flow",
-    "JobHandler": "CZJLHandler",		//残枝记录Handler
-    "Jobs": [
-        {
-            "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
-            "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
-                "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "status": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
-                    "height": "",
-                    "area": "",
-                    "comment": ""
-                }
-            }
-        },
-        {							//创建记录必须要更新档案
-            "Method": "update",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZDAROOT",
-            "Object": {
-                "ExtendType": "CZDA",
-                "ExtendData": {
-                    "haopai_color": "",
-                    "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
+            "Method":"create",
+            "MasterSpaId":"masterid",
+            "MasterExtendType":"CZHD",			//父节点:[/残枝活动]
+            "Object":{
+                "ExtendType":"CZJL",			//新建节点:[/残枝记录]	
+                "ExtendData":{
+                    "czhd_spaid":"czhd_spaid",		//外键 所属残枝活动
+                    "timestamp":"",
+                    "status":"部分白化",			 //残枝状态
+                    "lightest_color":"",			//颜色-最浅
+                    "darkest_color":"",				//颜色-最深
+                    "height_area_both":"2",			//高度/面积/两者 0 1 2
+                    "height":"",
+                    "area":"",
+                    "comment":""                    
                 }
             }
         }
@@ -787,6 +734,55 @@ export const P03 = {
         }
     ]
 }
+
+// 获取珊瑚品种
+export const species_01 = {
+    "JobType":"single",
+    "Jobs":[
+        {
+            "Method":"select",
+            "MasterSpaId":"7270dc1d-3aab-418f-995b-9bfbf7075288",
+            "MasterExtendType":"SHPZ",      
+            "NeedFK":"false",               
+            "Where":[
+               
+            ],
+            "Order":[
+                {
+                    
+                }
+            ],
+            "GroupBy":[
+                {}
+            ]
+        }
+    ]
+}
+
+// 获取暂养区域的苗圃分区
+export const ZYQY_01 = {
+    "JobType":"single",
+    "Jobs":[
+        {
+            "Method":"select",
+            "MasterSpaId":"",
+            "MasterExtendType":"",      
+            "NeedFK":"false",               
+            "Where":[
+               
+            ],
+            "Order":[
+                {
+                    
+                }
+            ],
+            "GroupBy":[
+                {}
+            ]
+        }
+    ]
+}
+
 
 
 

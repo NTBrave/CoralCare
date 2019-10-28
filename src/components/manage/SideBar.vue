@@ -4,7 +4,6 @@
       <img src="../../assets/logo.png" />
     </div>
     <el-menu
-
       :default-active="selectedKeys"
       mode="vertical"
       background-color="#fff"
@@ -129,7 +128,6 @@ export default {
   },
   methods: {
     changeRoute(e) {
-      console.log(e)
       if (e && e.indexOf('null') === -1) {
         this.$router.push(e)
       }

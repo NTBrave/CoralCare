@@ -69,16 +69,16 @@ export default {
           segmentation: '' // 分段
         }
       },
-      breedData: {
-        // 创建档案表单
-        signColor: '',
-        signNumber: '',
-        breedArea: {
-          firstArea: 'A',
-          nursery: '', // 苗圃
-          partition: '' // 分区
-        }
-      },
+      // breedData: {
+      //   // 创建档案表单
+      //   signColor: '',
+      //   signNumber: '',
+      //   breedArea: {
+      //     firstArea: 'A',
+      //     nursery: '', // 苗圃
+      //     partition: '' // 分区
+      //   }
+      // },
       recordData: {
         // 更新记录表单
         state: '', // 状态
