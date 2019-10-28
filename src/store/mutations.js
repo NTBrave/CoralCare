@@ -1,65 +1,202 @@
 const mutations = {
-  /**
-   *  登陆部分
-   */
-  //设置登陆状态
-  setIsLogin(state, bo) {
-    state.isLogin = bo;
-  },
-  //设置培育站点
-  setPYZD(state, arr) {
-    // console.log(arr);
-    state.PYZD = arr;
-  },
+    setIsHome(state, home) {
+        state.isHome = home;
+        // console.log(state.isHome);
+    },
+    setmenu(state, newMenu) {
+        // console.log("vuex: ", newMenu)
+        state.menu.Show = newMenu.Show;
+        state.menu.Left = newMenu.Left;
+        state.menu.Top = newMenu.Top;
+    },
+    setUserInforFromAppVue(state, infor) {
+        state.userInformation = infor;
+    },
+    setwhatSizeCard(state, size) {
+        state.whatSizeCard = size;
+    },
+    setIdOfThePathJust(state, id) {
+        state.idOfThePathJust = id;
+    },
+    setTypeOfThePathJust(state, type) {
+        state.typeOfThePathJust = type;
+    },
 
-  // 缓存当前选择的站点编号
-  setCurrentZD(state, addressNum) {
-    state.currentZD = addressNum;
-  },
+    setDropdownKey1(state, key) {
+        state.dropdownKey1 = key;
+    },
+    setDropdownKey2(state, key) {
+        state.dropdownKey2 = key;
+    },
+    setDropdownKey3(state, key) {
+        state.dropdownKey3 = key;
+    },
+    setArea(state, area) {
+        state.area = area;
+    },
+    setMp(state, mp) {
+        state.mp = mp;
+    },
+    setGroup(state, group) {
+        state.group = group;
+    },
+    setCoralNumberStatistic(state, coralNumberStatistic) {
+        state.coralNumberStatistic = coralNumberStatistic;
+    },
 
-  // 缓存当前的作业列表
-  setWorkList(state, workList) {
-    state.workList.push(workList);
-  },
 
-  // 缓存作业下的活动列表
-  setActivityList(state, activityList) {
-    state.activityList.push(activityList);
-  },
+    setPathBackup(state, payload) {
+        state.pathBackup = payload.pathBackup;
+    },
+    setCurrentResourceBackup(state, payload) {
+        state.currentResourceBackup = payload.currentResourceBackup;
+    },
 
-  /**
-   *   后台管理端
-   */
+    setListOrNot(state, yesno) {
+        state.ListOrNot = yesno;
+    },
+    // visible
+    groupV(state) {
+        state.groupVisible = true;
+    },
+    // hidden
+    groupH(state) {
+        state.groupVisible = false;
+    },
 
-  // 设置当前创建的作业时间戳
-  setCurrentWork(state, timestamp) {
-    state.currentWork = timestamp;
-  },
+    docMetaV(state) {
+        state.docMetaVisible = true;
+    },
+    docMetaH(state) {
+        state.docMetaVisible = false;
+    },
 
-  // 缓存当前创建的下水作业对应的活动
-  setNowDivingActivitiesList(state, data) {
-    state.nowDivingActivitiesList.push(data);
-  },
+    dirMetaV(state) {
+        state.dirMetaVisible = true;
+    },
+    dirMetaH(state) {
+        state.dirMetaVisible = false;
+    },
 
-  // 缓存当前的活动编号
-  setNowDivingActivity(state, data) {
-    state.nowDivingActivity = data;
-  },
+    fileMetaV(state) {
+        state.fileMetaVisible = true;
+    },
+    fileMetaH(state) {
+        state.fileMetaVisible = false;
+    },
 
-  // 缓存当前页面对应的活动类型导航栏id
-  setActiveId(state, id) {
-    state.activeId = id;
-  },
+    changeNameV(state) {
+        state.changeNameVisible = true;
+    },
+    changeNameH(state) {
+        state.changeNameVisible = false;
+    },
 
-  // 缓存当前活动下对应的植株档案列表
-  setActivityFiles(state, filesList) {
-    state.activityFiles = filesList;
-  },
+    uploadV(state) {
+        state.uploadVisiable = true;
+    },
+    uploadH(state) {
+        state.uploadVisiable = false;
+    },
 
-  // 缓存当前正在操作的植株档案
-  setOperateFile(state, fileName) {
-    state.operateFile = fileName;
-  }
+    /**
+     *   后台管理端
+     */
+    // 改变在残枝培育页面时显示的时间地点按钮内容
+    setActivity(state, activity) {
+        state.activity = activity;
+    },
+
+    // 设置日历发起请求渲染有活动日期
+    setCalendarShowActivity(state, calendarShowActivity) {
+        state.calendarShowActivity = calendarShowActivity;
+    },
+
+    // 缓存当前创建的下水作业对应的活动
+    setNowDivingActivitiesList(state, data) {
+        state.nowDivingActivitiesList.push(data);
+    },
+
+    // 缓存当前的活动编号
+    setNowDivingActivity(state, data) {
+        state.nowDivingActivity = data;
+    },
+
+    // 缓存当前页面对应的活动类型导航栏id
+    setActiveId(state, id) {
+        state.activeId = id;
+    },
+
+    // 缓存当前活动下对应的植株档案列表
+    setActivityFiles(state, filesList) {
+        state.activityFiles = filesList;
+    },
+
+    // 缓存当前正在操作的植株档案
+    setOperateFile(state, fileName) {
+        state.operateFile = fileName;
+    },
+    /**
+     *  登陆部分
+     */
+    //设置登陆状态
+    setIsLogin(state, bo) {
+        state.isLogin = bo;
+    },
+    //设置培育站点
+    setPYZD(state, arr) {
+        // console.log(arr);
+        state.PYZD = arr;
+    },
+
+    // 缓存当前选择的站点编号
+    setCurrentZD(state, addressNum) {
+        state.currentZD = addressNum;
+    },
+
+    // 缓存当前的作业列表
+    setWorkList(state, workList) {
+        state.workList.push(workList);
+    },
+
+    // 缓存作业下的活动列表
+    setActivityList(state, activityList) {
+        state.activityList.push(activityList);
+    },
+
+    /**
+     *   后台管理端
+     */
+
+    // 设置当前创建的作业时间戳
+    setCurrentWork(state, timestamp) {
+        state.currentWork = timestamp;
+    },
+
+    // 缓存当前创建的下水作业对应的活动
+    setNowDivingActivitiesList(state, data) {
+        state.nowDivingActivitiesList.push(data);
+    },
+
+    // 缓存当前的活动编号
+    setNowDivingActivity(state, data) {
+        state.nowDivingActivity = data;
+    },
+
+    // 缓存当前页面对应的活动类型导航栏id
+    setActiveId(state, id) {
+        state.activeId = id;
+    },
+
+    // 缓存当前活动下对应的植株档案列表
+    setActivityFiles(state, filesList) {
+        state.activityFiles = filesList;
+    },
+
+    // 缓存当前正在操作的植株档案
+    setOperateFile(state, fileName) {
+        state.operateFile = fileName;
+    }
 };
 
 export default mutations;
