@@ -28,7 +28,7 @@
 
 
     <div>
-        <div class="dropdown-style2" style="display:inline-block">
+        <!-- <div class="dropdown-style2" style="display:inline-block">
             <span style="margin-right:20px;color:gray;">选择区域</span>
             <el-dropdown @command="handleCommand1" style="font-size:16px;color:black;">
             <span class="el-dropdown-link">
@@ -39,7 +39,7 @@
                 <el-dropdown-item v-for="area in this.$store.state.area" :key="area" :command="area">{{area}}</el-dropdown-item>              
             </el-dropdown-menu>
             </el-dropdown>
-        </div>
+        </div> -->
         <div class="dropdown-style2" style="display:inline-block">
             <span style="margin-right:20px;color:gray;">选择苗圃</span>
             <el-dropdown @command="handleCommand2" style="font-size:16px;color:black;">
@@ -102,18 +102,25 @@ export default {
     }
   },
   mounted: function() {
-    this.bodySize.height = document.body.clientHeight - 90 + 'px';
-    this.bodySize.width = document.body.clientWidth - 200 + 'px';
+   
     //初始化statistics和接口一,以及area
     //Axios.post('',{}).then(response=>{}).catch(error=>{});
-    Axios.post('',{}).then(response=>{
-      this.statistic=JSON.parse(response.data);
+    Axios.post('http://172.20.10.4:9091/data/init',{}).then(response=>{    
+      this.statistic=response.data;
     }).catch(error=>{});
-    Axios.post('',{area:'所有区域',mp:'所有苗圃',group:'所有分区'}).then(response=>{
-      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+    Axios.post('http://172.20.10.4:9091/data/result',{mp:'所有苗圃',group:'所有分区'}).then(response=>{
+     
+
+
+      this.$store.commit('setCoralNumberStatistic',response.data);
     }).catch(error=>{});
-    Axios.post('',{}).then(response=>{
-      this.$store.commit('setArea',JSON.parse(response.data));
+    // JSON.stringify({mp:''})
+    Axios.post('http://172.20.10.4:9091/data/select',{mp:''}).then(response=>{   
+       let arr=[]
+      for(let i=0;i<=response.data.length-1;i++){
+        arr[i]=response.data[i].substring(1);
+      }
+      this.$store.commit('setMp',arr);
     }).catch(error=>{});
   },
   components: { firstGraph, secondGraph, thirdGraph },
@@ -137,42 +144,47 @@ export default {
           break
       }
     },
-    handleCommand1(command){
-      //处理接口二
-      if(command==this.$store.state.dropdownKey1){
-            return;
-        }
-      this.$store.commit('setDropdownKey1',command);
-      this.$store.commit('setDropdownKey2','所有苗圃');
-      if(this.$store.state.dropdownKey3!='所有分区'){
-        let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
-        this.$store.commit('setDropdownKey3','所有分区');
-        this.$refs.comp.helpHandleCommand(num);
-      }
-      this.$store.commit('setGroup',[]);
-      Axios.post('',{area:command}).then(response=>{
-        this.$store.commit('setMp',JSON.parse(response.data));
-      }).catch(error=>{});
-      Axios.post('',{area:command,mp:'所有苗圃',group:'所有分区'}).then(response=>{
-      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
-      }).catch(error=>{});
-
-    },
+    // handleCommand1(command){
+    //   //处理接口二
+    //   if(command==this.$store.state.dropdownKey1){
+    //         return;
+    //     }
+    //   this.$store.commit('setDropdownKey1',command);
+    //   this.$store.commit('setDropdownKey2','所有苗圃');
+    //   if(this.$store.state.dropdownKey3!='所有分区'){
+    //     let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
+    //     this.$store.commit('setDropdownKey3','所有分区');
+    //     this.$refs.comp.helpHandleCommand(num);
+    //   }
+    //   this.$store.commit('setGroup',[]);
+    //   Axios.post('',{area:command}).then(response=>{
+    //     this.$store.commit('setMp',JSON.parse(response.data));
+    //   }).catch(error=>{});
+    //   Axios.post('',{area:command,mp:'所有苗圃',group:'所有分区'}).then(response=>{
+    //   this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+    //   }).catch(error=>{});
+    // },
      handleCommand2(command){
       if(command==this.$store.state.dropdownKey2){
             return;
         }
+     
       this.$store.commit('setDropdownKey2',command);
       if(this.$store.state.dropdownKey3!='所有分区'){
         let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
         this.$store.commit('setDropdownKey3','所有分区');
         this.$refs.comp.helpHandleCommand(num);
       }
-      Axios.post('',{area:this.$store.state.dropdownKey1,mp:command}).then(response=>{
-        this.$store.commit('setGroup',JSON.parse(response.data));
+      Axios.post('http://172.20.10.4:9091/data/select',{mp:command}).then(response=>{
+         let arr=[]
+      for(let i=0;i<=response.data.length-1;i++){
+        arr[i]=response.data[i].substring(1);
+      }
+
+        this.$store.commit('setGroup',arr);
       }).catch(error=>{});
-      Axios.post('',{area:this.$store.state.dropdownKey1,mp:command,group:'所有分区'}).then(response=>{
-      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+      Axios.post('http://172.20.10.4:9091/data/result',{mp:command,group:'所有分区'}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',response.data);
       }).catch(error=>{});
     },
     handleCommand3(command){
@@ -180,8 +192,8 @@ export default {
             return;
         }
       //处理接口二
-      Axios.post('',{area:this.$store.state.dropdownKey1,mp:this.$store.state.dropdownKey2,group:command}).then(response=>{
-      this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
+      Axios.post('http://172.20.10.4:9091/data/result',{mp:this.$store.state.dropdownKey2,group:command}).then(response=>{
+      this.$store.commit('setCoralNumberStatistic',response.data);
       }).catch(error=>{});
       if(command=='所有分区'){
             let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
@@ -207,9 +219,9 @@ export default {
   background-color:#00c8c8;
   border-radius:14px;
   line-height:28px;
-  width:240px;
+  width:300px;
   text-align:center;
-  margin-left:20px;
+  margin-left:40px;
 }
 .dropdown-item{
   overflow-y:auto;

@@ -83,8 +83,8 @@ const getters = {
             }
         }
         let rateX1 = ((800 / (dataX1.length + 1)) <= 100 ? (800 / (dataX1.length + 1)) : 100);
-        let rateX2 = ((800 / (dataX2.length + 1)) <= 100 ? (800 / (dataX2.length + 1)) : 100) * 0.6;
-        let rateX3 = ((800 / (dataX3.length + 1)) <= 100 ? (800 / (dataX3.length + 1)) : 100) * 0.6;
+        let rateX2 = ((400 / (dataX2.length + 1)) <= 100 ? (800 / (dataX2.length + 1)) : 100);
+        let rateX3 = ((400 / (dataX3.length + 1)) <= 100 ? (800 / (dataX3.length + 1)) : 100);
         return { dataX1, dataX2, dataX3, dataY1, dataY2, dataY3, dataY4, dataY5, rateX1, rateX2, rateX3, maxY1, maxY2, maxY3 }
     },
     getIfLogin(state) {
