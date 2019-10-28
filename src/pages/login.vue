@@ -67,7 +67,9 @@ export default {
       }
     }
   },
-  mounted: function() {},
+  mounted: function() {
+    this.getAllZhan()
+  },
   computed: {},
   methods: {
     //vuex mutation
@@ -82,7 +84,7 @@ export default {
           if (res.data.status === 200) {
             _this.setIsLogin(true)
             _this.getAllZhan()
-            this.$router.push('/manage')
+            // this.$router.push('/manage')
             // console.log(this.$store.state.isLogin);
           }
         })

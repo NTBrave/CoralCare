@@ -67,7 +67,7 @@ export default {
         },
         collectSite: this.$route.query.address,
         breedArea: {
-          firstArea: this.$route.query.address[0],
+          firstArea: '',
           nursery: '', // 苗圃
           partition: '' // 分区
         }
@@ -75,8 +75,8 @@ export default {
       recordData: {
         // 更新记录表单
         state: '', // 状态
-        penetrability: '', // 透光度
-        temperature: '', // 温度
+        // penetrability: '', // 透光度
+        // temperature: '', // 温度
         coralColor: {
           shallowColor: '', // 最浅颜色
           deepColor: '' // 最深颜色

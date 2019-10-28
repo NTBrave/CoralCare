@@ -37,6 +37,7 @@ export function createActivity(reqObj, spaid, options) {
   return newObj;
 }
 
+// 获取珊瑚品种
 export function requestSpecies(reqObj, spaid, extendType) {
   let newObj = deepCopy(reqObj);
   newObj.Jobs[0].MasterSpaId = spaid;
@@ -44,12 +45,20 @@ export function requestSpecies(reqObj, spaid, extendType) {
   return newObj;
 }
 
+// 获取暂养区域苗圃分区
+export function requestZYQY(reqObj, spaid, extendType) {
+  let newObj = deepCopy(reqObj);
+  newObj.Jobs[0].MasterSpaId = spaid;
+  newObj.Jobs[0].MasterExtendType = extendType;
+  return newObj;
+}
+
+// 新增首次暂养记录
 export function createR03(
   reqObj,
   MasterSpaId_1,
   MasterSpaId_2,
   ZD_spaid,
-  // CZHD_spaid,
   timestamp,
   fileForm,
   recordForm
@@ -65,6 +74,9 @@ export function createR03(
   extendData_1.family_spaid = fileForm.species.second;
   extendData_1.genus_spaid = fileForm.species.third;
   extendData_1.pyzd_spaid = ZD_spaid;
+  extendData_1.quyu_spaid = fileForm.breedArea.firstArea;
+  extendData_1.miaopu_spaid = fileForm.breedArea.nursery;
+  extendData_1.fenqu_spaid = fileForm.breedArea.partition;
 
   let extendData_2 = newObj.Jobs[1].Object.ExtendData;
   // extendData_2.czhd_spaid = CZHD_spaid;

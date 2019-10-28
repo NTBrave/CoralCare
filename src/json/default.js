@@ -1,21 +1,23 @@
-
-
 export const signColorList = [
   {
     label: "红",
-    value: "red"
+    value: "红",
+    color: "red"
   },
   {
     label: "黄",
-    value: "yellow"
+    value: "黄",
+    color: "yellow"
   },
   {
     label: "蓝",
-    value: "blue"
+    value: "蓝",
+    color: "blue"
   },
   {
     label: "绿",
-    value: "green"
+    value: "绿",
+    color: "green"
   }
 ];
 

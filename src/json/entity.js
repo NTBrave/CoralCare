@@ -767,6 +767,30 @@ export const species_01 = {
     ]
 }
 
+// 获取暂养区域的苗圃分区
+export const ZYQY_01 = {
+    "JobType":"single",
+    "Jobs":[
+        {
+            "Method":"select",
+            "MasterSpaId":"",
+            "MasterExtendType":"",      
+            "NeedFK":"false",               
+            "Where":[
+               
+            ],
+            "Order":[
+                {
+                    
+                }
+            ],
+            "GroupBy":[
+                {}
+            ]
+        }
+    ]
+}
+
 
 
 

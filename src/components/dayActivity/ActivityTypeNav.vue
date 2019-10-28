@@ -181,8 +181,8 @@ export default {
 
       // })
       let requestObj = createActivity(A02, this.work_spaid, this.form)
-      console.log(requestObj)
-      console.log(this.form)
+      // console.log(requestObj)
+      // console.log(this.form)
       reqApi(requestObj, '/tree/create').then(res => {
         if (res.data.status === 200) {
           console.log(res)

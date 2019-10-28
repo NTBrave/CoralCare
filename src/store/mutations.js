@@ -31,11 +31,6 @@ const mutations = {
    *   后台管理端
    */
 
-  // 设置日历发起请求渲染有活动日期
-  setCalendarShowActivity(state, calendarShowActivity) {
-    state.calendarShowActivity = calendarShowActivity;
-  },
-
   // 设置当前创建的作业时间戳
   setCurrentWork(state, timestamp) {
     state.currentWork = timestamp;
