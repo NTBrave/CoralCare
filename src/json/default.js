@@ -120,6 +120,28 @@ export const colorList = [
     color: '#4C200E'
   }
 ]
+export const colorObj = {
+  B2: '#E1EAAE',
+  B3: '#C1DA83',
+  B4: '#899D52',
+  B5: '#586832',
+  B6: '#223017',
+  C2: '#F9D2BC',
+  C3: '#F1915E',
+  C4: '#D86430',
+  C5: '#8A3820',
+  C6: '#510D0C',
+  D2: '#F7DA9F',
+  D3: '#F2A04C',
+  D4: '#CC7D3F',
+  D5: '#8F4124',
+  D6: '#73381C',
+  E2: '#EEEDA4',
+  E3: '#E2C96F',
+  E4: '#AC913D',
+  E5: '#764922',
+  E6: '#4C200E'
+}
 
 
 export const imgUrl = [

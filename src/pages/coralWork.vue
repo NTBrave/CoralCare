@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 100%;
+    <!-- <div style="width: 100%;
     height: 100%;
     justify-content: center;
     display: flex;">
@@ -9,13 +9,13 @@
     <div style="text-align: center;font-size: 3rem;font-weight: 300;">
       <div>WELCOME!</div>
       <div style="font-size: 3rem;">欢迎使用</div>
-    </div>
-    <!-- <Upload></Upload>
+    </div>-->
+    <Upload></Upload>
 
     <div>
       <el-button @click="delefile">删除</el-button>
       <el-button @click="down">下载</el-button>
-    </div>-->
+    </div>
   </div>
 </template>
 

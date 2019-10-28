@@ -10,7 +10,7 @@
           :model="loginData"
           :rules="loginData.rules"
         >
-          <el-form-item label="工号" prop="user">
+          <el-form-item label="账号" prop="user">
             <el-input v-model="loginData.user"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="pwd">
@@ -52,7 +52,7 @@ export default {
           user: [
             {
               required: true,
-              message: "请输入工号",
+              message: "请输入账号",
               trigger: "blur"
             }
           ],
@@ -84,6 +84,8 @@ export default {
             _this.getAllZhan();
             this.$router.push("/manage");
             // console.log(this.$store.state.isLogin);
+          } else {
+            this.$message.success("账号或密码错误");
           }
         })
         .catch(err => {

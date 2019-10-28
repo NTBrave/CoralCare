@@ -23,7 +23,7 @@ export default {
     ...mapState(["uploadVisiable"])
   },
   //父节点残肢记录id、残肢档案id
-  props: ["masterid","czda_spaid"],
+  props: ["masterid", "czda_spaid"],
   // props: ["currentResourceId"],
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
       var data = JSON.stringify({
         ext: uploadData.fileExtension
       });
-      console.log(data);
+      console.log(uploadData);
 
       $.ajax({
         type: "post",
@@ -76,8 +76,8 @@ export default {
         },
         crossDomain: true,
         success: function(datas) {
-          console.log(datas);
-          uploadData.url = datas.response.url;
+          console.log(datas.response);
+          uploadData.url = datas.response;
           console.log(uploadData.url);
 
           // uploadData.currentUserId = datas.data.creator;
@@ -164,16 +164,18 @@ export default {
     afterUpload(params, uploadData) {
       let _this = this;
       let file = params.file;
-      //上传成功之后 新建照片节点 
-      let imgNodeData =  ENTITY.P01;
+      //上传成功之后 新建照片节点
+      console.log(0);
+      let imgNodeData = ENTITY.P01;
       imgNodeData.Jobs[0].MasterSpaId = _this.masterid;
       imgNodeData.Jobs[0].Object.ExtendData.czjl_spaid = _this.masterid;
       imgNodeData.Jobs[0].Object.ExtendData.czda_spaid = _this.czda_spaid;
       imgNodeData.Jobs[0].Object.ExtendFileData.file_id = uploadData.url;
-       imgNodeData.Jobs[0].Object.ExtendFileData.mine_type = uploadData.fileExtension;
-       Api.reqApi(imgNodeData,"/tree/create").then(res=>{
-         console.log(res)
-       })
+      imgNodeData.Jobs[0].Object.ExtendFileData.mine_type =
+        uploadData.fileExtension;
+      Api.reqApi(imgNodeData, "/tree/create").then(res => {
+        console.log(res);
+      });
       // 上传成功后更新meta
       // let data = JSON.stringify({
       //   title: file.name.substring(0, file.name.lastIndexOf(".")),
@@ -208,11 +210,12 @@ export default {
       //   // error: _this.handleError() 有点忘了是不是这个函数。。
       // });
     },
-    // close() {
-    //   this.$store.commit({
-    //     type: "uploadH"
-    //   });
-    // },
+    close() {
+      return;
+      // this.$store.commit({
+      //   type: "uploadH"
+      // });
+    },
     handleError(err) {
       console.log(err);
       Message.warning(DEFAULT.defaultNetwordError);
