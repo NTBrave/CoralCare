@@ -27,11 +27,11 @@
         <div
           v-for="(item, idx) in reverseE_color"
           :key="idx"
-          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderLeft': '1px solid lightgray'}"
+          :style="{'width':'100%','height':'6vw','background': item.color,'textAlign': 'center','lineHeight':'6vw','color':'white','borderLeft': '1px solid lightgray'}"
         >{{item.name}}</div>
       </el-col>
       <el-col :span="22">
-        <div :style="{'width':'100%','height':'45vh'}">
+        <div :style="{'width':'100%','height':'30vw'}">
           <slot></slot>
         </div>
       </el-col>
@@ -39,7 +39,7 @@
         <div
           v-for="(item, idx) in colorList.C_color"
           :key="idx"
-          :style="{'width':'100%','height':'9vh','background': item.color,'textAlign': 'center','lineHeight':'9vh','color':'white','borderRight': '1px solid lightgray'}"
+          :style="{'width':'100%','height':'6vw','background': item.color,'textAlign': 'center','lineHeight':'6vw','color':'white','borderRight': '1px solid lightgray'}"
         >{{item.name}}</div>
       </el-col>
     </el-row>

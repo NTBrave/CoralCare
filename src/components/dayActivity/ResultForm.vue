@@ -80,6 +80,77 @@ export default {
       // console.log(this.imgUrlFormSwiper)
     },
 
+    typeForm(type) {
+      switch (type) {
+        case 'A1':
+          let A1Form = {
+            // 创建档案表单
+            signColor: '',
+            signNumber: '',
+            species: {
+              first: '', // 门纲
+              second: '', // 科目
+              third: '' // 属种
+            },
+            collectSite: this.$route.query.address,
+            breedArea: {
+              firstArea: '',
+              nursery: '', // 苗圃
+              partition: '' // 分区
+            }
+          }
+          return A1Form
+        case 'A2':
+          let A2Form = {
+            // 创建档案表单
+            signColor: '',
+            signNumber: '',
+            breedArea: {
+              firstArea: 'A',
+              nursery: '', // 苗圃
+              partition: '' // 分区
+            }
+          }
+          return A2Form
+        case 'A3':
+          let A3Form = {
+            sowData: {
+              signColor: '',
+              signNumber: '',
+              sowArea: {
+                firstArea: 'A',
+                line: '', // 样线
+                segmentation: '' // 分段
+              }
+            },
+            breedData: {
+              // 创建档案表单
+              signColor: '',
+              signNumber: '',
+              breedArea: {
+                firstArea: 'A',
+                nursery: '', // 苗圃
+                partition: '' // 分区
+              }
+            }
+          }
+          return A3Form
+        case 'A4':
+          let A4Form = {
+            signColor: '',
+            signNumber: '',
+            sowArea: {
+              firstArea: 'A',
+              line: '', // 样线
+              segmentation: '' // 分段
+            }
+          }
+          return A4Form
+        default:
+          return null
+      }
+    },
+
     edit() {
       this.$router.push({
         name: `build${this.$route.query.activityType}`,

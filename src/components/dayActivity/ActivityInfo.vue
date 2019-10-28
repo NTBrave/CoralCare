@@ -2,8 +2,8 @@
   <div class="infoRoot">
     <div class="bottonArea">
       <div v-if="!ifEdit">
-        <i :style="{'marginRight':'1vw'}" class="el-icon-s-operation" @click="editActivity"></i>
-        <i class="el-icon-delete" @click="deleteActivity"></i>
+        <i class="el-icon-s-operation" @click="editActivity"></i>
+        <i :style="{'cursor':'pointer'}" class="el-icon-delete" @click="deleteActivity"></i>
       </div>
       <div v-else>
         <el-button type="danger" round size="mini" @click="submitEdit">提交</el-button>
@@ -118,16 +118,35 @@ export default {
 
 <style lang="stylus" scoped>
 .infoRoot {
-  width: 25vw;
+  width: 25rem;
+  height: 35rem;
   min-width: 350px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   padding-top: 0.5vw;
+  font-size: 1rem;
 
   .bottonArea {
     text-align: right;
-    font-size: 2vw;
+    font-size: 1.5rem;
     margin-right: 1vw;
+
+    .el-icon-s-operation {
+      margin-right: 1vw;
+      cursor: pointer;
+
+      &:hover {
+        color: #3FC1CB;
+      }
+    }
+
+    .el-icon-delete {
+      cursor: pointer;
+
+      &:hover {
+        color: #FF6B6B;
+      }
+    }
   }
 
   .infoBoard {
@@ -136,11 +155,9 @@ export default {
     width: 100%;
     justify-content: center;
     align-items: center;
-    border: 1px solid red;
 
     .infoBody {
       width: 100%;
-      border: 1px solid green;
 
       .formItem {
         margin: 1vw auto;

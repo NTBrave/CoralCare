@@ -175,7 +175,7 @@ export default {
       // 根据时间地点活动等信息找到记录获得详细信息
       next(vm => {
         //
-        // vm.isSuccessResult = false
+        vm.isSuccessResult = false
       })
     } else next()
   }

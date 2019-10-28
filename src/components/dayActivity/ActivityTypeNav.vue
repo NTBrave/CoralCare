@@ -54,7 +54,10 @@
 import moment from 'moment'
 import ActivityTypeCardVue from './ActivityTypeCard'
 import { mapGetters, mapMutations } from 'vuex'
-import { newActivityType } from '../../api/api'
+import { reqApi } from '../../api/api'
+import { A02, A03, A04, A05 } from '../../json/entity'
+import { createActivity } from '../../util/apiCreator'
+import { activityTypes } from '../../json/default'
 export default {
   components: {
     'activity-card': ActivityTypeCardVue
@@ -63,40 +66,15 @@ export default {
     navType: {
       type: String,
       default: 'card'
+    },
+    existActivity: {
+      type: Array,
+      default: () => []
     }
-    // subNavType: {
-    //   type: String,
-    //   default: 'subCard'
-    // }
   },
   data() {
     return {
-      activityTypes: [
-        {
-          title: '新建首次暂养活动',
-          activityType: '首次暂养',
-          typeId: 'A1',
-          idx: 0
-        },
-        {
-          title: '新建暂养巡检活动',
-          activityType: '暂养巡检',
-          typeId: 'A2',
-          idx: 1
-        },
-        {
-          title: '新建首次回播活动',
-          activityType: '首次回播',
-          typeId: 'A3',
-          idx: 2
-        },
-        {
-          title: '新建回播巡检活动',
-          activityType: '回播巡检',
-          typeId: 'A4',
-          idx: 3
-        }
-      ],
+      activityTypes,
       dialogFormVisible: false,
       form: {
         // 提交的创建活动的表单信息
@@ -104,8 +82,8 @@ export default {
         activityNum: '',
         activityType: '',
         activityTime: '',
-        members: '-',
-        remarks: '-'
+        members: '',
+        remarks: ''
       },
       formLabelWidth: '100px',
 
@@ -123,17 +101,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activityTimeAddress: 'getActivity',
       acticityHadCreated: 'getNowDivingActivitiesList',
-      activeItem: 'getActiveId'
+      activeItem: 'getActiveId',
+      work_spaid: 'getCurrentWork_spaid',
+      activity_spaid: 'getCurrentActivity_spaid'
     })
   },
   methods: {
     ...mapMutations([
-      'setActivity',
       'setNowDivingActivitiesList',
       'setNowDivingActivity',
-      'setActiveId'
+      'setActiveId',
+      'setActivityList'
     ]),
 
     // 监听活动路由变化，显示对应导航栏样式
@@ -157,9 +136,9 @@ export default {
       let activityNum =
         this.activityTypes[index].typeId +
         '-' +
-        this.activityTimeAddress.address +
+        this.$route.query.address +
         '-' +
-        this.activityTimeAddress.timeNum
+        this.$route.query.time
 
       if (this.acticityHadCreated.indexOf(activityNum) !== -1) {
         this.setNowDivingActivity(activityNum)
@@ -168,8 +147,8 @@ export default {
           path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}/create`,
 
           query: {
-            time: this.activityTimeAddress.timeNum,
-            address: this.activityTimeAddress.address,
+            time: this.$route.query.time,
+            address: this.$route.query.address,
             activityType: this.activityTypes[index].typeId
           }
         })
@@ -184,10 +163,11 @@ export default {
           title: this.activityTypes[index].title,
           activityNum,
           activityType: this.activityTypes[index].activityType,
-          activityTime: moment(
-            this.activityTimeAddress.timeNum,
-            'YYYYMMDDHH'
-          ).format('YYYY年MM月DD日HH点')
+          activityTime: moment(this.$route.query.time, 'YYYYMMDDHH').format(
+            'YYYY年MM月DD日HH点'
+          ),
+          members: '',
+          remarks: ''
         }
       }
     },
@@ -195,12 +175,26 @@ export default {
     // 提交表单确定新建一个类型的活动，更新这次下水作业已创建的活动列表
     newAnActivity() {
       // 请求创建下水作业活动类型接口
-      // newActivityType(this.form).then(res => {
       // 若活动已存在，返回该下水作业下已创建的活动列表，对话框提醒用户活动已创建,是否前往活动添加记录页面
       //
       // 活动未创建，创建成功，更新当前下水作业已创建活动列表，前往活动添加记录页面
 
       // })
+      let requestObj = createActivity(A02, this.work_spaid, this.form)
+      // console.log(requestObj)
+      // console.log(this.form)
+      reqApi(requestObj, '/tree/create').then(res => {
+        if (res.data.status === 200) {
+          console.log(res)
+          let activityList = {}
+          activityList.activity_number =
+            res.data.response.CZHD.objects[0].principle.ExtendData.activity_number
+          activityList.czzy_spaid =
+            res.data.response.CZHD.objects[0].principle.ExtendData.czzy_spaid
+          activityList.SpaId = res.data.response.CZHD.objects[0].principle.SpaId
+          this.setActivityList(activityList) // 缓存创建成功返回的活动信息列表
+        }
+      })
 
       // 创建相应类型，更新当前下水作业已创建的活动类型列表
       this.activitiesList = this.form.activityNum
@@ -216,8 +210,8 @@ export default {
           2
         )}/create`,
         query: {
-          time: this.activityTimeAddress.timeNum,
-          address: this.activityTimeAddress.address,
+          time: this.$route.query.time,
+          address: this.$route.query.address,
           activityType: this.form.activityNum.slice(0, 2)
         }
       })
@@ -227,13 +221,12 @@ export default {
     }
   },
   mounted() {
-    let buildActivity = {
-      timeNum: sessionStorage.getItem('selectedTime'),
-      address: sessionStorage.getItem('selectedAddress')
-    }
-
-    this.setActivity(buildActivity)
     // console.log(this.$route.params)
+
+    // 将路由传来的已创建活动并入当前作业下已有的作业列表
+    if (this.$route.params.existActivity) {
+      this.activityList = this.$route.params.existActivity
+    }
 
     this.showActive()
   }

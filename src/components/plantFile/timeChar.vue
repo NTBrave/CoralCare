@@ -71,7 +71,7 @@ export default {
           }
         },
         toolbox: {
-          show: true,
+          show: false,
           left: "center",
           itemSize: 25,
           top: 55,
@@ -82,8 +82,8 @@ export default {
             restore: {},
             saveAsImage: {
               show: true,
-              type:"png",
-              name:"oneImg",
+              type: "png",
+              name: "oneImg",
               excludeComponents: ["toolbox"],
 
               pixelRatio: 2
@@ -137,9 +137,8 @@ export default {
             handle: {
               //拖拽按钮
               show: true,
-              icon: "image://http://dayy.xyz/resource/select.png"    
+              icon: "image://http://dayy.xyz/resource/select.png"
               // icon: require('../../assets/images/select.png')
-
             }
           },
           splitLine: {
@@ -153,7 +152,8 @@ export default {
           axisTick: {
             inside: true
           },
-          splitLine: {//分割竖杠
+          splitLine: {
+            //分割竖杠
             show: false
           },
           axisLabel: {
@@ -168,7 +168,8 @@ export default {
           right: 15,
           height: 160
         },
-        dataZoom: [//鼠标滚动缩放
+        dataZoom: [
+          //鼠标滚动缩放
           {
             type: "inside",
             throttle: 50

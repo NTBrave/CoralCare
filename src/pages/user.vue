@@ -50,7 +50,7 @@
           <p style="font-size:16px;">
             <b style="float: left;">主目录:</b>
           </p>
-          <div >
+          <div>
             <span v-for="(document, index) in master_dirs" :key="index">
               <el-button size="mini" @click="goMasterDirs(index)">{{document.title}}</el-button>
               <span class="el-icon-arrow-right"></span>
@@ -124,22 +124,22 @@ export default {
       _this.hava_infot = true;
     }
 
-    Api.getGroupOfUser()
-      .then(res => {
-        // console.log("getUser:", res);
-        if (res.data.status === 200) {
-          _this.group = res.data.data;
-          // console.log("getUser:", _this.group);
-          _this.userLoading = false;
-        } else {
-          Message.warning(res);
-          _this.userLoading = false;
-        }
-      })
-      .catch(err => {
-        Message.warning(err);
-        _this.userLoading = false;
-      });
+    // Api.getGroupOfUser()
+    //   .then(res => {
+    //     // console.log("getUser:", res);
+    //     if (res.data.status === 200) {
+    //       _this.group = res.data.data;
+    //       // console.log("getUser:", _this.group);
+    //       _this.userLoading = false;
+    //     } else {
+    //       Message.warning(res);
+    //       _this.userLoading = false;
+    //     }
+    //   })
+    //   .catch(err => {
+    //     Message.warning(err);
+    //     _this.userLoading = false;
+    //   });
   },
   methods: {
     updatePublicMsg() {

@@ -1,6 +1,6 @@
 <template>
   <div class="ActivityRoot">
-    <activity-nav></activity-nav>
+    <activity-nav :existActivity="existActivity"></activity-nav>
   </div>
 </template>
 
@@ -12,7 +12,12 @@ export default {
     'activity-nav': ActivityTypeNavVue
   },
   data() {
-    return {}
+    return {
+      existActivity: []
+    }
+  },
+  mounted() {
+    this.existActivity = this.$route.params.existActivity
   }
 }
 </script>

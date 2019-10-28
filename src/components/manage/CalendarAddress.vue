@@ -1,26 +1,34 @@
 <template>
   <div class="root">
     <div class="ifShowCalendar" @click="showDrawer">
-      <div class="time">{{activity.timeNum}}</div>
-      <div class="address">{{activity.address}}</div>
+      <div class="time">{{$route.query.time}}</div>
+      <div class="address">{{$route.query.address}}</div>
     </div>
     <show-drawer ref="drawer" @hide="requestBeforeHideDrawer">
       <div class="addressSlide">
         <el-carousel
-          height="180px"
+          height="200px"
           :autoplay="false"
           trigger="click"
           indicator-position="none"
-          @change="((pre, next) => {selectAddress(pre, next)})"
+          @change="(pre) => {selectAddress_debounce(pre)}"
         >
-          <el-carousel-item v-for="(item, idx) in address" :key="idx">
+          <el-carousel-item
+            v-for="(item, idx) in addressList"
+            :key="idx"
+            :style="{'height':'100%'}"
+          >
             <!-- <div class="image-cnt"> -->
             <!-- <img :src="item.img" ref="bannerHeight" @load="imgLoad(item.id)" />
             <span>{{item.name}}</span>-->
             <div
               class="image-cnt"
-              :style="{backgroundImage: 'url(' + item.img + ')', backgroundRepeat:'no-repeat', backgroundPosition:'center center', backgroundSize: 'contain'}"
-            ><span style="color: rgb(255, 255, 255);background-color: rgba(0,0,0,0.6);padding: 0.5rem;font-weight: 600;">{{item.id + item.name}}</span></div>
+              :style="{'backgroundImage': 'url(' + item.img + ')', 'backgroundRepeat':'no-repeat', 'backgroundPosition':'center center', 'backgroundSize': 'contain', }"
+            >
+              <p
+                style="color: rgb(20, 20, 20);background-color: rgba(255,255,255,0.4);padding: 5px;width: 250px;margin-bottom: 0"
+              >{{item.id + item.name}}</p>
+            </div>
             <!-- </div> -->
           </el-carousel-item>
         </el-carousel>
@@ -81,35 +89,35 @@
 // 日历语言
 import moment from 'moment'
 import 'moment/locale/zh-cn'
-import { getActivityDays } from '../../api/api'
 moment.locale('zh-cn')
 
 // 地点
-const address = [
-  {
-    id: 'A',
-    name: '大鹏大澳湾',
-    img: require('../../assets/images/A.jpg')
-    // img: '../../assets/logo.png'
-  },
-  {
-    id: 'B',
-    name: '大亚湾核电站',
-    img: require('../../assets/images/B.jpg')
-    // img: '../../assets/logo.png'
-  },
-  {
-    id: 'C',
-    name: '三门岛鬼湾',
-    img: require('../../assets/images/C.jpg')
-    // img: '../../assets/images/4.png'
-  },{
-     id: 'D',
-    name: '菲律宾',
-    img: require('../../assets/images/D.jpg')
-    // img: '../../assets/images/4.png'
-  }
-]
+// const address = [
+//   {
+//     id: 'A',
+//     name: '大鹏大澳湾',
+//     img: require('../../assets/images/A.jpg')
+//     // img: '../../assets/logo.png'
+//   },
+//   {
+//     id: 'B',
+//     name: '大亚湾核电站',
+//     img: require('../../assets/images/B.jpg')
+//     // img: '../../assets/logo.png'
+//   },
+//   {
+//     id: 'C',
+//     name: '三门岛鬼湾',
+//     img: require('../../assets/images/C.jpg')
+//     // img: '../../assets/images/4.png'
+//   },
+//   {
+//     id: 'D',
+//     name: '菲律宾',
+//     img: require('../../assets/images/D.jpg')
+//     // img: '../../assets/images/4.png'
+//   }
+// ]
 
 // 日历配置
 const locale = {
@@ -158,8 +166,10 @@ const locale = {
 // ]
 
 import DrawerVue from './Drawer.vue'
-import { mapGetters, mapMutations } from 'vuex'
-import { newDivingOperation } from '../../api/api'
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import { reqApi } from '../../api/api'
+import { W01, W03 } from '../../json/entity'
+import { debounce } from '../../util/requestLimit'
 
 export default {
   components: {
@@ -167,7 +177,7 @@ export default {
   },
   data() {
     return {
-      address,
+      // address,
       locale,
 
       bannerHeight: '', // 轮播图片
@@ -184,7 +194,7 @@ export default {
       ifNewActivity: true, // 是否显示新建活动按钮
       isTimeReady: true, // 是否能建活动
 
-      datesHaveActivity: []
+      datesHaveActivity: [] // 有作业的日期
     }
   },
   computed: {
@@ -192,9 +202,17 @@ export default {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      activity: 'getActivity',
-      showActivity: 'getCalendarShowActivity'
-    })
+      currentZD_data: 'getCurrentZD_data',
+      addressList: 'getAddressList'
+    }),
+
+    ...mapState(['currentZD']),
+
+    yearMonth() {
+      return (
+        this.dateNumber_review.slice(0, 6) || this.dateNumber_build.slice(0, 6)
+      )
+    }
   },
   watch: {
     selectHour: function() {
@@ -203,32 +221,26 @@ export default {
     },
     '$route.path': function() {
       if (this.$route.path !== '/manage/coralBreed/dayActivity') {
-        this.$refs.drawer.close()
+        this.closeDrawer()
       } else {
         this.showDrawer()
-
-        // this.showDrawer()
       }
-    },
-    showActivity: function() {
-      if (this.showActivity === true) {
-        // 请求有活动的日期
-        // console.log(this.dateNumber_review.slice(0, 6))
-        // this.setActivityDays(
-        //   this.dateNumber_review.slice(),
-        //   this.activityAddress
-        // )
-        this.setCalendarShowActivity(false)
-      }
-      // console.log(this.showActivity)
     }
   },
   methods: {
-    ...mapMutations(['setActivity', 'setCalendarShowActivity']),
+    ...mapMutations(['setCurrentZD', 'setWorkList', 'setCurrentWork']),
 
     // 点击打开抽屉
     showDrawer() {
+      this.setActivityDays(this.yearMonth)
+      this.todayHasActivity(moment())
       this.$refs.drawer.open()
+    },
+
+    // 关闭抽屉时清空selectHour
+    closeDrawer() {
+      this.$refs.drawer.close()
+      this.selectHour = ''
     },
 
     // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
@@ -240,20 +252,39 @@ export default {
       // }
       if (this.$route.path === '/manage/coralBreed/dayActivity') {
         this.dayActivity()
+      } else {
+        this.closeDrawer()
       }
-      this.$refs.drawer.close()
     },
 
-    selectAddress(pre, next) {
+    // 轮播图地点变动
+    selectAddress(pre) {
       this.addressIndex = pre
-      this.activityAddress = this.address[pre].id + this.address[pre].name
+      this.activityAddress =
+        this.addressList[pre].id + this.addressList[pre].name
+
+      this.setCurrentZD(this.addressList[pre].id) // 缓存选择的站点
+      console.log(this.currentZD_data(this.addressList[pre].id))
+
+      this.setActivityDays(moment().format('YYYYMM')) // 站点改变，月视图改变
+      this.todayHasActivity(moment())
     },
 
+    // 防抖，当选择地点稳定下来后请求数据
+    selectAddress_debounce: debounce(
+      function(pre) {
+        this.selectAddress(pre)
+      },
+      2000,
+      false
+    ),
+
+    // 切换年月视图时更新
     onPanelChange(value) {
-      // console.log(value.date().toString())
-      console.log(value.format('YYYYMM'))
-      // 切换年月视图时更新当前月视图有活动日期
-      // this.setActivityDays(value.format('YYYYMM'))
+      // 切换年月视图时更新当前月视图有作业日期
+
+      this.setActivityDays(value.format('YYYYMM'))
+      this.todayHasActivity(value)
     },
 
     // 日历时间选择
@@ -261,6 +292,7 @@ export default {
       // console.log(value)
       this.onPanelChange(value)
       this.chooseDate = value.format('M月D日  YYYY年')
+      this.dateNumber_build = value.format('YYYYMMDD')
       this.dateNumber_review = value.format('YYYYMMDD')
     },
 
@@ -269,7 +301,7 @@ export default {
       this.ifNewActivity = !this.ifNewActivity
     },
 
-    // 选择具体时间后才可以确认新建活动
+    // 选择具体时间后才可以确认新建残枝作业
     timeReady(hourTime) {
       if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
         if (hourTime < 10) {
@@ -290,87 +322,113 @@ export default {
     // 确定好时间地点后创建活动提交活动编号和地点，生成一次下水作业id
     submitTimeAddress() {
       // this.onSelect(moment())
-      let buildActivity = {
-        timeNum: this.dateNumber_build,
-        address: this.activityAddress
-      }
-
-      // 缓存选择的时间与地点，刷新页面时读取数据
-      sessionStorage.setItem('selectedTime', this.dateNumber_build)
-      sessionStorage.setItem('selectedAddress', this.activityAddress)
-
-      // this.$store.commit('setActivity', buildActivity)
-      this.setActivity(buildActivity)
-
+      W03.Jobs[0].MasterSpaId = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.ywsj_spaid
+      W03.Jobs[0].Object.ExtendData.pyzd_spaid = this.currentZD_data(
+        this.currentZD
+      ).SpaId
+      W03.Jobs[0].Object.ExtendData.timestamp = this.dateNumber_build
+      // W03.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
+      // W03.Jobs[0].Object.ExtendData.pyzd_spaid =
+      //   '10e489cb-aa38-47fa-ae49-fef7c2296977'
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
-      // newDivingOperation(buildActivity)
+      reqApi(W03, '/tree/create').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          console.log(res)
+          let newWork = {}
+          newWork.pyzd_spaid =
+            res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
+          newWork.timestamp =
+            res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
+          newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
+
+          this.setWorkList(newWork)
+          this.setCurrentWork(this.$route.query.time)
+          console.log(this.$store.state.workList)
+        }
+      })
 
       this.$router.push({
         name: `newActivity`,
         query: {
           // time: this.dateNumber_review,
           // address: this.activityAddress
-          time: this.activity.timeNum,
-          address: this.activity.address
+          time: this.dateNumber_build,
+          address: this.activityAddress
         }
       })
-      this.$refs.drawer.close()
+      this.closeDrawer()
     },
 
     // 点击查看当日活动
     dayActivity() {
-      let reviewActivity = {
-        timeNum: this.dateNumber_review,
-        address: this.activityAddress
-      }
-
-      // 缓存选择的时间与地点，刷新页面时读取数据
-      sessionStorage.setItem('selectedTime', this.dateNumber_review)
-      sessionStorage.setItem('selectedAddress', this.activityAddress)
-
-      // this.$store.commit('setActivity', reviewActivity)
-      this.setActivity(reviewActivity)
-
       this.$router.push({
         name: `dayActivity`,
         query: {
           // time: this.dateNumber_review,
           // address: this.activityAddress
-          time: this.activity.timeNum,
-          address: this.activity.address
+          time: this.dateNumber_review,
+          address: this.activityAddress
         }
       })
-      this.$refs.drawer.close()
+      this.closeDrawer()
     },
 
     // 当前月视图有活动的日期列表（需渲染不同样式）
     todayHasActivity(value) {
       let dateList
-      for (let i = 0; i < this.datesHaveActivity.length; i++) {
-        let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
-          'MMDD'
-        )
-        // console.log(date)
-        if (value.format('MMDD') === date) {
-          switch (this.datesHaveActivity[i].state) {
-            case 0:
-              dateList = {
-                color: 'rgba(255,255,255,1)'
-                // content: date.slice(2)
-              }
-              break
-            default:
+      if (this.datesHaveActivity.length > 0) {
+        for (let i = 0; i < this.datesHaveActivity.length; i++) {
+          let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
+            'MMDD'
+          )
+          if (value.format('MMDD') === date) {
+            switch (this.datesHaveActivity[i].state) {
+              case 0:
+                dateList = {
+                  color: 'rgba(255,255,255,1)'
+                  // content: date.slice(2)
+                }
+                break
+              default:
+            }
           }
         }
+        return dateList || null
       }
-      return dateList || null
+      // else {
+      //   return null
+      // }
     },
 
     // 设置当前月视图有活动的日期
     setActivityDays(yearMonth) {
-      // getActivityDays(yearMonth).then(res => {
-      //   console.log(res)
-      // })
+      // 逻辑赋值
+      W01.Jobs[0].MasterSpaId = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.ywsj_spaid
+      W01.Jobs[0].Where[0].Operator.Value = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.ywsj_spaid
+      // W01.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
+      // W01.Jobs[0].Where[0].Operator.Value =
+      //   '737ee050-7f45-4dc7-b276-59b410581cc8'
+      W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`
+      reqApi(W01, '/tree/select').then(res => {
+        // console.log(res)
+        if (res.data.response) {
+          for (let i of res.data.response.CZZY.objects) {
+            let obj = {}
+            obj.date = i.principle.ExtendData.timestamp
+            obj.state = 0
+            this.datesHaveActivity.push(obj)
+          }
+        } else {
+          this.datesHaveActivity = []
+        }
+      })
     }
 
     // 图片首次加载方法
@@ -390,8 +448,9 @@ export default {
     //   this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
     //   this.imgLoad(thils.addressIndex)
     // })
-
     this.onSelect(moment())
+    this.selectAddress(0)
+
     if (this.$route.path === '/manage/coralBreed/dayActivity') {
       this.showDrawer()
     }
@@ -417,22 +476,25 @@ export default {
 }
 
 .addressSlide {
-  width: 70%;
-  height: 9rem;
-  background-color: rgba(255 255 255 0.9);
+  // width: 300px;
+  // height: 200px;
+  // background-color: rgba(255 255 255 0.9);
   border-radius: 10px;
   // position: absolute;
   // left: 0;
   // top: 5%;
   // bottom: 0;
   // right: 0;
-  margin: 10% auto;
+  margin: 10% auto 5% auto;
+  overflow: auto;
 
   .image-cnt {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
     width: 100%;
-    height: 100%;
-    text-align: center;
-    line-height: 9rem;
+    height: 94%;
+    // text-align: center;
   }
 }
 
