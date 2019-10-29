@@ -539,7 +539,7 @@ export const R05 =
 
 {
     "JobType":"flow",
-    "JobHandler":"CZJLHandler",		//残枝记录Handler
+    "JobHandler":"",		//残枝记录Handler
     "Jobs":[
         {
             "Method":"create",
@@ -590,59 +590,85 @@ export const R05 =
     ]
 }
 //R-06 新建回播巡检记录
-export const R06 =
-
-{
-    "JobType": "flow",
-    "JobHandler": "CZJLHandler",		//残枝记录Handler
-    "Jobs": [
+export const R06 = {
+    "JobType":"single",
+    "JobHandler":"",		//残枝记录Handler
+    "Jobs":[
         {
-            "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
-            "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
-                "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
-                    "height": "",
-                    "area": "",
-                    "comment": ""
-                }
-            }
-        },
-        {							//创建记录必须要更新档案
-            "Method": "update",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZDAROOT",
-            "Object": {
-                "ExtendType": "CZDA",
-                "ExtendData": {
-                    "haopai_color": "",
-                    "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
+            "Method":"create",
+            "MasterSpaId":"masterid",		
+            "MasterExtendType":"CZHD",		//父节点:[/残枝活动]
+            "Object":{
+                "ExtendType":"CZJL",		//新建节点:[/残枝记录]
+                "ExtendData":{
+                    "czhd_spaid":"",
+                    "czda_spaid":"",
+                    "timestamp":"",
+                    "status":"",
+                    "lightest_color":"",
+                    "darkest_color":"",
+                    "height_area_both":"",
+                    "height":"",
+                    "area":"",
+                    "comment":""                    
                 }
             }
         }
     ]
 }
+// export const R06 =
+
+// {
+//     "JobType": "flow",
+//     "JobHandler": "CZJLHandler",		//残枝记录Handler
+//     "Jobs": [
+//         {
+//             "Method": "create",
+//             "MasterSpaId": "masterid",
+//             "MasterExtendType": "CZHD",
+//             "Object": {
+//                 "ExtendType": "CZJL",	//残枝记录	
+//                 "ExtendData": {
+//                     "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
+//                     "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
+//                     "timestamp": "2019090910",
+//                     "stage": "",						//残枝状态
+//                     "lightest_color": "",			//颜色-最浅
+//                     "darkest_color": "",				//颜色-最深
+//                     "height_area_both": "",			//高度/面积/两者 0 1 2
+//                     "height": "",
+//                     "area": "",
+//                     "comment": ""
+//                 }
+//             }
+//         },
+//         {							//创建记录必须要更新档案
+//             "Method": "update",
+//             "MasterSpaId": "masterid",
+//             "MasterExtendType": "CZDAROOT",
+//             "Object": {
+//                 "ExtendType": "CZDA",
+//                 "ExtendData": {
+//                     "haopai_color": "",
+//                     "haopai_number": "",
+//                     "mengang_spaid": "",
+//                     "muke_spaid": "",
+//                     "shuzhong_spaid": "",
+//                     "pyzd_spaid": "",
+//                     "stage": "",		//培育阶段 暂养|回播
+//                     "quyu_spaid": "",
+//                     "miaopu_spaid": "",
+//                     "fenqu_spaid": "",
+//                     "yangxian_spaid": "",
+//                     "fenduan_spaid": "",
+//                     "starred": "",	//是否关注 0 1
+//                     "ended": "",		//是否完结 0 1
+//                     "label": ""
+//                 }
+//             }
+//         }
+//     ]
+// }
 //R-07 更新记录
 export const R07 =
 

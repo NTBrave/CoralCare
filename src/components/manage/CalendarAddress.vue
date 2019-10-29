@@ -92,32 +92,32 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 // 地点
-const addressList = [
-  {
-    id: 'A',
-    name: '大澳湾',
-    img: require('../../assets/images/A.jpg')
-    // img: '../../assets/logo.png'
-  },
-  //   {
-  //     id: 'B',
-  //     name: '大亚湾核电站',
-  //     img: require('../../assets/images/B.jpg')
-  //     // img: '../../assets/logo.png'
-  //   },
-  {
-    id: 'B',
-    name: '三门岛',
-    img: require('../../assets/images/C.jpg')
-    // img: '../../assets/images/4.png'
-  }
-  //   {
-  //     id: 'D',
-  //     name: '菲律宾',
-  //     img: require('../../assets/images/D.jpg')
-  //     // img: '../../assets/images/4.png'
-  //   }
-]
+// const addressList = [
+// {
+// id: 'A',
+// name: '大澳湾',
+// img: require('../../assets/images/A.jpg')
+// img: '../../assets/logo.png'
+// },
+//   {
+//     id: 'B',
+//     name: '大亚湾核电站',
+//     img: require('../../assets/images/B.jpg')
+//     // img: '../../assets/logo.png'
+//   },
+// {
+// id: 'B',
+// name: '三门岛',
+// img: require('../../assets/images/C.jpg')
+// img: '../../assets/images/4.png'
+// }
+//   {
+//     id: 'D',
+//     name: '菲律宾',
+//     img: require('../../assets/images/D.jpg')
+//     // img: '../../assets/images/4.png'
+//   }
+// ]
 
 // 日历配置
 const locale = {
@@ -177,7 +177,7 @@ export default {
   },
   data() {
     return {
-      addressList, // beizhu1
+      // addressList, // beizhu1
 
       locale,
 
@@ -203,8 +203,8 @@ export default {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data'
-      // addressList: 'getAddressList'
+      currentZD_data: 'getCurrentZD_data',
+      addressList: 'getAddressList'
     }),
 
     ...mapState(['currentZD']),
@@ -265,6 +265,7 @@ export default {
         this.addressList[pre].id + this.addressList[pre].name
 
       this.setCurrentZD(this.addressList[pre].id) // 缓存选择的站点
+
       console.log(this.currentZD_data(this.addressList[pre].id))
 
       this.setActivityDays(moment().format('YYYYMM')) // 站点改变，月视图改变
@@ -454,8 +455,9 @@ export default {
     //   this.bannerHeight = this.$refs.bannerHeight[this.addressIndex].height
     //   this.imgLoad(thils.addressIndex)
     // })
+
+    // 初始化时间
     this.onSelect(moment())
-    this.selectAddress(0)
 
     if (this.$route.path === '/manage/coralBreed/dayActivity') {
       this.showDrawer()

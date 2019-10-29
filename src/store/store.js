@@ -81,7 +81,7 @@ const state = {
    *
    */
   PYZD: [], // 所有站点信息
-  currentZD: "B", // 当前选择的站点编号
+  currentZD: "", // 当前选择的站点编号
   workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
   activityList: [], // 本次已创建的活动列表(activity_number, czzy_spaid, SpaId)
 

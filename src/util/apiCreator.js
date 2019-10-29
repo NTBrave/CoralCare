@@ -97,8 +97,8 @@ export function createR03(
   return newObj;
 }
 
-// 新建暂养巡检记录;
-export function createR04(
+// 新建暂养巡检记录/回播巡检记录
+export function createR04_06(
   reqObj,
   czhd_spaid,
   czda_spaid,
@@ -151,13 +151,24 @@ export function createR05(
   return newObj;
 }
 
-// 获取指定残枝档案
-export function getCZDA(reqObj, breedForm) {
+// 获取指定残枝档案(暂养区域)
+export function getCZDA_ZY(reqObj, breedForm) {
   let newObj = deepCopy(reqObj);
   newObj.Jobs[0].Where[0].Operator.Value = breedForm.breedArea.firstArea;
   newObj.Jobs[0].Where[1].Operator.Value = breedForm.breedArea.nursery;
   newObj.Jobs[0].Where[2].Operator.Value = breedForm.breedArea.partition;
   newObj.Jobs[0].Where[3].Operator.Value = breedForm.signColor;
   newObj.Jobs[0].Where[4].Operator.Value = breedForm.signNumber;
+  return newObj;
+}
+
+// 获取指定残枝档案(回播区域)
+export function getCZDA_HB(reqObj, sowForm) {
+  let newObj = deepCopy(reqObj);
+  newObj.Jobs[0].Where[0].Operator.Value = sowForm.sowArea.firstArea;
+  newObj.Jobs[0].Where[1].Operator.Value = sowForm.sowArea.line;
+  newObj.Jobs[0].Where[2].Operator.Value = sowForm.sowArea.segmentation;
+  newObj.Jobs[0].Where[3].Operator.Value = sowForm.signColor;
+  newObj.Jobs[0].Where[4].Operator.Value = sowForm.signNumber;
   return newObj;
 }

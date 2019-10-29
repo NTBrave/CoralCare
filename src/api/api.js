@@ -11,6 +11,8 @@ axios.defaults.withCredentials = false;
 
 export const baseUrl = "http://192.168.199.102:9091";
 // export const baseUrl = "http://192.168.199.107:9091";
+// export const baseUrl = "http://192.168.199.102:8899";
+
 /**
  *   统一请求接口
  */

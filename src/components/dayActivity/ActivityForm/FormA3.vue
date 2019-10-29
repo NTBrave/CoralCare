@@ -182,7 +182,11 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
 import { ZYQY_HBQY, CZDA_01, R05 } from '../../../json/entity'
-import { requestZYQY_HBQY, getCZDA, createR05 } from '../../../util/apiCreator'
+import {
+  requestZYQY_HBQY,
+  getCZDA_ZY,
+  createR05
+} from '../../../util/apiCreator'
 import { debounce } from '../../../util/requestLimit'
 import { reqApi } from '../../../api/api'
 
@@ -276,13 +280,16 @@ export default {
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA() {
-      if (
+      let is = Boolean(
         this.breedForm.breedArea.firstArea &&
-        this.breedForm.breedArea.nursery &&
-        this.breedForm.breedArea.partition &&
-        this.breedForm.signColor
-      ) {
-        let requestObj = getCZDA(CZDA_01, this.breedForm)
+          this.breedForm.breedArea.nursery &&
+          this.breedForm.breedArea.partition &&
+          this.breedForm.signColor &&
+          this.breedForm.signNumber
+      )
+      console.log(is)
+      if (is) {
+        let requestObj = getCZDA_ZY(CZDA_01, this.breedForm)
         reqApi(requestObj, '/tree/select').then(res => {
           console.log(res)
           if (res.data.status === 200) {
@@ -293,10 +300,18 @@ export default {
               this.$message({
                 showClose: true,
                 message: '找不到残枝档案！',
-                type: 'error'
+                type: 'error',
+                duration: 4000
               })
             }
           }
+        })
+      } else {
+        this.$message({
+          showClose: true,
+          message: '残枝档案信息不完整！',
+          type: 'error',
+          duration: 4000
         })
       }
     },
