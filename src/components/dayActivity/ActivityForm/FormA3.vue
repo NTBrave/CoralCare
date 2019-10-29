@@ -3,42 +3,106 @@
     <el-form class="A-Two">
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
+          <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder></el-select>
+          <el-select v-model="breedForm.breedArea.firstArea" disabled placeholder>
+            <el-option
+              v-for="(item, idx) in ZY_quyu"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.line" placeholder="样线"></el-select>
+          <el-select v-model="breedForm.breedArea.nursery" placeholder="苗圃">
+            <el-option
+              v-for="(item, idx) in ZY_miaopu"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.segmentation" placeholder="分段"></el-select>
+          <el-select v-model="breedForm.breedArea.partition" placeholder="分区">
+            <el-option
+              v-for="(item, idx) in ZY_fenqu"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.signColor" placeholder="牌色"></el-select>
+          <el-select v-model="breedForm.signColor" placeholder="牌色">
+            <el-option
+              v-for="(item, idx) in signColorList"
+              :key="idx"
+              :label="item.label"
+              :value="item.value"
+              :color="item.color"
+            >
+              <span>{{item.label}}</span>
+              <span class="colorCircle" :style="{backgroundColor: item.color}"></span>
+            </el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.signNumber" placeholder="号码"></el-select>
+          <el-input v-model="breedForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
+          <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.firstArea" disabled placeholder></el-select>
+          <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder>
+            <el-option
+              v-for="(item, idx) in HB_quyu"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.nursery" placeholder="苗圃"></el-select>
+          <el-select v-model="sowForm.sowArea.line" placeholder="样线">
+            <el-option
+              v-for="(item, idx) in HB_yangxian"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="breedForm.breedArea.partition" placeholder="分区"></el-select>
+          <el-select v-model="sowForm.sowArea.segmentation" placeholder="分段">
+            <el-option
+              v-for="(item, idx) in HB_fenduan"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="breedForm.signColor" placeholder="牌色"></el-select>
+          <el-select v-model="sowForm.signColor" placeholder="牌色">
+            <el-option
+              v-for="(item, idx) in signColorList"
+              :key="idx"
+              :label="item.label"
+              :value="item.value"
+              :color="item.color"
+            >
+              <span>{{item.label}}</span>
+              <span class="colorCircle" :style="{backgroundColor: item.color}"></span>
+            </el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="breedForm.signNumber" placeholder="号码"></el-select>
+          <el-input v-model="sowForm.signNumber" placeholder="号码"></el-input>
         </el-col>
       </el-form-item>
     </el-form>
@@ -50,33 +114,15 @@
         </el-col>
         <el-col :span="20">
           <el-select v-model="recordForm.state" placeholder="请选择">
-            <el-option label="良好" value="0"></el-option>
-            <el-option label="部分白化" value="1"></el-option>
-            <el-option label="部分死亡" value="2"></el-option>
-            <el-option label="死亡" value="3"></el-option>
-            <el-option label="失踪" value="4"></el-option>
+            <el-option label="良好" value="良好"></el-option>
+            <el-option label="部分白化" value="部分白化"></el-option>
+            <el-option label="部分死亡" value="部分死亡"></el-option>
+            <el-option label="死亡" value="死亡"></el-option>
+            <el-option label="失踪" value="失踪"></el-option>
           </el-select>
         </el-col>
       </el-form-item>
-      <!-- <el-form-item :style="{border: 'none'}">
-        <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
-          <el-col :span="11">
-            <span :style="{marginLeft:'10px'}">透光度</span>
-          </el-col>
-          <el-col :span="13">
-            <el-input v-model="recordForm.penetrability" placeholder="请输入"></el-input>
-          </el-col>
-        </el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
-          <el-col :span="8">
-            <span :style="{marginLeft:'15px'}">温度</span>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="recordForm.temperature" placeholder="请输入"></el-input>
-          </el-col>
-        </el-col>
-      </el-form-item>-->
+
       <el-form-item>
         <el-col :span="5">
           <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
@@ -133,9 +179,13 @@
 </template>
 
 <script>
-// import {} from '../../api/api'
-import { mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
+import { ZYQY_HBQY, CZDA_01, R05 } from '../../../json/entity'
+import { requestZYQY_HBQY, getCZDA, createR05 } from '../../../util/apiCreator'
+import { debounce } from '../../../util/requestLimit'
+import { reqApi } from '../../../api/api'
+
 export default {
   props: {
     sowData: Object,
@@ -143,11 +193,78 @@ export default {
     recordData: Object,
     isCreated: Boolean
   },
-  watch: {},
+  computed: {
+    ...mapGetters({
+      currentZD_data: 'getCurrentZD_data',
+      currentActivity_spaid: 'getCurrentActivity_spaid'
+    }),
+    ...mapState(['currentZD'])
+  },
+  watch: {
+    // 根据苗圃显示分区
+    'breedForm.breedArea.nursery': function() {
+      this.ZY_fenqu = []
+      this.breedForm.breedArea.partition = ''
+
+      let fenqu = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.breedForm.breedArea.nursery,
+        'MP'
+      )
+      reqApi(fenqu, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.FQ.objects) {
+              let fenqu = {}
+              fenqu.name = i.principle.ExtendData.name
+              fenqu.spaid = i.principle.SpaId
+              this.ZY_fenqu.push(fenqu)
+            }
+          } else this.ZY_fenqu = []
+        }
+      })
+    },
+
+    // 根据样线显示分段
+    'sowForm.sowArea.line': function() {
+      this.HB_fenduan = []
+      this.sowForm.sowArea.segmentation = ''
+
+      let fenduan = requestZYQY_HBQY(ZYQY_HBQY, this.sowForm.sowArea.line, 'YX')
+      reqApi(fenduan, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.FD.objects) {
+              let fenduan = {}
+              fenduan.name = i.principle.ExtendData.name
+              fenduan.spaid = i.principle.SpaId
+              this.HB_fenduan.push(fenduan)
+            }
+          } else this.HB_fenduan = []
+        }
+      })
+    }
+  },
   data() {
     return {
       signColorList, // 牌色列表
       colorList,
+
+      // 暂养区域（区域、苗圃、分区）
+      ZY_quyu: [],
+      ZY_miaopu: [],
+      ZY_fenqu: [],
+
+      // 回播区域（区域、样线、分段）
+      HB_quyu: [],
+      HB_yangxian: [],
+      HB_fenduan: [],
+
+      // 获取的残枝档案spaid
+      file_spaid: '',
+      record_spaid: '',
 
       sowForm: this.sowData,
       breedForm: this.breedData,
@@ -157,21 +274,83 @@ export default {
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
+    // 根据最后的号码输入框改变请求 残枝档案spaid
+    requestCZDA() {
+      if (
+        this.breedForm.breedArea.firstArea &&
+        this.breedForm.breedArea.nursery &&
+        this.breedForm.breedArea.partition &&
+        this.breedForm.signColor
+      ) {
+        let requestObj = getCZDA(CZDA_01, this.breedForm)
+        reqApi(requestObj, '/tree/select').then(res => {
+          console.log(res)
+          if (res.data.status === 200) {
+            if (res.data.response) {
+              this.file_spaid =
+                res.data.response.CZDA.objects[0].principle.SpaId
+            } else {
+              this.$message({
+                showClose: true,
+                message: '找不到残枝档案！',
+                type: 'error'
+              })
+            }
+          }
+        })
+      }
+    },
+
+    requestCZDA_debounce: debounce(
+      function() {
+        this.requestCZDA()
+      },
+      1000,
+      false
+    ),
+
+    // 向父组件传递 档案spaid 和 记录spaid
+    sendSpaid() {
+      this.$emit('func', this.file_spaid, this.record_spaid)
+    },
+
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
+      let newR05 = createR05(
+        R05,
+        this.currentActivity_spaid,
+        this.file_spaid,
+        this.currentZD_data(this.currentZD).SpaId,
+        this.$route.query.time,
+        this.sowForm,
+        this.recordForm
+      )
 
-      this.$message({
-        showClose: true,
-        message: '数据已成功录入！',
-        type: 'success'
-      })
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+      console.log(newR05)
+      reqApi(newR05, '/tree/flow').then(res => {
+        console.log(res)
+
+        if (res.data.status === 200) {
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
+          this.sendSpaid() // 向父组件传spaid
+
+          // 数据成功录入提醒
+          this.$message({
+            showClose: true,
+            message: '数据已成功录入！',
+            type: 'success'
+          })
+
+          // 携带参数路由跳转
+          this.$router.push({
+            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+            query: {
+              time: this.$route.query.time,
+              address: this.$route.query.address,
+              activityType: this.$route.query.activityType
+            }
+          })
         }
       })
     },
@@ -190,10 +369,77 @@ export default {
           activityType: this.$route.query.activityType
         }
       })
+    },
+
+    // 初始化请求采集区域
+    requestCJQU() {
+      this.breedForm.breedArea.firstArea = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.zyqy_spaid
+      this.ZY_quyu = [
+        {
+          name: 'A',
+          spaid: this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid
+        }
+      ]
+      console.log(this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid)
+      let miaopu = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid,
+        'ZYQYROOT'
+      )
+      reqApi(miaopu, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.MP.objects) {
+              let miaopu = {}
+              miaopu.name = i.principle.ExtendData.name
+              miaopu.spaid = i.principle.SpaId
+              this.ZY_miaopu.push(miaopu)
+            }
+          } else this.ZY_miaopu = []
+        }
+      })
+    },
+
+    // 初始化请求回播区域
+    requestHBQY() {
+      this.sowForm.sowArea.firstArea = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.hbqy_spaid
+      this.HB_quyu = [
+        {
+          name: 'A',
+          spaid: this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid
+        }
+      ]
+      console.log(this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid)
+      let yangxian = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid,
+        'HBQYROOT'
+      )
+      reqApi(yangxian, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.YX.objects) {
+              let yangxian = {}
+              yangxian.name = i.principle.ExtendData.name
+              yangxian.spaid = i.principle.SpaId
+              this.HB_yangxian.push(yangxian)
+            }
+          } else this.HB_yangxian = []
+        }
+      })
     }
   },
 
-  mounted() {}
+  mounted() {
+    this.requestCJQU()
+    this.requestHBQY()
+  }
 }
 </script>
 
@@ -205,7 +451,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(75%, -50%);
 }
 
 .buttonArea {

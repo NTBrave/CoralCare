@@ -36,7 +36,7 @@
 
 <script >
 export default {
-  name: 'swiperper',
+  name: "swiperper",
   props: {
     imgHeight: Number,
     imgWidth: Number,
@@ -44,7 +44,6 @@ export default {
   },
   data() {
     return {
-     
       list: null,
       index: 0,
       // imgWidth: 180,
@@ -52,60 +51,62 @@ export default {
       // imgMargin: 2,
       allImg: null,
       num: 4,
-      signImgUrl: ''
-    }
+      signImgUrl: ""
+    };
   },
   //用的自定义组件
   components: {},
   mounted: function() {
-    this.list = document.getElementById('list')
-    this.allImg = document.getElementsByClassName('img-swiper')
-    this.allImg[this.index].classList.add('current-img')
-    this.imgLen = this.imgUrl.length - 1
-    this.selectOneImg(this.index)
+    this.list = document.getElementById("list");
+    this.allImg = document.getElementsByClassName("img-swiper");
+    if (this.allImg[this.index]) {
+      this.allImg[this.index].classList.add("current-img");
+      this.imgLen = this.imgUrl.length - 1;
+      this.selectOneImg(this.index);
+    }
   },
   methods: {
     move(offset) {
       //获取的是style.left，是相对左边获取距离，所以第一张图后style.left都为负值，
       if (this.index == 0) {
-        this.list.style.left = 0 + 'vw'
+        this.list.style.left = 0 + "vw";
       } else if (this.index > this.imgLen - this.num) {
         this.list.style.left =
-          -this.imgWidth * (this.imgUrl.length - this.num + 1) + 'vw'
+          -this.imgWidth * (this.imgUrl.length - this.num + 1) + "vw";
       } else {
         // console.log(this.list.style.left)
-        var newLeft = parseInt(this.list.style.left) + offset
+        var newLeft = parseInt(this.list.style.left) + offset;
 
-        this.list.style.left = newLeft + 'vw'
+        this.list.style.left = newLeft + "vw";
         // console.log('newLeft:', newLeft)
       }
     },
     prevOnclick() {
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = this.index > 0 ? this.index - 1 : 0
-      this.allImg[this.index].classList.add('current-img')
-      this.move(this.imgWidth)
-      this.selectOneImg(this.index)
+      this.allImg[this.index].classList.remove("current-img");
+      this.index = this.index > 0 ? this.index - 1 : 0;
+      this.allImg[this.index].classList.add("current-img");
+      this.move(this.imgWidth);
+      this.selectOneImg(this.index);
     },
     nextOnclick() {
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen
-      this.allImg[this.index].classList.add('current-img')
-      this.move(-this.imgWidth)
-      this.selectOneImg(this.index)
+      this.allImg[this.index].classList.remove("current-img");
+      this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
+      this.allImg[this.index].classList.add("current-img");
+      this.move(-this.imgWidth);
+      this.selectOneImg(this.index);
       // console.log(this.index)
     },
     selectOneImg(ind) {
       // console.log(this.index,ind,this.allImg);
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = ind
-      this.allImg[this.index].classList.add('current-img')
+      this.allImg[this.index].classList.remove("current-img");
+      this.index = ind;
+      this.allImg[this.index].classList.add("current-img");
 
-      this.$emit('selectOneImg', this.imgUrl[ind].url)
+      this.$emit("selectOneImg", this.imgUrl[ind].url);
     },
     deleteImg() {}
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

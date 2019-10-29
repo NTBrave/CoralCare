@@ -167,10 +167,13 @@ export default {
     this.recordInfor[5].color = DEFAULT.colorObj[light];
     this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
     //构建时间
-    this.recordInfor[6].msg = moment(
-      this.recordObj.ExtendData.timestamp,
-      "YYYYMMDDHH"
-    ).format("YYYY-MM-DD HH");
+    this.recordInfor[6].msg = moment(this.activty.time, "YYYYMMDDHH").format(
+      "YYYY-MM-DD HH"
+    );
+    // this.recordInfor[6].msg = moment(
+    //   this.recordObj.ExtendData.timestamp,
+    //   "YYYYMMDDHH"
+    // ).format("YYYY-MM-DD HH");
     //构建尺寸
     if (this.recordObj.ExtendData.height_area_both == 0) {
       this.recordInfor[7].msg = this.recordObj.ExtendData.height + "cm";
@@ -180,7 +183,7 @@ export default {
     //构建备注
     this.recordInfor[8].msg = this.recordObj.ExtendData.comment;
 
-    // console.log(this.recordObj);
+    console.log(this.activty);
     //获取这个记录的图片啦
     this.getImgUrl();
   },
@@ -229,7 +232,7 @@ export default {
       let _this = this;
       let imgNodeData = ENTITY.P04;
       imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
-      imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
+      // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
       Api.reqApi(imgNodeData, "/tree/select").then(res => {
         console.log("图片节点:", res);
         if (res.data.status === 200 && res.data.response) {

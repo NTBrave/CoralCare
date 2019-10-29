@@ -53,7 +53,7 @@
 <script>
 import moment from 'moment'
 import ActivityTypeCardVue from './ActivityTypeCard'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { reqApi } from '../../api/api'
 import { A02, A03, A04, A05 } from '../../json/entity'
 import { createActivity } from '../../util/apiCreator'
@@ -103,7 +103,7 @@ export default {
     ...mapGetters({
       acticityHadCreated: 'getNowDivingActivitiesList',
       activeItem: 'getActiveId',
-      work_spaid: 'getCurrentWork_spaid',
+      currentWorkInfo: 'getCurrentWork',
       activity_spaid: 'getCurrentActivity_spaid'
     })
   },
@@ -180,7 +180,13 @@ export default {
       // 活动未创建，创建成功，更新当前下水作业已创建活动列表，前往活动添加记录页面
 
       // })
-      let requestObj = createActivity(A02, this.work_spaid, this.form)
+
+      console.log(this.currentWorkInfo(this.$route.query.time))
+      let requestObj = createActivity(
+        A02,
+        this.currentWorkInfo(this.$route.query.time).SpaId,
+        this.form
+      )
       // console.log(requestObj)
       // console.log(this.form)
       reqApi(requestObj, '/tree/create').then(res => {

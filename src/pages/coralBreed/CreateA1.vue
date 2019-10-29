@@ -11,7 +11,12 @@
         ></file-list>
         <div class="form">
           <p>{{operateFile}}</p>
-          <activity-form :fileData="fileData" :recordData="recordData" :isCreated="isCreated"></activity-form>
+          <activity-form
+            :fileData="fileData"
+            :recordData="recordData"
+            :isCreated="isCreated"
+            @func="getSpaid"
+          ></activity-form>
         </div>
       </div>
     </div>
@@ -30,7 +35,7 @@
         <upload-border>
           <div class="imgUpload">
             <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load></up-load>
+            <up-load :masterid.sync="record_spaid" :czda_spaid.sync="file_spaid"></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -170,7 +175,10 @@ export default {
         // }
       ],
       isCreated: true,
-      imgUrlFormSwiper: ''
+      imgUrlFormSwiper: '',
+
+      file_spaid: '',
+      record_spaid: ''
     }
   },
   computed: {
@@ -183,6 +191,12 @@ export default {
   },
 
   methods: {
+    // 接收表单组件回传的 档案spaid 和 记录spaid
+    getSpaid(fileSpaid, recordSpaid) {
+      this.file_spaid = fileSpaid
+      this.record_spaid = recordSpaid
+    },
+
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)

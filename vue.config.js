@@ -8,7 +8,7 @@ module.exports = {
   //   devServer: {
   //     proxy: {
   //       '*': {
-  //         target: 'http://192.168.199.102:9091', //设置你调用的接口域名和端口号 别忘了加http
+  //         target: 'http://39.108.93.27/:9091', //设置你调用的接口域名和端口号 别忘了加http
   //         // target: 'http://39.108.210.48:8089',
   //         changeOrigin: true, //这里设置是否跨域
   //         secure: false,

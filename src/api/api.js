@@ -9,8 +9,15 @@ export const DELETE = "delete";
 //当前端配置withCredentials=true时, 后端配置Access-Control-Allow-Origin不能为*, 必须是相应地址
 axios.defaults.withCredentials = false;
 
+//昊中
 export const baseUrl = "http://192.168.199.102:9091";
+// 苏恒
 // export const baseUrl = "http://192.168.199.107:9091";
+
+//阿里云
+// export const baseUrl = "http://39.108.93.27/:9091";
+
+
 /**
  *   统一请求接口
  */

@@ -68,7 +68,7 @@ export default {
     };
   },
   mounted: function() {
-    this.getAllZhan();
+    // this.getAllZhan();
   },
   computed: {},
   methods: {
@@ -76,24 +76,27 @@ export default {
     ...mapMutations(["setPYZD", "setIsLogin"]),
     login() {
       let _this = this;
-      Api.reqApi(
-        { username: _this.loginData.user, password: _this.loginData.pwd },
-        "/tree/login"
-      )
-        .then(res => {
-          if (res.data.status === 200) {
-            _this.setIsLogin(true);
-            _this.getAllZhan();
-            // this.$router.push('/manage')
-            // console.log(this.$store.state.isLogin);
-          } else {
-            this.$message.success("账号或密码错误");
-          }
-        })
-        .catch(err => {
-          this.$message.success("登陆失败");
-          console.log(err);
-        });
+      this.getAllZhan();
+
+      // Api.reqApi(
+      //   { username: _this.loginData.user, password: _this.loginData.pwd },
+      //   "/tree/login"
+      // )
+      //   .then(res => {
+      //     if (res.data.status === 200) {
+      //       _this.setIsLogin(true);
+      //       this.$router.push("/manage");
+      //       _this.getAllZhan();
+      //       //
+      //       // console.log(this.$store.state.isLogin);
+      //     } else {
+      //       this.$message.success("账号或密码错误");
+      //     }
+      //   })
+      //   .catch(err => {
+      //     this.$message.success("登陆失败");
+      //     console.log(err);
+      //   });
     },
     getAllZhan() {
       let _this = this;

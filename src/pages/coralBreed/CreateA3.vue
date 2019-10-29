@@ -64,7 +64,7 @@ export default {
         signColor: '',
         signNumber: '',
         sowArea: {
-          firstArea: 'A',
+          firstArea: '',
           line: '', // 样线
           segmentation: '' // 分段
         }
@@ -74,7 +74,7 @@ export default {
         signColor: '',
         signNumber: '',
         breedArea: {
-          firstArea: 'A',
+          firstArea: '',
           nursery: '', // 苗圃
           partition: '' // 分区
         }

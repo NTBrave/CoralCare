@@ -244,7 +244,7 @@ export default {
     },
     timeDataArr: {
       handler: function() {
-        console.log(this.timeDataArr);
+        // console.log(this.timeDataArr);
         this.option.series[0].data = this.timeDataArr;
       }
       // deep: true

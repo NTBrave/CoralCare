@@ -506,6 +506,35 @@ export const R03 =
         }
     ]
 }
+
+//R-04 新建暂养巡检记录
+export const R04 = {
+    "JobType": "single",
+    "JobHandler": "",		//残枝记录Handler
+    "Jobs": [
+        {
+            "Method": "create",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
+            "Object": {
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]
+                "ExtendData": {
+                    "czhd_spaid": "",
+                    "czda_spaid": "",
+                    "timestamp": "",
+                    "status": "",
+                    "lightest_color": "",
+                    "darkest_color": "",
+                    "height_area_both": "",
+                    "height": "",
+                    "area": "",
+                    "comment": ""
+                }
+            }
+        }
+    ]
+}
+
 //R-05 新建首次回播记录
 export const R05 =
 
@@ -515,18 +544,18 @@ export const R05 =
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
+            "MasterSpaId": "",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
             "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]
                 "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
+                    "czhd_spaid": "czhd_spaid",
+                    "czda_spaid": "czda_spaid",
+                    "timestamp": "",
+                    "status": "",
+                    "lightest_color": "",
+                    "darkest_color": "",
+                    "height_area_both": "",
                     "height": "",
                     "area": "",
                     "comment": ""
@@ -542,19 +571,20 @@ export const R05 =
                 "ExtendData": {
                     "haopai_color": "",
                     "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
+                    "order_spaid": "",		//外键 所属珊瑚目
+                    "family_spaid": "",		//外键 所属珊瑚科
+                    "genus_spaid": "",		//外键 所属珊瑚属
+                    "pyzd_spaid": "",	//外键 所属培育站点
+                    "stage": "回播",		//培育阶段 暂养|回播
+                    "quyu_spaid": "",		//外键 所属采集区域
+                    "miaopu_spaid": "",		//外键 所属（暂养）苗圃
+                    "fenqu_spaid": "",		//外键 所属（暂养）分区
+                    "yangxian_spaid": "",	//外键 所属（回播）样线
+                    "fenduan_spaid": "",		//外键 所属（回播）分段
                     "starred": "",	//是否关注 0 1
                     "ended": "",		//是否完结 0 1
-                    "label": ""
+                    "label": "",
+                    "comment": ""
                 }
             }
         }
@@ -755,8 +785,8 @@ export const species_01 = {
     ]
 }
 
-// 获取暂养区域的苗圃分区
-export const ZYQY_01 = {
+// 获取暂养区域的苗圃分区/回播区域的样线分段
+export const ZYQY_HBQY = {
     "JobType": "single",
     "Jobs": [
         {
@@ -810,6 +840,74 @@ export const AA_01 = {
         }
     ]
 }
+// 获取指定残枝档案
+export const CZDA_01 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "false",
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.quyu_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "8b665e9b-8d9f-4bae-b67e-1a8e9755a608"
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.miaopu_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "f334db62-4c57-440e-8406-4972cf85d262"
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.fenqu_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "2215cab5-d874-4104-8eae-90f1b0a19084"
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_color",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "蓝"
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_number",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "123"
+                    }
+
+                }
+            ],
+            "Order": [
+                {
+
+                }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+
 
 //R-01 获取指定记录下的所有图片
 export const P04 =
@@ -823,19 +921,11 @@ export const P04 =
             "NeedFK": "false",	//不回传外键
             "Where": [
                 {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "MasterId"//记录SpaId
-                    }
+
                 }
             ],
             "Order": [
-                {
-                    "Key": "",
-                    "Order": ""
-                }
+
             ],
             "GroupBy": [
                 {}

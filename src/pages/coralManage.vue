@@ -117,8 +117,11 @@
                     indicator-position="none"
                     ref="carousel"
                   >
-                    <el-carousel-item v-for="(item,index) in exampleData" :key="index">
+                    <!-- <el-carousel-item v-for="(item,index) in exampleData" :key="index">
                       <img :src="item.url" alt />
+                    </el-carousel-item>-->
+                    <el-carousel-item v-for="(item,index) in inforImgUrl" :key="index">
+                      <img :src="item?item[item.length-1].url:''" alt />
                     </el-carousel-item>
                   </el-carousel>
                 </div>
@@ -126,9 +129,37 @@
 
               <el-col :offset="2" :span="14">
                 <div style="position: absolute;top: 0px;left: 37.5%;">
-                  <span v-show="isStart==1">
-                    <img src="../assets/images/star.png" width="80%" alt />
-                  </span>
+                  <el-popover
+                    v-show="isStart==1"
+                    placement="top"
+                    trigger="hover"
+                    v-model="visible1"
+                  >
+                    <p>取消关注？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible1 = false">否</el-button>
+                      <el-button type="primary" size="mini" @click="visible1 = false,setStart(0)">是</el-button>
+                    </div>
+                    <span slot="reference" v-show="isStart==1">
+                      <img src="../assets/images/star.png" width="80%" alt />
+                    </span>
+                  </el-popover>
+
+                  <el-popover
+                    v-show="isStart!=1"
+                    placement="top"
+                    trigger="hover"
+                    v-model="visible2"
+                  >
+                    <p>是否关注？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible2 = false">否</el-button>
+                      <el-button type="primary" size="mini" @click="visible2 = false,setStart(1)">是</el-button>
+                    </div>
+                    <span slot="reference" v-show="isStart!=1">
+                      <img src="../assets/images/unstar.png" width="80%" alt />
+                    </span>
+                  </el-popover>
                 </div>
                 <div>
                   <div class="coral-informations" style="position:relative">
@@ -194,10 +225,10 @@
             <span>完结</span>
           </div>
           <div v-show="isEnd==1">
-            <el-popover placement="top" width="30">
+            <el-popover placement="top" trigger="hover" width="30" v-model="visible3">
               <div style="text-align: right; margin: 0;cursor:pointer">
-                <div style="text-align: center;" @click="setEnd('0')">取消完结</div>
-                <div style="text-align: center;">删除档案</div>
+                <div style="text-align: center;" @click="visible3=false,setEnd('0')">取消完结</div>
+                <div style="text-align: center;" @click="visible3=false">删除档案</div>
               </div>
               <span class="el-icon-s-operation" slot="reference"></span>
             </el-popover>
@@ -369,11 +400,20 @@ export default {
       },
       activityNum: "",
       recordIndex: 0,
+      // 所有记录的spaid
+      allRecordArr: [],
+      //所有记录的图片[[{url:""},{url:""}{url:""}],[],[]]
+      inforImgUrl: [],
       exampleData: DEFAULT.imgUrl,
       //当前活动
       activityData: {},
       //传给timeChar的数组数据
-      timeCharArr: []
+      timeCharArr: [],
+      //记录对应的活动数组
+      allActivityArr: [],
+      visible1: false,
+      visible2: false,
+      visible3: false
     };
   },
 
@@ -436,7 +476,7 @@ export default {
     },
 
     //展示一个档案的数据
-    selectCoral(spaId) {
+    async selectCoral(spaId) {
       let _this = this;
       // console.log("01");
       //找到指定的残肢档案
@@ -444,7 +484,7 @@ export default {
       var CZDASpaId = spaId;
       oneCoral.Jobs[0].CZDASpaId = CZDASpaId;
       oneCoral.Jobs[0].Where[0].Operator.Value = CZDASpaId;
-      Api.reqApi(oneCoral, "/tree/select").then(res => {
+      await Api.reqApi(oneCoral, "/tree/select").then(res => {
         // console.log("找到指定的残肢档案", res);
         if (res.data.status === 200 && res.data.response) {
           _this.currentCoralData = _this.Refactoring(
@@ -454,42 +494,7 @@ export default {
           _this.isStart = oneCoralMsg.starred;
           _this.isEnd = oneCoralMsg.ended;
           _this.currentCoralId = oneCoralMsg.SpaId;
-          // 获取指定残枝的最新记录
-          let forOneRecord = ENTITY.R02;
-          // forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
-          forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
-          Api.reqApi(forOneRecord, "/tree/select").then(res => {
-            console.log("获取指定残枝的最新记录", res);
-            if (res.data.status === 200 && res.data.response) {
-              let recoedData = res.data.response.CZJL.objects[0].principle;
-              // 设置最新的记录数据
-              _this.currentRecord = recoedData;
-              // console.log("当前记录", _this.currentRecord);
 
-              //构建状态
-              _this.coralInformations[4].msg = recoedData.ExtendData.status;
-              //构建颜色
-              let light = recoedData.ExtendData.lightest_color;
-              let darkest = recoedData.ExtendData.darkest_color;
-
-              _this.coralInformations[6].msg = light;
-              _this.coralInformations[6].msg2 = darkest;
-              _this.coralInformations[6].color1 = DEFAULT.colorObj[light];
-              _this.coralInformations[6].color2 = DEFAULT.colorObj[darkest];
-
-              //构建尺寸
-              if (recoedData.ExtendData.height_area_both == 0) {
-                _this.coralInformations[7].msg =
-                  recoedData.ExtendData.height + "cm";
-              } else {
-                _this.coralInformations[7].msg = recoedData.ExtendData.area;
-              }
-              //构建备注
-              _this.coralInformations[8].msg = recoedData.ExtendData.comment;
-
-              // console.log(res);
-            }
-          });
           //构建珊瑚名字
           _this.coralInformations[0].msg = oneCoralMsg.title;
           _this.coralTitle = oneCoralMsg.title;
@@ -506,16 +511,60 @@ export default {
           _this.coralInformations[5].msg = oneCoralMsg.stage;
         }
       });
+      this.getfirstRecord(CZDASpaId);
       this.getAllCoralRecord(CZDASpaId);
-      return;
+      // return;
     },
+    //获取残肢的最新记录
+    async getfirstRecord(CZDASpaId) {
+      // 获取指定残枝的最新记录
+      let _this = this;
+      let forOneRecord = ENTITY.R02;
+      // forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
+      forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+      await Api.reqApi(forOneRecord, "/tree/select").then(res => {
+        console.log("获取指定残枝的最新记录", res);
+        if (res.data.status === 200 && res.data.response) {
+          let recoedData = res.data.response.CZJL.objects[0].principle;
+          // 设置最新的记录数据
+          _this.currentRecord = recoedData;
+          // console.log("当前记录", _this.currentRecord);
+
+          //构建状态
+          _this.coralInformations[4].msg = recoedData.ExtendData.status;
+          //构建颜色
+          let light = recoedData.ExtendData.lightest_color;
+          let darkest = recoedData.ExtendData.darkest_color;
+          console.log(light, darkest);
+          _this.coralInformations[6].msg = darkest;
+          _this.coralInformations[6].msg2 = light;
+          _this.coralInformations[6].color1 = DEFAULT.colorObj[light];
+          _this.coralInformations[6].color2 = DEFAULT.colorObj[darkest];
+
+          //构建尺寸
+          if (recoedData.ExtendData.height_area_both == 0) {
+            _this.coralInformations[7].msg =
+              recoedData.ExtendData.height + "cm";
+          } else {
+            _this.coralInformations[7].msg = recoedData.ExtendData.area;
+          }
+          //构建备注
+          _this.coralInformations[8].msg = recoedData.ExtendData.comment;
+
+          // console.log(res);
+        }
+      });
+    },
+
     //获取残肢的所有记录
     getAllCoralRecord(CZDASpaId) {
       let _this = this;
+
       let forAllRecord = ENTITY.R02;
       forAllRecord.Jobs[0].Method = "select";
       // forAllRecord.Jobs[0].MasterSpaId = CZDASpaId;
       forAllRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+      _this.allRecordArr = [];
       Api.reqApi(forAllRecord, "/tree/select").then(res => {
         // console.log("获取残肢的所有记录:", res);
         if (res.data.status === 200 && res.data.response) {
@@ -523,19 +572,21 @@ export default {
 
           let dateSizeArr = [];
           let objArr = res.data.response.CZJL.objects;
+          // console.log("所有残枝记录：", objArr);
           for (let i = 0; i < objArr.length; i++) {
             let oneArr = [];
-            oneArr.push(
-              moment(
-                objArr[i].principle.CreateAt,
-                "YYYY-MM-DD HH:mm:ss"
-              ).format("YYYY-MM-DD")
-            );
+            // oneArr.push("");
             oneArr.push(objArr[i].principle.ExtendData.area);
+            _this.allRecordArr.push(objArr[i].principle.SpaId);
+            _this.allActivityArr.push(
+              objArr[i].principle.ExtendData.czhd_spaid
+            );
             dateSizeArr.push(oneArr);
           }
-          console.log("将传给图表:", dateSizeArr);
+          // console.log("将传给图表:", dateSizeArr);
           _this.timeCharArr = dateSizeArr;
+          _this.getImgUrlId();
+          _this.getTimeAndSize();
         }
       });
     },
@@ -557,7 +608,7 @@ export default {
       Api.reqApi(CoralData, "/tree/update").then(res => {
         if (res.data.status === 200 && res.data.response) {
           let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
-          console.log("返回的url:", returnUrl);
+          // console.log("返回的url:", returnUrl);
           _this.selectCoral(returnUrl);
         }
       });
@@ -566,6 +617,7 @@ export default {
       this.isShowRecord = !this.isShowRecord;
       this.getActivity();
     },
+    //获取当前记录的活动数据
     getActivity() {
       let _this = this;
       if (_this.currentRecord.ExtendData) {
@@ -574,13 +626,15 @@ export default {
         let AA_01 = ENTITY.AA_01;
         AA_01.Jobs[0].Where[0].Operator.Value = recordID;
         Api.reqApi(AA_01, "/tree/select").then(res => {
-          console.log("活动数据", res);
+          // console.log("活动数据", res);
           if (res.data.status === 200 && res.data.response) {
             _this.activityData =
               res.data.response.CZHD.objects[0].principle.ExtendData;
             _this.activityData.activityID =
               res.data.response.CZHD.objects[0].principle.SpaId;
-            _this.activityNum = _this.activityData.activity_number;
+            let msgArr = _this.activityData.activity_number.split("-");
+            _this.activityData.time = msgArr.pop();
+            // console.log("时间");
           }
         });
       } else {
@@ -653,6 +707,99 @@ export default {
       // console.log(ind)
       this.recordIndex = ind;
       this.$refs.carousel.setActiveItem(this.recordIndex);
+    },
+    //获取所有记录节点下的全部图片节点
+    async getImgUrlId() {
+      //构造请求体
+      let _this = this;
+      // console.log("这个档案所有记录id:", _this.allRecordArr);
+      let imgNameArr = [];
+      for (let j = 0; j < _this.allRecordArr.length; j++) {
+        let imgNodeData = ENTITY.P04;
+
+        imgNodeData.Jobs[0].MasterSpaId = _this.allRecordArr[j];
+        // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.allRecordArr[j];
+
+        await Api.reqApi(imgNodeData, "/tree/select").then(res => {
+          // console.log("图片节点:", res);
+          if (res.data.status === 200 && res.data.response) {
+            let nodeArr = res.data.response.CZZP.objects;
+            let imgArr = [];
+            for (let i = 0; i < nodeArr.length; ++i) {
+              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+
+              imgArr.push(obj);
+            }
+            imgNameArr[j] = imgArr;
+          }
+        });
+      }
+      _this.inforImgUrl = imgNameArr;
+      // console.log("这个档案 所有记录的图片：", _this.inforImgUrl);
+      _this.getImgURL();
+    },
+    async getTimeAndSize() {
+      let _this = this;
+      // console.log("时间数组前：", this.timeCharArr, _this.allActivityArr);
+      if (_this.allActivityArr.length > 0) {
+        for (let j = 0; j < _this.allActivityArr.length; j++) {
+          let acID = _this.allActivityArr[j];
+          let AA_01 = ENTITY.AA_01;
+          AA_01.Jobs[0].Where[0].Operator.Value = acID;
+          AA_01.Jobs[0].Where[0].Operator.Value = acID;
+          await Api.reqApi(AA_01, "/tree/select").then(res => {
+            // console.log();
+            if (res.data.status === 200 && res.data.response) {
+              let data = res.data.response.CZHD.objects[0].principle.ExtendData;
+              let msgArr = data.activity_number.split("-");
+              if (_this.timeCharArr[j]) {
+                _this.timeCharArr[j].unshift(
+                  moment(msgArr.pop(), "YYYYMMDDHH").format("YYYY-MM-DD")
+                );
+              }
+
+              // console.log("时间:", j, msgArr, res, acID);
+            }
+          });
+        }
+      } else {
+        console.log("没有记录");
+      }
+      // console.log("时间数组后：", this.timeCharArr);
+    },
+    //根据图片id获取图片url
+    async getImgURL() {
+      let _this = this;
+      if (_this.inforImgUrl.length > 0) {
+        for (let i = 0; i < _this.inforImgUrl.length; i++) {
+          let oneRecordImg = _this.inforImgUrl[i];
+          for (let j = 0; j < oneRecordImg.length; j++) {
+            let imgName = oneRecordImg[j].url;
+            await Api.reqApi({ file_id: imgName }, "/file/get").then(res => {
+              console.log(i, j, res.response.data.url);
+            });
+          }
+        }
+      }
+    },
+    //设置关注状态
+    setStart(sign) {
+      // console.log(sign);
+      let _this = this;
+      let CoralData = ENTITY.D05;
+      for (let item in CoralData.Jobs[0].Object.ExtendData) {
+        CoralData.Jobs[0].Object.ExtendData[item] =
+          _this.currentCoralData[item];
+      }
+      CoralData.Jobs[0].Object.SpaId = _this.currentCoralId;
+      CoralData.Jobs[0].Object.ExtendData.starred = sign;
+      Api.reqApi(CoralData, "/tree/update").then(res => {
+        if (res.data.status === 200 && res.data.response) {
+          let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
+          // console.log("返回的url:", returnUrl);
+          _this.selectCoral(returnUrl);
+        }
+      });
     }
   }
 };

@@ -92,32 +92,32 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 // 地点
-// const address = [
-//   {
-//     id: 'A',
-//     name: '大鹏大澳湾',
-//     img: require('../../assets/images/A.jpg')
-//     // img: '../../assets/logo.png'
-//   },
-//   {
-//     id: 'B',
-//     name: '大亚湾核电站',
-//     img: require('../../assets/images/B.jpg')
-//     // img: '../../assets/logo.png'
-//   },
-//   {
-//     id: 'C',
-//     name: '三门岛鬼湾',
-//     img: require('../../assets/images/C.jpg')
-//     // img: '../../assets/images/4.png'
-//   },
-//   {
-//     id: 'D',
-//     name: '菲律宾',
-//     img: require('../../assets/images/D.jpg')
-//     // img: '../../assets/images/4.png'
-//   }
-// ]
+const addressList = [
+  {
+    id: 'A',
+    name: '大澳湾',
+    img: require('../../assets/images/A.jpg')
+    // img: '../../assets/logo.png'
+  },
+  //   {
+  //     id: 'B',
+  //     name: '大亚湾核电站',
+  //     img: require('../../assets/images/B.jpg')
+  //     // img: '../../assets/logo.png'
+  //   },
+  {
+    id: 'B',
+    name: '三门岛',
+    img: require('../../assets/images/C.jpg')
+    // img: '../../assets/images/4.png'
+  }
+  //   {
+  //     id: 'D',
+  //     name: '菲律宾',
+  //     img: require('../../assets/images/D.jpg')
+  //     // img: '../../assets/images/4.png'
+  //   }
+]
 
 // 日历配置
 const locale = {
@@ -177,7 +177,8 @@ export default {
   },
   data() {
     return {
-      // address,
+      addressList, // beizhu1
+
       locale,
 
       bannerHeight: '', // 轮播图片
@@ -202,8 +203,8 @@ export default {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data',
-      addressList: 'getAddressList'
+      currentZD_data: 'getCurrentZD_data'
+      // addressList: 'getAddressList'
     }),
 
     ...mapState(['currentZD']),
@@ -275,7 +276,7 @@ export default {
       function(pre) {
         this.selectAddress(pre)
       },
-      2000,
+      1500,
       false
     ),
 
@@ -333,33 +334,38 @@ export default {
       // W03.Jobs[0].Object.ExtendData.pyzd_spaid =
       //   '10e489cb-aa38-47fa-ae49-fef7c2296977'
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
-      reqApi(W03, '/tree/create').then(res => {
-        console.log(res)
-        if (res.data.status === 200) {
+      reqApi(W03, '/tree/create')
+        .then(res => {
           console.log(res)
-          let newWork = {}
-          newWork.pyzd_spaid =
-            res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
-          newWork.timestamp =
-            res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
-          newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
+          if (res.data.status === 200) {
+            console.log(res)
+            let newWork = {}
+            newWork.pyzd_spaid =
+              res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
+            newWork.timestamp =
+              res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
+            newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
 
-          this.setWorkList(newWork)
-          this.setCurrentWork(this.$route.query.time)
-          console.log(this.$store.state.workList)
-        }
-      })
+            this.setWorkList(newWork)
+            this.setCurrentWork(this.$route.query.time)
+            console.log('+++++++', this.$store.state.workList)
 
-      this.$router.push({
-        name: `newActivity`,
-        query: {
-          // time: this.dateNumber_review,
-          // address: this.activityAddress
-          time: this.dateNumber_build,
-          address: this.activityAddress
-        }
-      })
-      this.closeDrawer()
+            // 创建成功路由跳转
+            this.$router.push({
+              name: `newActivity`,
+              query: {
+                // time: this.dateNumber_review,
+                // address: this.activityAddress
+                time: this.dateNumber_build,
+                address: this.activityAddress
+              }
+            })
+            this.closeDrawer()
+          }
+        })
+        .catch(err => {
+          cosole.log(err)
+        })
     },
 
     // 点击查看当日活动
