@@ -55,7 +55,7 @@
       </div>
       <div style="width:40rem">
         <swiper
-          :imgUrl="inforImgUrl"
+          :imgUrl="theRecordImgArr"
           :imgHeight="9.5"
           :imgWidth="10"
           @selectOneImg="chooseSwiperImg"
@@ -74,7 +74,12 @@
       @click="goMessuring"
     >取消测量</div>
     <div v-if="doMeasuring">
-      <swiper :imgUrl="inforImgUrl" :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg"></swiper>
+      <swiper
+        :imgUrl="theRecordImgArr"
+        :imgHeight="9.5"
+        :imgWidth="10"
+        @selectOneImg="chooseSwiperImg"
+      ></swiper>
       <getArea
         @givaASize="setRecordSize"
         :imageUrl="imgUrlFormSwiper"
@@ -139,8 +144,11 @@ export default {
       doMeasuring: false,
       imgUrlFormSwiper: "",
       key: 0,
-      inforImgUrl: []
-      // inforImgUrl: DEFAULT.imgUrl
+      // 记录下图片节点里面的图片id
+      inforImgUrlId: [],
+      //图片id对应的推按url
+      theRecordImgArr: []
+      // inforImgUrlId: DEFAULT.imgUrl
     };
   },
   watch: {
@@ -167,9 +175,7 @@ export default {
     this.recordInfor[5].color = DEFAULT.colorObj[light];
     this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
     //构建时间
-    this.recordInfor[6].msg = moment(this.activty.time, "YYYYMMDDHH").format(
-      "YYYY-MM-DD HH"
-    );
+    this.recordInfor[6].msg = this.activty.time;
     // this.recordInfor[6].msg = moment(
     //   this.recordObj.ExtendData.timestamp,
     //   "YYYYMMDDHH"
@@ -185,7 +191,7 @@ export default {
 
     console.log(this.activty);
     //获取这个记录的图片啦
-    this.getImgUrl();
+    this.getImgUrlId();
   },
   methods: {
     goMessuring() {
@@ -226,23 +232,37 @@ export default {
         }
       });
     },
-    //获取记录节点下的图片节点
-    getImgUrl() {
+    //获取记录节点下的图片节点 图片key
+    async getImgUrlId() {
       //构造请求体
       let _this = this;
       let imgNodeData = ENTITY.P04;
       imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
       // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
-      Api.reqApi(imgNodeData, "/tree/select").then(res => {
+      await Api.reqApi(imgNodeData, "/tree/select").then(res => {
         console.log("图片节点:", res);
         if (res.data.status === 200 && res.data.response) {
-          let nodeArr = res.response.CZZP.objects;
+          let nodeArr = res.data.response.CZZP.objects;
           for (let i = 0; i < nodeArr.length; ++i) {
-            let obj = { url: nodeArr.principle.ExtendFileData.file_id };
-            _this.inforImgUrl.push(obj);
+            let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+            _this.inforImgUrlId.push(obj);
           }
         }
       });
+      this.getimgUrl();
+    },
+    //获取每个图片节点的对应url
+    async getimgUrl() {
+      let _this = this;
+      for (let i = 0; i < _this.inforImgUrlId.length; i++) {
+        let imgName = _this.inforImgUrlId[i];
+        await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
+          // console.log(i, j, res.data.response.url);
+          _this.theRecordImgArr.push({ url: res.data.response.url });
+        });
+      }
+      chooseSwiperImg(_this.theRecordImgArr[0]);
+      console.log("图片:", _this.theRecordImgArr);
     }
   }
 };
@@ -296,6 +316,9 @@ export default {
   /* margin-top: 1rem; */
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
+}
+.measuring:hover {
+  opacity: 0.7;
 }
 .showOneImg {
   max-width: 740px;

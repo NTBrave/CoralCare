@@ -44,12 +44,12 @@ export default {
   },
   data() {
     return {
-      list: null,
+      list: [],
       index: 0,
       // imgWidth: 180,
       // imgHeight: 90,
       // imgMargin: 2,
-      allImg: null,
+      allImg: [],
       num: 4,
       signImgUrl: ""
     };
@@ -61,7 +61,7 @@ export default {
     this.allImg = document.getElementsByClassName("img-swiper");
     if (this.allImg[this.index]) {
       this.allImg[this.index].classList.add("current-img");
-      this.imgLen = this.imgUrl.length - 1;
+      this.imgLen = this.allImg.length - 1;
       this.selectOneImg(this.index);
     }
   },
@@ -82,27 +82,30 @@ export default {
       }
     },
     prevOnclick() {
-      this.allImg[this.index].classList.remove("current-img");
-      this.index = this.index > 0 ? this.index - 1 : 0;
-      this.allImg[this.index].classList.add("current-img");
-      this.move(this.imgWidth);
-      this.selectOneImg(this.index);
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove("current-img");
+        this.index = this.index > 0 ? this.index - 1 : 0;
+        this.allImg[this.index].classList.add("current-img");
+        this.move(this.imgWidth);
+        this.selectOneImg(this.index);
+      }
     },
     nextOnclick() {
-      this.allImg[this.index].classList.remove("current-img");
-      this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
-      this.allImg[this.index].classList.add("current-img");
-      this.move(-this.imgWidth);
-      this.selectOneImg(this.index);
-      // console.log(this.index)
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove("current-img");
+        this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
+        this.allImg[this.index].classList.add("current-img");
+        this.move(-this.imgWidth);
+        this.selectOneImg(this.index);
+      }
     },
     selectOneImg(ind) {
-      // console.log(this.index,ind,this.allImg);
-      this.allImg[this.index].classList.remove("current-img");
-      this.index = ind;
-      this.allImg[this.index].classList.add("current-img");
-
-      this.$emit("selectOneImg", this.imgUrl[ind].url);
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove("current-img");
+        this.index = ind;
+        this.allImg[this.index].classList.add("current-img");
+        this.$emit("selectOneImg", this.imgUrl[ind].url);
+      }
     },
     deleteImg() {}
   }

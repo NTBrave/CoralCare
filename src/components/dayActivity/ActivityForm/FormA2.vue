@@ -130,7 +130,11 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
 import { ZYQY_HBQY, CZDA_01, R04 } from '../../../json/entity'
-import { requestZYQY_HBQY, getCZDA, createR04 } from '../../../util/apiCreator'
+import {
+  requestZYQY_HBQY,
+  getCZDA_ZY,
+  createR04_06
+} from '../../../util/apiCreator'
 import { debounce } from '../../../util/requestLimit'
 import { reqApi } from '../../../api/api'
 export default {
@@ -201,7 +205,7 @@ export default {
         this.breedForm.breedArea.partition &&
         this.breedForm.signColor
       ) {
-        let requestObj = getCZDA(CZDA_01, this.breedForm)
+        let requestObj = getCZDA_ZY(CZDA_01, this.breedForm)
         reqApi(requestObj, '/tree/select').then(res => {
           console.log(res)
           if (res.data.status === 200) {
@@ -234,7 +238,7 @@ export default {
     },
 
     submitRecorder() {
-      let newR04 = createR04(
+      let newR04 = createR04_06(
         R04,
         this.currentActivity_spaid,
         this.file_spaid,

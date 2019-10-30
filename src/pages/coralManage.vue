@@ -120,8 +120,8 @@
                     <!-- <el-carousel-item v-for="(item,index) in exampleData" :key="index">
                       <img :src="item.url" alt />
                     </el-carousel-item>-->
-                    <el-carousel-item v-for="(item,index) in inforImgUrl" :key="index">
-                      <img :src="item?item[item.length-1].url:''" alt />
+                    <el-carousel-item v-for="(item,index) in danAnImgList" :key="index">
+                      <img :src="item?item:''" alt />
                     </el-carousel-item>
                   </el-carousel>
                 </div>
@@ -335,7 +335,7 @@ export default {
       coralInformations: [
         { infor: "珊瑚编号", msg: "" },
         { infor: "属种", msg: "" },
-        { infor: "时间", msg: "" },
+        { infor: "最新时间", msg: "" },
         { infor: "现处位置", msg: "" },
         { infor: "状态", msg: "" },
         { infor: "阶段类型", msg: "" },
@@ -403,7 +403,10 @@ export default {
       // 所有记录的spaid
       allRecordArr: [],
       //所有记录的图片[[{url:""},{url:""}{url:""}],[],[]]
+      //一个记录可能有很多照片
       inforImgUrl: [],
+      //一个档案 每个记录的最新照片
+      danAnImgList: [],
       exampleData: DEFAULT.imgUrl,
       //当前活动
       activityData: {},
@@ -465,6 +468,7 @@ export default {
       title += newObj.haopai_color + "-" + newObj.haopai_number;
       newObj.title = title;
       //构造种类
+      // console.log(newObj);
       newObj.type =
         newObj.ORDER.extenddata.name +
         "-" +
@@ -491,6 +495,7 @@ export default {
             res.data.response.CZDA.objects[0]
           );
           let oneCoralMsg = _this.currentCoralData;
+          console.log("找到指定的残肢档案", oneCoralMsg);
           _this.isStart = oneCoralMsg.starred;
           _this.isEnd = oneCoralMsg.ended;
           _this.currentCoralId = oneCoralMsg.SpaId;
@@ -500,8 +505,7 @@ export default {
           _this.coralTitle = oneCoralMsg.title;
           //构建种类
           _this.coralInformations[1].msg = oneCoralMsg.type;
-          //时间
-          _this.coralInformations[2].msg = oneCoralMsg.CreateAt;
+
           //位置
           _this.coralInformations[3].msg =
             oneCoralMsg.MP.extenddata.name +
@@ -519,11 +523,11 @@ export default {
     async getfirstRecord(CZDASpaId) {
       // 获取指定残枝的最新记录
       let _this = this;
-      let forOneRecord = ENTITY.R02;
+      let forOneRecord = ENTITY.R021;
       // forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
       forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
       await Api.reqApi(forOneRecord, "/tree/select").then(res => {
-        console.log("获取指定残枝的最新记录", res);
+        console.log("最新记录", res);
         if (res.data.status === 200 && res.data.response) {
           let recoedData = res.data.response.CZJL.objects[0].principle;
           // 设置最新的记录数据
@@ -535,7 +539,7 @@ export default {
           //构建颜色
           let light = recoedData.ExtendData.lightest_color;
           let darkest = recoedData.ExtendData.darkest_color;
-          console.log(light, darkest);
+          // console.log(light, darkest);
           _this.coralInformations[6].msg = darkest;
           _this.coralInformations[6].msg2 = light;
           _this.coralInformations[6].color1 = DEFAULT.colorObj[light];
@@ -554,6 +558,8 @@ export default {
           // console.log(res);
         }
       });
+      // 获取最新记录的活动时间
+      this.getActivity();
     },
 
     //获取残肢的所有记录
@@ -615,7 +621,6 @@ export default {
     },
     showRecord() {
       this.isShowRecord = !this.isShowRecord;
-      this.getActivity();
     },
     //获取当前记录的活动数据
     getActivity() {
@@ -633,8 +638,13 @@ export default {
             _this.activityData.activityID =
               res.data.response.CZHD.objects[0].principle.SpaId;
             let msgArr = _this.activityData.activity_number.split("-");
-            _this.activityData.time = msgArr.pop();
-            // console.log("时间");
+            let time = moment(msgArr.pop(), "YYYYMMDDHH").format(
+              "YYYY-MM-DD HH"
+            );
+            _this.activityData.time = time;
+            //时间
+            _this.coralInformations[2].msg = time;
+            // console.log("时间", time);
           }
         });
       } else {
@@ -770,16 +780,20 @@ export default {
     //根据图片id获取图片url
     async getImgURL() {
       let _this = this;
+      _this.danAnImgList = [];
       if (_this.inforImgUrl.length > 0) {
         for (let i = 0; i < _this.inforImgUrl.length; i++) {
           let oneRecordImg = _this.inforImgUrl[i];
-          for (let j = 0; j < oneRecordImg.length; j++) {
-            let imgName = oneRecordImg[j].url;
-            await Api.reqApi({ file_id: imgName }, "/file/get").then(res => {
-              console.log(i, j, res.response.data.url);
-            });
-          }
+
+          let imgName = oneRecordImg[oneRecordImg.length - 1].url;
+          await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
+            // console.log(i, j, res.data.response.url);
+            if (res.data.status === 200 && res.data.response) {
+              _this.danAnImgList.push(res.data.response.url);
+            }
+          });
         }
+        console.log(_this.danAnImgList);
       }
     },
     //设置关注状态
@@ -816,6 +830,9 @@ export default {
   text-align: center;
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
+}
+.A-btn:hover {
+  opacity: 0.7;
 }
 .workPage {
   width: 89rem;
@@ -952,6 +969,9 @@ export default {
   top: 2rem;
   color: rgba(126, 126, 126, 1);
   cursor: pointer;
+}
+.see-mover:hover {
+  opacity: 0.7;
 }
 .which-on-right {
   position: absolute;

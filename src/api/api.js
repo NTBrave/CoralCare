@@ -44,6 +44,15 @@ export const delApi = (data, url) => {
   });
 };
 
+export const mockApi = (data, url) => {
+  // console.log( work_no, username,password,email);
+  return new axios({
+    url: "http://rap2api.taobao.org/app/mock/235164" + url,
+    data: data,
+    method: POST
+  });
+};
+
 /**
  *  coralBreed残枝培育部分的接口
  *  username 蔡梓彬

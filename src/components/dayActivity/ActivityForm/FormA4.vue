@@ -6,19 +6,51 @@
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder></el-select>
+          <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder>
+            <el-option
+              v-for="(item, idx) in HB_quyu"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.line" placeholder="样线"></el-select>
+          <el-select v-model="sowForm.sowArea.line" placeholder="样线">
+            <el-option
+              v-for="(item, idx) in HB_yangxian"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.sowArea.segmentation" placeholder="分段"></el-select>
+          <el-select v-model="sowForm.sowArea.segmentation" placeholder="分段">
+            <el-option
+              v-for="(item, idx) in HB_fenduan"
+              :key="idx"
+              :label="item.name"
+              :value="item.spaid"
+            ></el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.signColor" placeholder="牌色"></el-select>
+          <el-select v-model="sowForm.signColor" placeholder="牌色">
+            <el-option
+              v-for="(item, idx) in signColorList"
+              :key="idx"
+              :label="item.label"
+              :value="item.value"
+              :color="item.color"
+            >
+              <span>{{item.label}}</span>
+              <span class="colorCircle" :style="{backgroundColor: item.color}"></span>
+            </el-option>
+          </el-select>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="sowForm.signNumber" placeholder="号码"></el-select>
+          <el-input v-model="sowForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
         </el-col>
       </el-form-item>
     </el-form>
@@ -38,25 +70,7 @@
           </el-select>
         </el-col>
       </el-form-item>
-      <!-- <el-form-item :style="{border: 'none'}">
-        <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
-          <el-col :span="11">
-            <span :style="{marginLeft:'10px'}">透光度</span>
-          </el-col>
-          <el-col :span="13">
-            <el-input v-model="recordForm.penetrability" placeholder="请输入"></el-input>
-          </el-col>
-        </el-col>
-        <el-col :span="2">&nbsp;</el-col>
-        <el-col :span="11" :style="{border: '1px solid #ACACAC', borderRadius: '6px'}">
-          <el-col :span="8">
-            <span :style="{marginLeft:'15px'}">温度</span>
-          </el-col>
-          <el-col :span="16">
-            <el-input v-model="recordForm.temperature" placeholder="请输入"></el-input>
-          </el-col>
-        </el-col>
-      </el-form-item>-->
+
       <el-form-item>
         <el-col :span="5">
           <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
@@ -114,19 +128,64 @@
 
 <script>
 // import {} from '../../api/api'
-import { mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
+import { ZYQY_HBQY, CZDA_01, R06 } from '../../../json/entity'
+import {
+  requestZYQY_HBQY,
+  getCZDA_HB,
+  createR04_06
+} from '../../../util/apiCreator'
+import { debounce } from '../../../util/requestLimit'
+import { reqApi } from '../../../api/api'
 export default {
   props: {
     sowData: Object,
     recordData: Object,
     isCreated: Boolean
   },
-  watch: {},
+  computed: {
+    ...mapGetters({
+      currentZD_data: 'getCurrentZD_data',
+      currentActivity_spaid: 'getCurrentActivity_spaid'
+    }),
+    ...mapState(['currentZD'])
+  },
+  watch: {
+    // 根据样线显示分段
+    'sowForm.sowArea.line': function() {
+      this.HB_fenduan = []
+      this.sowForm.sowArea.segmentation = ''
+
+      let fenduan = requestZYQY_HBQY(ZYQY_HBQY, this.sowForm.sowArea.line, 'YX')
+      reqApi(fenduan, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.FD.objects) {
+              let fenduan = {}
+              fenduan.name = i.principle.ExtendData.name
+              fenduan.spaid = i.principle.SpaId
+              this.HB_fenduan.push(fenduan)
+            }
+          } else this.HB_fenduan = []
+        }
+      })
+    }
+  },
   data() {
     return {
       signColorList, // 牌色列表
       colorList,
+
+      // 回播区域（区域、样线、分段）
+      HB_quyu: [],
+      HB_yangxian: [],
+      HB_fenduan: [],
+
+      // 获取的残枝档案spaid
+      file_spaid: '',
+      record_spaid: '',
 
       sowForm: this.sowData,
       recordForm: this.recordData
@@ -135,23 +194,95 @@ export default {
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
+    // 根据最后的号码输入框改变请求 残枝档案spaid
+    requestCZDA() {
+      let is = Boolean(
+        this.sowForm.breedArea.firstArea &&
+          this.sowForm.breedArea.nursery &&
+          this.sowForm.breedArea.partition &&
+          this.sowForm.signColor &&
+          this.sowForm.signNumber
+      )
+      console.log(is)
+      if (is) {
+        let requestObj = getCZDA_HB(CZDA_01, this.sowForm)
+        reqApi(requestObj, '/tree/select').then(res => {
+          console.log(res)
+          if (res.data.status === 200) {
+            if (res.data.response) {
+              this.file_spaid =
+                res.data.response.CZDA.objects[0].principle.SpaId
+            } else {
+              this.$message({
+                showClose: true,
+                message: '找不到残枝档案！',
+                type: 'error',
+                duration: 4000
+              })
+            }
+          }
+        })
+      } else {
+        this.$message({
+          showClose: true,
+          message: '残枝档案信息不完整！',
+          type: 'error',
+          duration: 4000
+        })
+      }
+    },
+
+    requestCZDA_debounce: debounce(
+      function() {
+        this.requestCZDA()
+      },
+      1000,
+      false
+    ),
+
+    // 向父组件传递 档案spaid 和 记录spaid
+    sendSpaid() {
+      this.$emit('func', this.file_spaid, this.record_spaid)
+    },
+
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
-      this.$message({
-        showClose: true,
-        message: '数据已成功录入！',
-        type: 'success'
-      })
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+      let newR06 = createR04_06(
+        R06,
+        this.currentActivity_spaid,
+        this.file_spaid,
+        this.$route.query.time,
+        this.recordForm
+      )
+
+      console.log(newR06)
+      reqApi(newR06, '/tree/create').then(res => {
+        if (res.data.status === 200) {
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
+          this.sendSpaid() // 向父组件传spaid
+
+          // 数据成功录入提醒
+          this.$message({
+            showClose: true,
+            message: '数据已成功录入！',
+            type: 'success'
+          })
+
+          // 携带参数路由跳转
+          this.$router.push({
+            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+            query: {
+              time: this.$route.query.time,
+              address: this.$route.query.address,
+              activityType: this.$route.query.activityType
+            }
+          })
         }
+        console.log(res)
       })
     },
+
     submitEdit() {
       // 修改成功接口
       this.$message({
@@ -167,10 +298,44 @@ export default {
           activityType: this.$route.query.activityType
         }
       })
+    },
+
+    // 初始化请求回播区域
+    requestHBQY() {
+      this.sowForm.sowArea.firstArea = this.currentZD_data(
+        this.currentZD
+      ).ExtendData.hbqy_spaid
+      this.HB_quyu = [
+        {
+          name: 'A',
+          spaid: this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid
+        }
+      ]
+      console.log(this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid)
+      let yangxian = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid,
+        'HBQYROOT'
+      )
+      reqApi(yangxian, '/tree/select').then(res => {
+        console.log(res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.YX.objects) {
+              let yangxian = {}
+              yangxian.name = i.principle.ExtendData.name
+              yangxian.spaid = i.principle.SpaId
+              this.HB_yangxian.push(yangxian)
+            }
+          } else this.HB_yangxian = []
+        }
+      })
     }
   },
 
-  mounted() {}
+  mounted() {
+    this.requestHBQY()
+  }
 }
 </script>
 
