@@ -228,6 +228,7 @@ export default {
 .createBoard {
   display: flex;
   width: 100%;
+  justify-content: space-around;
 
   .infoArea {
     display: flex;
@@ -256,9 +257,9 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 40%;
+        width: 60%;
         min-width: 350px;
-        max-width: 400px;
+        max-width: 500px;
 
         p {
           height: 1.8rem;
@@ -272,7 +273,7 @@ export default {
 
   .uploadArea {
     width: 40vw;
-    margin-left: 5vw;
+    margin-right: 3vw;
     margin-top: 2.3rem;
 
     .imgUpload {

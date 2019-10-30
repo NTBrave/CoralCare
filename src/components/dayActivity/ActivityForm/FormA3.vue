@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two">
+    <el-form class="A-Two" v-model="breedForm">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
@@ -50,9 +50,11 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="breedForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
+          <el-input v-model="breedForm.signNumber" placeholder="号码"></el-input>
         </el-col>
       </el-form-item>
+    </el-form>
+    <el-form :disabled="beforeFileFind">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
@@ -107,7 +109,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -205,6 +207,22 @@ export default {
     ...mapState(['currentZD'])
   },
   watch: {
+    // 监听整个查找档案的表单对象
+    breedForm: {
+      handler: function() {
+        let is = Boolean(
+          this.breedForm.breedArea.firstArea &&
+            this.breedForm.breedArea.nursery &&
+            this.breedForm.breedArea.partition &&
+            this.breedForm.signColor &&
+            this.breedForm.signNumber
+        )
+        if (is) {
+          this.requestCZDA_debounce(is)
+        } else this.beforeFileFind = !is
+      },
+      deep: true
+    },
     // 根据苗圃显示分区
     'breedForm.breedArea.nursery': function() {
       this.ZY_fenqu = []
@@ -256,6 +274,8 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      beforeFileFind: true, // 是否找到目标档案
+
       // 暂养区域（区域、苗圃、分区）
       ZY_quyu: [],
       ZY_miaopu: [],
@@ -279,15 +299,15 @@ export default {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
-    requestCZDA() {
-      let is = Boolean(
-        this.breedForm.breedArea.firstArea &&
-          this.breedForm.breedArea.nursery &&
-          this.breedForm.breedArea.partition &&
-          this.breedForm.signColor &&
-          this.breedForm.signNumber
-      )
-      console.log(is)
+    requestCZDA(is) {
+      // let is = Boolean(
+      //   this.breedForm.breedArea.firstArea &&
+      //     this.breedForm.breedArea.nursery &&
+      //     this.breedForm.breedArea.partition &&
+      //     this.breedForm.signColor &&
+      //     this.breedForm.signNumber
+      // )
+      // console.log(is)
       if (is) {
         let requestObj = getCZDA_ZY(CZDA_01, this.breedForm)
         reqApi(requestObj, '/tree/select').then(res => {
@@ -295,7 +315,17 @@ export default {
           if (res.data.status === 200) {
             if (res.data.response) {
               this.file_spaid =
-                res.data.response.CZDA.objects[0].principle.SpaId
+                res.data.response.CZDA.objects[0].principle.SpaId // 缓存档案spaid
+
+              // 成功提示消息
+              this.$message({
+                showClose: true,
+                message: '档案已找到！',
+                type: 'success'
+              })
+
+              // 记录表单可以操作了
+              this.beforeFileFind = !is
             } else {
               this.$message({
                 showClose: true,
@@ -317,8 +347,8 @@ export default {
     },
 
     requestCZDA_debounce: debounce(
-      function() {
-        this.requestCZDA()
+      function(is) {
+        this.requestCZDA(is)
       },
       1000,
       false

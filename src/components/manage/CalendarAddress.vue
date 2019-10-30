@@ -204,10 +204,20 @@ export default {
     // }
     ...mapGetters({
       currentZD_data: 'getCurrentZD_data',
-      addressList: 'getAddressList'
+      addressList_before: 'getAddressList' // 后端返回的未按照站点编号排序的站点列表
     }),
 
     ...mapState(['currentZD']),
+
+    // 将站点列表按照编号排序
+    addressList() {
+      let compare = id => (a, b) => {
+        let value1 = a[id]
+        let value2 = b[id]
+        return value1.localeCompare(value2)
+      }
+      return this.addressList_before.sort(compare('id'))
+    },
 
     yearMonth() {
       return (
@@ -270,6 +280,18 @@ export default {
 
       this.setActivityDays(moment().format('YYYYMM')) // 站点改变，月视图改变
       this.todayHasActivity(moment())
+    },
+
+    // 初始化站点定位到 A大澳湾
+    initAddress(currentAddress) {
+      if (this.addressList[this.addressIndex].id !== currentAddress) {
+        for (let i = 0; i < this.addressList.length; i++) {
+          if (this.addressList[i].id === currentAddress) {
+            this.selectAddress(i)
+            break
+          }
+        }
+      }
     },
 
     // 防抖，当选择地点稳定下来后请求数据
@@ -458,7 +480,9 @@ export default {
 
     // 初始化时间
     this.onSelect(moment())
-
+    // this.selectAddress(0)
+    // this.initAddress('A')
+    // console.log(this.addressSortList)
     if (this.$route.path === '/manage/coralBreed/dayActivity') {
       this.showDrawer()
     }

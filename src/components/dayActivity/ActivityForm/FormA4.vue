@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two">
+    <el-form class="A-Two" :model="sowForm">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
@@ -50,12 +50,12 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="sowForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
+          <el-input v-model="sowForm.signNumber" placeholder="号码"></el-input>
         </el-col>
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -152,6 +152,23 @@ export default {
     ...mapState(['currentZD'])
   },
   watch: {
+    // 监听整个查找档案的表单对象
+    sowForm: {
+      handler: function() {
+        let is = Boolean(
+          this.sowForm.sowArea.firstArea &&
+            this.sowForm.sowArea.line &&
+            this.sowForm.sowArea.segmentation &&
+            this.sowForm.signColor &&
+            this.sowForm.signNumber
+        )
+        if (is) {
+          this.requestCZDA_debounce(is)
+        } else this.beforeFileFind = !is
+      },
+      deep: true
+    },
+
     // 根据样线显示分段
     'sowForm.sowArea.line': function() {
       this.HB_fenduan = []
@@ -178,6 +195,8 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      beforeFileFind: true, // 是否找到目标档案
+
       // 回播区域（区域、样线、分段）
       HB_quyu: [],
       HB_yangxian: [],
@@ -195,15 +214,7 @@ export default {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
-    requestCZDA() {
-      let is = Boolean(
-        this.sowForm.breedArea.firstArea &&
-          this.sowForm.breedArea.nursery &&
-          this.sowForm.breedArea.partition &&
-          this.sowForm.signColor &&
-          this.sowForm.signNumber
-      )
-      console.log(is)
+    requestCZDA(is) {
       if (is) {
         let requestObj = getCZDA_HB(CZDA_01, this.sowForm)
         reqApi(requestObj, '/tree/select').then(res => {
@@ -212,6 +223,16 @@ export default {
             if (res.data.response) {
               this.file_spaid =
                 res.data.response.CZDA.objects[0].principle.SpaId
+
+              // 成功提示消息
+              this.$message({
+                showClose: true,
+                message: '档案已找到！',
+                type: 'success'
+              })
+
+              // 记录表单可以操作了
+              this.beforeFileFind = !is
             } else {
               this.$message({
                 showClose: true,
@@ -233,8 +254,8 @@ export default {
     },
 
     requestCZDA_debounce: debounce(
-      function() {
-        this.requestCZDA()
+      function(is) {
+        this.requestCZDA(is)
       },
       1000,
       false
@@ -347,7 +368,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(75%, -50%);
 }
 
 .buttonArea {
