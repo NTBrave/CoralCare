@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two">
+    <el-form class="A-Two" :model="breedForm" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
@@ -50,12 +50,12 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="breedForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
+          <el-input v-model="breedForm.signNumber" placeholder="号码"></el-input>
         </el-col>
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -115,12 +115,19 @@
 
     <div class="buttonArea">
       <el-button
-        v-if="isCreated"
+        v-if="isCreated && beforeCreateRecord"
         class="afterCreate"
         type="danger"
         round
         @click="submitRecorder"
       >录入暂养巡检数据</el-button>
+      <el-button
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
+        type="danger"
+        round
+        @click="routeToSuccess"
+      >图片录入</el-button>
       <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改暂养巡检数据</el-button>
     </div>
   </div>
@@ -144,6 +151,23 @@ export default {
     isCreated: Boolean
   },
   watch: {
+    // 监听整个查找档案的表单对象
+    breedForm: {
+      handler: function() {
+        let is = Boolean(
+          this.breedForm.breedArea.firstArea &&
+            this.breedForm.breedArea.nursery &&
+            this.breedForm.breedArea.partition &&
+            this.breedForm.signColor &&
+            this.breedForm.signNumber
+        )
+        if (is) {
+          this.requestCZDA_debounce(is)
+        } else this.beforeFileFind = !is
+      },
+      deep: true
+    },
+
     // 根据苗圃显示分区
     'breedForm.breedArea.nursery': function() {
       this.ZY_fenqu = []
@@ -181,6 +205,8 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      beforeFileFind: true, // 是否找到目标档案
+
       // 暂养区域（区域、苗圃、分区）
       ZY_quyu: [],
       ZY_miaopu: [],
@@ -191,27 +217,53 @@ export default {
       record_spaid: '',
 
       breedForm: this.breedData,
-      recordForm: this.recordData
+      recordForm: this.recordData,
+
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
+      // 携带参数路由跳转
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
+    },
+
     // 根据最后的号码输入框改变请求 残枝档案spaid
-    requestCZDA() {
-      if (
-        this.breedForm.breedArea.firstArea &&
-        this.breedForm.breedArea.nursery &&
-        this.breedForm.breedArea.partition &&
-        this.breedForm.signColor
-      ) {
+    requestCZDA(is) {
+      // if (
+      //   this.breedForm.breedArea.firstArea &&
+      //   this.breedForm.breedArea.nursery &&
+      //   this.breedForm.breedArea.partition &&
+      //   this.breedForm.signColor
+      // ) {
+      if (is) {
         let requestObj = getCZDA_ZY(CZDA_01, this.breedForm)
         reqApi(requestObj, '/tree/select').then(res => {
           console.log(res)
           if (res.data.status === 200) {
             if (res.data.response) {
               this.file_spaid =
-                res.data.response.CZDA.objects[0].principle.SpaId
+                res.data.response.CZDA.objects[0].principle.SpaId // 缓存档案spaid
+
+              // 成功提示消息
+              this.$message({
+                showClose: true,
+                message: '档案已找到！',
+                type: 'success'
+              })
+
+              // 记录表单可以操作了
+              this.beforeFileFind = !is
             } else {
               this.$message({
                 showClose: true,
@@ -221,12 +273,19 @@ export default {
             }
           }
         })
+      } else {
+        this.$message({
+          showClose: true,
+          message: '残枝档案信息不完整！',
+          type: 'error',
+          duration: 4000
+        })
       }
     },
 
     requestCZDA_debounce: debounce(
-      function() {
-        this.requestCZDA()
+      function(is) {
+        this.requestCZDA(is)
       },
       1000,
       false
@@ -259,15 +318,7 @@ export default {
             type: 'success'
           })
 
-          // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
+          this.beforeCreateRecord = false
         }
         console.log(res)
       })

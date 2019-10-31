@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two">
+    <el-form class="A-Two" :model="sowForm" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
@@ -50,12 +50,12 @@
           </el-select>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="sowForm.signNumber" placeholder="号码" @blur="requestCZDA_debounce"></el-input>
+          <el-input v-model="sowForm.signNumber" placeholder="号码"></el-input>
         </el-col>
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -115,12 +115,19 @@
 
     <div class="buttonArea">
       <el-button
-        v-if="isCreated"
+        v-if="isCreated && beforeCreateRecord"
         class="afterCreate"
         type="danger"
         round
         @click="submitRecorder"
       >录入回播巡检数据</el-button>
+      <el-button
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
+        type="danger"
+        round
+        @click="routeToSuccess"
+      >图片录入</el-button>
       <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改回播巡检数据</el-button>
     </div>
   </div>
@@ -130,7 +137,7 @@
 // import {} from '../../api/api'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
-import { ZYQY_HBQY, CZDA_01, R06 } from '../../../json/entity'
+import { ZYQY_HBQY, CZDA_02, R06 } from '../../../json/entity'
 import {
   requestZYQY_HBQY,
   getCZDA_HB,
@@ -152,6 +159,23 @@ export default {
     ...mapState(['currentZD'])
   },
   watch: {
+    // 监听整个查找档案的表单对象
+    sowForm: {
+      handler: function() {
+        let is = Boolean(
+          this.sowForm.sowArea.firstArea &&
+            this.sowForm.sowArea.line &&
+            this.sowForm.sowArea.segmentation &&
+            this.sowForm.signColor &&
+            this.sowForm.signNumber
+        )
+        if (is) {
+          this.requestCZDA_debounce(is)
+        } else this.beforeFileFind = !is
+      },
+      deep: true
+    },
+
     // 根据样线显示分段
     'sowForm.sowArea.line': function() {
       this.HB_fenduan = []
@@ -178,6 +202,8 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      beforeFileFind: true, // 是否找到目标档案
+
       // 回播区域（区域、样线、分段）
       HB_quyu: [],
       HB_yangxian: [],
@@ -188,30 +214,34 @@ export default {
       record_spaid: '',
 
       sowForm: this.sowData,
-      recordForm: this.recordData
+      recordForm: this.recordData,
+
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
-    requestCZDA() {
-      let is = Boolean(
-        this.sowForm.breedArea.firstArea &&
-          this.sowForm.breedArea.nursery &&
-          this.sowForm.breedArea.partition &&
-          this.sowForm.signColor &&
-          this.sowForm.signNumber
-      )
-      console.log(is)
+    requestCZDA(is) {
       if (is) {
-        let requestObj = getCZDA_HB(CZDA_01, this.sowForm)
+        let requestObj = getCZDA_HB(CZDA_02, this.sowForm)
         reqApi(requestObj, '/tree/select').then(res => {
           console.log(res)
           if (res.data.status === 200) {
             if (res.data.response) {
               this.file_spaid =
                 res.data.response.CZDA.objects[0].principle.SpaId
+
+              // 成功提示消息
+              this.$message({
+                showClose: true,
+                message: '档案已找到！',
+                type: 'success'
+              })
+
+              // 记录表单可以操作了
+              this.beforeFileFind = !is
             } else {
               this.$message({
                 showClose: true,
@@ -233,8 +263,8 @@ export default {
     },
 
     requestCZDA_debounce: debounce(
-      function() {
-        this.requestCZDA()
+      function(is) {
+        this.requestCZDA(is)
       },
       1000,
       false
@@ -243,6 +273,18 @@ export default {
     // 向父组件传递 档案spaid 和 记录spaid
     sendSpaid() {
       this.$emit('func', this.file_spaid, this.record_spaid)
+    },
+
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
     },
 
     submitRecorder() {
@@ -269,15 +311,7 @@ export default {
             type: 'success'
           })
 
-          // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
+          this.beforeCreateRecord = false
         }
         console.log(res)
       })
@@ -347,7 +381,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(75%, -50%);
 }
 
 .buttonArea {

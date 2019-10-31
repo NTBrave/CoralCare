@@ -35,7 +35,11 @@
         <upload-border>
           <div class="imgUpload">
             <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load></up-load>
+            <up-load
+              @createImg="imgArrPush"
+              :masterid.sync="record_spaid"
+              :czda_spaid.sync="file_spaid"
+            ></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -199,6 +203,16 @@ export default {
     },
     setData(res) {
       this.recordData = res
+    },
+
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(fileId) {
+      reqApi({ file_id: fileId }, '/file/get').then(res => {
+        console.log('img:', res)
+        if (res.data.status === 200 && res.data.response) {
+          this.imgUrl.push({ url: res.data.response.url })
+        }
+      })
     }
   },
   mounted() {},
@@ -221,11 +235,12 @@ export default {
 .createBoard {
   display: flex;
   width: 100%;
+  justify-content: space-around;
 
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
 
     .activityNum {
       width: 40%;
@@ -249,9 +264,9 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 40%;
+        width: 60%;
         min-width: 350px;
-        max-width: 400px;
+        max-width: 500px;
 
         p {
           height: 1.8rem;
@@ -265,7 +280,7 @@ export default {
 
   .uploadArea {
     width: 40vw;
-    margin-left: 5vw;
+    margin-right: 5vw;
     margin-top: 2.3rem;
 
     .imgUpload {

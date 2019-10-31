@@ -34,8 +34,8 @@
                 <span>{{item.msg2}}</span>
                 <span class="color-block" :style="'background-color:'+item.color2"></span>
               </span>
-
-              <span v-if="item.title.search(/尺寸/)>0">
+              <span v-if="item.title === '尺寸' && item.msg">cm</span>
+              <span v-if="item.title === '面积' && item.msg">
                 cm
                 <sup>2</sup>
               </span>

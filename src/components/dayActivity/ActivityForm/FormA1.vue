@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form :disabled="isCreated && !beforeCreateFile" size="mini">
+    <el-form ref="fileForm" size="mini" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">牌色</span>
@@ -102,7 +102,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form :disabled="isCreated && beforeCreateFile" ref="recorderForm" size="mini">
+    <el-form ref="recorderForm" size="mini" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -162,26 +162,21 @@
 
     <div class="buttonArea">
       <el-button
-        class="beforeCreate"
-        v-if="isCreated && beforeCreateFile"
-        type="danger"
-        round
-        @click="createFile"
-      >创建珊瑚档案</el-button>
-      <el-button
         class="afterCreate"
-        v-if="isCreated && !beforeCreateFile"
+        v-if="isCreated && beforeCreateRecord"
+        :disabled="fileInfoNeed"
         type="danger"
         round
-        @click="submitRecorder"
+        @click="submitRecorder()"
       >录入首次暂养数据</el-button>
       <el-button
-        class="afterCreate"
-        v-if="!isCreated"
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
         type="danger"
         round
-        @click="submitEdit"
-      >修改首次暂养数据</el-button>
+        @click="routeToSuccess"
+      >图片录入</el-button>
+      <el-button class="afterCreate" v-else type="danger" round @click="submitRecorder()">修改首次暂养数据</el-button>
     </div>
   </div>
 </template>
@@ -197,6 +192,7 @@ import {
   createR03,
   requestZYQY_HBQY
 } from '../../../util/apiCreator'
+import { objIsEmpty } from '../../../util/formRules'
 export default {
   props: {
     fileData: Object,
@@ -204,6 +200,15 @@ export default {
     isCreated: Boolean
   },
   watch: {
+    // 监听档案信息是否有空值
+    fileForm: {
+      handler: function() {
+        let ready = objIsEmpty(this.fileForm)
+        console.log(ready)
+        this.fileInfoNeed = ready
+      },
+      deep: true
+    },
     // 根据目类来请求科类
     'fileForm.species.first': function() {
       this.species_family = []
@@ -313,19 +318,15 @@ export default {
       fileForm: this.fileData, // 接受父页面传来的档案信息
       recordForm: this.recordData, // 接受父页面传来的记录信息
 
-      beforeCreateFile: true // 首次暂养时需要先创建档案才能录入记录
+      fileInfoNeed: true, // 首次暂养时需要先创建档案才能录入记录
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
 
     createFile() {
-      // 创建档案接口
-
       this.setOperateFile('A-宇宙号-1区-蓝-10')
-      this.beforeCreateFile = false
-
-      // console.log(this.fileForm)
     },
 
     // 向父组件传递 档案spaid 和 记录spaid
@@ -334,9 +335,6 @@ export default {
     },
 
     submitRecorder() {
-      // 提交记录接口，成功后跳转到查看详情页面
-      // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
-
       let newR03 = createR03(
         R03,
         this.currentZD_data(this.currentZD).ExtendData.czdaroot_spaid,
@@ -359,37 +357,24 @@ export default {
           // 数据成功录入提醒
           this.$message({
             showClose: true,
-            message: '数据已成功录入！',
+            message: '记录已成功录入！',
             type: 'success'
           })
 
+          this.beforeCreateRecord = false
+
           // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
         }
         // else if(res.data.status === 406){
 
         // }
       })
-      // .then(e => {
-      //   console.log(e)
-      // })
     },
-    submitEdit() {
-      // 修改成功接口
-      this.$message({
-        showClose: true,
-        message: '数据修改成功！',
-        type: 'success'
-      })
+
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
       this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
@@ -397,6 +382,22 @@ export default {
         }
       })
     },
+    // submitEdit() {
+    //   // 修改成功接口
+    //   this.$message({
+    //     showClose: true,
+    //     message: '记录修改成功！',
+    //     type: 'success'
+    //   })
+    //   this.$router.push({
+    //     path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+    //     query: {
+    //       time: this.$route.query.time,
+    //       address: this.$route.query.address,
+    //       activityType: this.$route.query.activityType
+    //     }
+    //   })
+    // },
 
     // 初始化请求珊瑚目类
     requestOrder() {

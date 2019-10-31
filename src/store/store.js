@@ -90,8 +90,6 @@ const state = {
    *  残枝培育部分
    */
 
-  uploadVisiable: true,
-
   // currentWork: "", // 当前的作业编号
 
   nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表
