@@ -16,10 +16,6 @@ axios.defaults.withCredentials = false;
 
 //阿里云
 export const baseUrl = "http://39.108.93.27:9091";
-<<<<<<< HEAD
-
-=======
->>>>>>> 5d2535285c89e5d1b235377526b6c619a36d23f3
 
 /**
  *   统一请求接口

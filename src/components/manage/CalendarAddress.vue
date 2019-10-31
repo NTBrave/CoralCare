@@ -87,9 +87,9 @@
 </template>
 <script>
 // 日历语言
-import moment from 'moment'
-import 'moment/locale/zh-cn'
-moment.locale('zh-cn')
+import moment from "moment";
+import "moment/locale/zh-cn";
+moment.locale("zh-cn");
 
 // 地点
 // const addressList = [
@@ -122,39 +122,39 @@ moment.locale('zh-cn')
 // 日历配置
 const locale = {
   lang: {
-    placeholder: 'Select date',
-    rangePlaceholder: ['Start date', 'End date'],
-    today: 'Today',
-    now: 'Now',
-    backToToday: 'Back to today',
-    ok: 'Ok',
-    clear: 'Clear',
-    month: '月',
-    year: '年',
-    timeSelect: 'Select time',
-    dateSelect: 'Select date',
-    monthSelect: 'Choose a month',
-    yearSelect: 'Choose a year',
-    decadeSelect: 'Choose a decade',
-    yearFormat: 'YYYY',
-    dateFormat: 'M/D/YYYY',
-    dayFormat: 'D',
-    dateTimeFormat: 'M/D/YYYY HH:mm:ss',
-    monthFormat: 'MMMM',
+    placeholder: "Select date",
+    rangePlaceholder: ["Start date", "End date"],
+    today: "Today",
+    now: "Now",
+    backToToday: "Back to today",
+    ok: "Ok",
+    clear: "Clear",
+    month: "月",
+    year: "年",
+    timeSelect: "Select time",
+    dateSelect: "Select date",
+    monthSelect: "Choose a month",
+    yearSelect: "Choose a year",
+    decadeSelect: "Choose a decade",
+    yearFormat: "YYYY",
+    dateFormat: "M/D/YYYY",
+    dayFormat: "D",
+    dateTimeFormat: "M/D/YYYY HH:mm:ss",
+    monthFormat: "MMMM",
     monthBeforeYear: true,
-    previousMonth: 'Previous month (PageUp)',
-    nextMonth: 'Next month (PageDown)',
-    previousYear: 'Last year (Control + left)',
-    nextYear: 'Next year (Control + right)',
-    previousDecade: 'Last decade',
-    nextDecade: 'Next decade',
-    previousCentury: 'Last century',
-    nextCentury: 'Next century'
+    previousMonth: "Previous month (PageUp)",
+    nextMonth: "Next month (PageDown)",
+    previousYear: "Last year (Control + left)",
+    nextYear: "Next year (Control + right)",
+    previousDecade: "Last decade",
+    nextDecade: "Next decade",
+    previousCentury: "Last century",
+    nextCentury: "Next century"
   },
   timePickerLocale: {
-    placeholder: 'Select time'
+    placeholder: "Select time"
   }
-}
+};
 
 // const datesHaveActivity = [
 //   { date: '20190907', state: 0 },
@@ -165,15 +165,15 @@ const locale = {
 //   { date: '20190925', state: 0 }
 // ]
 
-import DrawerVue from './Drawer.vue'
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import { reqApi } from '../../api/api'
-import { W01, W03 } from '../../json/entity'
-import { debounce } from '../../util/requestLimit'
+import DrawerVue from "./Drawer.vue";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { reqApi } from "../../api/api";
+import { W01, W03 } from "../../json/entity";
+import { debounce } from "../../util/requestLimit";
 
 export default {
   components: {
-    'show-drawer': DrawerVue
+    "show-drawer": DrawerVue
   },
   data() {
     return {
@@ -181,77 +181,78 @@ export default {
 
       locale,
 
-      bannerHeight: '', // 轮播图片
+      bannerHeight: "", // 轮播图片
       addressIndex: 0, // 轮播图片索引
 
-      chooseDate: '', // 选择活动日期
+      chooseDate: "", // 选择活动日期
 
-      dateNumber_review: '', // 以活动日期生成的查看当日活动编号
-      dateNumber_build: '', // 以活动日期和具体时间生成的新建活动编号
-      activityAddress: '', // 活动地点
+      dateNumber_review: "", // 以活动日期生成的查看当日活动编号
+      dateNumber_build: "", // 以活动日期和具体时间生成的新建活动编号
+      activityAddress: "", // 活动地点
 
-      selectHour: '', // 选择具体活动时间
+      selectHour: "", // 选择具体活动时间
 
       ifNewActivity: true, // 是否显示新建活动按钮
       isTimeReady: true, // 是否能建活动
 
       datesHaveActivity: [] // 有作业的日期
-    }
+    };
   },
   computed: {
     // activity() {
     //   return this.$store.getters.getActivity
     // }
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data',
-      addressList_before: 'getAddressList' // 后端返回的未按照站点编号排序的站点列表
+      currentZD_data: "getCurrentZD_data",
+      addressList_before: "getAddressList" // 后端返回的未按照站点编号排序的站点列表
     }),
 
-    ...mapState(['currentZD']),
+    ...mapState(["currentZD"]),
 
     // 将站点列表按照编号排序
     addressList() {
+      let _this = this;
       let compare = id => (a, b) => {
-        let value1 = a[id]
-        let value2 = b[id]
-        return value1.localeCompare(value2)
-      }
-      return this.addressList_before.sort(compare('id'))
+        let value1 = a[id];
+        let value2 = b[id];
+        return value1.localeCompare(value2);
+      };
+      return _this.addressList_before.sort(compare("id"));
     },
 
     yearMonth() {
       return (
         this.dateNumber_review.slice(0, 6) || this.dateNumber_build.slice(0, 6)
-      )
+      );
     }
   },
   watch: {
     selectHour: function() {
       // this.submitTimeAddress()
-      this.timeReady(this.selectHour)
+      this.timeReady(this.selectHour);
     },
-    '$route.path': function() {
-      if (this.$route.path !== '/manage/coralBreed/dayActivity') {
-        this.closeDrawer()
+    "$route.path": function() {
+      if (this.$route.path !== "/manage/coralBreed/dayActivity") {
+        this.closeDrawer();
       } else {
-        this.showDrawer()
+        this.showDrawer();
       }
     }
   },
   methods: {
-    ...mapMutations(['setCurrentZD', 'setWorkList', 'setCurrentWork']),
+    ...mapMutations(["setCurrentZD", "setWorkList", "setCurrentWork"]),
 
     // 点击打开抽屉
     showDrawer() {
-      this.setActivityDays(this.yearMonth)
-      this.todayHasActivity(moment())
-      this.$refs.drawer.open()
+      this.setActivityDays(this.yearMonth);
+      this.todayHasActivity(moment());
+      this.$refs.drawer.open();
     },
 
     // 关闭抽屉时清空selectHour
     closeDrawer() {
-      this.$refs.drawer.close()
-      this.selectHour = ''
+      this.$refs.drawer.close();
+      this.selectHour = "";
     },
 
     // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
@@ -261,25 +262,25 @@ export default {
       // } else {
       //   this.dayActivity()
       // }
-      if (this.$route.path === '/manage/coralBreed/dayActivity') {
-        this.dayActivity()
+      if (this.$route.path === "/manage/coralBreed/dayActivity") {
+        this.dayActivity();
       } else {
-        this.closeDrawer()
+        this.closeDrawer();
       }
     },
 
     // 轮播图地点变动
     selectAddress(pre) {
-      this.addressIndex = pre
+      this.addressIndex = pre;
       this.activityAddress =
-        this.addressList[pre].id + this.addressList[pre].name
+        this.addressList[pre].id + this.addressList[pre].name;
 
-      this.setCurrentZD(this.addressList[pre].id) // 缓存选择的站点
+      this.setCurrentZD(this.addressList[pre].id); // 缓存选择的站点
 
-      console.log(this.currentZD_data(this.addressList[pre].id))
+      console.log(this.currentZD_data(this.addressList[pre].id));
 
-      this.setActivityDays(moment().format('YYYYMM')) // 站点改变，月视图改变
-      this.todayHasActivity(moment())
+      this.setActivityDays(moment().format("YYYYMM")); // 站点改变，月视图改变
+      this.todayHasActivity(moment());
     },
 
     // 初始化站点定位到 A大澳湾
@@ -287,8 +288,8 @@ export default {
       if (this.addressList[this.addressIndex].id !== currentAddress) {
         for (let i = 0; i < this.addressList.length; i++) {
           if (this.addressList[i].id === currentAddress) {
-            this.selectAddress(i)
-            break
+            this.selectAddress(i);
+            break;
           }
         }
       }
@@ -297,7 +298,7 @@ export default {
     // 防抖，当选择地点稳定下来后请求数据
     selectAddress_debounce: debounce(
       function(pre) {
-        this.selectAddress(pre)
+        this.selectAddress(pre);
       },
       1500,
       false
@@ -307,39 +308,39 @@ export default {
     onPanelChange(value) {
       // 切换年月视图时更新当前月视图有作业日期
 
-      this.setActivityDays(value.format('YYYYMM'))
-      this.todayHasActivity(value)
+      this.setActivityDays(value.format("YYYYMM"));
+      this.todayHasActivity(value);
     },
 
     // 日历时间选择
     onSelect(value, mode) {
       // console.log(value)
-      this.onPanelChange(value)
-      this.chooseDate = value.format('M月D日  YYYY年')
-      this.dateNumber_build = value.format('YYYYMMDD')
-      this.dateNumber_review = value.format('YYYYMMDD')
+      this.onPanelChange(value);
+      this.chooseDate = value.format("M月D日  YYYY年");
+      this.dateNumber_build = value.format("YYYYMMDD");
+      this.dateNumber_review = value.format("YYYYMMDD");
     },
 
     // 新建活动按钮与选择具体时间输入框显示控制
     newActivity() {
-      this.ifNewActivity = !this.ifNewActivity
+      this.ifNewActivity = !this.ifNewActivity;
     },
 
     // 选择具体时间后才可以确认新建残枝作业
     timeReady(hourTime) {
-      if (typeof hourTime === 'number' && hourTime > 0 && hourTime <= 24) {
+      if (typeof hourTime === "number" && hourTime > 0 && hourTime <= 24) {
         if (hourTime < 10) {
-          this.dateNumber_build = this.dateNumber_review + 0 + hourTime
+          this.dateNumber_build = this.dateNumber_review + 0 + hourTime;
           // this.selectHour = '0' + hourTime + ":00"
         } else {
-          this.dateNumber_build = this.dateNumber_review + hourTime
+          this.dateNumber_build = this.dateNumber_review + hourTime;
           // this.selectHour = hourTime+":00"
         }
-        this.selectHour = hourTime
+        this.selectHour = hourTime;
         // console.log(this.selectHour)
-        this.isTimeReady = false
+        this.isTimeReady = false;
       } else {
-        this.isTimeReady = true
+        this.isTimeReady = true;
       }
     },
 
@@ -348,30 +349,30 @@ export default {
       // this.onSelect(moment())
       W03.Jobs[0].MasterSpaId = this.currentZD_data(
         this.currentZD
-      ).ExtendData.ywsj_spaid
+      ).ExtendData.ywsj_spaid;
       W03.Jobs[0].Object.ExtendData.pyzd_spaid = this.currentZD_data(
         this.currentZD
-      ).SpaId
-      W03.Jobs[0].Object.ExtendData.timestamp = this.dateNumber_build
+      ).SpaId;
+      W03.Jobs[0].Object.ExtendData.timestamp = this.dateNumber_build;
       // W03.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
       // W03.Jobs[0].Object.ExtendData.pyzd_spaid =
       //   '10e489cb-aa38-47fa-ae49-fef7c2296977'
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
-      reqApi(W03, '/tree/create')
+      reqApi(W03, "/tree/create")
         .then(res => {
-          console.log(res)
+          console.log(res);
           if (res.data.status === 200) {
-            console.log(res)
-            let newWork = {}
+            console.log(res);
+            let newWork = {};
             newWork.pyzd_spaid =
-              res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
+              res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid;
             newWork.timestamp =
-              res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
-            newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
+              res.data.response.CZZY.objects[0].principle.ExtendData.timestamp;
+            newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId;
 
-            this.setWorkList(newWork)
-            this.setCurrentWork(this.$route.query.time)
-            console.log('+++++++', this.$store.state.workList)
+            this.setWorkList(newWork);
+            this.setCurrentWork(this.$route.query.time);
+            console.log("+++++++", this.$store.state.workList);
 
             // 创建成功路由跳转
             this.$router.push({
@@ -382,13 +383,13 @@ export default {
                 time: this.dateNumber_build,
                 address: this.activityAddress
               }
-            })
-            this.closeDrawer()
+            });
+            this.closeDrawer();
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
 
     // 点击查看当日活动
@@ -401,31 +402,31 @@ export default {
           time: this.dateNumber_review,
           address: this.activityAddress
         }
-      })
-      this.closeDrawer()
+      });
+      this.closeDrawer();
     },
 
     // 当前月视图有活动的日期列表（需渲染不同样式）
     todayHasActivity(value) {
-      let dateList
+      let dateList;
       if (this.datesHaveActivity.length > 0) {
         for (let i = 0; i < this.datesHaveActivity.length; i++) {
-          let date = moment(this.datesHaveActivity[i].date, 'YYYYMMDD').format(
-            'MMDD'
-          )
-          if (value.format('MMDD') === date) {
+          let date = moment(this.datesHaveActivity[i].date, "YYYYMMDD").format(
+            "MMDD"
+          );
+          if (value.format("MMDD") === date) {
             switch (this.datesHaveActivity[i].state) {
               case 0:
                 dateList = {
-                  color: 'rgba(255,255,255,1)'
+                  color: "rgba(255,255,255,1)"
                   // content: date.slice(2)
-                }
-                break
+                };
+                break;
               default:
             }
           }
         }
-        return dateList || null
+        return dateList || null;
       }
       // else {
       //   return null
@@ -437,27 +438,27 @@ export default {
       // 逻辑赋值
       W01.Jobs[0].MasterSpaId = this.currentZD_data(
         this.currentZD
-      ).ExtendData.ywsj_spaid
+      ).ExtendData.ywsj_spaid;
       W01.Jobs[0].Where[0].Operator.Value = this.currentZD_data(
         this.currentZD
-      ).ExtendData.ywsj_spaid
+      ).ExtendData.ywsj_spaid;
       // W01.Jobs[0].MasterSpaId = '737ee050-7f45-4dc7-b276-59b410581cc8'
       // W01.Jobs[0].Where[0].Operator.Value =
       //   '737ee050-7f45-4dc7-b276-59b410581cc8'
-      W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`
-      reqApi(W01, '/tree/select').then(res => {
+      W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`;
+      reqApi(W01, "/tree/select").then(res => {
         // console.log(res)
         if (res.data.response) {
           for (let i of res.data.response.CZZY.objects) {
-            let obj = {}
-            obj.date = i.principle.ExtendData.timestamp
-            obj.state = 0
-            this.datesHaveActivity.push(obj)
+            let obj = {};
+            obj.date = i.principle.ExtendData.timestamp;
+            obj.state = 0;
+            this.datesHaveActivity.push(obj);
           }
         } else {
-          this.datesHaveActivity = []
+          this.datesHaveActivity = [];
         }
-      })
+      });
     }
 
     // 图片首次加载方法
@@ -479,15 +480,15 @@ export default {
     // })
 
     // 初始化时间
-    this.onSelect(moment())
+    this.onSelect(moment());
     // this.selectAddress(0)
     // this.initAddress('A')
     // console.log(this.addressSortList)
-    if (this.$route.path === '/manage/coralBreed/dayActivity') {
-      this.showDrawer()
+    if (this.$route.path === "/manage/coralBreed/dayActivity") {
+      this.showDrawer();
     }
   }
-}
+};
 </script>
 <style lang="stylus" scoped>
 .ifShowCalendar {
