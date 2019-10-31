@@ -5,7 +5,7 @@
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
 
 <style>
@@ -15,7 +15,7 @@ export default {}
 }
 
 #app {
-  font-family: 'Microsoft YaHei', 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Microsoft YaHei", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
@@ -41,5 +41,27 @@ export default {}
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(0, 0, 0, 0.1);
+}
+/* 加载动画 */
+.loadingSvg {
+  display: flex;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  transition: 0.5s;
+  transform-origin: 30px 30px;
+  animation: rotate 1s linear infinite; /*开始动画后无限循环，用来控制rotate*/
+  background-image: url("./assets/images/loading.svg");
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex;">
-    <div>
+    <div class="min-img">
       <canvas id="mycanvas" @mousedown="setPoint"></canvas>
     </div>
     <div style="margin-left:1rem;color:#000;position: relative;">
@@ -518,8 +518,7 @@ export default {
   /* height: 100%; */
 }
 #mycanvas {
-  max-width: 700px;
-  border: 1px solid rgb(199, 198, 198);
+  max-width: 40vw;
 }
 
 .my-btn {
@@ -593,5 +592,10 @@ export default {
   margin-top: 1rem;
   border: 1px solid rgb(63, 193, 203);
   padding: 0.5rem;
+}
+.min-img {
+  /* min-height: 650px; */
+  min-width: 40vw;
+  border: 1px solid rgb(199, 198, 198);
 }
 </style>

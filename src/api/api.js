@@ -10,12 +10,12 @@ export const DELETE = "delete";
 axios.defaults.withCredentials = false;
 
 //昊中
-export const baseUrl = "http://192.168.199.102:9091";
+// export const baseUrl = "http://192.168.199.102:9091";
 // 苏恒
 // export const baseUrl = "http://192.168.199.107:9091";
 
 //阿里云
-// export const baseUrl = "http://39.108.93.27/:9091";
+export const baseUrl = "http://39.108.93.27:9091";
 
 
 /**
