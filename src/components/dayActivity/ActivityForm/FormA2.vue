@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two" :model="breedForm">
+    <el-form class="A-Two" :model="breedForm" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
@@ -55,7 +55,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -115,12 +115,19 @@
 
     <div class="buttonArea">
       <el-button
-        v-if="isCreated"
+        v-if="isCreated && beforeCreateRecord"
         class="afterCreate"
         type="danger"
         round
         @click="submitRecorder"
       >录入暂养巡检数据</el-button>
+      <el-button
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
+        type="danger"
+        round
+        @click="routeToSuccess"
+      >图片录入</el-button>
       <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改暂养巡检数据</el-button>
     </div>
   </div>
@@ -210,11 +217,26 @@ export default {
       record_spaid: '',
 
       breedForm: this.breedData,
-      recordForm: this.recordData
+      recordForm: this.recordData,
+
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
     ...mapMutations(['setOperateFile', 'setActivityFiles']),
+
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
+      // 携带参数路由跳转
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
+    },
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA(is) {
@@ -296,15 +318,7 @@ export default {
             type: 'success'
           })
 
-          // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
+          this.beforeCreateRecord = false
         }
         console.log(res)
       })

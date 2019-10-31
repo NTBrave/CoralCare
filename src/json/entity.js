@@ -593,26 +593,27 @@ export const R05 =
         },
         {							//创建记录必须要更新档案
             "Method": "update",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZDAROOT",
             "Object": {
                 "ExtendType": "CZDA",
+                "SpaId":'',
                 "ExtendData": {
                     "haopai_color": "",
                     "haopai_number": "",
-                    "order_spaid": "",		//外键 所属珊瑚目
-                    "family_spaid": "",		//外键 所属珊瑚科
-                    "genus_spaid": "",		//外键 所属珊瑚属
+                    // "order_spaid": "",		//外键 所属珊瑚目
+                    // "family_spaid": "",		//外键 所属珊瑚科
+                    // "genus_spaid": "",		//外键 所属珊瑚属
                     "pyzd_spaid": "",	//外键 所属培育站点
                     "stage": "回播",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",		//外键 所属采集区域
+                    // "quyu_spaid": "",		//外键 所属采集区域
                     "miaopu_spaid": "",		//外键 所属（暂养）苗圃
                     "fenqu_spaid": "",		//外键 所属（暂养）分区
                     "yangxian_spaid": "",	//外键 所属（回播）样线
                     "fenduan_spaid": "",		//外键 所属（回播）分段
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": "",
+                    // "starred": "",	//是否关注 0 1
+                    // "ended": "",		//是否完结 0 1
+                    // "label": "",
                     "comment": ""
                 }
             }
@@ -758,7 +759,7 @@ export const P01 = {
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZJL",	//父节点:[/残枝记录]
             "Object": {
                 "ExtendType": "CZZP",		//新建节点:[/残枝照片]
@@ -768,9 +769,9 @@ export const P01 = {
                     "comment": ""
                 },
                 "ExtendFileData": {
-                    "file_id": "url",		//照片在minio里的url
+                    "file_id": "",		//照片在minio里的objectName
                     "mine_type": "",			//文件类型 jpeg png等
-                    "thumbnail": "url"		//缩略图路径
+                    "thumbnail": ""		//缩略图路径
                 }
             }
         }
@@ -895,7 +896,7 @@ export const AA_01 = {
         }
     ]
 }
-// 获取指定残枝档案
+// 获取指定残枝档案(暂养阶段)
 export const CZDA_01 = {
     "JobType": "single",
     "Jobs": [
@@ -907,19 +908,10 @@ export const CZDA_01 = {
             "Where": [
                 {
                     "Type": "Condition",
-                    "Key": "ext_data.quyu_spaid",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "8b665e9b-8d9f-4bae-b67e-1a8e9755a608"
-                    },
-                    "LogicOperator": "AND"
-                },
-                {
-                    "Type": "Condition",
                     "Key": "ext_data.miaopu_spaid",
                     "Operator": {
                         "Operator": "=",
-                        "Value": "f334db62-4c57-440e-8406-4972cf85d262"
+                        "Value": ""
                     },
                     "LogicOperator": "AND"
                 },
@@ -928,7 +920,7 @@ export const CZDA_01 = {
                     "Key": "ext_data.fenqu_spaid",
                     "Operator": {
                         "Operator": "=",
-                        "Value": "2215cab5-d874-4104-8eae-90f1b0a19084"
+                        "Value": ""
                     },
                     "LogicOperator": "AND"
                 },
@@ -937,7 +929,7 @@ export const CZDA_01 = {
                     "Key": "ext_data.haopai_color",
                     "Operator": {
                         "Operator": "=",
-                        "Value": "蓝"
+                        "Value": ""
                     },
                     "LogicOperator": "AND"
                 },
@@ -946,10 +938,97 @@ export const CZDA_01 = {
                     "Key": "ext_data.haopai_number",
                     "Operator": {
                         "Operator": "=",
-                        "Value": "123"
-                    }
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.stage",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "暂养"
+                    },
+                    
+                },
+            ],
+            "Order": [
+                {
 
                 }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+
+// 获取指定残枝档案(回播阶段)
+export const CZDA_02 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "false",
+            "Where": [
+                // {
+                //     "Type": "Condition",
+                //     "Key": "ext_data.quyu_spaid",
+                //     "Operator": {
+                //         "Operator": "=",
+                //         "Value": "8b665e9b-8d9f-4bae-b67e-1a8e9755a608"
+                //     },
+                //     "LogicOperator": "AND"
+                // },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.yangxian_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.fenduan_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_color",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_number",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.stage",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "回播"
+                    },
+                    
+                },
             ],
             "Order": [
                 {

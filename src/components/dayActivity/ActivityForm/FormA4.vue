@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two" :model="sowForm">
+    <el-form class="A-Two" :model="sowForm" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
@@ -55,7 +55,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -115,12 +115,19 @@
 
     <div class="buttonArea">
       <el-button
-        v-if="isCreated"
+        v-if="isCreated && beforeCreateRecord"
         class="afterCreate"
         type="danger"
         round
         @click="submitRecorder"
       >录入回播巡检数据</el-button>
+      <el-button
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
+        type="danger"
+        round
+        @click="routeToSuccess"
+      >图片录入</el-button>
       <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改回播巡检数据</el-button>
     </div>
   </div>
@@ -130,7 +137,7 @@
 // import {} from '../../api/api'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import { signColorList, colorList } from '../../../json/default'
-import { ZYQY_HBQY, CZDA_01, R06 } from '../../../json/entity'
+import { ZYQY_HBQY, CZDA_02, R06 } from '../../../json/entity'
 import {
   requestZYQY_HBQY,
   getCZDA_HB,
@@ -207,7 +214,9 @@ export default {
       record_spaid: '',
 
       sowForm: this.sowData,
-      recordForm: this.recordData
+      recordForm: this.recordData,
+
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
@@ -216,7 +225,7 @@ export default {
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA(is) {
       if (is) {
-        let requestObj = getCZDA_HB(CZDA_01, this.sowForm)
+        let requestObj = getCZDA_HB(CZDA_02, this.sowForm)
         reqApi(requestObj, '/tree/select').then(res => {
           console.log(res)
           if (res.data.status === 200) {
@@ -266,6 +275,18 @@ export default {
       this.$emit('func', this.file_spaid, this.record_spaid)
     },
 
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
+    },
+
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
@@ -290,15 +311,7 @@ export default {
             type: 'success'
           })
 
-          // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
+          this.beforeCreateRecord = false
         }
         console.log(res)
       })

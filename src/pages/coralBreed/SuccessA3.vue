@@ -45,8 +45,6 @@ export default {
         { title: '状态', msg: '部分白化' },
         { title: '阶段类型', msg: '回播' },
         { title: '暂养区域', msg: 'A-宇宙号-1区' },
-        { title: '透光度', msg: '180cm' },
-        { title: '温度', msg: '31℃' },
         {
           title: '颜色',
           msg: 'D2',
@@ -55,7 +53,8 @@ export default {
           color2: 'rgb(143,65,36)'
         },
         { title: '时间', msg: '2018.9.10.10' },
-        { title: '珊瑚尺寸', msg: '5.66' },
+        { title: '尺寸', msg: '5.66' },
+        { title: '面积', msg: '' },
         { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
       ],
       imgUrl: [

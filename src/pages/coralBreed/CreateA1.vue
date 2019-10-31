@@ -35,7 +35,11 @@
         <upload-border>
           <div class="imgUpload">
             <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load :masterid.sync="record_spaid" :czda_spaid.sync="file_spaid"></up-load>
+            <up-load
+              @createImg="imgArrPush"
+              :masterid.sync="record_spaid"
+              :czda_spaid.sync="file_spaid"
+            ></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -50,6 +54,7 @@ import ActivityFormVue from '../../components/dayActivity/ActivityForm/FormA1.vu
 import swiperVue from '../../components/swiper.vue'
 import UploadBorderVue from '../../components/dayActivity/UploadBorder.vue'
 import uploadVue from '../../components/upload.vue'
+import { reqApi } from '../../api/api'
 export default {
   components: {
     'file-list': FileListVue,
@@ -89,89 +94,23 @@ export default {
         remark: '' // 备注
       },
       imgUrl: [
-        {
-          url: 'http://dayy.xyz/resource/example/1.png',
-          size: '223.4',
-          time: '2018.4.10',
-          name: 'A1-大鹏大澳湾-2018090410-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/2.jpg',
-          size: '235.6',
-          time: '2018.5.09',
-          name: 'A2-大鹏大澳湾-2018050909-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/3.jpg',
-          size: '240.2',
-          time: '2018.6.09',
-          name: 'A2-大鹏大澳湾-2018060910-01'
-        }
         // {
-        //   url: 'http://dayy.xyz/resource/example/4.jpg',
-        //   size: '242.5',
-        //   time: '2018.6.17',
-        //   name: 'A2-大鹏大澳湾-2018061710-01'
+        //   url: 'http://dayy.xyz/resource/example/1.png',
+        //   size: '223.4',
+        //   time: '2018.4.10',
+        //   name: 'A1-大鹏大澳湾-2018090410-01'
         // },
         // {
-        //   url: 'http://dayy.xyz/resource/example/5.jpg',
-        //   size: '243.2',
-        //   time: '2018.7.01',
-        //   name: 'A2-大鹏大澳湾-2018070110-01'
+        //   url: 'http://dayy.xyz/resource/example/2.jpg',
+        //   size: '235.6',
+        //   time: '2018.5.09',
+        //   name: 'A2-大鹏大澳湾-2018050909-01'
         // },
         // {
-        //   url: 'http://dayy.xyz/resource/example/6.jpg',
-        //   size: '250.4',
-        //   time: '2018.7.28',
-        //   name: 'A2-大鹏大澳湾-2018072810-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/7.jpg',
-        //   size: '254.6',
-        //   time: '2018.11.17',
-        //   name: 'A2-大鹏大澳湾-2018111710-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/8.jpg',
-        //   size: '260.3',
-        //   time: '2018.12.29',
-        //   name: 'A2-大鹏大澳湾-2018122910-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/9.jpg',
-        //   size: '268.4',
-        //   time: '2019.3.02',
-        //   name: 'A2-大鹏大澳湾-2019030210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/10.jpg',
-        //   size: '278.5',
-        //   time: '2019.3.17',
-        //   name: 'A3-大鹏大澳湾-2019031710-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/11.jpg',
-        //   size: '279.1',
-        //   time: '2019.4.06',
-        //   name: 'A4-大鹏大澳湾-2019040610-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/12.jpg',
-        //   size: '280.5',
-        //   time: '2019.6.02',
-        //   name: 'A4-大鹏大澳湾-2019060210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/13.jpg',
-        //   size: '284.6',
-        //   time: '2019.6.22',
-        //   name: 'A4-大鹏大澳湾-2019062210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/14.jpg',
-        //   size: '288.1',
-        //   time: '2019.8.24',
-        //   name: 'A4-大鹏大澳湾-2019082410-01'
+        //   url: 'http://dayy.xyz/resource/example/3.jpg',
+        //   size: '240.2',
+        //   time: '2018.6.09',
+        //   name: 'A2-大鹏大澳湾-2018060910-01'
         // }
       ],
       isCreated: true,
@@ -197,15 +136,27 @@ export default {
       this.record_spaid = recordSpaid
     },
 
+    // 接收轮播组件回传的当前选中的图片url
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)
     },
+
     setIsCreated(res) {
       this.isCreated = res
     },
     setData(res) {
       this.recordData = res
+    },
+
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(fileId) {
+      reqApi({ file_id: fileId }, '/file/get').then(res => {
+        console.log('img:', res)
+        if (res.data.status === 200 && res.data.response) {
+          this.imgUrl.push({ url: res.data.response.url })
+        }
+      })
     }
   },
   mounted() {},
@@ -233,7 +184,7 @@ export default {
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
 
     .activityNum {
       width: 40%;
@@ -273,7 +224,7 @@ export default {
 
   .uploadArea {
     width: 40vw;
-    margin-right: 3vw;
+    margin-right: 5vw;
     margin-top: 2.3rem;
 
     .imgUpload {

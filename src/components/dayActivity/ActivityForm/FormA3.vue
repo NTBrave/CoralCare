@@ -1,6 +1,6 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two" v-model="breedForm">
+    <el-form class="A-Two" v-model="breedForm" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
@@ -54,7 +54,7 @@
         </el-col>
       </el-form-item>
     </el-form>
-    <el-form :disabled="beforeFileFind">
+    <el-form :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
@@ -109,7 +109,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind">
+    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
           <span :style="{marginLeft:'15px'}">状态</span>
@@ -169,12 +169,19 @@
 
     <div class="buttonArea">
       <el-button
-        v-if="isCreated"
+        v-if="isCreated && beforeCreateRecord"
         class="afterCreate"
         type="danger"
         round
         @click="submitRecorder"
       >录入首次回播数据</el-button>
+      <el-button
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
+        type="danger"
+        round
+        @click="routeToSuccess"
+      >图片录入</el-button>
       <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改首次回播数据</el-button>
     </div>
   </div>
@@ -292,7 +299,9 @@ export default {
 
       sowForm: this.sowData,
       breedForm: this.breedData,
-      recordForm: this.recordData
+      recordForm: this.recordData,
+
+      beforeCreateRecord: true // 需先提交档案才能录入图片
     }
   },
   methods: {
@@ -359,12 +368,25 @@ export default {
       this.$emit('func', this.file_spaid, this.record_spaid)
     },
 
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
+      this.$router.push({
+        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        query: {
+          time: this.$route.query.time,
+          address: this.$route.query.address,
+          activityType: this.$route.query.activityType
+        }
+      })
+    },
+
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
       let newR05 = createR05(
         R05,
         this.currentActivity_spaid,
+        this.currentZD_data(this.currentZD).czdaroot_spaid,
         this.file_spaid,
         this.currentZD_data(this.currentZD).SpaId,
         this.$route.query.time,
@@ -387,15 +409,7 @@ export default {
             type: 'success'
           })
 
-          // 携带参数路由跳转
-          this.$router.push({
-            path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.$route.query.activityType
-            }
-          })
+          this.beforeCreateRecord = false
         }
       })
     },

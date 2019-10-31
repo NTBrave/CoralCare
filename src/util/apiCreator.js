@@ -122,6 +122,7 @@ export function createR04_06(
 export function createR05(
   reqObj,
   czhd_spaid,
+  czdaroot_spaid,
   czda_spaid,
   ZD_spaid,
   timestamp,
@@ -130,7 +131,7 @@ export function createR05(
 ) {
   let newObj = deepCopy(reqObj);
   newObj.Jobs[0].MasterSpaId = czhd_spaid;
-  newObj.Jobs[1].MasterSpaId = czda_spaid;
+  newObj.Jobs[1].MasterSpaId = czdaroot_spaid;
 
   let extendData_1 = newObj.Jobs[0].Object.ExtendData;
   extendData_1.czhd_spaid = czhd_spaid;
@@ -142,6 +143,7 @@ export function createR05(
   extendData_1.comment = recordForm.remark;
 
   let extendData_2 = newObj.Jobs[1].Object.ExtendData;
+  newObj.Jobs[1].Object.SpaId = czda_spaid;
   extendData_2.haopai_color = sowForm.signColor;
   extendData_2.haopai_number = sowForm.signNumber;
   extendData_2.pyzd_spaid = ZD_spaid;
@@ -154,21 +156,21 @@ export function createR05(
 // 获取指定残枝档案(暂养区域)
 export function getCZDA_ZY(reqObj, breedForm) {
   let newObj = deepCopy(reqObj);
-  newObj.Jobs[0].Where[0].Operator.Value = breedForm.breedArea.firstArea;
-  newObj.Jobs[0].Where[1].Operator.Value = breedForm.breedArea.nursery;
-  newObj.Jobs[0].Where[2].Operator.Value = breedForm.breedArea.partition;
-  newObj.Jobs[0].Where[3].Operator.Value = breedForm.signColor;
-  newObj.Jobs[0].Where[4].Operator.Value = breedForm.signNumber;
+  // newObj.Jobs[0].Where[0].Operator.Value = breedForm.breedArea.firstArea;
+  newObj.Jobs[0].Where[0].Operator.Value = breedForm.breedArea.nursery;
+  newObj.Jobs[0].Where[1].Operator.Value = breedForm.breedArea.partition;
+  newObj.Jobs[0].Where[2].Operator.Value = breedForm.signColor;
+  newObj.Jobs[0].Where[3].Operator.Value = breedForm.signNumber;
   return newObj;
 }
 
 // 获取指定残枝档案(回播区域)
 export function getCZDA_HB(reqObj, sowForm) {
   let newObj = deepCopy(reqObj);
-  newObj.Jobs[0].Where[0].Operator.Value = sowForm.sowArea.firstArea;
-  newObj.Jobs[0].Where[1].Operator.Value = sowForm.sowArea.line;
-  newObj.Jobs[0].Where[2].Operator.Value = sowForm.sowArea.segmentation;
-  newObj.Jobs[0].Where[3].Operator.Value = sowForm.signColor;
-  newObj.Jobs[0].Where[4].Operator.Value = sowForm.signNumber;
+  // newObj.Jobs[0].Where[0].Operator.Value = sowForm.sowArea.firstArea;
+  newObj.Jobs[0].Where[0].Operator.Value = sowForm.sowArea.line;
+  newObj.Jobs[0].Where[1].Operator.Value = sowForm.sowArea.segmentation;
+  newObj.Jobs[0].Where[2].Operator.Value = sowForm.signColor;
+  newObj.Jobs[0].Where[3].Operator.Value = sowForm.signNumber;
   return newObj;
 }
