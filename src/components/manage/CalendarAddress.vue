@@ -257,7 +257,7 @@ export default {
     // 关闭抽屉时清空selectHour
     closeDrawer() {
       this.$refs.drawer.close();
-      this.selectHour = "";
+      // this.selectHour = ''
     },
 
     // 点击蒙层关闭抽屉时进行查看或新建下水活动处理
@@ -324,6 +324,7 @@ export default {
       this.chooseDate = value.format("M月D日  YYYY年");
       this.dateNumber_build = value.format("YYYYMMDD");
       this.dateNumber_review = value.format("YYYYMMDD");
+      this.timeReady(this.selectHour);
     },
 
     // 新建活动按钮与选择具体时间输入框显示控制
@@ -365,19 +366,19 @@ export default {
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
       reqApi(W03, "/tree/create")
         .then(res => {
-          console.log(res);
+          console.log("新建作业", res);
           if (res.data.status === 200) {
-            console.log(res);
-            let newWork = {};
-            newWork.pyzd_spaid =
-              res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid;
-            newWork.timestamp =
-              res.data.response.CZZY.objects[0].principle.ExtendData.timestamp;
-            newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId;
+            console.log("新建作业成功", res);
+            // let newWork = {}
+            // newWork.pyzd_spaid =
+            //   res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
+            // newWork.timestamp =
+            //   res.data.response.CZZY.objects[0].principle.ExtendData.timestamp
+            // newWork.SpaId = res.data.response.CZZY.objects[0].principle.SpaId
 
-            this.setWorkList(newWork);
-            this.setCurrentWork(this.$route.query.time);
-            console.log("+++++++", this.$store.state.workList);
+            // this.setWorkList(newWork)
+            // this.setCurrentWork(this.$route.query.time)
+            // console.log('+++++++', this.$store.state.workList)
 
             // 创建成功路由跳转
             this.$router.push({
@@ -386,8 +387,10 @@ export default {
                 // time: this.dateNumber_review,
                 // address: this.activityAddress
                 time: this.dateNumber_build,
-                address: this.activityAddress
-              }
+                address: this.activityAddress,
+                czzy_spaid: res.data.response.CZZY.objects[0].principle.SpaId
+              },
+              params: {}
             });
             this.closeDrawer();
           }

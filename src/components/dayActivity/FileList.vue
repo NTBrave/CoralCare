@@ -14,10 +14,11 @@
 export default {
   props: {
     fileNameList: {
-      type: Array,
-      default: () => ['A-宇宙号-1区-蓝-07', 'A-宇宙号-1区-蓝-10']
+      type: Array
     }
   },
+
+  computed: {},
   data() {
     return {
       activeFile: ''
@@ -28,9 +29,12 @@ export default {
       this.activeFile = item
       console.log(item)
     }
+
+    // 将接受到的
   },
   mounted() {
-    this.activeFile = this.$route.query.file
+    // this.activeFile = this.$route.query.file
+    console.log(this.fileNameList)
   }
 }
 </script>

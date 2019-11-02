@@ -20,10 +20,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
 import ResultFormVue from '../../components/dayActivity/ResultForm.vue'
 
+import { getCZJL } from '../../util/apiCreator'
+import { reqApi } from '../../api/api'
+import { R01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -31,14 +34,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activityNum: 'getNowDivingActivity',
-      activityFiles: 'getActivityFiles'
+      activityNum: 'getNowDivingActivity'
     })
   },
 
   data() {
     return {
       recordName: 'A-宇宙号-1区-蓝-07',
+      activityFiles: [],
       recordInfor: [
         { title: '活动编号', msg: '' },
         { title: '属种', msg: '盔型珊瑚科目' },
@@ -149,6 +152,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setActivityFiles']),
+
+    // 返回继续录入记录
     returnCreate() {
       this.$router.push({
         name: `buildA1`,
@@ -161,7 +167,21 @@ export default {
           activityType: this.$route.query.activityType
         }
       })
+    },
+
+    // 请求该活动下的所有记录
+    requestCZJL() {
+      let obj = getCZJL(R01, this.$route.query.spaid.czhd_spaid)
+      reqApi(obj, '/tree/select').then(res => {
+        console.log('获取活动下所有残枝记录', res)
+        if (res.data.status === 200) {
+          let czdaList = res.data.response.CZJL.objects
+        }
+      })
     }
+  },
+  mounted() {
+    // console.log(this.$route.params)
   },
   beforeRouteEnter(to, from, next) {
     // 根据活动编号查询活动下所有的记录
@@ -171,6 +191,8 @@ export default {
       next(vm => {
         // vm.recordInfor[0].msg = 'A2-大鹏大澳湾-2019090910'
         vm.isSuccessResult = true
+        console.log(vm.$route.query.spaid)
+        vm.requestCZJL()
       })
     } else if (to.params.result === 'detail') {
       // 根据时间地点活动等信息找到记录获得详细信息

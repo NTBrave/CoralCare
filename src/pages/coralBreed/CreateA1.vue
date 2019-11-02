@@ -1,13 +1,13 @@
 <template>
   <div class="createBoard" :key="isCreated">
     <div class="infoArea">
-      <div class="activityNum">活动编号：{{activityNum}}</div>
+      <div class="activityNum">活动编号：{{activityNumber}}</div>
 
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
           v-if="activityFiles"
-          :fileNameList="activityFiles"
+          :fileNameList.sync="activityFiles"
         ></file-list>
         <div class="form">
           <p>{{operateFile}}</p>
@@ -54,7 +54,10 @@ import ActivityFormVue from '../../components/dayActivity/ActivityForm/FormA1.vu
 import swiperVue from '../../components/swiper.vue'
 import UploadBorderVue from '../../components/dayActivity/UploadBorder.vue'
 import uploadVue from '../../components/upload.vue'
+
+import { getCZJL } from '../../util/apiCreator'
 import { reqApi } from '../../api/api'
+import { R01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -65,6 +68,7 @@ export default {
   },
   data() {
     return {
+      activityFiles: [],
       // 传递给表单组件的档案信息和记录信息
       fileData: {
         // 创建档案表单
@@ -117,16 +121,41 @@ export default {
       imgUrlFormSwiper: '',
 
       file_spaid: '',
-      record_spaid: ''
+      record_spaid: '',
+
+      activityNumber:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   computed: {
-    ...mapGetters({
-      activityNum: 'getNowDivingActivity',
-      activityFiles: 'getActivityFiles'
-    }),
+    ...mapGetters({}),
 
-    ...mapState(['operateFile'])
+    ...mapState(['operateFile']),
+
+    isSpaidChange() {
+      const { file_spaid, record_spaid } = this
+      return {
+        file_spaid,
+        record_spaid
+      }
+    }
+  },
+
+  watch: {
+    isSpaidChange: {
+      handler: function() {
+        if (Boolean(this.file_spaid && this.record_spaid)) {
+          this.requestCZJL()
+        } else {
+          console.log('还没有拿到czda_spaid!')
+        }
+      },
+      deep: true
+    }
   },
 
   methods: {
@@ -140,6 +169,20 @@ export default {
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)
+    },
+
+    // 请求该活动下的所有记录
+    requestCZJL() {
+      let obj = getCZJL(R01, this.$route.query.czhd_spaid)
+      reqApi(obj, '/tree/select').then(res => {
+        console.log('获取活动下所有残枝记录', res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            let czdaList = res.data.response.CZJL.objects
+            this.activityFiles = czdaList
+          }
+        }
+      })
     },
 
     setIsCreated(res) {
@@ -159,11 +202,13 @@ export default {
       })
     }
   },
-  mounted() {},
+  mounted() {
+    this.requestCZJL()
+  },
   beforeRouteEnter(to, from, next) {
     console.log(to.params.recordData)
     if (to.params.build === 'create') {
-      next()
+      next(vm => {})
     } else if (to.params.build === 'edit') {
       next(vm => {
         // vm.recordData = to.params.recordData
@@ -209,7 +254,7 @@ export default {
         flex-direction: column;
         align-items: center;
         width: 60%;
-        min-width: 350px;
+        min-width: 400px;
         max-width: 500px;
 
         p {

@@ -2,8 +2,8 @@
   <div class="formRoot">
     <el-form class="A-Two" :model="sowForm" :disabled="!beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
+        <el-col :span="4" :style="{'textAlign':'center',}">
+          <span :style="{'fontWeight':'bold'}">回播区域</span>
         </el-col>
         <el-col :span="4">
           <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder>
@@ -55,12 +55,12 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
+    <el-form ref="recordForm" size="small" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">状态</span>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">状态</span>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="19">
           <el-select v-model="recordForm.state" placeholder="请选择">
             <el-option label="良好" value="0"></el-option>
             <el-option label="部分白化" value="1"></el-option>
@@ -73,7 +73,7 @@
 
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -116,6 +116,7 @@
     <div class="buttonArea">
       <el-button
         v-if="isCreated && beforeCreateRecord"
+        :disabled="beforeFileFind"
         class="afterCreate"
         type="danger"
         round
@@ -216,11 +217,18 @@ export default {
       sowForm: this.sowData,
       recordForm: this.recordData,
 
-      beforeCreateRecord: true // 需先提交档案才能录入图片
+      beforeCreateRecord: true, // 需先提交档案才能录入图片
+
+      activityNum:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   methods: {
-    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+    ...mapMutations(['setOperateFile']),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA(is) {
@@ -292,7 +300,7 @@ export default {
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
       let newR06 = createR04_06(
         R06,
-        this.currentActivity_spaid,
+        this.currentActivity_spaid(this.activityNum),
         this.file_spaid,
         this.$route.query.time,
         this.recordForm

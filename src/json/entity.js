@@ -281,6 +281,34 @@ export const D01 = {
         }
     ]
 }
+//D-011 获取指定记录
+export const D_011 = {
+    JobType: "single",
+    Jobs: [
+        {
+            Method: "select",
+            MasterSpaId: "5e7106c3-7d6a-4949-b5a4-6a94200639e5", //活动id
+            CZJLSpaId: "3fd3cc68-5b33-4e2b-9494-a0741b0608b3",	//要查询的残枝档案spaid
+            NeedFK: "false",			//需要回传外键 
+            Where: [
+                {
+                    Type: "Condition",
+                    Key: "spa_id",
+                    Operator: {
+                        "Operator": "=",
+                        "Value": "3fd3cc68-5b33-4e2b-9494-a0741b0608b3"
+                    }
+                }
+            ],
+            Order: [
+                {}
+            ],
+            GroupBy: [
+                {}
+            ]
+        }
+    ]
+}
 // D-02 获取所有残枝档案
 export const D02 = {
     "JobType": "single",
@@ -384,18 +412,14 @@ export const R01 =
     "Jobs": [
         {
             "Method": "select",
-            "MasterSpaId": "MasterId",
+            "MasterSpaId": "485ba801-f3cb-4959-94fa-d5215d9612cf",
             "MasterExtendType": "CZHD",
-            "NeedFK": "false",	//不回传外键
+            "NeedFK": "false",
             "Where": [
-                {
 
-                }
             ],
             "Order": [
-                {
 
-                }
             ],
             "GroupBy": [
                 {}
@@ -868,6 +892,7 @@ export const AA_01 = {
         }
     ]
 }
+
 // 获取指定残枝档案(暂养阶段)
 export const CZDA_01 = {
     "JobType": "single",

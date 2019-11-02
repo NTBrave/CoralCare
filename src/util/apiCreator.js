@@ -174,3 +174,10 @@ export function getCZDA_HB(reqObj, sowForm) {
   newObj.Jobs[0].Where[3].Operator.Value = sowForm.signNumber;
   return newObj;
 }
+
+// 获取指定活动下的所有记录
+export function getCZJL(reqObj, czhd_spaid) {
+  let newObj = deepCopy(reqObj);
+  newObj.Jobs[0].MasterSpaId = czhd_spaid;
+  return newObj;
+}

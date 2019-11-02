@@ -2,8 +2,8 @@
   <div class="formRoot">
     <el-form class="A-Two" v-model="breedForm" :disabled="!beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
+        <el-col :span="4" :style="{'textAlign':'center',}">
+          <span :style="{'fontWeight':'bold'}">选择珊瑚</span>
         </el-col>
         <el-col :span="4">
           <el-select v-model="breedForm.breedArea.firstArea" disabled placeholder>
@@ -54,10 +54,10 @@
         </el-col>
       </el-form-item>
     </el-form>
-    <el-form :disabled="beforeFileFind || !beforeCreateRecord">
+    <el-form class="A-Two" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">回播区域</span>
+        <el-col :span="4" :style="{'textAlign':'center',}">
+          <span :style="{'fontWeight':'bold'}">回播区域</span>
         </el-col>
         <el-col :span="4">
           <el-select v-model="sowForm.sowArea.firstArea" disabled placeholder>
@@ -109,12 +109,12 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
+    <el-form ref="recordForm" size="small" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">状态</span>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">状态</span>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="19">
           <el-select v-model="recordForm.state" placeholder="请选择">
             <el-option label="良好" value="良好"></el-option>
             <el-option label="部分白化" value="部分白化"></el-option>
@@ -127,7 +127,7 @@
 
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -170,6 +170,7 @@
     <div class="buttonArea">
       <el-button
         v-if="isCreated && beforeCreateRecord"
+        :disabled="beforeFileFind"
         class="afterCreate"
         type="danger"
         round
@@ -209,7 +210,7 @@ export default {
   computed: {
     ...mapGetters({
       currentZD_data: 'getCurrentZD_data',
-      currentActivity_spaid: 'getCurrentActivity_spaid'
+      currentActivity: 'getCurrentActivity'
     }),
     ...mapState(['currentZD'])
   },
@@ -265,6 +266,7 @@ export default {
         console.log(res)
         if (res.data.status === 200) {
           if (res.data.response) {
+            console.log('分段', res.data.response.FD)
             for (let i of res.data.response.FD.objects) {
               let fenduan = {}
               fenduan.name = i.principle.ExtendData.name
@@ -301,11 +303,18 @@ export default {
       breedForm: this.breedData,
       recordForm: this.recordData,
 
-      beforeCreateRecord: true // 需先提交档案才能录入图片
+      beforeCreateRecord: true, // 需先提交档案才能录入图片
+
+      activityNum:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   methods: {
-    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+    ...mapMutations(['setOperateFile']),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA(is) {
@@ -385,7 +394,7 @@ export default {
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
       let newR05 = createR05(
         R05,
-        this.currentActivity_spaid,
+        this.currentActivity(this.activityNum).czhd_spaid,
         this.currentZD_data(this.currentZD).czdaroot_spaid,
         this.file_spaid,
         this.currentZD_data(this.currentZD).SpaId,

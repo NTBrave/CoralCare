@@ -74,21 +74,6 @@ const getters = {
   getCurrentZD_data: state => id => {
     return state.PYZD.find(todo => todo.ExtendData.number === id);
   },
-  // getCurrentZD_data(state) {
-  //   let currentZD_data = {};
-  //   let targetArr = state.PYZD.filter(function(item) {
-  //     if (item.ExtendData.number === state.currentZD) {
-  //       return item;
-  //     }
-  //   });
-  //   currentZD_data.ZD_spaId = targetArr[0].SpaId; // 站点spaid
-  //   currentZD_data.cjqy_spaid = targetArr[0].cjqy_spaid; //采集区域spaid
-  //   currentZD_data.zyqy_spaid = targetArr[0].zyqy_spaid; //暂养区域spaid
-  //   currentZD_data.hbqy_spaid = targetArr[0].hbqy_spaid; //回播区域spaid
-  //   currentZD_data.ywsj_spaid = targetArr[0].ywsj_spaid; //业务数据spaid
-  //   currentZD_data.czdaroot_spaid = targetArr[0].czdaroot_spaid; //残枝档案spaid
-  //   return currentZD_data;
-  // },
 
   // 获取站点资源
   getAddressList(state) {
@@ -103,10 +88,10 @@ const getters = {
     return addressList;
   },
 
-  //获取当前作业的spaid
-  getCurrentWork: state => time => {
-    return state.workList.find(todo => todo.timestamp === time);
-  },
+  // 获取当前作业的spaid
+  // getCurrentWork: state => time => {
+  //   return state.workList.find(todo => todo.timestamp === time);
+  // },
   // getCurrentWork_spaid(state) {
   //     console.log(state.currentWork);
   //     console.log(state.workList);
@@ -119,13 +104,16 @@ const getters = {
   // },
 
   // 获取当前创建的活动的spaid
-  getCurrentActivity_spaid(state) {
-    return state.activityList.filter(function (item) {
-      if (item.activity_number === state.nowDivingActivity) {
-        return item;
-      }
-    })[0].SpaId;
+  getCurrentActivity: state => acitivtyNum => {
+    return state.activityList.find(todo => todo.activity_num === acitivtyNum);
   },
+  // getCurrentActivity_spaid(state) {
+  //   return state.activityList.filter(function(item) {
+  //     if (item.activity_number === state.nowDivingActivity) {
+  //       return item;
+  //     }
+  //   })[0].SpaId;
+  // },
 
   // 获取当前新建下水作业下的活动列表
   getNowDivingActivitiesList(state) {
