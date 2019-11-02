@@ -155,7 +155,7 @@ export default {
   computed: {
     ...mapGetters({
       currentZD_data: 'getCurrentZD_data',
-      currentActivity_spaid: 'getCurrentActivity_spaid'
+      currentActivity: 'getCurrentActivity'
     }),
     ...mapState(['currentZD'])
   },
@@ -300,7 +300,7 @@ export default {
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
       let newR06 = createR04_06(
         R06,
-        this.currentActivity_spaid(this.activityNum),
+        this.currentActivity(this.activityNum).czhd_spaid,
         this.file_spaid,
         this.$route.query.time,
         this.recordForm
