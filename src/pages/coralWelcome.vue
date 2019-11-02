@@ -10,12 +10,12 @@
       <div>WELCOME!</div>
       <div style="font-size: 3rem;">欢迎使用</div>
     </div>
-    <Upload></Upload>
+    <!-- <Upload></Upload> -->
 
-    <div>
+    <!-- <div>
       <el-button @click="delefile">删除</el-button>
       <el-button @click="down">下载</el-button>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -29,9 +29,9 @@ import * as Download from "../util/download";
 
 export default {
   name: "coralWork",
-  components: {
-    Upload
-  },
+  // components: {
+  //   Upload
+  // },
   data() {
     return {};
   },

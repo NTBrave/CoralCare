@@ -463,6 +463,8 @@ export default {
       align-items: center;
       margin-top: 3rem;
       font-size: 1rem;
+      overflow: auto;
+      height: 80vh;
 
       span {
         color: red;

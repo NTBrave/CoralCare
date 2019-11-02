@@ -227,7 +227,7 @@ export default {
 
       // console.log(recordData);
       Api.reqApi(recordData, "/tree/update").then(res => {
-        console.log("----:", res);
+        // console.log("----:", res);
         if (res.data.status === 200 && res.data.response) {
           //设置新的尺寸
           this.recordInfor[7].msg = sizeData.size;
@@ -243,7 +243,7 @@ export default {
       imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
       await Api.reqApi(imgNodeData, "/tree/select")
         .then(res => {
-          console.log("图片节点:", res);
+          // console.log("图片节点:", res);
           if (res.data.status === 200 && res.data.response) {
             let nodeArr = res.data.response.CZZP.objects;
             for (let i = 0; i < nodeArr.length; ++i) {
@@ -268,11 +268,11 @@ export default {
       _this.theRecordImgArr = [];
       for (let i = 0; i < _this.inforImgUrlId.length; i++) {
         let imgName = _this.inforImgUrlId[i];
-        console.log("图片id：", imgName.url);
+        // console.log("图片id：", imgName.url);
         // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
         await Api.reqApi({ file_id: imgName.url }, "/file/get").then(res => {
           if (res.data.status === 200 && res.data.response) {
-            console.log("图片:", res.data.response.url);
+            // console.log("图片:", res.data.response.url);
             _this.theRecordImgArr.push({ url: res.data.response.url });
           }
         });

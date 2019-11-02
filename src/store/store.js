@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import getters from "./getters.js";
 import actions from "./actions.js";
 import mutations from "./mutations.js";
-
+import createPersistedState from 'vuex-persistedstate'//vuex数据持久化
 Vue.use(Vuex);
 
 const state = {
@@ -86,5 +86,8 @@ export default new Vuex.Store({
   state,
   getters,
   mutations,
-  actions
+  actions,
+  plugins: [createPersistedState({
+    storage: window.sessionStorage//存在sessionStorage
+  })]
 });

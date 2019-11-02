@@ -259,7 +259,7 @@ export const D01 = {
     Jobs: [
         {
             Method: "select",
-            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",//写死的不能改
             CZDASpaId: "czdaspaid",	//要查询的残枝档案spaid
             NeedFK: "true",			//需要回传外键 
             Where: [

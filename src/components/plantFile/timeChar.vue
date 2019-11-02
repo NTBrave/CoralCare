@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       indexInChar: 0,
+      indexArr: [],
       option: {
         animation: false,
         title: {},
@@ -222,30 +223,22 @@ export default {
       }
     };
   },
-  mounted() {
-    //  let chartBox = document.getElementsByClassName('charts')[0]
-    // let myChart = document.getElementById('myChart')
-    // 用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
-    // function resizeCharts () {
-    //   myChart.style.width = chartBox.style.width + 'px'
-    //   myChart.style.height = chartBox.style.height + 'px'
-    // }
-    // 设置容器高宽
-    // resizeCharts()
-    // let mainChart = ECharts.init(myChart)
-    // mainChart.setOption(options)
-    // var EchartIndex = document.getElementById("selectIndex").attributes;
-    // console.log(this.timeDataArr);
-  },
+  mounted() {},
   watch: {
     indexInChar() {
       //传下标值值给父组件
-      this.$emit("index", this.indexInChar);
+      this.$emit("index", this.indexArr[this.indexInChar]);
     },
     timeDataArr: {
       handler: function() {
         // console.log(this.timeDataArr);
-        this.option.series[0].data = this.timeDataArr;
+        let newDataArr = this.sortDataArr(this.timeDataArr);
+        for (let item of newDataArr) {
+          let index = this.timeDataArr.indexOf(item);
+          this.indexArr.push(index);
+        }
+        // console.log(this.indexArr);
+        this.option.series[0].data = newDataArr;
       }
       // deep: true
     }
@@ -258,6 +251,23 @@ export default {
         var signVal = EchartIndex.attributes;
         _this.indexInChar = signVal.value.value;
       }
+    },
+    // 日期数组排序
+    sortDataArr(DataArr) {
+      let arr = [...DataArr];
+      let length = arr.length;
+      for (let i = 1; i < length; i++) {
+        let temp = arr[i];
+        let j = i;
+        for (; j > 0; j--) {
+          if (temp[0] >= arr[j - 1][0]) {
+            break; // 当前考察的数大于前一个数，证明有序，退出循环
+          }
+          arr[j] = arr[j - 1]; // 将前一个数复制到后一个数上
+        }
+        arr[j] = temp; // 找到考察的数应处于的位置
+      }
+      return arr;
     }
   }
 };
