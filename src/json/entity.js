@@ -484,13 +484,22 @@ export const R021 = {
                     "Operator": {
                         "Operator": "=",
                         "Value": ""
+                    },
+                    "LogicOperator": "and"
+
+                }, {
+                    "Type": "Condition",
+                    "Key": "ext_type",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "CZJL"
                     }
                 }
             ],
             "Order": [
                 {
-                    "Key": "ext_data.create_at",
-                    "Order": "ASC"
+                    "Key": "ext_data.timestamp",//排序方式
+                    "Order": "DESC" //ASC升序
                 }
             ],
             "GroupBy": [
@@ -735,33 +744,15 @@ export const R07 =
                 "ExtendData": {
                     "czhd_spaid": "",
                     "czda_spaid": "",
-                    "timestamp": "",
-                    "status": "",
-                    "lightest_color": "",
-                    "darkest_color": "",
-                    "height_area_both": "",
-                    "height": "",
-                    "area": "",
-                    "comment": ""
+                    // "timestamp": "",
+                    // "status": "",
+                    // "lightest_color": "",
+                    // "darkest_color": "",
+                    // "height_area_both": "",
+                    // "height": "",
+                    // "area": "",
+                    // "comment": ""
                 },
-                // "UpdateExtendData": {
-                //     "haopai_color": "",
-                //     "haopai_number": "",
-                //     "order_spaid": "",		//外键 所属珊瑚目
-                //     "family_spaid": "",		//外键 所属珊瑚科
-                //     "genus_spaid": "",		//外键 所属珊瑚属
-                //     "pyzd_spaid": "",	//外键 所属培育站点
-                //     "stage": "",		//培育阶段 暂养|回播
-                //     "quyu_spaid": "",		//外键 所属采集区域
-                //     "miaopu_spaid": "",		//外键 所属（暂养）苗圃
-                //     "fenqu_spaid": "",		//外键 所属（暂养）分区
-                //     "yangxian_spaid": "",	//外键 所属（回播）样线
-                //     "fenduan_spaid": "",		//外键 所属（回播）分段
-                //     "starred": "",	//是否关注 0 1
-                //     "ended": "",		//是否完结 0 1
-                //     "label": "",
-                //     "comment": ""
-                // }
             }
         }
     ]
@@ -777,7 +768,7 @@ export const P01 = {
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "",
+            "MasterSpaId": "",//masterid
             "MasterExtendType": "CZJL",	//父节点:[/残枝记录]
             "Object": {
                 "ExtendType": "CZZP",		//新建节点:[/残枝照片]

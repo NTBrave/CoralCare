@@ -4,14 +4,22 @@
       <div class="measuring" style="margin-left:14rem;width:3rem;background: #3FC1CB;">编辑</div>
       <div class="measuring" style="margin-left: 20rem;" @click="goMessuring">测量图片</div>
     </div>
-    <div v-if="!doMeasuring" class="inforSwiper">
+    <div
+      v-loading="inforLoading"
+      element-loading-spinner="loadingSvg"
+      v-if="!doMeasuring"
+      class="inforSwiper"
+    >
       <div class="mian-size">
         <el-row>
           <el-col>
             <div>
               <div style="display:flex;">
-                <span>
+                <span v-show="isStart==1">
                   <img src="../assets/images/star.png" width="80%" alt />
+                </span>
+                <span slot="reference" v-show="isStart!=1">
+                  <img src="../assets/images/unstar.png" width="80%" alt />
                 </span>
                 <span class="record-name">{{recordName}}</span>
               </div>
@@ -42,10 +50,10 @@
                     <span class="color-block" :style="'background-color:'+item.color2"></span>
                   </span>
 
-                  <span v-if="item.title.search(/尺寸/)>0">
+                  <!-- <span v-if="item.title.search(/尺寸/)>0">
                     cm
-                    <sup>2</sup>
-                  </span>
+                    <sup v-if="showPingFang">2</sup>
+                  </span>-->
                   <div v-show="index!=recordInfor.length-1" class="bottom-line"></div>
                 </div>
               </div>
@@ -102,7 +110,8 @@ export default {
     recordObj: Object,
     recordName: String,
     activty: Object,
-    type: String
+    type: String,
+    isStart: String
   },
   data() {
     return {
@@ -121,34 +130,19 @@ export default {
           color2: ""
         },
         { title: "时间", msg: "" },
-        { title: "珊瑚尺寸", msg: "" },
+        { title: "尺寸", msg: "" },
+        { title: "高度", msg: "" },
         { title: "备注", msg: "" }
       ],
-      // recordInfor: [
-      //   { title: "活动编号", msg: "A2-大鹏大澳湾-2019090910" },
-      //   { title: "属种", msg: "盔型珊瑚科目" },
-      //   { title: "状态", msg: "部分白化" },
-      //   { title: "阶段类型", msg: "回播" },
-      //   { title: "暂养区域", msg: "A-宇宙号-1区" },
-      //   {
-      //     title: "颜色",
-      //     msg: "D2",
-      //     color: "rgb(247,218,159)",
-      //     msg2: "D5",
-      //     color2: "rgb(143,65,36)"
-      //   },
-      //   { title: "时间", msg: "2018.9.10.10" },
-      //   { title: "珊瑚尺寸", msg: "5.66" },
-      //   { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
-      // ],
+
       doMeasuring: false,
       imgUrlFormSwiper: "",
       key: 0,
       // 记录下图片节点里面的图片id
       inforImgUrlId: [],
       //图片id对应的推按url
-      theRecordImgArr: []
-      // inforImgUrlId: DEFAULT.imgUrl
+      theRecordImgArr: [],
+      inforLoading: false
     };
   },
   watch: {
@@ -159,6 +153,7 @@ export default {
   },
   mounted: function() {
     //构造表单数据
+    this.inforLoading = true;
     this.recordInfor[0].msg = this.activty.activity_number;
     this.recordInfor[1].msg = this.type;
     this.recordInfor[2].msg = this.recordObj.ExtendData.status;
@@ -181,13 +176,11 @@ export default {
     //   "YYYYMMDDHH"
     // ).format("YYYY-MM-DD HH");
     //构建尺寸
-    if (this.recordObj.ExtendData.height_area_both == 0) {
-      this.recordInfor[7].msg = this.recordObj.ExtendData.height + "cm";
-    } else {
-      this.recordInfor[7].msg = this.recordObj.ExtendData.area;
-    }
+    this.recordInfor[7].msg = this.recordObj.ExtendData.area + "cm²";
     //构建备注
-    this.recordInfor[8].msg = this.recordObj.ExtendData.comment;
+    this.recordInfor[8].msg = this.recordObj.ExtendData.height + "cm";
+    //构建高度
+    this.recordInfor[9].msg = this.recordObj.ExtendData.comment;
 
     console.log(this.activty);
     //获取这个记录的图片啦
@@ -210,10 +203,14 @@ export default {
       _this.goMessuring();
       //构造请求体
       let recordData = ENTITY.R07;
-      for (let item in recordData.Jobs[0].Object.ExtendData) {
-        recordData.Jobs[0].Object.ExtendData[item] =
-          _this.recordObj.ExtendData[item];
-      }
+      // for (let item in recordData.Jobs[0].Object.ExtendData) {
+      //   recordData.Jobs[0].Object.ExtendData[item] =
+      //     _this.recordObj.ExtendData[item];
+      // }
+      recordData.Jobs[0].Object.ExtendData.czhd_spaid =
+        _this.recordObj.ExtendData.czhd_spaid;
+      recordData.Jobs[0].Object.ExtendData.czda_spaid =
+        _this.recordObj.ExtendData.czda_spaid;
       recordData.Jobs[0].MasterSpaId = _this.activty.activityID;
       recordData.Jobs[0].Object.SpaId = _this.recordObj.SpaId;
       recordData.Jobs[0].Object.ExtendData.height_area_both = sizeData.type;
@@ -239,16 +236,25 @@ export default {
       let imgNodeData = ENTITY.P04;
       imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
       // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
-      await Api.reqApi(imgNodeData, "/tree/select").then(res => {
-        console.log("图片节点:", res);
-        if (res.data.status === 200 && res.data.response) {
-          let nodeArr = res.data.response.CZZP.objects;
-          for (let i = 0; i < nodeArr.length; ++i) {
-            let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
-            _this.inforImgUrlId.push(obj);
+      await Api.reqApi(imgNodeData, "/tree/select")
+        .then(res => {
+          console.log("图片节点:", res);
+          if (res.data.status === 200 && res.data.response) {
+            let nodeArr = res.data.response.CZZP.objects;
+            for (let i = 0; i < nodeArr.length; ++i) {
+              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+              _this.inforImgUrlId.push(obj);
+              this.inforLoading = false;
+            }
+          } else {
+            this.$message.warning("获取不到它的图片");
+            this.inforLoading = false;
           }
-        }
-      });
+        })
+        .catch(err => {
+          this.$message.warning("获取不到它的图片");
+          this.inforLoading = false;
+        });
       this.getimgUrl();
     },
     //获取每个图片节点的对应url
@@ -256,12 +262,16 @@ export default {
       let _this = this;
       for (let i = 0; i < _this.inforImgUrlId.length; i++) {
         let imgName = _this.inforImgUrlId[i];
-        await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
+        // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
+        await Api.reqApi({ file_id: imgName }, "/file/get").then(res => {
           // console.log(i, j, res.data.response.url);
           _this.theRecordImgArr.push({ url: res.data.response.url });
         });
       }
-      chooseSwiperImg(_this.theRecordImgArr[0]);
+      if (_this.theRecordImgArr[0]) {
+        _this.chooseSwiperImg(_this.theRecordImgArr[0].url);
+      }
+
       console.log("图片:", _this.theRecordImgArr);
     }
   }
@@ -332,7 +342,7 @@ export default {
   overflow: hidden;
 }
 .all-infor {
-  padding-top: 1.5rem;
+  /* padding-top: 1.5rem; */
   position: relative;
 }
 /* @media screen and (max-width:1600px) {

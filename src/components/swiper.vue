@@ -11,7 +11,11 @@
         :style="'width:'+imgWidth"
         @click="selectOneImg(index)"
       >
-        <img :src="images.url" :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;'" />
+        <img
+          :src="images.url"
+          :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;'"
+          v-on:error.once="errorImg($event)"
+        />
         <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
         <span class="delete-img el-icon-close" @click="deleteImg">
           <!-- <span class="el-icon-close"></span> -->
@@ -32,8 +36,6 @@
   </div>
 </template>
 
-
-
 <script >
 export default {
   name: "swiperper",
@@ -51,7 +53,8 @@ export default {
       // imgMargin: 2,
       allImg: [],
       num: 4,
-      signImgUrl: ""
+      signImgUrl: "",
+      imgLen: 0
     };
   },
   //用的自定义组件
@@ -59,8 +62,9 @@ export default {
   mounted: function() {
     this.list = document.getElementById("list");
     this.allImg = document.getElementsByClassName("img-swiper");
-    if (this.allImg[this.index]) {
-      this.allImg[this.index].classList.add("current-img");
+    // console.log("this.allImg", this.allImg);
+    if (this.allImg[0]) {
+      this.allImg[0].classList.add("current-img");
       this.imgLen = this.allImg.length - 1;
       this.selectOneImg(this.index);
     }
@@ -84,7 +88,9 @@ export default {
     prevOnclick() {
       if (this.allImg.length > 0) {
         this.allImg[this.index].classList.remove("current-img");
+        // console.log(this.index);
         this.index = this.index > 0 ? this.index - 1 : 0;
+        // console.log(this.index);
         this.allImg[this.index].classList.add("current-img");
         this.move(this.imgWidth);
         this.selectOneImg(this.index);
@@ -93,7 +99,9 @@ export default {
     nextOnclick() {
       if (this.allImg.length > 0) {
         this.allImg[this.index].classList.remove("current-img");
+        console.log(this.index, this.imgLen);
         this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
+        console.log(this.index);
         this.allImg[this.index].classList.add("current-img");
         this.move(-this.imgWidth);
         this.selectOneImg(this.index);
@@ -106,6 +114,9 @@ export default {
         this.allImg[this.index].classList.add("current-img");
         this.$emit("selectOneImg", this.imgUrl[ind].url);
       }
+    },
+    errorImg(e) {
+      e.currentTarget.src = require("../assets/images/error.svg");
     },
     deleteImg() {}
   }

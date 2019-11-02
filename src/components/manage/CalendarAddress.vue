@@ -211,12 +211,13 @@ export default {
 
     // 将站点列表按照编号排序
     addressList() {
+      let _this = this
       let compare = id => (a, b) => {
         let value1 = a[id]
         let value2 = b[id]
         return value1.localeCompare(value2)
       }
-      return this.addressList_before.sort(compare('id'))
+      return _this.addressList_before.sort(compare('id'))
     },
 
     yearMonth() {
