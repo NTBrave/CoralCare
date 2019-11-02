@@ -3,7 +3,7 @@
     <div
       class="listItem"
       :class="activeFile === item? 'activeItem': ''"
-      v-for="(item, idx) in fileNameList"
+      v-for="(item, idx) in fileName"
       :key="idx"
       @click="findFile(item)"
     >{{item}}</div>
@@ -11,20 +11,49 @@
 </template>
 
 <script>
+import { reqApi } from '../../api/api'
+import { Refactoring, getCZDA } from '../../util/apiCreator'
+import { D01 } from '../../json/entity'
 export default {
   props: {
     fileNameList: {
       type: Array
     }
   },
-
-  computed: {},
+  watch: {
+    fileNameList: {
+      handler: function() {
+        this.getFileName()
+      },
+      deep: true
+    }
+  },
+  computed: {
+    // async fileName() {
+    // }
+  },
   data() {
     return {
+      fileName: [],
       activeFile: ''
     }
   },
   methods: {
+    // 循环根据记录请求档案，拼接档案名称
+    async getFileName() {
+      // this.getFileName()
+      if (this.fileNameList.length > 0) {
+        for (let i of this.fileNameList) {
+          let obj = getCZDA(D01, i.principle.ExtendData.czda_spaid)
+          await reqApi(obj, '/tree/select').then(res => {
+            let name = Refactoring(res.data.response.CZDA.objects[0]).title
+            console.log(Refactoring(res.data.response.CZDA.objects[0]))
+            this.fileName.push(name)
+          })
+        }
+      }
+    },
+
     findFile(item) {
       this.activeFile = item
       console.log(item)
@@ -33,15 +62,14 @@ export default {
     // 将接受到的
   },
   mounted() {
-    // this.activeFile = this.$route.query.file
-    console.log(this.fileNameList)
+    this.getFileName()
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 .listRoot {
-  width: 15%;
+  // width: 10vw;
   min-width: 150px;
   margin-bottom: 1rem;
   font-size: 14px;

@@ -263,7 +263,9 @@ export default {
       })
     }
   },
-  mounted() {},
+  mounted() {
+    this.requestCZJL()
+  },
   beforeRouteEnter(to, from, next) {
     console.log(to.params.recordData)
     if (to.params.build === 'create') {

@@ -6,7 +6,7 @@
         <file-list
           :style="{'marginTop': '4.5vh'}"
           v-if="activityFiles"
-          :fileNameList="activityFiles"
+          :fileNameList.sync="activityFiles"
         ></file-list>
       </div>
     </div>
@@ -24,9 +24,9 @@ import { mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
 import ResultFormVue from '../../components/dayActivity/ResultForm.vue'
 
-import { getCZJL } from '../../util/apiCreator'
+import { getCZJL, Refactoring } from '../../util/apiCreator'
 import { reqApi } from '../../api/api'
-import { R01 } from '../../json/entity'
+import { R01, D01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -41,26 +41,25 @@ export default {
   data() {
     return {
       recordName: 'A-宇宙号-1区-蓝-07',
-      activityFiles: [],
+      activityFiles: [], // 当前活动下的记录涉及的档案
       recordInfor: [
         { title: '活动编号', msg: '' },
-        { title: '属种', msg: '盔型珊瑚科目' },
-        { title: '状态', msg: '部分白化' },
-        { title: '阶段类型', msg: '回播' },
-        { title: '暂养区域', msg: 'A-宇宙号-1区' },
-        // { title: '透光度', msg: '180cm' },
-        // { title: '温度', msg: '31℃' },
+        { title: '属种', msg: '' },
+        { title: '状态', msg: '' },
+        { title: '阶段类型', msg: '' },
+        { title: '暂养区域', msg: '' },
+
         {
           title: '颜色',
-          msg: 'D2',
-          color: 'rgb(247,218,159)',
-          msg2: 'D5',
-          color2: 'rgb(143,65,36)'
+          msg: '',
+          color: '',
+          msg2: '',
+          color2: ''
         },
-        { title: '时间', msg: '2018.9.10.10' },
-        { title: '尺寸', msg: '5.66' },
-        { title: '面积', msg: '266' },
-        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
+        { title: '时间', msg: '' },
+        { title: '尺寸', msg: '' },
+        { title: '面积', msg: '' },
+        { title: '备注', msg: '' }
       ],
       imgUrl: [
         {
@@ -152,7 +151,9 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setActivityFiles']),
+    ...mapMutations([
+      // 'setActivityFiles'
+    ]),
 
     // 返回继续录入记录
     returnCreate() {
@@ -176,6 +177,7 @@ export default {
         console.log('获取活动下所有残枝记录', res)
         if (res.data.status === 200) {
           let czdaList = res.data.response.CZJL.objects
+          this.activityFiles = czdaList
         }
       })
     }

@@ -175,9 +175,56 @@ export function getCZDA_HB(reqObj, sowForm) {
   return newObj;
 }
 
+// 根据残枝记录查询所属残枝档案
+export function getCZDA(reqObj, czda_spaid) {
+  let newObj = deepCopy(reqObj);
+  newObj.Jobs[0].CZDASpaId = czda_spaid;
+  newObj.Jobs[0].Where[0].Operator.Value = czda_spaid;
+
+  return newObj;
+}
+
 // 获取指定活动下的所有记录
 export function getCZJL(reqObj, czhd_spaid) {
   let newObj = deepCopy(reqObj);
   newObj.Jobs[0].MasterSpaId = czhd_spaid;
+  return newObj;
+}
+
+// 构造档案名字
+export function Refactoring(obj) {
+  let ExtendData = obj.principle.ExtendData;
+  let newObj = {};
+  if (obj.fks) {
+    let fks = obj.fks;
+    for (let i = 0; i < fks.length; i++) {
+      Object.assign(newObj, fks[i]);
+    }
+  }
+  newObj["SpaId"] = obj.principle.SpaId;
+  newObj["CreateAt"] = obj.principle.CreateAt;
+  for (let item in ExtendData) {
+    newObj[item] = ExtendData[item];
+  }
+  //构建珊瑚名字
+  let title = newObj.PYZD.extenddata.number + "-";
+  if (newObj.YX == null) {
+    //判断名字显示 样线 还是 区域
+    title += newObj.MP.extenddata.name + "-";
+    title += newObj.FQ.extenddata.name + "-";
+  } else {
+    title += newObj.YX.extenddata.name + "-";
+  }
+  title += newObj.haopai_color + "-" + newObj.haopai_number;
+  newObj.title = title;
+  //构造种类
+  // console.log(newObj);
+  newObj.type =
+    newObj.ORDER.extenddata.name +
+    "-" +
+    newObj.FAMILY.extenddata.name +
+    "-" +
+    newObj.GENUS.extenddata.name;
+  // console.log(newObj);
   return newObj;
 }

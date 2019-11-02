@@ -28,7 +28,7 @@ const getters = {
         dataY3[dataY3.length] = coralNumberStatistic[i][1];
         dataY4[dataY4.length] = parseInt(
           (100 * coralNumberStatistic[i][1]) /
-          (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
+            (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
         );
         if (coralNumberStatistic[i][1] + coralNumberStatistic[i][2] > maxY2) {
           maxY2 = coralNumberStatistic[i][1] + coralNumberStatistic[i][2];
