@@ -22,7 +22,7 @@
         </div>
 
         <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
-        <span class="delete-img el-icon-close" @click="deleteImg">
+        <span v-if="isShowDel" class="delete-img el-icon-close" @click="deleteImg">
           <!-- <span class="el-icon-close"></span> -->
         </span>
       </div>
@@ -47,7 +47,8 @@ export default {
   props: {
     imgHeight: Number,
     imgWidth: Number,
-    imgUrl: Array
+    imgUrl: Array,
+    isShowDelet: Boolean
   },
   data() {
     return {
@@ -59,12 +60,14 @@ export default {
       allImg: [],
       num: 4,
       signImgUrl: "",
-      imgLen: 0
+      imgLen: 0,
+      isShowDel: false
     };
   },
   //用的自定义组件
   components: {},
   mounted: function() {
+    this.isShowDel = this.isShowDelet || false;
     this.list = document.getElementById("list");
     this.allImg = document.getElementsByClassName("img-swiper");
     // console.log("this.allImg", this.allImg);

@@ -47,16 +47,20 @@
             v-for="(coral, index) in coralList"
             :key="index"
             class="one-list"
-            @click.native="selectCoral(coral.SpaId)"
+            @click.native="selectCoral(coral.SpaId,index)"
           >
-            <el-col :offset="3" :span="22">
+            <el-col
+              :offset="3"
+              :span="22"
+              :class="index===active_index? 'activeItem':'one-list-title'"
+            >
               <el-col :span="4">
                 <span :style="coral.starred==1?'visibility: visible;':'visibility: hidden;'">
                   <img src="../assets/images/star.png" width="80%" alt />
                 </span>
               </el-col>
               <el-col :span="20">
-                <span class="one-list-title">{{coral.title}}</span>
+                <span>{{coral.title}}</span>
               </el-col>
             </el-col>
           </el-row>
@@ -404,7 +408,10 @@ export default {
       leftLoading: false,
       visible1: false,
       visible2: false,
-      visible3: false
+      visible3: false,
+
+      //选中的下标
+      active_index: 0
     };
   },
 
@@ -428,8 +435,8 @@ export default {
           }
           _this.allLoading = false;
           // _this.rightLoading = true;
-          console.log("第一个档案：", _this.coralList[0].SpaId);
-          _this.selectCoral(_this.coralList[0].SpaId);
+          // console.log("第一个档案：", _this.coralList[0].SpaId);
+          _this.selectCoral(_this.coralList[0].SpaId, 0);
         }
       });
     },
@@ -472,8 +479,9 @@ export default {
     },
 
     //展示一个档案的数据
-    async selectCoral(spaId) {
+    async selectCoral(spaId, index) {
       let _this = this;
+      _this.active_index = index;
       _this.rightLoading = true;
       // console.log("01");
       //找到指定的残肢档案
@@ -488,7 +496,7 @@ export default {
             res.data.response.CZDA.objects[0]
           );
           let oneCoralMsg = _this.currentCoralData;
-          console.log("找到指定的残肢档案", oneCoralMsg);
+          // console.log("找到指定的残肢档案", oneCoralMsg);
           _this.isStart = oneCoralMsg.starred.toString();
           _this.isEnd = oneCoralMsg.ended;
           _this.currentCoralId = oneCoralMsg.SpaId;
@@ -520,7 +528,7 @@ export default {
       // forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
       forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
       await Api.reqApi(forOneRecord, "/tree/select").then(res => {
-        console.log("最新记录", res);
+        // console.log("最新记录", res);
         if (res.data.status === 200 && res.data.response) {
           let recoedData = res.data.response.CZJL.objects[0].principle;
           // 设置最新的记录数据
@@ -588,7 +596,8 @@ export default {
             _this.allActivityArr.push(
               objArr[i].principle.ExtendData.czhd_spaid
             );
-            dateSizeArr.push(oneArr);
+            // dateSizeArr.push(oneArr);
+            dateSizeArr[i] = oneArr;
           }
           // console.log("将传给图表:", dateSizeArr);
           _this.timeCharArr = dateSizeArr;
@@ -601,7 +610,7 @@ export default {
     //查看详情
     showRecord() {
       this.isShowRecord = !this.isShowRecord;
-      this.selectCoral(this.currentCoralId);
+      this.selectCoral(this.currentCoralId, this.active_index);
     },
     //获取当前记录的活动数据
     getActivity() {
@@ -778,7 +787,7 @@ export default {
             }
           });
         }
-        console.log(_this.danAnImgList);
+        // console.log(_this.danAnImgList);
       }
       _this.rightLoading = false;
     },
@@ -797,7 +806,7 @@ export default {
         if (res.data.status === 200 && res.data.response) {
           let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
           // console.log("返回的url:", returnUrl);
-          _this.selectCoral(returnUrl);
+          _this.selectCoral(returnUrl, this.active_index);
         }
       });
     },
@@ -820,7 +829,7 @@ export default {
         if (res.data.status === 200 && res.data.response) {
           let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
           // console.log("返回的url:", returnUrl);
-          _this.selectCoral(returnUrl);
+          _this.selectCoral(returnUrl, this.active_index);
         }
       });
     },
@@ -877,7 +886,7 @@ export default {
   width: 90%;
   overflow: hidden;
   margin: 1rem auto;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
 
   cursor: pointer;
 }
@@ -1026,5 +1035,9 @@ export default {
 }
 .an-btn:hover {
   background: rgba(255, 107, 107, 0.5);
+}
+.activeItem {
+  color: #3fc1cb;
+  background: #f5f5f5;
 }
 </style>
