@@ -50,10 +50,10 @@
                     <span class="color-block" :style="'background-color:'+item.color2"></span>
                   </span>
 
-                  <!-- <span v-if="item.title.search(/尺寸/)>0">
+                  <span v-if="/尺寸|高度/.test(item.title)&&item.msg">
                     cm
-                    <sup v-if="showPingFang">2</sup>
-                  </span>-->
+                    <sup v-if="/尺寸/.test(item.title)">2</sup>
+                  </span>
                   <div v-show="index!=recordInfor.length-1" class="bottom-line"></div>
                 </div>
               </div>
@@ -68,7 +68,7 @@
           :imgWidth="10"
           @selectOneImg="chooseSwiperImg"
         ></swiper>
-        <div style="    height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
+        <div class="boderImg">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
           <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
         </div>
@@ -152,43 +152,48 @@ export default {
     // }
   },
   mounted: function() {
-    //构造表单数据
-    this.inforLoading = true;
-    this.recordInfor[0].msg = this.activty.activity_number;
-    this.recordInfor[1].msg = this.type;
-    this.recordInfor[2].msg = this.recordObj.ExtendData.status;
-    this.recordInfor[3].msg = this.activty.type;
-    let positonArr = this.recordName.split("-");
-    positonArr.length = positonArr.length - 2;
-    this.recordInfor[4].msg = positonArr.join("-");
-    //构建颜色
-    let light = this.recordObj.ExtendData.lightest_color;
-    let darkest = this.recordObj.ExtendData.darkest_color;
-
-    this.recordInfor[5].msg = light;
-    this.recordInfor[5].msg2 = darkest;
-    this.recordInfor[5].color = DEFAULT.colorObj[light];
-    this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
-    //构建时间
-    this.recordInfor[6].msg = this.activty.time;
-    // this.recordInfor[6].msg = moment(
-    //   this.recordObj.ExtendData.timestamp,
-    //   "YYYYMMDDHH"
-    // ).format("YYYY-MM-DD HH");
-    //构建尺寸
-    this.recordInfor[7].msg = this.recordObj.ExtendData.area + "cm²";
-    //构建备注
-    this.recordInfor[8].msg = this.recordObj.ExtendData.height + "cm";
-    //构建高度
-    this.recordInfor[9].msg = this.recordObj.ExtendData.comment;
-
-    console.log(this.activty);
+    // console.log(this.activty);
     //获取这个记录的图片啦
-    this.getImgUrlId();
+    this.madeForm();
   },
   methods: {
+    madeForm() {
+      //构造表单数据
+      this.inforLoading = true;
+      this.recordInfor[0].msg = this.activty.activity_number;
+      this.recordInfor[1].msg = this.type;
+      this.recordInfor[2].msg = this.recordObj.ExtendData.status;
+      this.recordInfor[3].msg = this.activty.type;
+      let positonArr = this.recordName.split("-");
+      positonArr.length = positonArr.length - 2;
+      this.recordInfor[4].msg = positonArr.join("-");
+      //构建颜色
+      let light = this.recordObj.ExtendData.lightest_color;
+      let darkest = this.recordObj.ExtendData.darkest_color;
+
+      this.recordInfor[5].msg = light;
+      this.recordInfor[5].msg2 = darkest;
+      this.recordInfor[5].color = DEFAULT.colorObj[light];
+      this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
+      //构建时间
+      this.recordInfor[6].msg = this.activty.time;
+      // this.recordInfor[6].msg = moment(
+      //   this.recordObj.ExtendData.timestamp,
+      //   "YYYYMMDDHH"
+      // ).format("YYYY-MM-DD HH");
+      //构建尺寸
+      this.recordInfor[7].msg = this.recordObj.ExtendData.area;
+      //构建备注
+      this.recordInfor[8].msg = this.recordObj.ExtendData.height;
+      //构建高度
+      this.recordInfor[9].msg = this.recordObj.ExtendData.comment;
+      this.getImgUrlId();
+    },
     goMessuring() {
       this.doMeasuring = !this.doMeasuring;
+      if (this.doMeasuring) {
+        this.madeForm();
+      }
     },
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url;
@@ -234,8 +239,8 @@ export default {
       //构造请求体
       let _this = this;
       let imgNodeData = ENTITY.P04;
+      _this.inforImgUrlId = [];
       imgNodeData.Jobs[0].MasterSpaId = _this.recordObj.SpaId;
-      // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.recordObj.SpaId;
       await Api.reqApi(imgNodeData, "/tree/select")
         .then(res => {
           console.log("图片节点:", res);
@@ -247,7 +252,7 @@ export default {
               this.inforLoading = false;
             }
           } else {
-            this.$message.warning("获取不到它的图片");
+            this.$message.warning("它的没有图片");
             this.inforLoading = false;
           }
         })
@@ -260,19 +265,21 @@ export default {
     //获取每个图片节点的对应url
     async getimgUrl() {
       let _this = this;
+      _this.theRecordImgArr = [];
       for (let i = 0; i < _this.inforImgUrlId.length; i++) {
         let imgName = _this.inforImgUrlId[i];
+        console.log("图片id：", imgName.url);
         // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
-        await Api.reqApi({ file_id: imgName }, "/file/get").then(res => {
-          // console.log(i, j, res.data.response.url);
-          _this.theRecordImgArr.push({ url: res.data.response.url });
+        await Api.reqApi({ file_id: imgName.url }, "/file/get").then(res => {
+          if (res.data.status === 200 && res.data.response) {
+            console.log("图片:", res.data.response.url);
+            _this.theRecordImgArr.push({ url: res.data.response.url });
+          }
         });
       }
       if (_this.theRecordImgArr[0]) {
         _this.chooseSwiperImg(_this.theRecordImgArr[0].url);
       }
-
-      console.log("图片:", _this.theRecordImgArr);
     }
   }
 };
@@ -331,7 +338,18 @@ export default {
   opacity: 0.7;
 }
 .showOneImg {
-  max-width: 740px;
+  max-width: 31rem;
+  max-height: 24rem;
+  width: auto;
+  height: auto;
+}
+.boderImg {
+  height: 25rem;
+  width: 32rem;
+  margin: 0px auto;
+  line-height: 25rem;
+  justify-content: center;
+  /* display: flex; */
 }
 .inforSwiper {
   width: 55rem;

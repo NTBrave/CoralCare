@@ -112,20 +112,10 @@ export const A01 =
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "NeedFK": "false",				//无需回传外键 此时已经知道是哪个残枝作业
             "Where": [
-                {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "MasterId"
-                    }
-                }
+
             ],
             "Order": [
-                {
-                    "Key": "",
-                    "Order": ""
-                }
+                {}
             ],
             "GroupBy": [
                 {}
@@ -240,27 +230,24 @@ export const A05 =
 }
 //A-06 更新活动
 export const A06 =
-
-
-
 {
     "JobType": "flow",
     "JobHandler": "CZHDHandler",		//残枝活动Handler
     "Jobs": [
         {
             "Method": "update",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZZY",	//父节点:[/残枝作业]
             "Object": {
-                "SpaId": "spaid",		//与新建不同，更新活动要在此字段提供spaid
+                "SpaId": "",		//与新建不同，更新活动要在此字段提供spaid
                 "ExtendType": "CZHD",	//残枝活动	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
-                    "type": "首次暂养/暂养巡检/首次回播/回播巡检",
-                    "code": "1/2/3/4",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
-                    "participants": "张三 李四",		//参与人员
-                    "comment": ""
+                    // "czzy_spaid": "",		//所属残枝作业的spaid
+                    // "timestamp": "",
+                    // "type": "",
+                    // "code": "",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
+                    // "participants": "",		//参与人员
+                    // "comment": ""
                 }
             }
         }
@@ -402,18 +389,12 @@ export const R01 =
             "NeedFK": "false",	//不回传外键
             "Where": [
                 {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "MasterId"
-                    }
+
                 }
             ],
             "Order": [
                 {
-                    "Key": "",
-                    "Order": ""
+
                 }
             ],
             "GroupBy": [
@@ -606,7 +587,7 @@ export const R05 =
             "MasterExtendType": "CZDAROOT",
             "Object": {
                 "ExtendType": "CZDA",
-                "SpaId":'',
+                "SpaId": '',
                 "ExtendData": {
                     "haopai_color": "",
                     "haopai_number": "",
@@ -941,7 +922,7 @@ export const CZDA_01 = {
                         "Operator": "=",
                         "Value": "暂养"
                     },
-                    
+
                 },
             ],
             "Order": [
@@ -1018,7 +999,7 @@ export const CZDA_02 = {
                         "Operator": "=",
                         "Value": "回播"
                     },
-                    
+
                 },
             ],
             "Order": [

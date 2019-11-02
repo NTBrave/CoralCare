@@ -11,11 +11,16 @@
         :style="'width:'+imgWidth"
         @click="selectOneImg(index)"
       >
-        <img
-          :src="images.url"
-          :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;'"
-          v-on:error.once="errorImg($event)"
-        />
+        <div
+          :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;display: flex;justify-content: center'"
+        >
+          <img
+            :src="images.url"
+            :style="'max-width:'+imgWidth+'vw;max-height:'+imgHeight+'vh;'"
+            v-on:error.once="errorImg($event)"
+          />
+        </div>
+
         <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
         <span class="delete-img el-icon-close" @click="deleteImg">
           <!-- <span class="el-icon-close"></span> -->

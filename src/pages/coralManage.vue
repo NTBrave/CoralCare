@@ -107,7 +107,7 @@
       <div
         v-loading="rightLoading"
         element-loading-spinner="loadingSvg"
-        v-if="!isShowRecord"
+        v-show="!isShowRecord"
         style="width: 70rem;position: relative;"
       >
         <el-row style="margin-left:1%;width: 100%;">

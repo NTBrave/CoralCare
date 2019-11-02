@@ -28,7 +28,7 @@ const getters = {
         dataY3[dataY3.length] = coralNumberStatistic[i][1];
         dataY4[dataY4.length] = parseInt(
           (100 * coralNumberStatistic[i][1]) /
-            (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
+          (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
         );
         if (coralNumberStatistic[i][1] + coralNumberStatistic[i][2] > maxY2) {
           maxY2 = coralNumberStatistic[i][1] + coralNumberStatistic[i][2];
@@ -120,7 +120,7 @@ const getters = {
 
   // 获取当前创建的活动的spaid
   getCurrentActivity_spaid(state) {
-    return state.activityList.filter(function(item) {
+    return state.activityList.filter(function (item) {
       if (item.activity_number === state.nowDivingActivity) {
         return item;
       }
@@ -155,6 +155,11 @@ const getters = {
   // 获取当前页面的活动类型导航栏id
   getActiveId(state) {
     return state.activeId;
+  },
+
+  //获取当日作业数组
+  getWorkIdArr(state) {
+    return state.workIdArr;
   }
 };
 

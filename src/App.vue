@@ -5,7 +5,41 @@
 </template>
 
 <script>
-export default {};
+import * as Api from "./api/api";
+import * as ENTITY from "./json/entity";
+import { mapMutations } from "vuex";
+export default {
+  data() {
+    return {};
+  },
+  mounted() {
+    this.getAllZhan();
+  },
+  methods: {
+    //vuex mutation
+    ...mapMutations(["setPYZD", "setIsLogin", "setCurrentZD"]),
+    getAllZhan() {
+      let _this = this;
+      Api.reqApi(ENTITY.O01, "/tree/select")
+        .then(res => {
+          let PYZDobjects = res.data.response.PYZD.objects;
+          let len = PYZDobjects.length;
+          let arr = [];
+          for (let i = 0; i < len; ++i) {
+            arr.push(PYZDobjects[i].principle);
+          }
+          _this.setPYZD(arr);
+          _this.setCurrentZD("A");
+          console.log(this.$store.state.PYZD);
+        })
+        .catch(err => {
+          this.$message.error("获取站点失败");
+          console.log(err);
+        });
+      console.log("刷新");
+    }
+  }
+};
 </script>
 
 <style>
@@ -57,11 +91,8 @@ export default {};
   0% {
     transform: rotate(0);
   }
-  50% {
-    transform: rotate(360deg);
-  }
   100% {
-    transform: rotate(0);
+    transform: rotate(360deg);
   }
 }
 </style>

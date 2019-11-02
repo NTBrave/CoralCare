@@ -29,11 +29,11 @@
   </div>
 </template>
 <script>
-import * as Api from '../api/api'
-import * as ENTITY from '../json/entity'
-import { mapMutations } from 'vuex'
+import * as Api from "../api/api";
+import * as ENTITY from "../json/entity";
+import { mapMutations } from "vuex";
 export default {
-  name: 'login',
+  name: "login",
   data() {
     return {
       // 登陆
@@ -42,183 +42,143 @@ export default {
         visible: false,
         logoutVisible: false,
         isLogin: false,
-        currentUserName: 'lintean',
-        currentUserNo: '',
-        currentUserId: '',
-        currentUserEmail: '',
-        user: '',
-        pwd: '',
+        currentUserName: "lintean",
+        currentUserNo: "",
+        currentUserId: "",
+        currentUserEmail: "",
+        user: "",
+        pwd: "",
         rules: {
           user: [
             {
               required: true,
-              message: '请输入账号',
-              trigger: 'blur'
+              message: "请输入账号",
+              trigger: "blur"
             }
           ],
           pwd: [
             {
               required: true,
-              message: '请输入密码',
-              trigger: 'blur'
+              message: "请输入密码",
+              trigger: "blur"
             }
           ]
         }
       }
-    }
+    };
   },
   mounted: function() {
-    this.getAllZhan()
+    // this.getAllZhan()
   },
   computed: {},
   methods: {
     //vuex mutation
-    ...mapMutations(['setPYZD', 'setIsLogin', 'setCurrentZD']),
+    ...mapMutations(["setPYZD", "setIsLogin", "setCurrentZD"]),
     login() {
-      let _this = this
+      let _this = this;
       Api.reqApi(
         { username: _this.loginData.user, password: _this.loginData.pwd },
-        '/tree/login'
+        "/tree/login"
       )
         .then(res => {
           if (res.data.status === 200) {
-            _this.setIsLogin(true)
-            _this.getAllZhan()
+            _this.setIsLogin(true);
+            _this.getAllZhan();
             // this.$router.push('/manage')
             // console.log(this.$store.state.isLogin);
           } else {
-            this.$message.success('账号或密码错误')
+            this.$message.success("账号或密码错误");
           }
         })
         .catch(err => {
-          this.$message.success('登陆失败')
-          console.log(err)
-        })
+          this.$message.success("登陆失败");
+          console.log(err);
+        });
     },
     getAllZhan() {
-      let _this = this
+      let _this = this;
       // let loginData = ENTITY.O01
       // console.log(ENTITY.O01);
-      Api.reqApi(ENTITY.O01, '/tree/select')
+      Api.reqApi(ENTITY.O01, "/tree/select")
         .then(res => {
           // console.log(res);
           //获取站点数据
-          let PYZDobjects = res.data.response.PYZD.objects
-          let len = PYZDobjects.length
-          let arr = []
+          let PYZDobjects = res.data.response.PYZD.objects;
+          let len = PYZDobjects.length;
+          let arr = [];
           for (let i = 0; i < len; ++i) {
-            arr.push(PYZDobjects[i].principle)
+            arr.push(PYZDobjects[i].principle);
           }
 
           //把站点数据放到Vuex
-          _this.setPYZD(arr)
-          _this.setCurrentZD('A')
-          console.log(this.$store.state.PYZD)
+          _this.setPYZD(arr);
+          _this.setCurrentZD("A");
+          console.log(this.$store.state.PYZD);
         })
         .catch(err => {
-          this.$message.error('获取站点失败')
-          console.log(err)
-        })
+          this.$message.error("获取站点失败");
+          console.log(err);
+        });
 
       // .catch(err => {
       // console.log(err);
       // });
-      this.$router.push('/manage')
-      // let _this = this;
-      // _this.LoginLoading = true;
-      // Api.Login(this.loginData.user, this.loginData.pwd)
-      // .then(res => {
-      //   _this.$store.commit("setUserInforFromAppVue", res.data.data);
-      //   if (res.data.status === 200) {
-      //     _this.loginData.isLogin = true;
-      //     _this.loginData.visible = false;
-      //     _this.loginData.currentUserName = res.data.data.userInfo.username;
-      //     _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
-      //     _this.loginData.currentUserEmail = res.data.data.userInfo.email;
-      //     _this.loginData.isLogin = true;
-      //     Message({
-      //       message: "用户登陆 成功",
-      //       center: true,
-      //       type: "success",
-      //       showClose: true,
-      //       customClass: "zZindex"
-      //     });
-      //   } else {
-      //     Message({
-      //       message: res.data.msg,
-      //       center: true,
-      //       type: "warning",
-      //       showClose: true,
-      //       customClass: "zZindex"
-      //     });
-      //   }
-      // })
-      // .catch(err => {
-      //   console.log(err);
-      //   this.LoginLoading = false;
-      //   Message({
-      //     message: "账号密码不正确 " + err,
-      //     center: true,
-      //     type: "warning",
-      //     showClose: true,
-      //     customClass: "zZindex"
-      //   });
-      // });
+      this.$router.push("/manage");
     },
 
     logout() {
-      let _this = this
+      let _this = this;
       Api.Logout()
         .then(res => {
           if (res.data.status === 200) {
-            _this.loginData.isLogin = false
-            _this.loginData.visible = true
+            _this.loginData.isLogin = false;
+            _this.loginData.visible = true;
             Message({
-              message: '注销登陆 成功',
+              message: "注销登陆 成功",
               center: true,
-              type: 'success',
+              type: "success",
               showClose: true,
-              customClass: 'zZindex'
-            })
+              customClass: "zZindex"
+            });
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
           Message({
-            message: '注销登陆 失败',
+            message: "注销登陆 失败",
             center: true,
-            type: 'warning',
+            type: "warning",
             showClose: true,
-            customClass: 'zZindex'
-          })
-          _this.handleError(err)
-        })
+            customClass: "zZindex"
+          });
+          _this.handleError(err);
+        });
     },
 
     cancelLogin() {
-      this.loginData.visible = false
+      this.loginData.visible = false;
       Message({
-        message: '未登录',
+        message: "未登录",
         center: true,
         showClose: true,
-        customClass: 'zZindex'
-      })
+        customClass: "zZindex"
+      });
     },
 
     changeRoute(index) {
-      if (index == '2-1') {
-        this.$router.push('/manage')
-      } else if (index == '1') {
-        this.$router.push('/manage/user')
+      if (index == "2-1") {
+        this.$router.push("/manage");
+      } else if (index == "1") {
+        this.$router.push("/manage/user");
       }
     }
   }
-}
+};
 </script>
 <style scoped >
 .the-login {
-  font-family: '思源黑体', Arial, Helvetica, sans-serif;
+  font-family: "思源黑体", Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
   color: #000;
   overflow-x: hidden;

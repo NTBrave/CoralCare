@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { reqApi } from "../../api/api";
+import { A06 } from "../../json/entity";
 export default {
   props: {
     activityInfo: {
@@ -53,51 +55,54 @@ export default {
   data() {
     return {
       ifEdit: false,
-      members: '',
-      remarks: '',
+      members: "",
+      remarks: "",
       formTitle: [
-        { title: '活动编号', data: '' },
-        { title: '活动时间', data: '' },
-        { title: '参与人员', data: '' },
-        { title: '活动类型', data: '' },
-        { title: '采集区域', data: '' },
-        { title: '珊瑚数量', data: '' },
-        { title: '品种数量', data: '' },
-        { title: '透光度', data: '' },
-        { title: '温度', data: '' },
-        { title: '备注', data: '' }
+        { title: "活动编号", data: "" },
+        { title: "活动时间", data: "" },
+        { title: "参与人员", data: "" },
+        { title: "活动类型", data: "" },
+        { title: "采集区域", data: "" },
+        { title: "珊瑚数量", data: "" },
+        { title: "品种数量", data: "" },
+        { title: "备注", data: "" }
       ]
-    }
+    };
   },
   computed: {
     // 将传入的数据与表单名称拼接起来形成一个新的数组，便于遍历渲染
     formList: function() {
-      let result = this.formTitle
-      let datas = Object.values(this.activityInfo)
+      let result = this.formTitle;
+      let datas = Object.values(this.activityInfo);
       for (let i of result) {
         for (var j of datas) {
-          // result[i].data =
-          i.data = j
-          datas.shift(j)
-          break
+          i.data = j;
+          datas.shift(j);
+          break;
         }
       }
-      return result
+      return result;
+    }
+  },
+  watch: {
+    "activityInfo.activityNum": function() {
+      this.members = this.activityInfo.totalMembers;
+      this.remarks = this.activityInfo.remarks;
     }
   },
   methods: {
     // 自动聚焦
     changeFocus() {
       this.$nextTick(function() {
-        this.$refs.input[0].focus()
-      })
+        this.$refs.input[0].focus();
+      });
     },
 
     // 编辑活动信息
     editActivity() {
-      this.ifEdit = !this.ifEdit
+      this.ifEdit = !this.ifEdit;
       if (this.ifEdit) {
-        this.changeFocus()
+        this.changeFocus();
       }
     },
 
@@ -106,14 +111,33 @@ export default {
 
     // 提交修改表单
     submitEdit() {
-      this.editActivity()
+      let _this = this;
+      console.log(this.activityInfo);
+      let newA06 = A06;
+      newA06.Jobs[0].Object.ExtendData.participants = _this.members;
+      newA06.Jobs[0].Object.ExtendData.comment = _this.remarks;
+      newA06.Jobs[0].MasterSpaId = _this.activityInfo.czzy_spaid;
+      newA06.Jobs[0].Object.SpaId = _this.activityInfo.czhd_spaid;
+      newA06.Jobs[0].Object.ExtendData.czzy_spaid =
+        _this.activityInfo.czzy_spaid;
+      newA06.Jobs[0].Object.ExtendData.timestamp =
+        _this.activityInfo.activityTime;
+      newA06.Jobs[0].Object.ExtendData.type = _this.activityInfo.activityType;
+      newA06.Jobs[0].Object.ExtendData.code = _this.activityInfo.code;
+
+      reqApi(newA06, "/tree/select/").then(res => {
+        console.log(res);
+        if (res.data.status === 2000 && res.data.response) {
+        }
+      });
+      this.editActivity();
     }
   },
   mounted() {
-    this.members = this.activityInfo.totalMembers
-    this.remarks = this.activityInfo.remarks
+    this.members = this.activityInfo.totalMembers;
+    this.remarks = this.activityInfo.remarks;
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

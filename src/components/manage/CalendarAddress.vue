@@ -240,7 +240,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setCurrentZD", "setWorkList", "setCurrentWork"]),
+    ...mapMutations([
+      "setCurrentZD",
+      "setWorkList",
+      "setCurrentWork",
+      "setWorkIdArr"
+    ]),
 
     // 点击打开抽屉
     showDrawer() {
@@ -394,11 +399,17 @@ export default {
 
     // 点击查看当日活动
     dayActivity() {
+      //找到那天的作业spaid
+      let workIdArr = [];
+      for (let item of this.datesHaveActivity) {
+        if (item.date.search(this.dateNumber_review) >= 0) {
+          workIdArr.push(item.SpaId);
+        }
+      }
+      this.setWorkIdArr(workIdArr);
       this.$router.push({
         name: `dayActivity`,
         query: {
-          // time: this.dateNumber_review,
-          // address: this.activityAddress
           time: this.dateNumber_review,
           address: this.activityAddress
         }
@@ -436,6 +447,7 @@ export default {
     // 设置当前月视图有活动的日期
     setActivityDays(yearMonth) {
       // 逻辑赋值
+      this.datesHaveActivity = [];
       W01.Jobs[0].MasterSpaId = this.currentZD_data(
         this.currentZD
       ).ExtendData.ywsj_spaid;
@@ -448,11 +460,13 @@ export default {
       W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`;
       reqApi(W01, "/tree/select").then(res => {
         // console.log(res)
-        if (res.data.response) {
+        if (res.data.response && res.data.status === 200) {
           for (let i of res.data.response.CZZY.objects) {
             let obj = {};
             obj.date = i.principle.ExtendData.timestamp;
+            obj.SpaId = i.principle.SpaId;
             obj.state = 0;
+            // console.log(obj);
             this.datesHaveActivity.push(obj);
           }
         } else {
