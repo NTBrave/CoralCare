@@ -1,9 +1,9 @@
 <template>
   <div class="formRoot">
-    <el-form ref="fileForm" size="mini" :disabled="!beforeCreateRecord">
+    <el-form ref="fileForm" size="small" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">牌色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">牌色</span>
         </el-col>
         <el-col :span="8">
           <el-select v-model="fileForm.signColor" placeholder="请选择">
@@ -21,13 +21,15 @@
         </el-col>
         <el-col :span="12">
           <el-input v-model="fileForm.signNumber" placeholder="请输入">
-            <template slot="prepend">号码</template>
+            <template slot="prepend">
+              <span :style="{'fontWeight':'bold','color':'black'}">号码</span>
+            </template>
           </el-input>
         </el-col>
       </el-form-item>
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">品种</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">品种</span>
         </el-col>
         <el-col :span="6">
           <el-select v-model="fileForm.species.first" placeholder="目">
@@ -61,15 +63,18 @@
         </el-col>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="fileForm.collectSite" :disabled="true">
-          <template slot="prepend">采集站点</template>
-        </el-input>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">采集站点</span>
+        </el-col>
+        <el-col :span="19">
+          <el-input v-model="fileForm.collectSite" :disabled="true"></el-input>
+        </el-col>
       </el-form-item>
       <el-form-item>
-        <el-col :span="6">
-          <span :style="{marginLeft:'15px'}">暂养区域</span>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">暂养区域</span>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-select v-model="fileForm.breedArea.firstArea" disabled>
             <el-option
               v-for="(item, idx) in ZY_quyu"
@@ -79,7 +84,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="7">
           <el-select v-model="fileForm.breedArea.nursery" placeholder="苗圃">
             <el-option
               v-for="(item, idx) in ZY_miaopu"
@@ -89,7 +94,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="7">
           <el-select v-model="fileForm.breedArea.partition" placeholder="分区">
             <el-option
               v-for="(item, idx) in ZY_fenqu"
@@ -102,10 +107,10 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recorderForm" size="mini" :disabled="!beforeCreateRecord">
+    <el-form ref="recorderForm" size="small" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">状态</span>
+          <span :style="{'marginLeft':'15px','fontWeight':'bold'}">状态</span>
         </el-col>
         <el-col :span="20">
           <el-select v-model="recordForm.state" placeholder="请选择">
@@ -120,7 +125,7 @@
 
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -198,6 +203,14 @@ export default {
     fileData: Object,
     recordData: Object,
     isCreated: Boolean
+    // edit_czdaSpaid: {
+    //   type: String,
+    //   default: ''
+    // },
+    // edit_czjlSpaid: {
+    //   type: String,
+    //   default: ''
+    // }
   },
   watch: {
     // 监听档案信息是否有空值
@@ -291,8 +304,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data',
-      currentActivity_spaid: 'getCurrentActivity_spaid'
+      currentZD_data: 'getCurrentZD_data'
     }),
     ...mapState(['currentZD'])
   },
@@ -319,11 +331,18 @@ export default {
       recordForm: this.recordData, // 接受父页面传来的记录信息
 
       fileInfoNeed: true, // 首次暂养时需要先创建档案才能录入记录
-      beforeCreateRecord: true // 需先提交档案才能录入图片
+      beforeCreateRecord: true, // 需先提交档案才能录入图片
+
+      activityNum:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   methods: {
-    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+    ...mapMutations(['setOperateFile']),
 
     createFile() {
       this.setOperateFile('A-宇宙号-1区-蓝-10')
@@ -334,11 +353,12 @@ export default {
       this.$emit('func', this.file_spaid, this.record_spaid)
     },
 
+    // 提交记录
     submitRecorder() {
       let newR03 = createR03(
         R03,
         this.currentZD_data(this.currentZD).ExtendData.czdaroot_spaid,
-        this.currentActivity_spaid,
+        this.$route.query.czhd_spaid,
         this.currentZD_data(this.currentZD).SpaId,
         this.$route.query.time,
         this.fileForm,
@@ -374,30 +394,22 @@ export default {
     // 数据录入完毕后跳转到成功页面
     routeToSuccess() {
       this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
+        name: 'resultA1',
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+          activityType: this.$route.query.activityType,
+          spaid: {
+            czhd_spaid: this.$route.query.czhd_spaid,
+            czda_spaid: this.file_spaid,
+            czjl_spaid: this.record_spaid
+          }
+        },
+        params: {
+          result: 'success'
         }
       })
     },
-    // submitEdit() {
-    //   // 修改成功接口
-    //   this.$message({
-    //     showClose: true,
-    //     message: '记录修改成功！',
-    //     type: 'success'
-    //   })
-    //   this.$router.push({
-    //     path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
-    //     query: {
-    //       time: this.$route.query.time,
-    //       address: this.$route.query.address,
-    //       activityType: this.$route.query.activityType
-    //     }
-    //   })
-    // },
 
     // 初始化请求珊瑚目类
     requestOrder() {
@@ -458,6 +470,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.formRoot {
+}
+
 .colorCircle {
   width: 10px;
   height: 10px;

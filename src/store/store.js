@@ -82,8 +82,9 @@ const state = {
    */
   PYZD: [], // 所有站点信息
   currentZD: "", // 当前选择的站点编号
-  workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
-  activityList: [], // 本次已创建的活动列表(activity_number, czzy_spaid, SpaId)
+  // workList: [], // 查询或本次已创建的作业列表(pyzd_spaid、timestamp、SpaId)
+  activityList: [], // 已创建的活动列表[{activity_number, czzy_spaid, czhd_spaid}]
+  // currentActivity: {}, // 当前活动
 
   /**
    *  后台管理端
@@ -92,8 +93,8 @@ const state = {
 
   // currentWork: "", // 当前的作业编号
 
-  nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表
-  nowDivingActivity: "", // 当前的活动编号
+  // nowDivingActivitiesList: [], // 当前新建下水作业下的活动列表
+  // nowDivingActivity: "", // 当前的活动编号
 
   activityFiles: [], // 活动下对应的植株档案记录
   operateFile: "", // 当前正在操作的植株档案

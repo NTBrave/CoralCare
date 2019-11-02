@@ -1,9 +1,9 @@
 <template>
   <div class="formRoot">
-    <el-form class="A-Two" :model="breedForm" :disabled="!beforeCreateRecord">
+    <el-form class="A-Two" size="medium" :model="breedForm" :disabled="!beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'5px',fontSize:'13px'}">选择珊瑚</span>
+        <el-col :span="4" :style="{'textAlign':'center',}">
+          <span :style="{'fontWeight':'bold'}">选择珊瑚</span>
         </el-col>
         <el-col :span="4">
           <el-select v-model="breedForm.breedArea.firstArea" disabled placeholder>
@@ -55,12 +55,12 @@
       </el-form-item>
     </el-form>
 
-    <el-form ref="recordForm" size="mini" :disabled="beforeFileFind || !beforeCreateRecord">
+    <el-form ref="recordForm" size="small" :disabled="beforeFileFind || !beforeCreateRecord">
       <el-form-item>
-        <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">状态</span>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">状态</span>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="19">
           <el-select v-model="recordForm.state" placeholder="请选择">
             <el-option label="良好" value="良好"></el-option>
             <el-option label="部分白化" value="部分白化"></el-option>
@@ -73,7 +73,7 @@
 
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -116,6 +116,7 @@
     <div class="buttonArea">
       <el-button
         v-if="isCreated && beforeCreateRecord"
+        :disabled="beforeFileFind"
         class="afterCreate"
         type="danger"
         round
@@ -128,7 +129,7 @@
         round
         @click="routeToSuccess"
       >图片录入</el-button>
-      <el-button class="afterCreate" v-else type="danger" round @click="submitEdit">修改暂养巡检数据</el-button>
+      <el-button class="afterCreate" v-else type="danger" round @click="submitRecorder">修改暂养巡检数据</el-button>
     </div>
   </div>
 </template>
@@ -144,6 +145,8 @@ import {
 } from '../../../util/apiCreator'
 import { debounce } from '../../../util/requestLimit'
 import { reqApi } from '../../../api/api'
+import { objIsEmpty } from '../../../util/formRules'
+
 export default {
   props: {
     breedData: Object,
@@ -151,6 +154,15 @@ export default {
     isCreated: Boolean
   },
   watch: {
+    // // 监听档案信息是否有空值
+    // fileForm: {
+    //   handler: function() {
+    //     let ready = objIsEmpty(this.fileForm)
+    //     console.log(ready)
+    //     this.fileInfoNeed = ready
+    //   },
+    //   deep: true
+    // },
     // 监听整个查找档案的表单对象
     breedForm: {
       handler: function() {
@@ -196,7 +208,7 @@ export default {
   computed: {
     ...mapGetters({
       currentZD_data: 'getCurrentZD_data',
-      currentActivity_spaid: 'getCurrentActivity_spaid'
+      currentActivity: 'getCurrentActivity'
     }),
     ...mapState(['currentZD'])
   },
@@ -219,11 +231,18 @@ export default {
       breedForm: this.breedData,
       recordForm: this.recordData,
 
-      beforeCreateRecord: true // 需先提交档案才能录入图片
+      beforeCreateRecord: true, // 需先提交档案才能录入图片
+
+      activityNum:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   methods: {
-    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+    ...mapMutations(['setOperateFile']),
 
     // 数据录入完毕后跳转到成功页面
     routeToSuccess() {
@@ -287,19 +306,20 @@ export default {
       function(is) {
         this.requestCZDA(is)
       },
-      1000,
+      1500,
       false
     ),
 
     // 向父组件传递 档案spaid 和 记录spaid
     sendSpaid() {
+      console.log('传给父组件的参', this.file_spaid, this.record_spaid)
       this.$emit('func', this.file_spaid, this.record_spaid)
     },
 
     submitRecorder() {
       let newR04 = createR04_06(
         R04,
-        this.currentActivity_spaid,
+        this.currentActivity(this.activityNum).czhd_spaid,
         this.file_spaid,
         this.$route.query.time,
         this.recordForm
@@ -308,6 +328,7 @@ export default {
       console.log(newR04)
       reqApi(newR04, '/tree/create').then(res => {
         if (res.data.status === 200) {
+          console.log('成功提交记录', res)
           this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
           this.sendSpaid() // 向父组件传spaid
 
@@ -325,22 +346,22 @@ export default {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
     },
-    submitEdit() {
-      // 修改成功接口
-      this.$message({
-        showClose: true,
-        message: '数据修改成功！',
-        type: 'success'
-      })
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
-        }
-      })
-    },
+    // submitEdit() {
+    //   // 修改成功接口
+    //   this.$message({
+    //     showClose: true,
+    //     message: '数据修改成功！',
+    //     type: 'success'
+    //   })
+    //   this.$router.push({
+    //     path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+    //     query: {
+    //       time: this.$route.query.time,
+    //       address: this.$route.query.address,
+    //       activityType: this.$route.query.activityType
+    //     }
+    //   })
+    // },
 
     // 初始化请求采集区域
     requestCJQU() {
