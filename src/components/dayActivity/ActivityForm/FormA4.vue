@@ -153,7 +153,11 @@ export default {
   props: {
     sowData: Object,
     recordData: Object,
-    isCreated: Boolean
+    isCreated: Boolean,
+    imgUrl: {
+      type: Array,
+      default: () => []
+    }
   },
   computed: {
     ...mapGetters({
@@ -365,6 +369,7 @@ export default {
           address: this.$route.query.address,
           activityType: this.$route.query.activityType,
           spaid: JSON.stringify({
+            czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
             czhd_spaid: JSON.parse(this.$route.query.spaid).czhd_spaid,
             czda_spaid: this.file_spaid,
             czjl_spaid: this.record_spaid,
