@@ -205,44 +205,52 @@ export default {
       )
       // console.log(requestObj)
       // console.log(this.form)
-      reqApi(requestObj, '/tree/create').then(res => {
-        if (res.data.status === 200) {
-          console.log('创建残枝活动成功', res)
-          let activity = {}
-          activity.activity_num =
-            res.data.response.CZHD.objects[0].principle.ExtendData.activity_number
-          activity.czzy_spaid =
-            res.data.response.CZHD.objects[0].principle.ExtendData.czzy_spaid
-          activity.czhd_spaid =
-            res.data.response.CZHD.objects[0].principle.SpaId
+      reqApi(requestObj, '/tree/create')
+        .then(res => {
+          if (res.data.status === 200) {
+            console.log('创建残枝活动成功', res)
+            let activity = {}
+            activity.activity_num =
+              res.data.response.CZHD.objects[0].principle.ExtendData.activity_number
+            activity.czzy_spaid =
+              res.data.response.CZHD.objects[0].principle.ExtendData.czzy_spaid
+            activity.czhd_spaid =
+              res.data.response.CZHD.objects[0].principle.SpaId
 
-          this.setActivityList(activity)
+            this.setActivityList(activity)
 
-          this.$router.push({
-            path: `/manage/coralBreed/newActivity/${this.form.activityNum.slice(
-              0,
-              2
-            )}/create`,
-            query: {
-              time: this.$route.query.time,
-              address: this.$route.query.address,
-              activityType: this.form.activityNum.slice(0, 2),
-              spaid: JSON.stringify({
-                czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
-                czhd_spaid: this.currentActivity(activity.activity_num)
-                  .czhd_spaid
-              })
-            }
-          })
-          this.dialogFormVisible = false
-        } else if (res.data.status === 406) {
+            this.$router.push({
+              path: `/manage/coralBreed/newActivity/${this.form.activityNum.slice(
+                0,
+                2
+              )}/create`,
+              query: {
+                time: this.$route.query.time,
+                address: this.$route.query.address,
+                activityType: this.form.activityNum.slice(0, 2),
+                spaid: JSON.stringify({
+                  czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+                  czhd_spaid: this.currentActivity(activity.activity_num)
+                    .czhd_spaid
+                })
+              }
+            })
+            this.dialogFormVisible = false
+          } else if (res.data.status === 406) {
+            this.$message({
+              showClose: true,
+              message: '数据不合法！',
+              type: 'error'
+            })
+          }
+        })
+        .catch(err => {
           this.$message({
             showClose: true,
-            message: '数据不合法！',
+            message: '该活动类型已存在！',
             type: 'error'
           })
-        }
-      })
+        })
 
       // console.log(this.$route.query.time + this.$route.query.address)
     }
