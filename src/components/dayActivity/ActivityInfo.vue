@@ -3,7 +3,14 @@
     <div class="bottonArea">
       <div v-if="!ifEdit">
         <i class="el-icon-s-operation" @click="editActivity"></i>
-        <i :style="{'cursor':'pointer'}" class="el-icon-delete" @click="deleteActivity"></i>
+        <el-popover v-model="visible1" placement="top" trigger="click">
+          <p>确定删除该活动？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible1 = false">否</el-button>
+            <el-button type="primary" size="mini" @click="visible1 = false,deleteActivity()">是</el-button>
+          </div>
+          <span slot="reference" :style="{'cursor':'pointer'}" class="el-icon-delete"></span>
+        </el-popover>
       </div>
       <div v-else>
         <el-button type="danger" round size="mini" @click="submitEdit">提交</el-button>
@@ -66,7 +73,8 @@ export default {
         { title: "珊瑚数量", data: "" },
         { title: "品种数量", data: "" },
         { title: "备注", data: "" }
-      ]
+      ],
+      visible1: false
     };
   },
   computed: {
@@ -107,7 +115,9 @@ export default {
     },
 
     // 删除活动
-    deleteActivity() {},
+    deleteActivity() {
+      this.$message.warning("该功能还在开发中，敬请期待");
+    },
 
     // 提交修改表单
     submitEdit() {
@@ -124,7 +134,7 @@ export default {
         _this.activityInfo.activityTime;
       newA06.Jobs[0].Object.ExtendData.type = _this.activityInfo.activityType;
       newA06.Jobs[0].Object.ExtendData.code = _this.activityInfo.code;
-
+      this.$message.warning("该功能还在开发中，敬请期待");
       reqApi(newA06, "/tree/select/").then(res => {
         console.log(res);
         if (res.data.status === 2000 && res.data.response) {

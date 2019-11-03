@@ -231,10 +231,22 @@
             <span>完结</span>
           </div>
           <div v-show="isEnd==1">
-            <el-popover placement="top" trigger="hover" width="30" v-model="visible3">
-              <div style="text-align: right; margin: 0;cursor:pointer">
-                <div style="text-align: center;" @click="visible3=false,setEnd('0')">取消完结</div>
-                <div style="text-align: center;" @click="visible3=false">删除档案</div>
+            <el-popover placement="left-end" trigger="hover" width="200" v-model="visible3">
+              <div style="text-align: center; margin: 0;cursor:pointer;display:flex">
+                <el-button
+                  plain
+                  type="info"
+                  size="mini"
+                  style="text-align: center;"
+                  @click="visible3=false,setEnd('0')"
+                >取消完结</el-button>
+                <el-button
+                  plain
+                  type="info"
+                  size="mini"
+                  style="text-align: center;"
+                  @click="visible3=false,delDanAn()"
+                >删除档案</el-button>
               </div>
               <span class="el-icon-s-operation" slot="reference"></span>
             </el-popover>
@@ -804,9 +816,10 @@ export default {
       CoralData.Jobs[0].Object.ExtendData.starred = sign;
       Api.reqApi(CoralData, "/tree/update").then(res => {
         if (res.data.status === 200 && res.data.response) {
-          let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
+          // let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
+          _this.getAllCoralData();
           // console.log("返回的url:", returnUrl);
-          _this.selectCoral(returnUrl, this.active_index);
+          // _this.selectCoral(returnUrl, this.active_index);
         }
       });
     },
@@ -833,6 +846,18 @@ export default {
         }
       });
     },
+    delDanAn() {
+      // console.log(this.currentCoralId);
+      let D06 = ENTITY.D06;
+      D06.Jobs[0].Object.SpaId = this.currentCoralId;
+      Api.reqApi(D06, "/tree/delete").then(res => {
+        if ((res.data.staus = 200 && res.data.response)) {
+          this.$message.success("删除成功");
+          this.getAllCoralData();
+        }
+      });
+    },
+    //图片加载404替代方案
     errorImg(e) {
       e.currentTarget.src = require("../assets/images/error.svg");
     }

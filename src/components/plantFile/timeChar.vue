@@ -231,8 +231,9 @@ export default {
     },
     timeDataArr: {
       handler: function() {
-        // console.log(this.timeDataArr);
+        this.indexArr = [];
         let newDataArr = this.sortDataArr(this.timeDataArr);
+        // console.log(newDataArr);
         for (let item of newDataArr) {
           let index = this.timeDataArr.indexOf(item);
           this.indexArr.push(index);

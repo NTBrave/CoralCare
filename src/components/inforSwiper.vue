@@ -1,7 +1,9 @@
 <template>
   <div class="all-infor">
     <div v-show="!doMeasuring" class="edit-img">
-      <div class="measuring" style="margin-left:14rem;width:3rem;background: #3FC1CB;">编辑</div>
+      <div class="measuring" style="margin-left:14rem;background: #3FC1CB;" @click="beforEdit">
+        <span v-show="ifEdit">取消</span>编辑
+      </div>
       <div class="measuring" style="margin-left: 20rem;" @click="goMessuring">测量图片</div>
     </div>
     <div
@@ -32,17 +34,64 @@
                 >
                   <span style="color:#7E7E7E;">
                     {{item.title}}：
-                    <span v-if="index==0">
+                    <!-- <span v-if="index==0">
                       <br />
-                    </span>
+                    </span>-->
                   </span>
-                  <span>
-                    <span v-if="item.title.match(/备注/g)!=null">
-                      <br />
-                    </span>
-                    {{item.msg}}
+                  <span v-if="/状态/.test(item.title) && ifEdit">
+                    <el-select style="width:60%;height:80%" v-model="statusNew" placeholder="请选择">
+                      <el-option label="良好" value="良好"></el-option>
+                      <el-option label="部分白化" value="部分白化"></el-option>
+                      <el-option label="部分死亡" value="部分死亡"></el-option>
+                      <el-option label="死亡" value="死亡"></el-option>
+                      <el-option label="失踪" value="失踪"></el-option>
+                    </el-select>
                   </span>
-                  <span v-if="/颜色/.test(item.title)">
+                  <span v-else-if="/备注/.test(item.title) && ifEdit">
+                    <el-input
+                      style="width:100%;display: flex;"
+                      :style="{'marginBottom': '1vw'}"
+                      type="textarea"
+                      placeholder="请输入"
+                      v-model="commentNew"
+                      :autosize="{ minRows: 2, maxRows: 10}"
+                    ></el-input>
+                  </span>
+                  <span v-else-if="/颜色/.test(item.title) && ifEdit">
+                    <el-select
+                      style="width:40%;height:80%"
+                      v-model="lightest_colorNew"
+                      placeholder="浅色"
+                    >
+                      <el-option
+                        v-for="(item, idx) in colorList"
+                        :key="idx"
+                        :label="item.label"
+                        :value="item.value"
+                      >
+                        <span>{{item.label}}</span>
+                        <span class="colorCircle" :style="{backgroundColor: item.color}"></span>
+                      </el-option>
+                    </el-select>
+                    <el-select
+                      style="width:40%;height:80%"
+                      v-model="darkest_colorNew"
+                      placeholder="深色"
+                    >
+                      <el-option
+                        v-for="(item, idx) in colorList"
+                        :key="idx"
+                        :label="item.label"
+                        :value="item.value"
+                      >
+                        <span>{{item.label}}</span>
+                        <span class="colorCircle" :style="{backgroundColor: item.color}"></span>
+                      </el-option>
+                    </el-select>
+                  </span>
+                  <span v-else>{{item.msg}}</span>
+
+                  <span v-if="/颜色/.test(item.title)&& !ifEdit">
                     <span class="color-block" :style="'background-color:'+item.color"></span>
 
                     <span style="margin:0 0.5rem">—</span>
@@ -60,6 +109,9 @@
             </div>
           </el-col>
         </el-row>
+        <div v-show="ifEdit" @click="editRecord" style="position: absolute;top: 0;">
+          <div class="measuring">确认编辑</div>
+        </div>
       </div>
       <div style="width:40rem">
         <swiper
@@ -142,7 +194,14 @@ export default {
       inforImgUrlId: [],
       //图片id对应的推按url
       theRecordImgArr: [],
-      inforLoading: false
+      inforLoading: false,
+      //修改涉及
+      ifEdit: false,
+      commentNew: "",
+      statusNew: "",
+      lightest_colorNew: "",
+      darkest_colorNew: "",
+      colorList: []
     };
   },
   watch: {
@@ -154,6 +213,7 @@ export default {
   mounted: function() {
     // console.log(this.activty);
     //获取这个记录的图片啦
+    this.colorList = DEFAULT.colorList;
     this.madeForm();
   },
   methods: {
@@ -208,10 +268,7 @@ export default {
       _this.goMessuring();
       //构造请求体
       let recordData = ENTITY.R07;
-      // for (let item in recordData.Jobs[0].Object.ExtendData) {
-      //   recordData.Jobs[0].Object.ExtendData[item] =
-      //     _this.recordObj.ExtendData[item];
-      // }
+
       recordData.Jobs[0].Object.ExtendData.czhd_spaid =
         _this.recordObj.ExtendData.czhd_spaid;
       recordData.Jobs[0].Object.ExtendData.czda_spaid =
@@ -280,6 +337,53 @@ export default {
       if (_this.theRecordImgArr[0]) {
         _this.chooseSwiperImg(_this.theRecordImgArr[0].url);
       }
+    },
+    beforEdit() {
+      if (!this.ifEdit) {
+        this.commentNew = this.recordInfor[9].msg;
+        this.statusNew = this.recordInfor[2].msg;
+        this.lightest_colorNew = this.recordInfor[5].msg;
+        this.darkest_colorNew = this.recordInfor[5].msg2;
+      }
+      this.ifEdit = !this.ifEdit;
+    },
+    editRecord() {
+      let _this = this;
+      _this.recordLoading = true;
+      //构造请求体
+      let recordData = ENTITY.R07;
+      recordData.Jobs[0].Object.ExtendData.czhd_spaid =
+        _this.recordObj.ExtendData.czhd_spaid;
+      recordData.Jobs[0].Object.ExtendData.czda_spaid =
+        _this.recordObj.ExtendData.czda_spaid;
+      recordData.Jobs[0].MasterSpaId = _this.activty.activityID;
+      recordData.Jobs[0].Object.SpaId = _this.recordObj.SpaId;
+      //新修改的数据
+      recordData.Jobs[0].Object.ExtendData.status = this.statusNew;
+      recordData.Jobs[0].Object.ExtendData.lightest_color = this.lightest_colorNew;
+      recordData.Jobs[0].Object.ExtendData.darkest_color = this.darkest_colorNew;
+      recordData.Jobs[0].Object.ExtendData.comment = this.commentNew;
+
+      // console.log(recordData);
+      Api.reqApi(recordData, "/tree/update").then(res => {
+        if (res.data.status === 200 && res.data.response) {
+          this.$message.success("成功修改记录");
+          this.recordInfor[9].msg =
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment;
+          this.recordInfor[8].msg =
+            res.data.response.CZJL.objects[0].principle.ExtendData.height;
+          this.recordInfor[7].msg =
+            res.data.response.CZJL.objects[0].principle.ExtendData.area;
+          this.recordInfor[2].msg =
+            res.data.response.CZJL.objects[0].principle.ExtendData.status;
+          this.recordInfor[5].msg =
+            res.data.response.CZJL.objects[0].principle.ExtendData.lightest_color;
+          this.recordInfor[5].msg2 =
+            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color;
+          _this.recordLoading = false;
+          this.ifEdit = false;
+        }
+      });
     }
   }
 };
@@ -312,7 +416,7 @@ export default {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 0.75;
   height: 100%;
-  width: 18rem;
+  width: 20rem;
 }
 .record-name {
   font-size: 1.3rem;
@@ -348,11 +452,10 @@ export default {
   width: 32rem;
   margin: 0px auto;
   line-height: 25rem;
-  justify-content: center;
-  /* display: flex; */
+  text-align: center;
 }
 .inforSwiper {
-  width: 55rem;
+  width: 61rem;
   display: flex;
   height: 30rem;
   /* margin-top: 2vh; */
@@ -363,9 +466,13 @@ export default {
   /* padding-top: 1.5rem; */
   position: relative;
 }
-/* @media screen and (max-width:1600px) {
-  .inforSwiper {width: 1000px;height: 62vh;}
-  .showOneImg {max-width: 670px;}
-  .edit-img {left: 960px}
-} */
+.colorCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 </style>

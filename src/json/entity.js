@@ -404,7 +404,21 @@ export const D05 =
     ]
 }
 //D-06 删除残枝档案  
-export const D06 = {}
+export const D06 = {
+    "JobType": "single",
+    "JobHandler": "CZDAHandler",		//残枝档案Handler
+    "Jobs": [
+        {
+            "Method": "delete",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
+            "MasterExtendType": "CZDAROOT",	//父节点:[/残枝档案]
+            "Object": {
+                "SpaId": "",					//要删除节点的spaid
+                "ExtendType": "CZDA"			//更新节点:[/残枝1]
+            }
+        }
+    ]
+}
 //R-01 获取指定活动下的所有记录
 export const R01 =
 {

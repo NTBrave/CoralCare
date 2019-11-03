@@ -82,10 +82,10 @@ export default {
   width: 50px;
   height: 50px;
   margin: 0 auto;
-  transition: 0.5s;
+  /* transition: 0.5s; */
   transform-origin: 30px 30px;
   animation: rotate 1s linear infinite; /*开始动画后无限循环，用来控制rotate*/
-  background-image: url("./assets/images/loading.svg");
+  background: url("./assets/images/loading2.svg") no-repeat;
 }
 @keyframes rotate {
   0% {

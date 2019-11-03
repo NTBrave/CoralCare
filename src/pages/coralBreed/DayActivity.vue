@@ -1,98 +1,104 @@
 <template>
-  <div class="dayActivityRoot">
-    <div class="empty" v-show="noActivity">当前日期没有活动</div>
-    <div class="dayActivity" v-show="!noActivity">
-      <div class="activityNameList">
-        <span>当日活动列表</span>
-        <div class="listBoard" v-for="(val,idx_1) in activityNameList" :key="idx_1">
+  <div>
+    <div v-show="!isShowDetail" class="dayActivityRoot">
+      <div class="empty" v-show="noActivity">当前日期没有活动</div>
+      <div class="dayActivity" v-show="!noActivity">
+        <div class="activityNameList">
+          <span>当日活动列表</span>
+          <div class="listBoard" v-for="(val,idx_1) in activityNameList" :key="idx_1">
+            <div
+              class="listItem"
+              :class="idx_1===action_1&&idx_2===action_2? 'activeItem':''"
+              v-for="(activityEach_sub, idx_2) in val"
+              :key="idx_2"
+              @click="showActivityInfo(activityEach_sub,idx_1, idx_2)"
+            >{{activityEach_sub}}</div>
+            <div v-if="val.length < 4" :style="{'textAlign':'right','marginTop':'0.3rem'}">
+              <i class="el-icon-circle-plus-outline" @click="addActivity(val,idx_1)"></i>
+            </div>
+          </div>
+
           <div
-            class="listItem"
-            :class="idx_1===action_1&&idx_2===action_2? 'activeItem':''"
-            v-for="(activityEach_sub, idx_2) in val"
-            :key="idx_2"
-            @click="showActivityInfo(activityEach_sub,idx_1, idx_2)"
-          >{{activityEach_sub}}</div>
-          <div v-if="val.length < 4" :style="{'textAlign':'right','marginTop':'0.3rem'}">
-            <i class="el-icon-circle-plus-outline" @click="addActivity(val,idx_1)"></i>
+            :style="{'textAlign':'center','marginTop':'0.3rem','width':'100%','borderTop':'1.2px solid #ACACAC'}"
+          >
+            <i class="el-icon-circle-plus" @click="addDivingWork"></i>
           </div>
         </div>
+        <div class="infoForm" v-if="activityInfo">
+          <activity-info :activityInfo="activityInfo"></activity-info>
+        </div>
 
-        <div
-          :style="{'textAlign':'center','marginTop':'0.3rem','width':'100%','borderTop':'1.2px solid #ACACAC'}"
-        >
-          <i class="el-icon-circle-plus" @click="addDivingWork"></i>
+        <div v-loading="recordLoading" element-loading-spinner="loadingSvg" class="fileArea">
+          <div class="list" v-for="(item, idx) in paginations.currentCoralList" :key="idx">
+            <file-item :showActivityData="item" @click="toDetail(selectActivity,item)"></file-item>
+          </div>
+          <div class="page" v-show="paginations.currentCoralList.length">
+            <el-pagination
+              hide-on-single-page
+              :current-page="paginations.page_index"
+              :layout="paginations.layout"
+              :total="paginations.total"
+              :page-size="paginations.page_size"
+              @current-change="handleCurrentChange"
+            ></el-pagination>
+          </div>
         </div>
-      </div>
-      <div class="infoForm" v-if="activityInfo">
-        <activity-info :activityInfo="activityInfo"></activity-info>
       </div>
 
-      <div class="fileArea" v-show="paginations.currentCoralList">
-        <div class="list" v-for="(item, idx) in paginations.currentCoralList" :key="idx">
-          <file-item :showActivityData="item" @click="toDetail(selectActivity,item)"></file-item>
+      <el-dialog
+        title="新建残枝作业"
+        width="600px"
+        :visible.sync="showAdd"
+        append-to-body
+        :show-close="false"
+      >
+        <el-form :model="newWorkForm">
+          <el-form-item>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="6" :style="{'textAlign':'center'}">
+              <span>日期</span>
+            </el-col>
+            <el-col :span="16">
+              <p :style="{'color':'gray','fontSize':'1.1rem'}">{{newWorkForm.time}}</p>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="6" :style="{'textAlign':'center'}">
+              <span>区域</span>
+            </el-col>
+            <el-col :span="16">
+              <p :style="{'color':'gray','fontSize':'1.1rem'}">{{newWorkForm.address}}</p>
+            </el-col>
+          </el-form-item>
+          <el-form-item>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="6" :style="{'textAlign':'center'}">
+              <span>残枝作业时间</span>
+            </el-col>
+            <el-col :span="16">
+              <el-input
+                type="number"
+                min="1"
+                max="24"
+                placeholder="请输入1-24之间的整数值"
+                v-model.number="newWorkForm.selectHour"
+                :style="{'width':'70%'}"
+                size="mini"
+              ></el-input>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="danger" @click="submitNewWork" :disabled="!newWorkForm.selectHour">确定</el-button>
+          <el-button @click="showAdd = false">取消</el-button>
         </div>
-        <div class="page">
-          <el-pagination
-            hide-on-single-page
-            :current-page="paginations.page_index"
-            :layout="paginations.layout"
-            :total="paginations.total"
-            :page-size="paginations.page_size"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
-        </div>
-      </div>
+      </el-dialog>
     </div>
-
-    <el-dialog
-      title="新建残枝作业"
-      width="600px"
-      :visible.sync="showAdd"
-      append-to-body
-      :show-close="false"
-    >
-      <el-form :model="newWorkForm">
-        <el-form-item>
-          <el-col :span="2">&nbsp;</el-col>
-          <el-col :span="6" :style="{'textAlign':'center'}">
-            <span>日期</span>
-          </el-col>
-          <el-col :span="16">
-            <p :style="{'color':'gray','fontSize':'1.1rem'}">{{newWorkForm.time}}</p>
-          </el-col>
-        </el-form-item>
-        <el-form-item>
-          <el-col :span="2">&nbsp;</el-col>
-          <el-col :span="6" :style="{'textAlign':'center'}">
-            <span>区域</span>
-          </el-col>
-          <el-col :span="16">
-            <p :style="{'color':'gray','fontSize':'1.1rem'}">{{newWorkForm.address}}</p>
-          </el-col>
-        </el-form-item>
-        <el-form-item>
-          <el-col :span="2">&nbsp;</el-col>
-          <el-col :span="6" :style="{'textAlign':'center'}">
-            <span>残枝作业时间</span>
-          </el-col>
-          <el-col :span="16">
-            <el-input
-              type="number"
-              min="1"
-              max="24"
-              placeholder="请输入1-24之间的整数值"
-              v-model.number="newWorkForm.selectHour"
-              :style="{'width':'70%'}"
-              size="mini"
-            ></el-input>
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="submitNewWork" :disabled="!newWorkForm.selectHour">确定</el-button>
-        <el-button @click="showAdd = false">取消</el-button>
-      </div>
-    </el-dialog>
+    <div v-if="isShowDetail" style="margin-left: 16vw;margin-top: 5.5vw">
+      <div class="measuring" style="margin-left: 2rem;" @click="selectShow">返回</div>
+      <recordDetails :recordObj="oneRecordData"></recordDetails>
+    </div>
   </div>
 </template>
 
@@ -103,10 +109,12 @@ import { mapState, mapMutations } from "vuex";
 import { reqApi } from "../../api/api";
 import FileItemVue from "../../components/dayActivity/FileItem.vue";
 import ActivityInfoVue from "../../components/dayActivity/ActivityInfo.vue";
+import recordDetails from "../../components/recordDetails.vue";
 export default {
   components: {
     "activity-info": ActivityInfoVue,
-    "file-item": FileItemVue
+    "file-item": FileItemVue,
+    recordDetails
   },
   computed: {},
   data() {
@@ -149,7 +157,14 @@ export default {
       noActivity: false,
       recordData: [],
       allMsg: [],
-      imgId: []
+      imgId: [],
+
+      //加载
+      recordLoading: true,
+      //细节
+      isShowDetail: false,
+      //选中的记录数据
+      oneRecordData: {}
     };
   },
   computed: {
@@ -166,6 +181,7 @@ export default {
 
     // 点击选择活动，显示活动详情及活动下的珊瑚记录
     showActivityInfo(activityNum, workIndex, actiIndec) {
+      this.recordLoading = true;
       this.selectActivity = activityNum;
       // 拿到请求的数据
       //填写表单数据
@@ -213,6 +229,8 @@ export default {
         _this.allMsg[i].imgUrlArr = [];
         _this.allMsg[i].imgUrl = "";
         _this.allMsg[i].imgId = [];
+        _this.allMsg[i].ExtendData = this.recordData[i].principle.ExtendData;
+
         //获取档案
         let oneCoral = D01;
         oneCoral.Jobs[0].CZDASpaId = daId;
@@ -256,7 +274,7 @@ export default {
         _this.allMsg[i].coralNum = _this.allMsg[i].daMsg.title;
         _this.allMsg[i].species = _this.allMsg[i].daMsg.type;
         _this.allMsg[i].state = this.recordData[i].principle.ExtendData.status;
-        console.log("记录数据", i, _this.allMsg[i]);
+        console.log("记录数据", i);
       }
 
       /**
@@ -274,23 +292,13 @@ export default {
 
     // 点击珊瑚记录跳转到记录详情
     toDetail(selectActivity, item) {
-      console.log(selectActivity, item);
-      let queryArr = selectActivity.split("-");
-      this.$router.push({
-        name: `result${queryArr[0]}`,
-        params: {
-          result: "detail"
-        },
-        query: {
-          time: queryArr[2],
-          address: queryArr[1],
-          activityType: queryArr[0],
-          allMsg: item
-        }
-      });
-
-      console.log(selectActivity);
-      console.log(item);
+      this.oneRecordData = item;
+      this.oneRecordData.actiName = selectActivity;
+      this.selectShow();
+      console.log("记录：", this.oneRecordData);
+    },
+    selectShow() {
+      this.isShowDetail = !this.isShowDetail;
     },
 
     // 设置分页每页显示的内容
@@ -300,6 +308,7 @@ export default {
         (index - 1) * pageSize,
         index * pageSize
       );
+      this.recordLoading = false;
     },
 
     // 点击大加号是添加新的残枝作业，生成要提交的表单信息
@@ -387,6 +396,7 @@ export default {
             this.makeCard();
           } else {
             this.$message.warning("这个活动下，没有记录");
+            this.recordLoading = false;
           }
         }
       });
@@ -549,5 +559,23 @@ export default {
     line-height: 20rem;
     text-align: center;
   }
+}
+
+.measuring {
+  width: 6rem;
+  background: rgba(255, 107, 107, 1);
+  -webkit-box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 5px;
+  font-weight: 400;
+  text-align: center;
+  /* margin: 0 auto; */
+  /* margin-top: 1rem; */
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+}
+
+.measuring:hover {
+  opacity: 0.7;
 }
 </style>
