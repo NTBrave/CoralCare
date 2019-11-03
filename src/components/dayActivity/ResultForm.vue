@@ -189,6 +189,13 @@ export default {
     //   // {activityNumcoralFileId} 根据档案id删除
     // }
   },
+  watch: {
+    imgUrl() {
+      if (this.imgUrl.length > 0) {
+        this.imgUrlFormSwiper = this.imgUrl[0].url;
+      }
+    }
+  },
   mounted() {
     if (this.imgUrl.length > 0) {
       this.imgUrlFormSwiper = this.imgUrl[0].url;

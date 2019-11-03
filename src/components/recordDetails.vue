@@ -49,7 +49,7 @@
                     </span>
                     <span v-else-if="/尺寸/.test(item.title) && ifEdit">
                       <el-input
-                        style="width:80%"
+                        style="width:50%"
                         v-model="areaNew"
                         placeholder="请输入"
                         size="mini"
@@ -58,7 +58,7 @@
                     </span>
                     <span v-else-if="/高度/.test(item.title) && ifEdit">
                       <el-input
-                        style="width:80%"
+                        style="width:50%"
                         v-model="heightNew"
                         placeholder="请输入"
                         size="mini"
