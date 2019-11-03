@@ -419,6 +419,7 @@ export default {
             res.data.response.CZJL.objects[0].principle.ExtendData.area
           msgObj.comment =
             res.data.response.CZJL.objects[0].principle.ExtendData.comment
+          msgObj.title = refactObj.title
 
           this.item = { ...msgObj }
 

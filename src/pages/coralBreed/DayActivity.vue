@@ -406,7 +406,7 @@ export default {
               // time: this.dateNumber_review,
               // address: this.activityAddress
               time: this.$route.query.time + this.getSelectHour,
-              address: this.activityAddress,
+              address: this.$route.query.address,
               spaid: JSON.stringify({
                 czzy_spaid: res.data.response.CZZY.objects[0].principle.SpaId
               })

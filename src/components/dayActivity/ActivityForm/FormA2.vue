@@ -265,6 +265,7 @@ export default {
               this.item.activity_Num = this.activityNum
               this.item.species = refactObj.type
               this.item.stage = refactObj.stage
+              this.item.title = refactObj.title
 
               // 构建区域
               let positonArr = refactObj.title.split('-')

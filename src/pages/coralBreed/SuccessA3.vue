@@ -1,7 +1,7 @@
 <template>
   <div class="successRoot">
     <div class="infoArea">
-      <div class="activityNum">活动编号：{{activityNum}}</div>
+      <div class="activityNum">活动编号：{{activityNumber}}</div>
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="successResult">
-      <result-form :recordName="recordName" :recordInfor="recordInfor" :imgUrl.sync="imgUrl"></result-form>
+      <result-form :recordName.sync="recordName" :recordInfor="recordInfor" :imgUrl.sync="imgUrl"></result-form>
       <div class="buttonSpan" v-if="isSuccessResult">
         <el-button type="danger" round @click="returnCreate">继续录入首次回播数据</el-button>
       </div>
@@ -41,7 +41,7 @@ export default {
 
   data() {
     return {
-      recordName: 'A-宇宙号-1区-蓝-07',
+      recordName: '',
       activityFiles: [], // 当前活动下的记录涉及的档案
       recordInfor: [
         { title: '活动编号', msg: '' },
@@ -64,6 +64,13 @@ export default {
       imgUrl: [],
       isSuccessResult: true,
 
+      activityNumber:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time,
+
       routeObj: JSON.parse(this.$route.query.spaid)
     }
   },
@@ -84,6 +91,8 @@ export default {
       this.recordInfor[7].msg = item.height
       this.recordInfor[8].msg = item.area
       this.recordInfor[9].msg = item.comment
+
+      this.recordName = item.title
     },
     returnCreate() {
       this.$router.push({
