@@ -16,6 +16,7 @@
             :recordData="recordData"
             :isCreated="isCreated"
             @func="getSpaid"
+            :imgUrl="imgUrl"
           ></activity-form>
         </div>
       </div>
@@ -27,14 +28,14 @@
           v-if="imgUrl.length"
           :imgHeight="9.5"
           :imgWidth="10"
-          :imgUrl="imgUrl"
+          :imgUrl.sync="imgUrl"
           @selectOneImg="chooseSwiperImg"
         ></picture-swiper>
       </el-row>
       <el-row :style="{'position':'','margin':'0 auto'}">
         <upload-border>
           <div class="imgUpload">
-            <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
+            <img class="showOneImg" :src="imgUrlFormSwiper" alt />
             <up-load
               @createImg="imgArrPush"
               :masterid.sync="record_spaid"
@@ -129,6 +130,8 @@ export default {
         this.$route.query.address +
         '-' +
         this.$route.query.time
+
+      // item: {} // 传给success页面的参数对象
     }
   },
   computed: {
@@ -173,7 +176,7 @@ export default {
 
     // 请求该活动下的所有记录
     requestCZJL() {
-      let obj = getCZJL(R01, this.$route.query.czhd_spaid)
+      let obj = getCZJL(R01, JSON.parse(this.$route.query.spaid).czhd_spaid)
       reqApi(obj, '/tree/select').then(res => {
         console.log('获取活动下所有残枝记录', res)
         if (res.data.status === 200) {
@@ -184,8 +187,6 @@ export default {
         }
       })
     },
-
-    //
 
     setIsCreated(res) {
       this.isCreated = res
@@ -281,6 +282,13 @@ export default {
       height: 100%;
       width: 100%;
       margin: 0 auto;
+    }
+
+    .showOneImg {
+      max-width: 31rem;
+      max-height: 20rem;
+      width: auto;
+      height: auto;
     }
   }
 }

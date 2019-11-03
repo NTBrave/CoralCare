@@ -137,15 +137,18 @@
 <script>
 // import {} from '../../api/api'
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import { signColorList, colorList } from '../../../json/default'
+import { signColorList, colorList, colorObj } from '../../../json/default'
 import { ZYQY_HBQY, CZDA_02, R06 } from '../../../json/entity'
 import {
   requestZYQY_HBQY,
   getCZDA_HB,
-  createR04_06
+  createR04_06,
+  Refactoring
 } from '../../../util/apiCreator'
 import { debounce } from '../../../util/requestLimit'
 import { reqApi } from '../../../api/api'
+import moment from 'moment'
+
 export default {
   props: {
     sowData: Object,
@@ -224,7 +227,9 @@ export default {
         '-' +
         this.$route.query.address +
         '-' +
-        this.$route.query.time
+        this.$route.query.time,
+
+      item: {}
     }
   },
   methods: {
@@ -238,9 +243,20 @@ export default {
           console.log(res)
           if (res.data.status === 200) {
             if (res.data.response) {
+              let refactObj = Refactoring(res.data.response.CZDA.objects[0])
+              console.log(refactObj)
               this.file_spaid =
-                res.data.response.CZDA.objects[0].principle.SpaId
+                res.data.response.CZDA.objects[0].principle.SpaId // 缓存档案spaid
 
+              // 构造成功表单中的档案数据
+              this.item.activity_Num = this.activityNum
+              this.item.species = refactObj.type
+              this.item.stage = refactObj.stage
+
+              // 构建区域
+              let positonArr = refactObj.title.split('-')
+              positonArr.length = positonArr.length - 2
+              this.item.zyqy = positonArr.join('-')
               // 成功提示消息
               this.$message({
                 showClose: true,
@@ -283,18 +299,6 @@ export default {
       this.$emit('func', this.file_spaid, this.record_spaid)
     },
 
-    // 数据录入完毕后跳转到成功页面
-    routeToSuccess() {
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
-        }
-      })
-    },
-
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
@@ -312,6 +316,33 @@ export default {
           this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
           this.sendSpaid() // 向父组件传spaid
 
+          // 构造成功表单的记录数据
+          this.item.status =
+            res.data.response.CZJL.objects[0].principle.ExtendData.status
+
+          // 构建最浅到最深颜色
+          let light =
+            res.data.response.CZJL.objects[0].principle.ExtendData
+              .lightest_color
+          let dark =
+            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
+          this.item.coralColor = {}
+          this.item.coralColor.lightest_color = light
+          this.item.coralColor.color1 = colorObj[light]
+
+          this.item.coralColor.darkest_color = dark
+          this.item.coralColor.color2 = colorObj[dark]
+          this.item.time = moment(
+            res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
+            'YYYYMMDDHH'
+          ).format('YYYY-MM-DD HH')
+          this.item.height =
+            res.data.response.CZJL.objects[0].principle.ExtendData.height
+          this.item.area =
+            res.data.response.CZJL.objects[0].principle.ExtendData.area
+          this.item.comment =
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment
+
           // 数据成功录入提醒
           this.$message({
             showClose: true,
@@ -325,19 +356,24 @@ export default {
       })
     },
 
-    submitEdit() {
-      // 修改成功接口
-      this.$message({
-        showClose: true,
-        message: '数据修改成功！',
-        type: 'success'
-      })
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
       this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+        name: 'resultA4',
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+          activityType: this.$route.query.activityType,
+          spaid: JSON.stringify({
+            czhd_spaid: JSON.parse(this.$route.query.spaid).czhd_spaid,
+            czda_spaid: this.file_spaid,
+            czjl_spaid: this.record_spaid,
+            item: this.item,
+            imgUrl: this.imgUrl
+          })
+        },
+        params: {
+          result: 'success'
         }
       })
     },

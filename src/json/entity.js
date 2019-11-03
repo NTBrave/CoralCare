@@ -259,7 +259,7 @@ export const D01 = {
     Jobs: [
         {
             Method: "select",
-            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",//写死的不能改
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7", // 固定的
             CZDASpaId: "czdaspaid",	//要查询的残枝档案spaid
             NeedFK: "true",			//需要回传外键 
             Where: [
@@ -426,7 +426,7 @@ export const R01 =
     "Jobs": [
         {
             "Method": "select",
-            "MasterSpaId": "485ba801-f3cb-4959-94fa-d5215d9612cf",
+            "MasterSpaId": "",
             "MasterExtendType": "CZHD",
             "NeedFK": "false",
             "Where": [
@@ -915,7 +915,7 @@ export const CZDA_01 = {
             "Method": "select",
             "MasterSpaId": "",
             "MasterExtendType": "",
-            "NeedFK": "false",
+            "NeedFK": "true",
             "Where": [
                 {
                     "Type": "Condition",
@@ -984,7 +984,7 @@ export const CZDA_02 = {
             "Method": "select",
             "MasterSpaId": "",
             "MasterExtendType": "",
-            "NeedFK": "false",
+            "NeedFK": "true",
             "Where": [
                 // {
                 //     "Type": "Condition",
