@@ -42,6 +42,7 @@ export default {
     // 循环根据记录请求档案，拼接档案名称
     async getFileName() {
       // this.getFileName()
+      this.fileName = []
       if (this.fileNameList.length > 0) {
         for (let i of this.fileNameList) {
           let obj = getCZDA(D01, i.principle.ExtendData.czda_spaid)
@@ -70,7 +71,7 @@ export default {
 <style lang="stylus" scoped>
 .listRoot {
   // width: 10vw;
-  min-width: 150px;
+  // min-width: 150px;
   margin-bottom: 1rem;
   font-size: 14px;
 

@@ -191,18 +191,24 @@
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { reqApi } from '../../../api/api'
 import { D04, R03, species_01, ZYQY_HBQY } from '../../../json/entity'
-import { signColorList, colorList } from '../../../json/default'
+import { signColorList, colorList, colorObj } from '../../../json/default'
 import {
   requestSpecies,
   createR03,
-  requestZYQY_HBQY
+  requestZYQY_HBQY,
+  Refactoring
 } from '../../../util/apiCreator'
 import { objIsEmpty } from '../../../util/formRules'
+import moment from 'moment'
 export default {
   props: {
     fileData: Object,
     recordData: Object,
-    isCreated: Boolean
+    isCreated: Boolean,
+    imgUrl: {
+      type: Array,
+      default: () => []
+    }
     // edit_czdaSpaid: {
     //   type: String,
     //   default: ''
@@ -338,7 +344,9 @@ export default {
         '-' +
         this.$route.query.address +
         '-' +
-        this.$route.query.time
+        this.$route.query.time,
+
+      item: {} // 传给success页面的信息对象
     }
   },
   methods: {
@@ -355,10 +363,11 @@ export default {
 
     // 提交记录
     submitRecorder() {
+      console.log(JSON.parse(this.$route.query.spaid))
       let newR03 = createR03(
         R03,
         this.currentZD_data(this.currentZD).ExtendData.czdaroot_spaid,
-        this.$route.query.czhd_spaid,
+        JSON.parse(this.$route.query.spaid).czhd_spaid,
         this.currentZD_data(this.currentZD).SpaId,
         this.$route.query.time,
         this.fileForm,
@@ -370,9 +379,48 @@ export default {
         console.log(res)
 
         if (res.data.status === 200) {
+          let refactObj = Refactoring(res.data.response.CZDA.objects[0])
           this.file_spaid = res.data.response.CZDA.objects[0].principle.SpaId
           this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
           this.sendSpaid() // 向父组件传spaid
+
+          let msgObj = {}
+          msgObj.activity_Num = this.activityNum
+          msgObj.species = refactObj.type
+          msgObj.status =
+            res.data.response.CZJL.objects[0].principle.ExtendData.status
+          msgObj.stage =
+            res.data.response.CZDA.objects[0].principle.ExtendData.stage
+
+          // 构建区域
+          let positonArr = refactObj.title.split('-')
+          positonArr.length = positonArr.length - 2
+          msgObj.zyqy = positonArr.join('-')
+
+          // 构建最浅到最深颜色
+          let light =
+            res.data.response.CZJL.objects[0].principle.ExtendData
+              .lightest_color
+          let dark =
+            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
+          msgObj.coralColor = {}
+          msgObj.coralColor.lightest_color = light
+          msgObj.coralColor.color1 = colorObj[light]
+
+          msgObj.coralColor.darkest_color = dark
+          msgObj.coralColor.color2 = colorObj[dark]
+          msgObj.time = moment(
+            res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
+            'YYYYMMDDHH'
+          ).format('YYYY-MM-DD HH')
+          msgObj.height =
+            res.data.response.CZJL.objects[0].principle.ExtendData.height
+          msgObj.area =
+            res.data.response.CZJL.objects[0].principle.ExtendData.area
+          msgObj.comment =
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment
+
+          this.item = { ...msgObj }
 
           // 数据成功录入提醒
           this.$message({
@@ -399,11 +447,13 @@ export default {
           time: this.$route.query.time,
           address: this.$route.query.address,
           activityType: this.$route.query.activityType,
-          spaid: {
-            czhd_spaid: this.$route.query.czhd_spaid,
+          spaid: JSON.stringify({
+            czhd_spaid: JSON.parse(this.$route.query.spaid).czhd_spaid,
             czda_spaid: this.file_spaid,
-            czjl_spaid: this.record_spaid
-          }
+            czjl_spaid: this.record_spaid,
+            item: this.item,
+            imgUrl: this.imgUrl
+          })
         },
         params: {
           result: 'success'

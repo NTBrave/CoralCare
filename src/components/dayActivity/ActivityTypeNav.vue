@@ -94,10 +94,7 @@ export default {
 
   watch: {
     '$route.path': function() {
-      // if (this.$route.path.indexOf(this.form.activityType) !== -1) {
-      //   console.log(this.$route.params.ActivityType)
       this.showActive()
-      // }
     }
   },
   computed: {
@@ -161,8 +158,10 @@ export default {
               time: this.$route.query.time,
               address: this.$route.query.address,
               activityType: this.activityTypes[index].typeId,
-              czzy_spaid: this.$route.query.czzy_spaid,
-              czhd_spaid: this.currentActivity(currentActivityNum).czhd_spaid
+              spaid: JSON.stringify({
+                czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+                czhd_spaid: this.currentActivity(currentActivityNum).czhd_spaid
+              })
             }
           })
         } else {
@@ -201,7 +200,7 @@ export default {
     newAnActivity() {
       let requestObj = createActivity(
         A02,
-        this.$route.query.czzy_spaid,
+        JSON.parse(this.$route.query.spaid).czzy_spaid,
         this.form
       )
       // console.log(requestObj)
@@ -228,8 +227,11 @@ export default {
               time: this.$route.query.time,
               address: this.$route.query.address,
               activityType: this.form.activityNum.slice(0, 2),
-              czzy_spaid: this.$route.query.czzy_spaid,
-              czhd_spaid: this.currentActivity(activity.activity_num).czhd_spaid
+              spaid: JSON.stringify({
+                czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+                czhd_spaid: this.currentActivity(activity.activity_num)
+                  .czhd_spaid
+              })
             }
           })
           this.dialogFormVisible = false
