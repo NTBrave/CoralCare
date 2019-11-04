@@ -21,13 +21,11 @@ const state = {
     uploadVisiable: true,
 
     //珊瑚数据部分下拉列表
-    dropdownKey1: '所有区域',
-    dropdownKey2: '所有苗圃',
-    dropdownKey3: '所有分区',
+    dropdownKey2: { name: '所有苗圃', spa_id: '' },
+    dropdownKey3: { name: '所有分区', spa_id: '' },
     //珊瑚的区域，苗圃，分区信息
-    area: ['区域A', '区域B', '区域C', '区域D', '区域E', '区域F'],
     mp: [],
-    group: [],
+    fq: [],
     //珊瑚数据
     coralNumberStatistic: {
         '菲律宾珊瑚': [250, 500, 100],

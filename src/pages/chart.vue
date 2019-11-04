@@ -28,27 +28,15 @@
 
 
     <div>
-        <!-- <div class="dropdown-style2" style="display:inline-block">
-            <span style="margin-right:20px;color:gray;">选择区域</span>
-            <el-dropdown @command="handleCommand1" style="font-size:16px;color:black;">
-            <span class="el-dropdown-link">
-                {{this.$store.state.dropdownKey1}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown" class="dropdown-item">
-                <el-dropdown-item command="所有区域">所有区域</el-dropdown-item>
-                <el-dropdown-item v-for="area in this.$store.state.area" :key="area" :command="area">{{area}}</el-dropdown-item>              
-            </el-dropdown-menu>
-            </el-dropdown>
-        </div> -->
         <div class="dropdown-style2" style="display:inline-block">
             <span style="margin-right:20px;color:gray;">选择苗圃</span>
             <el-dropdown @command="handleCommand2" style="font-size:16px;color:black;">
             <span class="el-dropdown-link">
-                {{this.$store.state.dropdownKey2}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
+                {{this.$store.state.dropdownKey2.name}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
             </span>
             <el-dropdown-menu slot="dropdown" class="dropdown-item">
-                <el-dropdown-item command="所有苗圃">所有苗圃</el-dropdown-item>
-                <el-dropdown-item v-for="mp in this.$store.state.mp" :key="mp" :command="mp">{{mp}}</el-dropdown-item>
+                <el-dropdown-item :command="{name:'所有苗圃',spa_id:''}">所有苗圃</el-dropdown-item>
+                <el-dropdown-item v-for="mp in this.$store.state.mp" :key="mp.spa_id" :command="mp">{{mp.name}}</el-dropdown-item>
             </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -56,11 +44,11 @@
             <span style="margin-right:20px;color:gray;">选择分区</span>
             <el-dropdown @command="handleCommand3" style="font-size:16px;color:black;">
             <span class="el-dropdown-link">
-                {{this.$store.state.dropdownKey3}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
+                {{this.$store.state.dropdownKey3.name}}<i class="el-icon-caret-bottom el-icon--right" style="margin-left:20px;font-size:20px;"></i>
             </span>
             <el-dropdown-menu slot="dropdown" class="dropdown-item">
-                <el-dropdown-item command="所有分区">所有分区</el-dropdown-item>
-                <el-dropdown-item v-for="group in this.$store.state.group" :key="group" :command="group">{{group}}</el-dropdown-item>
+                <el-dropdown-item :command="{name:'所有分区',spa_id:''}">所有分区</el-dropdown-item>
+                <el-dropdown-item v-for="fq in this.$store.state.fq" :key="fq.spa_id" :command="fq">{{fq.name}}</el-dropdown-item>
             </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -105,20 +93,17 @@ export default {
    
     //初始化statistics和接口一,以及area
     //Axios.post('',{}).then(response=>{}).catch(error=>{});
-    Axios.post('http://172.20.10.4:9091/data/init',{}).then(response=>{    
-      this.statistic=response.data;
+    Axios.post('http://192.168.43.156:9091/data/init',{}).then(response=>{    
+      this.statistic=response.data.statistic;
     }).catch(error=>{});
-    Axios.post('http://172.20.10.4:9091/data/result',{mp:'所有苗圃',group:'所有分区'}).then(response=>{
-     
-
-
+    Axios.post('http://192.168.43.156:9091/data/result',{mp:'',fq:''}).then(response=>{
       this.$store.commit('setCoralNumberStatistic',response.data);
     }).catch(error=>{});
-    // JSON.stringify({mp:''})
-    Axios.post('http://172.20.10.4:9091/data/select',{mp:''}).then(response=>{   
-       let arr=[]
+    Axios.post('http://192.168.43.156:9091/data/select',{mp:'',fq:''}).then(response=>{  
+      let arr=[]
       for(let i=0;i<=response.data.length-1;i++){
-        arr[i]=response.data[i].substring(1);
+        arr[i]=response.data[i]
+        arr[i].name=response.data[i].name.substring(1);
       }
       this.$store.commit('setMp',arr);
     }).catch(error=>{});
@@ -144,59 +129,55 @@ export default {
           break
       }
     },
-    // handleCommand1(command){
-    //   //处理接口二
-    //   if(command==this.$store.state.dropdownKey1){
-    //         return;
-    //     }
-    //   this.$store.commit('setDropdownKey1',command);
-    //   this.$store.commit('setDropdownKey2','所有苗圃');
-    //   if(this.$store.state.dropdownKey3!='所有分区'){
-    //     let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
-    //     this.$store.commit('setDropdownKey3','所有分区');
-    //     this.$refs.comp.helpHandleCommand(num);
-    //   }
-    //   this.$store.commit('setGroup',[]);
-    //   Axios.post('',{area:command}).then(response=>{
-    //     this.$store.commit('setMp',JSON.parse(response.data));
-    //   }).catch(error=>{});
-    //   Axios.post('',{area:command,mp:'所有苗圃',group:'所有分区'}).then(response=>{
-    //   this.$store.commit('setCoralNumberStatistic',JSON.parse(response.data));
-    //   }).catch(error=>{});
-    // },
      handleCommand2(command){
-      if(command==this.$store.state.dropdownKey2){
+      if(command.spa_id==this.$store.state.dropdownKey2.spa_id){
             return;
-        }
-     
+        }   
       this.$store.commit('setDropdownKey2',command);
-      if(this.$store.state.dropdownKey3!='所有分区'){
-        let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
-        this.$store.commit('setDropdownKey3','所有分区');
+      if(this.$store.state.dropdownKey3.spa_id!=''){
+        let num = 0;
+        for(let k=0;k<=this.$store.state.fq.length-1;k++){
+          if(this.$store.state.fq[k].spa_id==this.$store.state.dropdownKey3.spa_id){
+            num=k+1;
+            break;
+          }
+        }
+        this.$store.commit('setDropdownKey3',{name:'所有分区',spa_id:''});
         this.$refs.comp.helpHandleCommand(num);
       }
-      Axios.post('http://172.20.10.4:9091/data/select',{mp:command}).then(response=>{
-         let arr=[]
-      for(let i=0;i<=response.data.length-1;i++){
-        arr[i]=response.data[i].substring(1);
+      if(command.spa_id!=''){
+        Axios.post('http://192.168.43.156:9091/data/select',{mp:command.spa_id,fq:''}).then(response=>{
+        let arr=[]
+        for(let i=0;i<=response.data.length-1;i++){
+          arr[i]=response.data[i]
+          arr[i].name=response.data[i].name.substring(1);
+        }
+        this.$store.commit('setFq',arr);
+        }).catch(error=>{});
       }
-
-        this.$store.commit('setGroup',arr);
-      }).catch(error=>{});
-      Axios.post('http://172.20.10.4:9091/data/result',{mp:command,group:'所有分区'}).then(response=>{
+      else{
+        this.$store.commit('setFq',[]);
+      }    
+      Axios.post('http://192.168.43.156:9091/data/result',{mp:command.spa_id,fq:''}).then(response=>{
       this.$store.commit('setCoralNumberStatistic',response.data);
       }).catch(error=>{});
     },
     handleCommand3(command){
-      if(command==this.$store.state.dropdownKey3){
+      if(command.spa_id==this.$store.state.dropdownKey3.spa_id){
             return;
         }
       //处理接口二
-      Axios.post('http://172.20.10.4:9091/data/result',{mp:this.$store.state.dropdownKey2,group:command}).then(response=>{
+      Axios.post('http://192.168.43.156:9091/data/result',{mp:this.$store.state.dropdownKey2.spa_id,fq:command.spa_id}).then(response=>{
       this.$store.commit('setCoralNumberStatistic',response.data);
       }).catch(error=>{});
-      if(command=='所有分区'){
-            let num = parseInt(this.$store.state.dropdownKey3.substring(1).substring(1));
+      if(command.spa_id==''){
+            let num = 0;
+            for(let k=0;k<=this.$store.state.fq.length-1;k++){
+              if(this.$store.state.fq[k].spa_id==this.$store.state.dropdownKey3.spa_id){
+                num=k+1;
+                break;
+              }
+            }
             this.$store.commit('setDropdownKey3',command);
             this.$refs.comp.helpHandleCommand(num);
             return;
@@ -205,8 +186,15 @@ export default {
         this.$store.commit('setDropdownKey3',command);
         return;
       }
-      let count=parseInt(command.substring(1).substring(1));
+      let count=0;
+      for(let k=0;k<=this.$store.state.fq.length-1;k++){
+          if(this.$store.state.fq[k].spa_id==command.spa_id){
+            count=k+1;
+            break;
+          }
+      }     
       this.$refs.comp.chooseBlock(count);
+      this.$store.commit('setDropdownKey3',command);
       
      
     }

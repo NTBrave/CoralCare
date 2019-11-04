@@ -37,11 +37,24 @@ const mutations = {
     setMp(state, mp) {
         state.mp = mp;
     },
-    setGroup(state, group) {
-        state.group = group;
+    setFq(state, fq) {
+        state.fq = fq;
     },
     setCoralNumberStatistic(state, coralNumberStatistic) {
-        state.coralNumberStatistic = coralNumberStatistic;
+        let obj = {};
+        for (let i = 0; i <= coralNumberStatistic.length - 1; i++) {
+            obj[coralNumberStatistic[i].key] = [0, 0, 0];
+            if (coralNumberStatistic[i].now_alive_number != undefined) {
+                obj[coralNumberStatistic[i].key][0] = coralNumberStatistic[i].now_alive_number;
+            }
+            if (coralNumberStatistic[i].history_alive_number != undefined) {
+                obj[coralNumberStatistic[i].key][1] = coralNumberStatistic[i].history_alive_number;
+            }
+            if (coralNumberStatistic[i].history_death_number != undefined) {
+                obj[coralNumberStatistic[i].key][2] = coralNumberStatistic[i].history_death_number;
+            }
+        }
+        state.coralNumberStatistic = obj;
     },
 
 
