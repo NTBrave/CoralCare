@@ -1,11 +1,11 @@
 <template>
   <div>
-    <!-- <div style="display: flex;justify-content: center;margin: 5% auto;">
+    <div style="display: flex;justify-content: center;margin: 5% auto;">
       <span>
         <img src="../assets/images/ComingSoon.gif" alt />
       </span>
-    </div> -->
-    <div class="cnt_back" :style="searchPage">
+    </div>
+    <!-- <div class="cnt_back" :style="searchPage">
       <el-container class="cnt_width">
         <el-header>
           <div class="input-cnt">
@@ -312,7 +312,7 @@
           </section>
         </el-main>
       </el-container>
-    </div>
+    </div>-->
   </div>
 </template>
 

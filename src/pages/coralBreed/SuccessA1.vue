@@ -1,17 +1,17 @@
 <template>
   <div class="successRoot">
     <div class="infoArea">
-      <div class="activityNum">活动编号：{{activityNum}}</div>
+      <div class="activityNum">活动编号：{{activityNumber}}</div>
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
           v-if="activityFiles"
-          :fileNameList="activityFiles"
+          :fileNameList.sync="activityFiles"
         ></file-list>
       </div>
     </div>
     <div class="successResult">
-      <result-form :recordName="recordName" :recordInfor="recordInfor" :imgUrl="imgUrl"></result-form>
+      <result-form :recordName.sync="recordName" :recordInfor="recordInfor" :imgUrl="imgUrl"></result-form>
       <div class="buttonSpan" v-if="isSuccessResult">
         <el-button type="danger" round @click="returnCreate">继续录入首次暂养数据</el-button>
       </div>
@@ -20,10 +20,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import FileListVue from '../../components/dayActivity/FileList.vue'
 import ResultFormVue from '../../components/dayActivity/ResultForm.vue'
 
+import { getCZJL, Refactoring } from '../../util/apiCreator'
+import { reqApi } from '../../api/api'
+import { R01, D01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -31,123 +34,157 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activityNum: 'getNowDivingActivity',
-      activityFiles: 'getActivityFiles'
+      // activityNum: 'getNowDivingActivity'
     })
   },
 
   data() {
     return {
-      recordName: 'A-宇宙号-1区-蓝-07',
+      recordName: '',
+      activityFiles: [], // 当前活动下的记录涉及的档案
       recordInfor: [
         { title: '活动编号', msg: '' },
-        { title: '属种', msg: '盔型珊瑚科目' },
-        { title: '状态', msg: '部分白化' },
-        { title: '阶段类型', msg: '回播' },
-        { title: '暂养区域', msg: 'A-宇宙号-1区' },
-        { title: '透光度', msg: '180cm' },
-        { title: '温度', msg: '31℃' },
+        { title: '属种', msg: '' },
+        { title: '状态', msg: '' },
+        { title: '阶段类型', msg: '' },
+        { title: '暂养区域', msg: '' },
+
         {
           title: '颜色',
-          msg: 'D2',
-          color: 'rgb(247,218,159)',
-          msg2: 'D5',
-          color2: 'rgb(143,65,36)'
+          msg: '',
+          color: '',
+          msg2: '',
+          color2: ''
         },
-        { title: '时间', msg: '2018.9.10.10' },
-        { title: '珊瑚尺寸', msg: '5.66' },
-        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
+        { title: '时间', msg: '' },
+        { title: '尺寸', msg: '' },
+        { title: '面积', msg: '' },
+        { title: '备注', msg: '' }
       ],
       imgUrl: [
-        {
-          url: 'http://dayy.xyz/resource/example/1.png',
-          size: '223.4',
-          time: '2018.4.10',
-          name: 'A1-大鹏大澳湾-2018090410-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/2.jpg',
-          size: '235.6',
-          time: '2018.5.09',
-          name: 'A2-大鹏大澳湾-2018050909-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/3.jpg',
-          size: '240.2',
-          time: '2018.6.09',
-          name: 'A2-大鹏大澳湾-2018060910-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/4.jpg',
-          size: '242.5',
-          time: '2018.6.17',
-          name: 'A2-大鹏大澳湾-2018061710-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/5.jpg',
-          size: '243.2',
-          time: '2018.7.01',
-          name: 'A2-大鹏大澳湾-2018070110-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/6.jpg',
-          size: '250.4',
-          time: '2018.7.28',
-          name: 'A2-大鹏大澳湾-2018072810-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/7.jpg',
-          size: '254.6',
-          time: '2018.11.17',
-          name: 'A2-大鹏大澳湾-2018111710-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/8.jpg',
-          size: '260.3',
-          time: '2018.12.29',
-          name: 'A2-大鹏大澳湾-2018122910-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/9.jpg',
-          size: '268.4',
-          time: '2019.3.02',
-          name: 'A2-大鹏大澳湾-2019030210-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/10.jpg',
-          size: '278.5',
-          time: '2019.3.17',
-          name: 'A3-大鹏大澳湾-2019031710-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/11.jpg',
-          size: '279.1',
-          time: '2019.4.06',
-          name: 'A4-大鹏大澳湾-2019040610-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/12.jpg',
-          size: '280.5',
-          time: '2019.6.02',
-          name: 'A4-大鹏大澳湾-2019060210-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/13.jpg',
-          size: '284.6',
-          time: '2019.6.22',
-          name: 'A4-大鹏大澳湾-2019062210-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/14.jpg',
-          size: '288.1',
-          time: '2019.8.24',
-          name: 'A4-大鹏大澳湾-2019082410-01'
-        }
+        // {
+        //   url: 'http://dayy.xyz/resource/example/1.png',
+        //   size: '223.4',
+        //   time: '2018.4.10',
+        //   name: 'A1-大鹏大澳湾-2018090410-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/2.jpg',
+        //   size: '235.6',
+        //   time: '2018.5.09',
+        //   name: 'A2-大鹏大澳湾-2018050909-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/3.jpg',
+        //   size: '240.2',
+        //   time: '2018.6.09',
+        //   name: 'A2-大鹏大澳湾-2018060910-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/4.jpg',
+        //   size: '242.5',
+        //   time: '2018.6.17',
+        //   name: 'A2-大鹏大澳湾-2018061710-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/5.jpg',
+        //   size: '243.2',
+        //   time: '2018.7.01',
+        //   name: 'A2-大鹏大澳湾-2018070110-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/6.jpg',
+        //   size: '250.4',
+        //   time: '2018.7.28',
+        //   name: 'A2-大鹏大澳湾-2018072810-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/7.jpg',
+        //   size: '254.6',
+        //   time: '2018.11.17',
+        //   name: 'A2-大鹏大澳湾-2018111710-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/8.jpg',
+        //   size: '260.3',
+        //   time: '2018.12.29',
+        //   name: 'A2-大鹏大澳湾-2018122910-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/9.jpg',
+        //   size: '268.4',
+        //   time: '2019.3.02',
+        //   name: 'A2-大鹏大澳湾-2019030210-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/10.jpg',
+        //   size: '278.5',
+        //   time: '2019.3.17',
+        //   name: 'A3-大鹏大澳湾-2019031710-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/11.jpg',
+        //   size: '279.1',
+        //   time: '2019.4.06',
+        //   name: 'A4-大鹏大澳湾-2019040610-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/12.jpg',
+        //   size: '280.5',
+        //   time: '2019.6.02',
+        //   name: 'A4-大鹏大澳湾-2019060210-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/13.jpg',
+        //   size: '284.6',
+        //   time: '2019.6.22',
+        //   name: 'A4-大鹏大澳湾-2019062210-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/14.jpg',
+        //   size: '288.1',
+        //   time: '2019.8.24',
+        //   name: 'A4-大鹏大澳湾-2019082410-01'
+        // }
       ],
-      isSuccessResult: true
+      isSuccessResult: true,
+
+      activityNumber:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time,
+
+      routeObj: JSON.parse(this.$route.query.spaid)
     }
   },
   methods: {
+    ...mapMutations([
+      // 'setActivityFiles'
+    ]),
+
+    showForm(obj) {
+      console.log(JSON.parse(this.$route.query.spaid).item)
+      let item = JSON.parse(this.$route.query.spaid).item
+      this.recordInfor[0].msg = item.activity_Num
+      this.recordInfor[1].msg = item.species
+      this.recordInfor[2].msg = item.status
+      this.recordInfor[3].msg = item.stage
+      this.recordInfor[4].msg = item.zyqy
+      this.recordInfor[5].msg = item.coralColor.lightest_color
+      this.recordInfor[5].color = item.coralColor.color1
+      this.recordInfor[5].msg2 = item.coralColor.darkest_color
+      this.recordInfor[5].color2 = item.coralColor.color2
+      this.recordInfor[6].msg = item.time
+      this.recordInfor[7].msg = item.height
+      this.recordInfor[8].msg = item.area
+      this.recordInfor[9].msg = item.comment
+
+      this.recordName = item.title
+    },
+
+    // 返回继续录入记录
     returnCreate() {
       this.$router.push({
         name: `buildA1`,
@@ -157,19 +194,38 @@ export default {
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+          activityType: this.$route.query.activityType,
+          spaid: JSON.stringify({
+            czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+            czhd_spaid: this.currentActivity(currentActivityNum).czhd_spaid
+          })
+        }
+      })
+    },
+
+    // 请求该活动下的所有记录
+    requestCZJL() {
+      let obj = getCZJL(R01, this.routeObj.czhd_spaid)
+      reqApi(obj, '/tree/select').then(res => {
+        console.log('获取活动下所有残枝记录', res)
+        if (res.data.status === 200) {
+          let czdaList = res.data.response.CZJL.objects
+          this.activityFiles = czdaList
         }
       })
     }
   },
+  mounted() {},
   beforeRouteEnter(to, from, next) {
     // 根据活动编号查询活动下所有的记录
 
     if (to.params.result === 'success') {
       // 成功反馈页面，根据记录id获取记录信息展示
       next(vm => {
-        // vm.recordInfor[0].msg = 'A2-大鹏大澳湾-2019090910'
         vm.isSuccessResult = true
+        vm.requestCZJL()
+        vm.showForm()
+        vm.imgUrl = JSON.parse(vm.$route.query.spaid).imgUrl
       })
     } else if (to.params.result === 'detail') {
       // 根据时间地点活动等信息找到记录获得详细信息
@@ -185,14 +241,15 @@ export default {
 <style lang="stylus" scoped>
 .successRoot {
   display: flex;
+  justify-content: space-between;
 
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 10vw;
 
     .activityNum {
-      width: 40%;
+      // width: 40%;
       height: 1.6rem;
       min-width: 320px;
       margin: 1.5rem 0;
@@ -203,10 +260,15 @@ export default {
       line-height: 1.6rem;
       border-radius: 3px;
     }
+
+    .info {
+      width: 60%;
+    }
   }
 
   .successResult {
-    margin-top: 7vh;
+    margin-top: 4vw;
+    margin-right: 12vw;
 
     .buttonSpan {
       text-align: center;

@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex;">
-    <div>
+    <div class="min-img">
       <canvas id="mycanvas" @mousedown="setPoint"></canvas>
     </div>
     <div style="margin-left:1rem;color:#000;position: relative;">
@@ -8,33 +8,31 @@
       <div style="position:absolute;right:0">
         <el-popover trigger="hover" title="测量说明：" placement="top" width="350">
           <ul>
-            <span>1、输入参考物的实际直径,默认3cm</span>
+            <span>1、输入参考物的实际直径或长度,默认3cm</span>
           </ul>
           <ul style="width:100%;list-style:none">
             <li>
               <span>2、测量面积</span>
             </li>
-            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(1)在图中标出参考物的两个端点，测量</li>
             <li>(2)在图中标出目标的轮廓点，测量。得出计算结果</li>
           </ul>
           <ul style="width:100%;list-style:none">
             <li>
               <span>3、测量高度</span>
             </li>
-            <li>(1)在图中标出参考物长轴的端点，测量</li>
+            <li>(1)在图中标出参考物的两个端点，测量</li>
             <li>(2)在图中标出目标的端点，测量。得出计算结果</li>
             <li></li>
           </ul>
-          <ul style="width:100%;list-style:none">
-            <li>4、测量面积时，图中参考物必须是圆形或椭圆形。</li>
-          </ul>
+
           <p slot="reference" style="text-align: center; padding-top:5px" type="text">
             <a class="el-icon-info" style="font-size: 25px;color: #ff6b6b;"></a>
           </p>
         </el-popover>
       </div>
       <div>
-        <label @click="checkedType(0)" class="elRadio">
+        <label @click="checkedType(1)" class="elRadio">
           <span class="elInput">
             <span class="elInner"></span>
           </span>
@@ -42,7 +40,7 @@
         </label>
       </div>
       <div>
-        <label @click="checkedType(1)" class="elRadio">
+        <label @click="checkedType(0)" class="elRadio">
           <span class="elInput">
             <span class="elInner"></span>
           </span>
@@ -51,7 +49,7 @@
       </div>
 
       <!-- 测量高度 -->
-      <div class="operStep" v-show="checkeId==1">
+      <div class="operStep" v-show="checkeId==0">
         <div>
           <span>号牌直径：</span>
           <input
@@ -92,7 +90,7 @@
         </div>
       </div>
       <!-- 测量面积 -->
-      <div class="operStep" v-show="checkeId==0">
+      <div class="operStep" v-show="checkeId==1">
         <div>
           <span>号牌直径：</span>
           <input
@@ -164,7 +162,7 @@
             {{coralInActual}}
             <span style=" float: right;">
               cm
-              <sup v-show="checkeId==0">2</sup>
+              <sup v-show="checkeId==1">2</sup>
             </span>
           </span>
         </div>
@@ -173,8 +171,9 @@
           上次测量值：
           <span>
             <span style="    float: right;">
+              {{lastSize}}
               cm
-              <sup v-show="checkeId==0">2</sup>
+              <sup v-show="checkeId==1">2</sup>
             </span>
           </span>
         </div>
@@ -183,7 +182,7 @@
       <div style="display: flex;justify-content: center;">
         <div class="my-btn">
           <span>
-            <span @click.stop="mackImg">确认提交</span>
+            <span @click="giveTheSize">确认提交</span>
           </span>
         </div>
       </div>
@@ -196,14 +195,15 @@
 
 export default {
   name: "essay",
-  // props: {
-  //   imageUrl: String
-  // },
+  props: {
+    imageUrl: String,
+    lastSize: String
+  },
   data() {
     return {
       canvas: null,
       // newUrl: "http://dayy.xyz/resource/1.jpg",
-      imageUrl: "http://dayy.xyz/resource/test.jpg",
+      // imageUrl: "http://dayy.xyz/resource/test.jpg",
       //点坐标数组
       pointList: [],
       pointX: [],
@@ -214,8 +214,10 @@ export default {
       context: null,
       img: null,
       canvasW: 0,
+      canvasH: 0,
+      imgInCanvas: 0,
       diameter: 3, //参考物实际长度
-      checkeId: 0,
+      checkeId: 1,
       shortAxis: 0, //图中短轴
       longAxis: 0, //图中长轴
       coralAreaInImg: 0, //图中轮廓点的面积
@@ -229,9 +231,11 @@ export default {
     this.context = this.canvas.getContext("2d");
     this.elRadio = document.getElementsByClassName("elRadio");
     this.elInput = document.getElementsByClassName("elInput");
-    this.elRadio[this.checkeId].classList.add("isChecked");
-    this.elInput[this.checkeId].classList.add("isChecked");
+    this.elRadio[0].classList.add("isChecked");
+    this.elInput[0].classList.add("isChecked");
     this.doDraw(this.imageUrl);
+
+    // console.log("旧值：", this.lastSize);
   },
   watch: {
     imageUrl: function() {
@@ -244,7 +248,14 @@ export default {
     //  imageUrl为后台提供图片地址
     doDraw(imageUrl) {
       let _this = this;
-
+      /*
+       *宽度判断很是关键
+       *这要结合css中#mycanvas
+       *的样式
+       */
+      let vw = document.body.offsetWidth / 100;
+      let vh = document.body.offsetHeight / 100;
+      let vw_vh = (40 * vw) / (60 * vh);
       if (!_this.canvas) {
         return false;
       } else {
@@ -252,20 +263,24 @@ export default {
         _this.img = new Image();
         _this.img.src = imageUrl;
         //  加载图片
-        // console.log("img:", _this.img.width, _this.img.height);
         _this.img.onload = function() {
           if (_this.img.complete) {
-            // console.log(_this.img.width, _this.img.height);
-            //  根据图像重新设定了canvas的长宽
-            if (_this.img.width > 700) {
-              _this.canvasW = 700;
-            } else {
+            //要判断canvas
+            //受图片影响
+            //受max-wight影响
+            //还是max-height影响
+            if (_this.img.width <= 40 * vw && _this.img.height <= 60 * vh) {
               _this.canvasW = _this.img.width;
+              _this.imgInCanvas = 1;
+            } else if (_this.img.width / _this.img.height > vw_vh) {
+              _this.canvasW = 40 * vw;
+              // console.log("canvasW", _this.canvasW);
+              _this.imgInCanvas = _this.img.width / _this.canvasW;
+            } else {
+              _this.canvasH = 60 * vh;
+              // console.log("canvasH", _this.canvasH);
+              _this.imgInCanvas = _this.img.height / _this.canvasH;
             }
-            // _this.canvas.setAttribute("width", 700);
-            // _this.canvas.setAttribute("height", _this.img.height*(700/_this.img.width));
-
-            // }else{
             _this.canvas.setAttribute("width", _this.img.width);
             _this.canvas.setAttribute("height", _this.img.height);
             // }
@@ -283,15 +298,10 @@ export default {
     },
     //画圆点
     setPoint(event) {
-      // console.log(1);
       let _this = this;
-      //   console.log("~~", event.clientX, "~~", event.clientY);
-      // console.log("event:", event.clientX, event.clientY);
-
       let loc = _this.windowToCanvas(event.clientX, event.clientY);
-      // console.log("loc:", loc.x, loc.y);
-
       //设置绘制颜色 宽度
+      // console.log("loc: ", loc.x, loc.y);
       _this.context.strokeStyle = "#ca113f";
       _this.context.lineWidth = 2;
       //圆点
@@ -300,7 +310,6 @@ export default {
       _this.pointX.push(loc.x);
       _this.pointY.push(loc.y);
       //动作存储 方便进行撤销
-      // console.log(_this.pointList.length,loc.x, loc.y);
       //   context.fill(); 遮盖效果
       _this.context.stroke();
     },
@@ -308,14 +317,13 @@ export default {
     //获取实际的像素坐标
     windowToCanvas(x, y) {
       let _this = this;
-      // console.log("canvas:", _this.canvasW);
-
       //方法返回元素的大小及其相对于视口的位置
       var bbox = _this.canvas.getBoundingClientRect();
-      // console.log("bbox:", bbox.left, bbox.top);
+      // console.log("bbox: ", bbox.left, bbox.top, _this.imgInCanvas);
+      // console.log(x, x - bbox.left, y, y - bbox.top);
       return {
-        x: (x - bbox.left) * (_this.img.width / _this.canvasW),
-        y: (y - bbox.top) * (_this.img.width / _this.canvasW)
+        x: (x - bbox.left) * _this.imgInCanvas,
+        y: (y - bbox.top) * _this.imgInCanvas
       };
     },
     //撤销上一步
@@ -378,11 +386,11 @@ export default {
       // });
     },
     checkedType(i) {
-      this.elRadio[this.checkeId].classList.remove("isChecked");
-      this.elInput[this.checkeId].classList.remove("isChecked");
+      this.elRadio[this.checkeId === 0 ? 1 : 0].classList.remove("isChecked");
+      this.elInput[this.checkeId === 0 ? 1 : 0].classList.remove("isChecked");
       this.checkeId = i;
-      this.elRadio[this.checkeId].classList.add("isChecked");
-      this.elInput[this.checkeId].classList.add("isChecked");
+      this.elRadio[this.checkeId === 0 ? 1 : 0].classList.add("isChecked");
+      this.elInput[this.checkeId === 0 ? 1 : 0].classList.add("isChecked");
     },
     calcuLongAxis() {
       if (this.pointList.length != 2) {
@@ -399,20 +407,7 @@ export default {
       this.proportion = this.diameter / this.longAxis;
       this.delectAllPoint();
     },
-    // calcuShortAxis() {
-    //   if (this.pointList.length != 2) {
-    //     this.$notify({
-    //       title: "",
-    //       message: "请在图中标两个点",
-    //       type: "warning"
-    //     });
-    //   } else {
-    //     let a2 = Math.pow(this.pointList[0].x - this.pointList[1].x, 2);
-    //     let b2 = Math.pow(this.pointList[0].y - this.pointList[1].y, 2);
-    //     this.shortAxis = Math.sqrt(a2 + b2).toFixed(2);
-    //   }
-    //   this.delectAllPoint();
-    // },
+
     // 测量面积
     calcuCoralAreaInImg() {
       if (!this.longAxis) {
@@ -494,6 +489,14 @@ export default {
         ).toFixed(2);
       }
       this.delectAllPoint();
+    },
+    //传出测量值给父组件
+    giveTheSize() {
+      // console.log("传出测量值：", this.coralInActual);
+      this.$emit("givaASize", {
+        size: this.coralInActual,
+        type: this.checkeId
+      });
     }
   }
 };
@@ -509,8 +512,12 @@ export default {
   /* height: 100%; */
 }
 #mycanvas {
-  max-width: 700px;
-  border: 1px solid rgb(199, 198, 198);
+  /* 
+  *这两个值和js函数有关系 
+  *慎重修改
+  */
+  max-width: 40vw;
+  max-height: 60vh;
 }
 
 .my-btn {
@@ -584,5 +591,9 @@ export default {
   margin-top: 1rem;
   border: 1px solid rgb(63, 193, 203);
   padding: 0.5rem;
+}
+.min-img {
+  width: 40vw;
+  border: 1px solid rgb(199, 198, 198);
 }
 </style>

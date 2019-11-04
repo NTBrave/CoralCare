@@ -112,20 +112,10 @@ export const A01 =
             "MasterExtendType": "CZZY",		//父节点:[/残枝作业]
             "NeedFK": "false",				//无需回传外键 此时已经知道是哪个残枝作业
             "Where": [
-                {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "MasterId"
-                    }
-                }
+
             ],
             "Order": [
-                {
-                    "Key": "",
-                    "Order": ""
-                }
+                {}
             ],
             "GroupBy": [
                 {}
@@ -240,27 +230,24 @@ export const A05 =
 }
 //A-06 更新活动
 export const A06 =
-
-
-
 {
     "JobType": "flow",
     "JobHandler": "CZHDHandler",		//残枝活动Handler
     "Jobs": [
         {
             "Method": "update",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZZY",	//父节点:[/残枝作业]
             "Object": {
-                "SpaId": "spaid",		//与新建不同，更新活动要在此字段提供spaid
+                "SpaId": "",		//与新建不同，更新活动要在此字段提供spaid
                 "ExtendType": "CZHD",	//残枝活动	
                 "ExtendData": {
-                    "czzy_spaid": "czzy_spaid",		//所属残枝作业的spaid
-                    "timestamp": "2019090910",
-                    "type": "首次暂养/暂养巡检/首次回播/回播巡检",
-                    "code": "1/2/3/4",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
-                    "participants": "张三 李四",		//参与人员
-                    "comment": ""
+                    // "czzy_spaid": "",		//所属残枝作业的spaid
+                    // "timestamp": "",
+                    // "type": "",
+                    // "code": "",		//1-首次暂养/2-暂养巡检/3-首次回播/ 4-回播巡检
+                    // "participants": "",		//参与人员
+                    // "comment": ""
                 }
             }
         }
@@ -272,7 +259,7 @@ export const D01 = {
     Jobs: [
         {
             Method: "select",
-            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7", // 固定的
             CZDASpaId: "czdaspaid",	//要查询的残枝档案spaid
             NeedFK: "true",			//需要回传外键 
             Where: [
@@ -282,6 +269,34 @@ export const D01 = {
                     Operator: {
                         "Operator": "=",
                         "Value": "czdaspaid"
+                    }
+                }
+            ],
+            Order: [
+                {}
+            ],
+            GroupBy: [
+                {}
+            ]
+        }
+    ]
+}
+//D-011 获取指定记录
+export const D_011 = {
+    JobType: "single",
+    Jobs: [
+        {
+            Method: "select",
+            MasterSpaId: "5e7106c3-7d6a-4949-b5a4-6a94200639e5", //活动id
+            CZJLSpaId: "3fd3cc68-5b33-4e2b-9494-a0741b0608b3",	//要查询的残枝档案spaid
+            NeedFK: "false",			//需要回传外键 
+            Where: [
+                {
+                    Type: "Condition",
+                    Key: "spa_id",
+                    Operator: {
+                        "Operator": "=",
+                        "Value": "3fd3cc68-5b33-4e2b-9494-a0741b0608b3"
                     }
                 }
             ],
@@ -361,7 +376,7 @@ export const D05 =
     "Jobs": [
         {
             "Method": "update",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
             "MasterExtendType": "CZDAROOT",
             "Object": {
                 "SpaId": "spaid",		//更新档案要在此字段提供spaid
@@ -369,26 +384,41 @@ export const D05 =
                 "ExtendData": {
                     "haopai_color": "",
                     "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
+                    "order_spaid": "",		//外键 所属珊瑚目
+                    "family_spaid": "",		//外键 所属珊瑚科
+                    "genus_spaid": "",		//外键 所属珊瑚属
+                    "pyzd_spaid": "",	//外键 所属培育站点
                     "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
+                    "quyu_spaid": "",		//外键 所属采集区域
+                    "miaopu_spaid": "",		//外键 所属（暂养）苗圃
+                    "fenqu_spaid": "",		//外键 所属（暂养）分区
+                    "yangxian_spaid": "",	//外键 所属（回播）样线
+                    "fenduan_spaid": "",		//外键 所属（回播）分段
                     "starred": "",	//是否关注 0 1
                     "ended": "",		//是否完结 0 1
-                    "label": ""
+                    "label": "",
+                    "comment": ""
                 }
             }
         }
     ]
 }
 //D-06 删除残枝档案  
-export const D06 = {}
+export const D06 = {
+    "JobType": "single",
+    "JobHandler": "CZDAHandler",		//残枝档案Handler
+    "Jobs": [
+        {
+            "Method": "delete",
+            "MasterSpaId": "40729f96-9484-411b-b706-00925362e1f7",
+            "MasterExtendType": "CZDAROOT",	//父节点:[/残枝档案]
+            "Object": {
+                "SpaId": "",					//要删除节点的spaid
+                "ExtendType": "CZDA"			//更新节点:[/残枝1]
+            }
+        }
+    ]
+}
 //R-01 获取指定活动下的所有记录
 export const R01 =
 {
@@ -396,24 +426,14 @@ export const R01 =
     "Jobs": [
         {
             "Method": "select",
-            "MasterSpaId": "MasterId",
+            "MasterSpaId": "",
             "MasterExtendType": "CZHD",
-            "NeedFK": "false",	//不回传外键
+            "NeedFK": "false",
             "Where": [
-                {
-                    "Type": "Condition",
-                    "Key": "spa_id",
-                    "Operator": {
-                        "Operator": "=",
-                        "Value": "MasterId"
-                    }
-                }
+
             ],
             "Order": [
-                {
-                    "Key": "",
-                    "Order": ""
-                }
+
             ],
             "GroupBy": [
                 {}
@@ -426,23 +446,61 @@ export const R02 = {
     "JobType": "flow",
     "Jobs": [
         {
-            "Method": "selectone",		//返回第一条记录
-            "MasterSpaId": "MasterId",
-            "MasterExtendType": "CZHD",	//残枝活动
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
             "Where": [
                 {
                     "Type": "Condition",
-                    "Key": "spa_id",
+                    "Key": "ext_data.czda_spaid",
                     "Operator": {
                         "Operator": "=",
-                        "Value": "MasterId"
+                        "Value": ""
                     }
                 }
             ],
             "Order": [
                 {
                     "Key": "ext_data.create_at",
-                    "Order": "DESC"
+                    "Order": "ASC"
+                }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+export const R021 = {
+    "JobType": "flow",
+    "Jobs": [
+        {
+            "Method": "selectone",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.czda_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "and"
+
+                }, {
+                    "Type": "Condition",
+                    "Key": "ext_type",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "CZJL"
+                    }
+                }
+            ],
+            "Order": [
+                {
+                    "Key": "ext_data.timestamp",//排序方式
+                    "Order": "DESC" //ASC升序
                 }
             ],
             "GroupBy": [
@@ -455,77 +513,106 @@ export const R02 = {
 export const R03 =
 
 {
-    "JobType":"flow",
-    "JobHandler":"SCZYJobHandler",		//残枝记录Handler
-    "Jobs":[
+    "JobType": "flow",
+    "JobHandler": "SCZYJobHandler",		//残枝记录Handler
+    "Jobs": [
         {							//创建首次暂养记录之前必须先创建残枝档案
-            "Method":"create",
-            "MasterSpaId":"masterid",
-            "MasterExtendType":"CZDAROOT",		//父节点:[/残枝档案]
-            "Object":{
-                "ExtendType":"CZDA",			//新建节点:[/残枝1]
-                "ExtendData":{
-                    "haopai_color":"",
-                    "haopai_number":"",
-                    "order_spaid":"",		//外键 所属珊瑚目
-                    "family_spaid":"",		//外键 所属珊瑚科
-                    "genus_spaid":"",		//外键 所属珊瑚属
-                    "pyzd_spaid":"",	//外键 所属培育站点
-                    "stage":"暂养",		//培育阶段 暂养|回播
-                    "quyu_spaid":"",		//外键 所属采集区域
-                    "miaopu_spaid":"",		//外键 所属（暂养）苗圃
-                    "fenqu_spaid":"",		//外键 所属（暂养）分区
-                    "yangxian_spaid":"",	//外键 所属（回播）样线
-                    "fenduan_spaid":"",		//外键 所属（回播）分段
-                    "starred":"",	//是否关注 0 1
-                    "ended":"",		//是否完结 0 1
-                    "label":"",
-                    "comment":""
+            "Method": "create",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZDAROOT",		//父节点:[/残枝档案]
+            "Object": {
+                "ExtendType": "CZDA",			//新建节点:[/残枝1]
+                "ExtendData": {
+                    "haopai_color": "",
+                    "haopai_number": "",
+                    "order_spaid": "",		//外键 所属珊瑚目
+                    "family_spaid": "",		//外键 所属珊瑚科
+                    "genus_spaid": "",		//外键 所属珊瑚属
+                    "pyzd_spaid": "",	//外键 所属培育站点
+                    "stage": "暂养",		//培育阶段 暂养|回播
+                    "quyu_spaid": "",		//外键 所属采集区域
+                    "miaopu_spaid": "",		//外键 所属（暂养）苗圃
+                    "fenqu_spaid": "",		//外键 所属（暂养）分区
+                    "yangxian_spaid": "",	//外键 所属（回播）样线
+                    "fenduan_spaid": "",		//外键 所属（回播）分段
+                    "starred": "",	//是否关注 0 1
+                    "ended": "",		//是否完结 0 1
+                    "label": "",
+                    "comment": ""
                 }
             }
         },
         {
-            "Method":"create",
-            "MasterSpaId":"masterid",
-            "MasterExtendType":"CZHD",			//父节点:[/残枝活动]
-            "Object":{
-                "ExtendType":"CZJL",			//新建节点:[/残枝记录]	
-                "ExtendData":{
-                    "czhd_spaid":"czhd_spaid",		//外键 所属残枝活动
-                    "timestamp":"",
-                    "status":"部分白化",			 //残枝状态
-                    "lightest_color":"",			//颜色-最浅
-                    "darkest_color":"",				//颜色-最深
-                    "height_area_both":"2",			//高度/面积/两者 0 1 2
-                    "height":"",
-                    "area":"",
-                    "comment":""                    
+            "Method": "create",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZHD",			//父节点:[/残枝活动]
+            "Object": {
+                "ExtendType": "CZJL",			//新建节点:[/残枝记录]	
+                "ExtendData": {
+                    "czhd_spaid": "czhd_spaid",		//外键 所属残枝活动
+                    "timestamp": "",
+                    "status": "部分白化",			 //残枝状态
+                    "lightest_color": "",			//颜色-最浅
+                    "darkest_color": "",				//颜色-最深
+                    "height_area_both": "2",			//高度/面积/两者 0 1 2
+                    "height": "",
+                    "area": "",
+                    "comment": ""
                 }
             }
         }
     ]
 }
+
+//R-04 新建暂养巡检记录
+export const R04 = {
+    "JobType": "single",
+    "JobHandler": "",		//残枝记录Handler
+    "Jobs": [
+        {
+            "Method": "create",
+            "MasterSpaId": "masterid",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
+            "Object": {
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]
+                "ExtendData": {
+                    "czhd_spaid": "",
+                    "czda_spaid": "",
+                    "timestamp": "",
+                    "status": "",
+                    "lightest_color": "",
+                    "darkest_color": "",
+                    "height_area_both": "",
+                    "height": "",
+                    "area": "",
+                    "comment": ""
+                }
+            }
+        }
+    ]
+}
+
 //R-05 新建首次回播记录
 export const R05 =
 
 {
     "JobType": "flow",
-    "JobHandler": "CZJLHandler",		//残枝记录Handler
+    "JobHandler": "",		//残枝记录Handler
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
+            "MasterSpaId": "",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
             "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]
                 "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
+                    "czhd_spaid": "czhd_spaid",
+                    "czda_spaid": "czda_spaid",
+                    "timestamp": "",
+                    "status": "",
+                    "lightest_color": "",
+                    "darkest_color": "",
+                    "height_area_both": "",
                     "height": "",
                     "area": "",
                     "comment": ""
@@ -534,138 +621,143 @@ export const R05 =
         },
         {							//创建记录必须要更新档案
             "Method": "update",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZDAROOT",
             "Object": {
                 "ExtendType": "CZDA",
+                "SpaId": '',
                 "ExtendData": {
                     "haopai_color": "",
                     "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
+                    // "order_spaid": "",		//外键 所属珊瑚目
+                    // "family_spaid": "",		//外键 所属珊瑚科
+                    // "genus_spaid": "",		//外键 所属珊瑚属
+                    "pyzd_spaid": "",	//外键 所属培育站点
+                    "stage": "回播",		//培育阶段 暂养|回播
+                    // "quyu_spaid": "",		//外键 所属采集区域
+                    "miaopu_spaid": "",		//外键 所属（暂养）苗圃
+                    "fenqu_spaid": "",		//外键 所属（暂养）分区
+                    "yangxian_spaid": "",	//外键 所属（回播）样线
+                    "fenduan_spaid": "",		//外键 所属（回播）分段
+                    // "starred": "",	//是否关注 0 1
+                    // "ended": "",		//是否完结 0 1
+                    // "label": "",
+                    "comment": ""
                 }
             }
         }
     ]
 }
 //R-06 新建回播巡检记录
-export const R06 =
-
-{
-    "JobType": "flow",
-    "JobHandler": "CZJLHandler",		//残枝记录Handler
+export const R06 = {
+    "JobType": "single",
+    "JobHandler": "",		//残枝记录Handler
     "Jobs": [
         {
             "Method": "create",
             "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
             "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]
                 "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
+                    "czhd_spaid": "",
+                    "czda_spaid": "",
+                    "timestamp": "",
+                    "status": "",
+                    "lightest_color": "",
+                    "darkest_color": "",
+                    "height_area_both": "",
                     "height": "",
                     "area": "",
                     "comment": ""
-                }
-            }
-        },
-        {							//创建记录必须要更新档案
-            "Method": "update",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZDAROOT",
-            "Object": {
-                "ExtendType": "CZDA",
-                "ExtendData": {
-                    "haopai_color": "",
-                    "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
                 }
             }
         }
     ]
 }
+// export const R06 =
+
+// {
+//     "JobType": "flow",
+//     "JobHandler": "CZJLHandler",		//残枝记录Handler
+//     "Jobs": [
+//         {
+//             "Method": "create",
+//             "MasterSpaId": "masterid",
+//             "MasterExtendType": "CZHD",
+//             "Object": {
+//                 "ExtendType": "CZJL",	//残枝记录	
+//                 "ExtendData": {
+//                     "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
+//                     "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
+//                     "timestamp": "2019090910",
+//                     "stage": "",						//残枝状态
+//                     "lightest_color": "",			//颜色-最浅
+//                     "darkest_color": "",				//颜色-最深
+//                     "height_area_both": "",			//高度/面积/两者 0 1 2
+//                     "height": "",
+//                     "area": "",
+//                     "comment": ""
+//                 }
+//             }
+//         },
+//         {							//创建记录必须要更新档案
+//             "Method": "update",
+//             "MasterSpaId": "masterid",
+//             "MasterExtendType": "CZDAROOT",
+//             "Object": {
+//                 "ExtendType": "CZDA",
+//                 "ExtendData": {
+//                     "haopai_color": "",
+//                     "haopai_number": "",
+//                     "mengang_spaid": "",
+//                     "muke_spaid": "",
+//                     "shuzhong_spaid": "",
+//                     "pyzd_spaid": "",
+//                     "stage": "",		//培育阶段 暂养|回播
+//                     "quyu_spaid": "",
+//                     "miaopu_spaid": "",
+//                     "fenqu_spaid": "",
+//                     "yangxian_spaid": "",
+//                     "fenduan_spaid": "",
+//                     "starred": "",	//是否关注 0 1
+//                     "ended": "",		//是否完结 0 1
+//                     "label": ""
+//                 }
+//             }
+//         }
+//     ]
+// }
 //R-07 更新记录
 export const R07 =
 
 {
-    "JobType": "flow",
+    "JobType": "single",
     "JobHandler": "CZJLHandler",		//残枝记录Handler
     "Jobs": [
         {
             "Method": "update",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZHD",
+            "MasterSpaId": "",
+            "MasterExtendType": "CZHD",		//父节点:[/残枝活动]
             "Object": {
-                "ExtendType": "CZJL",	//残枝记录	
+                "SpaId": "",					//要更新的节点spaid
+                "ExtendType": "CZJL",		//新建节点:[/残枝记录]	
                 "ExtendData": {
-                    "czhd_spaid": "czhd_spaid",		//所属残枝活动的spaid
-                    "czda_spaid": "czda_spaid",		//所属残枝（档案）的spaid
-                    "timestamp": "2019090910",
-                    "stage": "",						//残枝状态
-                    "lightest_color": "",			//颜色-最浅
-                    "darkest_color": "",				//颜色-最深
-                    "height_area_both": "",			//高度/面积/两者 0 1 2
-                    "height": "",
-                    "area": "",
-                    "comment": ""
-                }
-            }
-        },
-        {							//如果更新是最新的记录就必须同步更新档案
-            "Method": "update",
-            "MasterSpaId": "masterid",
-            "MasterExtendType": "CZDAROOT",
-            "Object": {
-                "ExtendType": "CZDA",
-                "ExtendData": {
-                    "haopai_color": "",
-                    "haopai_number": "",
-                    "mengang_spaid": "",
-                    "muke_spaid": "",
-                    "shuzhong_spaid": "",
-                    "pyzd_spaid": "",
-                    "stage": "",		//培育阶段 暂养|回播
-                    "quyu_spaid": "",
-                    "miaopu_spaid": "",
-                    "fenqu_spaid": "",
-                    "yangxian_spaid": "",
-                    "fenduan_spaid": "",
-                    "starred": "",	//是否关注 0 1
-                    "ended": "",		//是否完结 0 1
-                    "label": ""
-                }
+                    "czhd_spaid": "",
+                    "czda_spaid": "",
+                    // "timestamp": "",
+                    // "status": "",
+                    // "lightest_color": "",
+                    // "darkest_color": "",
+                    // "height_area_both": "",
+                    // "height": "",
+                    // "area": "",
+                    // "comment": ""
+                },
             }
         }
     ]
+
 }
 //R-08 删除指定记录
 export const R08 = {}
@@ -677,7 +769,7 @@ export const P01 = {
     "Jobs": [
         {
             "Method": "create",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",//masterid
             "MasterExtendType": "CZJL",	//父节点:[/残枝记录]
             "Object": {
                 "ExtendType": "CZZP",		//新建节点:[/残枝照片]
@@ -687,9 +779,9 @@ export const P01 = {
                     "comment": ""
                 },
                 "ExtendFileData": {
-                    "file_id": "url",		//照片在minio里的url
+                    "file_id": "",		//照片在minio里的objectName
                     "mine_type": "",			//文件类型 jpeg png等
-                    "thumbnail": "url"		//缩略图路径
+                    "thumbnail": ""		//缩略图路径
                 }
             }
         }
@@ -737,46 +829,224 @@ export const P03 = {
 
 // 获取珊瑚品种
 export const species_01 = {
-    "JobType":"single",
-    "Jobs":[
+    "JobType": "single",
+    "Jobs": [
         {
-            "Method":"select",
-            "MasterSpaId":"7270dc1d-3aab-418f-995b-9bfbf7075288",
-            "MasterExtendType":"SHPZ",      
-            "NeedFK":"false",               
-            "Where":[
-               
+            "Method": "select",
+            "MasterSpaId": "7270dc1d-3aab-418f-995b-9bfbf7075288",
+            "MasterExtendType": "SHPZ",
+            "NeedFK": "false",
+            "Where": [
+
             ],
-            "Order":[
+            "Order": [
                 {
-                    
+
                 }
             ],
-            "GroupBy":[
+            "GroupBy": [
                 {}
             ]
         }
     ]
 }
 
-// 获取暂养区域的苗圃分区
-export const ZYQY_01 = {
-    "JobType":"single",
-    "Jobs":[
+// 获取暂养区域的苗圃分区/回播区域的样线分段
+export const ZYQY_HBQY = {
+    "JobType": "single",
+    "Jobs": [
         {
-            "Method":"select",
-            "MasterSpaId":"",
-            "MasterExtendType":"",      
-            "NeedFK":"false",               
-            "Where":[
-               
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "false",
+            "Where": [
+
             ],
-            "Order":[
+            "Order": [
                 {
-                    
+
                 }
             ],
-            "GroupBy":[
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+
+//获取记录的活动数据
+export const AA_01 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "false",
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "spa_id",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""//czjl_spaid
+                    }
+                }
+
+            ],
+            "Order": [
+                {
+
+                }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+
+// 获取指定残枝档案(暂养阶段)
+export const CZDA_01 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "true",
+            "Where": [
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.miaopu_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.fenqu_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_color",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_number",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.stage",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "暂养"
+                    },
+
+                },
+            ],
+            "Order": [
+                {
+
+                }
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
+
+// 获取指定残枝档案(回播阶段)
+export const CZDA_02 = {
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "",
+            "MasterExtendType": "",
+            "NeedFK": "true",
+            "Where": [
+                // {
+                //     "Type": "Condition",
+                //     "Key": "ext_data.quyu_spaid",
+                //     "Operator": {
+                //         "Operator": "=",
+                //         "Value": "8b665e9b-8d9f-4bae-b67e-1a8e9755a608"
+                //     },
+                //     "LogicOperator": "AND"
+                // },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.yangxian_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.fenduan_spaid",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_color",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.haopai_number",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": ""
+                    },
+                    "LogicOperator": "AND"
+                },
+                {
+                    "Type": "Condition",
+                    "Key": "ext_data.stage",
+                    "Operator": {
+                        "Operator": "=",
+                        "Value": "回播"
+                    },
+
+                },
+            ],
+            "Order": [
+                {
+
+                }
+            ],
+            "GroupBy": [
                 {}
             ]
         }
@@ -784,6 +1054,30 @@ export const ZYQY_01 = {
 }
 
 
+//R-01 获取指定记录下的所有图片
+export const P04 =
+{
+    "JobType": "single",
+    "Jobs": [
+        {
+            "Method": "select",
+            "MasterSpaId": "MasterId",//记录SpaId
+            "MasterExtendType": "CZJL",
+            "NeedFK": "false",	//不回传外键
+            "Where": [
+                {
+
+                }
+            ],
+            "Order": [
+
+            ],
+            "GroupBy": [
+                {}
+            ]
+        }
+    ]
+}
 
 
 

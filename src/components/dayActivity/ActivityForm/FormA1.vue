@@ -1,9 +1,9 @@
 <template>
   <div class="formRoot">
-    <el-form :disabled="isCreated && !beforeCreateFile" size="mini">
+    <el-form ref="fileForm" size="small" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">牌色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">牌色</span>
         </el-col>
         <el-col :span="8">
           <el-select v-model="fileForm.signColor" placeholder="请选择">
@@ -21,13 +21,15 @@
         </el-col>
         <el-col :span="12">
           <el-input v-model="fileForm.signNumber" placeholder="请输入">
-            <template slot="prepend">号码</template>
+            <template slot="prepend">
+              <span :style="{'fontWeight':'bold','color':'black'}">号码</span>
+            </template>
           </el-input>
         </el-col>
       </el-form-item>
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">品种</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">品种</span>
         </el-col>
         <el-col :span="6">
           <el-select v-model="fileForm.species.first" placeholder="目">
@@ -61,15 +63,18 @@
         </el-col>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="fileForm.collectSite" :disabled="true">
-          <template slot="prepend">采集站点</template>
-        </el-input>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">采集站点</span>
+        </el-col>
+        <el-col :span="19">
+          <el-input v-model="fileForm.collectSite" :disabled="true"></el-input>
+        </el-col>
       </el-form-item>
       <el-form-item>
-        <el-col :span="6">
-          <span :style="{marginLeft:'15px'}">暂养区域</span>
+        <el-col :span="5">
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">暂养区域</span>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-select v-model="fileForm.breedArea.firstArea" disabled>
             <el-option
               v-for="(item, idx) in ZY_quyu"
@@ -79,7 +84,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="7">
           <el-select v-model="fileForm.breedArea.nursery" placeholder="苗圃">
             <el-option
               v-for="(item, idx) in ZY_miaopu"
@@ -89,7 +94,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="7">
           <el-select v-model="fileForm.breedArea.partition" placeholder="分区">
             <el-option
               v-for="(item, idx) in ZY_fenqu"
@@ -102,10 +107,10 @@
       </el-form-item>
     </el-form>
 
-    <el-form :disabled="isCreated && beforeCreateFile" ref="recorderForm" size="mini">
+    <el-form ref="recorderForm" size="small" :disabled="!beforeCreateRecord">
       <el-form-item>
         <el-col :span="4">
-          <span :style="{marginLeft:'15px'}">状态</span>
+          <span :style="{'marginLeft':'15px','fontWeight':'bold'}">状态</span>
         </el-col>
         <el-col :span="20">
           <el-select v-model="recordForm.state" placeholder="请选择">
@@ -120,7 +125,7 @@
 
       <el-form-item>
         <el-col :span="5">
-          <span :style="{marginLeft:'5px'}">珊瑚颜色</span>
+          <span :style="{marginLeft:'15px','fontWeight':'bold'}">珊瑚颜色</span>
         </el-col>
         <el-col :span="9">
           <el-select v-model="recordForm.coralColor.shallowColor" placeholder="选择最浅颜色">
@@ -162,26 +167,21 @@
 
     <div class="buttonArea">
       <el-button
-        class="beforeCreate"
-        v-if="isCreated && beforeCreateFile"
-        type="danger"
-        round
-        @click="createFile"
-      >创建珊瑚档案</el-button>
-      <el-button
         class="afterCreate"
-        v-if="isCreated && !beforeCreateFile"
+        v-if="isCreated && beforeCreateRecord"
+        :disabled="fileInfoNeed"
         type="danger"
         round
-        @click="submitRecorder"
+        @click="submitRecorder()"
       >录入首次暂养数据</el-button>
       <el-button
-        class="afterCreate"
-        v-if="!isCreated"
+        class="beforeCreate"
+        v-else-if="isCreated && !beforeCreateRecord"
         type="danger"
         round
-        @click="submitEdit"
-      >修改首次暂养数据</el-button>
+        @click="routeToSuccess"
+      >图片录入</el-button>
+      <el-button class="afterCreate" v-else type="danger" round @click="submitRecorder()">修改首次暂养数据</el-button>
     </div>
   </div>
 </template>
@@ -190,20 +190,44 @@
 // import {} from '../../api/api'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import { reqApi } from '../../../api/api'
-import { D04, R03, species_01, ZYQY_01 } from '../../../json/entity'
-import { signColorList, colorList } from '../../../json/default'
+import { D04, R03, species_01, ZYQY_HBQY } from '../../../json/entity'
+import { signColorList, colorList, colorObj } from '../../../json/default'
 import {
   requestSpecies,
   createR03,
-  requestZYQY
+  requestZYQY_HBQY,
+  Refactoring
 } from '../../../util/apiCreator'
+import { objIsEmpty } from '../../../util/formRules'
+import moment from 'moment'
 export default {
   props: {
     fileData: Object,
     recordData: Object,
-    isCreated: Boolean
+    isCreated: Boolean,
+    imgUrl: {
+      type: Array,
+      default: () => []
+    }
+    // edit_czdaSpaid: {
+    //   type: String,
+    //   default: ''
+    // },
+    // edit_czjlSpaid: {
+    //   type: String,
+    //   default: ''
+    // }
   },
   watch: {
+    // 监听档案信息是否有空值
+    fileForm: {
+      handler: function() {
+        let ready = objIsEmpty(this.fileForm)
+        console.log(ready)
+        this.fileInfoNeed = ready
+      },
+      deep: true
+    },
     // 根据目类来请求科类
     'fileForm.species.first': function() {
       this.species_family = []
@@ -264,7 +288,11 @@ export default {
       this.ZY_fenqu = []
       this.fileForm.breedArea.partition = ''
 
-      let fenqu = requestZYQY(ZYQY_01, this.fileForm.breedArea.nursery, 'MP')
+      let fenqu = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.fileForm.breedArea.nursery,
+        'MP'
+      )
       reqApi(fenqu, '/tree/select').then(res => {
         console.log(res)
         if (res.data.status === 200) {
@@ -282,8 +310,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data',
-      currentActivity_spaid: 'getCurrentActivity_spaid'
+      currentZD_data: 'getCurrentZD_data'
     }),
     ...mapState(['currentZD'])
   },
@@ -292,39 +319,55 @@ export default {
       signColorList, // 牌色列表
       colorList,
 
+      // 珊瑚品种（目科属）
       species_order: [],
       species_family: [],
       species_genus: [],
 
+      // 暂养区域（区域、苗圃、分区）
       ZY_quyu: [],
       ZY_miaopu: [],
       ZY_fenqu: [],
 
+      // 创建档案和首次暂养记录成功之后返回的 档案spaid 和 记录spaid
+      file_spaid: '',
+      record_spaid: '',
+
       fileForm: this.fileData, // 接受父页面传来的档案信息
       recordForm: this.recordData, // 接受父页面传来的记录信息
 
-      beforeCreateFile: true // 首次暂养时需要先创建档案才能录入记录
+      fileInfoNeed: true, // 首次暂养时需要先创建档案才能录入记录
+      beforeCreateRecord: true, // 需先提交档案才能录入图片
+
+      activityNum:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time,
+
+      item: {} // 传给success页面的信息对象
     }
   },
   methods: {
-    ...mapMutations(['setOperateFile', 'setActivityFiles']),
+    ...mapMutations(['setOperateFile']),
 
     createFile() {
-      // 创建档案接口
-
       this.setOperateFile('A-宇宙号-1区-蓝-10')
-      this.beforeCreateFile = false
-
-      // console.log(this.fileForm)
     },
-    submitRecorder() {
-      // 提交记录接口，成功后跳转到查看详情页面
-      // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
 
+    // 向父组件传递 档案spaid 和 记录spaid
+    sendSpaid() {
+      this.$emit('func', this.file_spaid, this.record_spaid)
+    },
+
+    // 提交记录
+    submitRecorder() {
+      console.log(JSON.parse(this.$route.query.spaid))
       let newR03 = createR03(
         R03,
         this.currentZD_data(this.currentZD).ExtendData.czdaroot_spaid,
-        this.currentActivity_spaid,
+        JSON.parse(this.$route.query.spaid).czhd_spaid,
         this.currentZD_data(this.currentZD).SpaId,
         this.$route.query.time,
         this.fileForm,
@@ -332,43 +375,90 @@ export default {
       )
 
       console.log(newR03)
-      reqApi(newR03, '/tree/flow')
-        .then(res => {
-          console.log(res)
-          if (res.data.status === 200) {
-            this.$message({
-              showClose: true,
-              message: '数据已成功录入！',
-              type: 'success'
-            })
-          }
-        })
-        .then(e => {
-          console.log(e)
-        })
+      reqApi(newR03, '/tree/flow').then(res => {
+        console.log(res)
 
-      this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/success`,
-        query: {
-          time: this.$route.query.time,
-          address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+        if (res.data.status === 200) {
+          let refactObj = Refactoring(res.data.response.CZDA.objects[0])
+          this.file_spaid = res.data.response.CZDA.objects[0].principle.SpaId
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
+          this.sendSpaid() // 向父组件传spaid
+
+          let msgObj = {}
+          msgObj.activity_Num = this.activityNum
+          msgObj.species = refactObj.type
+          msgObj.status =
+            res.data.response.CZJL.objects[0].principle.ExtendData.status
+          msgObj.stage =
+            res.data.response.CZDA.objects[0].principle.ExtendData.stage
+
+          // 构建区域
+          let positonArr = refactObj.title.split('-')
+          positonArr.length = positonArr.length - 2
+          msgObj.zyqy = positonArr.join('-')
+
+          // 构建最浅到最深颜色
+          let light =
+            res.data.response.CZJL.objects[0].principle.ExtendData
+              .lightest_color
+          let dark =
+            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
+          msgObj.coralColor = {}
+          msgObj.coralColor.lightest_color = light
+          msgObj.coralColor.color1 = colorObj[light]
+
+          msgObj.coralColor.darkest_color = dark
+          msgObj.coralColor.color2 = colorObj[dark]
+          msgObj.time = moment(
+            res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
+            'YYYYMMDDHH'
+          ).format('YYYY-MM-DD HH')
+          msgObj.height =
+            res.data.response.CZJL.objects[0].principle.ExtendData.height
+          msgObj.area =
+            res.data.response.CZJL.objects[0].principle.ExtendData.area
+          msgObj.comment =
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment
+          msgObj.title = refactObj.title
+
+          this.item = { ...msgObj }
+
+          // 数据成功录入提醒
+          this.$message({
+            showClose: true,
+            message: '记录已成功录入！',
+            type: 'success'
+          })
+
+          this.beforeCreateRecord = false
+
+          // 携带参数路由跳转
         }
+        // else if(res.data.status === 406){
+
+        // }
       })
     },
-    submitEdit() {
-      // 修改成功接口
-      this.$message({
-        showClose: true,
-        message: '数据修改成功！',
-        type: 'success'
-      })
+
+    // 数据录入完毕后跳转到成功页面
+    routeToSuccess() {
       this.$router.push({
-        path: `/manage/coralBreed/${this.$route.query.activityType}/detail`,
+        name: 'resultA1',
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
-          activityType: this.$route.query.activityType
+          activityType: this.$route.query.activityType,
+          spaid: JSON.stringify({
+            czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+            czhd_spaid: JSON.parse(this.$route.query.spaid).czhd_spaid,
+            czda_spaid: this.file_spaid,
+            czjl_spaid: this.record_spaid,
+            item: this.item,
+            imgUrl: this.imgUrl
+          })
+        },
+        params: {
+          result: 'success'
         }
       })
     },
@@ -403,8 +493,8 @@ export default {
         }
       ]
       console.log(this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid)
-      let miaopu = requestZYQY(
-        ZYQY_01,
+      let miaopu = requestZYQY_HBQY(
+        ZYQY_HBQY,
         this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid,
         'ZYQYROOT'
       )
@@ -432,6 +522,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.formRoot {
+}
+
 .colorCircle {
   width: 10px;
   height: 10px;

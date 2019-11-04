@@ -30,7 +30,7 @@ export default new Router({
           path: "/manage/main",
           name: "main",
           alias: "/manage",
-          component: () => import("../pages/coralWork.vue")
+          component: () => import("../pages/coralWelcome.vue")
         },
         // {
         //   path: "/manage/doc",
@@ -56,9 +56,9 @@ export default new Router({
         },
 
         {
-          // path: "/manage/coralWork",
-          // name: "coralWork",
-          // component: () => import("../pages/coralWork.vue")
+          // path: "/manage/coralWelcome",
+          // name: "coralWelcome",
+          // component: () => import("../pages/coralWelcome.vue")
           path: "/manage/coralBreed/dayActivity",
           name: "dayActivity",
           component: () => import("../pages/coralBreed/DayActivity.vue")

@@ -11,9 +11,18 @@
         :style="'width:'+imgWidth"
         @click="selectOneImg(index)"
       >
-        <img :src="images.url" :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;'" />
+        <div
+          :style="'width:'+imgWidth+'vw;height:'+imgHeight+'vh;display: flex;justify-content: center'"
+        >
+          <img
+            :src="images.url"
+            :style="'max-width:'+imgWidth+'vw;max-height:'+imgHeight+'vh;'"
+            v-on:error.once="errorImg($event)"
+          />
+        </div>
+
         <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
-        <span class="delete-img el-icon-close" @click="deleteImg">
+        <span v-if="isShowDel" class="delete-img el-icon-close" @click="deleteImg">
           <!-- <span class="el-icon-close"></span> -->
         </span>
       </div>
@@ -32,37 +41,44 @@
   </div>
 </template>
 
-
-
 <script >
 export default {
   name: 'swiperper',
   props: {
     imgHeight: Number,
     imgWidth: Number,
-    imgUrl: Array
+    imgUrl: Array,
+    isShowDelet: Boolean
   },
   data() {
     return {
-     
-      list: null,
+      list: [],
       index: 0,
       // imgWidth: 180,
       // imgHeight: 90,
       // imgMargin: 2,
-      allImg: null,
+      allImg: [],
       num: 4,
-      signImgUrl: ''
+      signImgUrl: '',
+      imgLen: 0,
+      isShowDel: false
     }
   },
   //用的自定义组件
   components: {},
   mounted: function() {
+    // if (!this.imgUrl) {
+    //   this.imgUrl = []
+    // }
+    this.isShowDel = this.isShowDelet || false
     this.list = document.getElementById('list')
     this.allImg = document.getElementsByClassName('img-swiper')
-    this.allImg[this.index].classList.add('current-img')
-    this.imgLen = this.imgUrl.length - 1
-    this.selectOneImg(this.index)
+    // console.log("this.allImg", this.allImg);
+    if (this.allImg[0]) {
+      this.allImg[0].classList.add('current-img')
+      this.imgLen = this.allImg.length - 1
+      this.selectOneImg(this.index)
+    }
   },
   methods: {
     move(offset) {
@@ -81,27 +97,37 @@ export default {
       }
     },
     prevOnclick() {
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = this.index > 0 ? this.index - 1 : 0
-      this.allImg[this.index].classList.add('current-img')
-      this.move(this.imgWidth)
-      this.selectOneImg(this.index)
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove('current-img')
+        // console.log(this.index);
+        this.index = this.index > 0 ? this.index - 1 : 0
+        // console.log(this.index);
+        this.allImg[this.index].classList.add('current-img')
+        this.move(this.imgWidth)
+        this.selectOneImg(this.index)
+      }
     },
     nextOnclick() {
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen
-      this.allImg[this.index].classList.add('current-img')
-      this.move(-this.imgWidth)
-      this.selectOneImg(this.index)
-      // console.log(this.index)
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove('current-img')
+        console.log(this.index, this.imgLen)
+        this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen
+        console.log(this.index)
+        this.allImg[this.index].classList.add('current-img')
+        this.move(-this.imgWidth)
+        this.selectOneImg(this.index)
+      }
     },
     selectOneImg(ind) {
-      // console.log(this.index,ind,this.allImg);
-      this.allImg[this.index].classList.remove('current-img')
-      this.index = ind
-      this.allImg[this.index].classList.add('current-img')
-
-      this.$emit('selectOneImg', this.imgUrl[ind].url)
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove('current-img')
+        this.index = ind
+        this.allImg[this.index].classList.add('current-img')
+        this.$emit('selectOneImg', this.imgUrl[ind].url)
+      }
+    },
+    errorImg(e) {
+      e.currentTarget.src = require('../assets/images/error.svg')
     },
     deleteImg() {}
   }

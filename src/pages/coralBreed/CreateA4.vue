@@ -1,21 +1,22 @@
 <template>
   <div class="createBoard" :key="isCreated">
     <div class="infoArea">
-      <div class="activityNum">活动编号：{{activityNum}}</div>
+      <div class="activityNum">活动编号：{{activityNumber}}</div>
 
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
           v-if="activityFiles"
-          :fileNameList="activityFiles"
+          :fileNameList.sync="activityFiles"
         ></file-list>
         <div class="form">
           <p>{{operateFile}}</p>
           <activity-form
             :sowData="sowData"
-            :breedData="breedData"
             :recordData="recordData"
             :isCreated="isCreated"
+            :imgUrl.sync="imgUrl"
+            @func="getSpaid"
           ></activity-form>
         </div>
       </div>
@@ -27,15 +28,19 @@
           v-if="imgUrl.length"
           :imgHeight="9.5"
           :imgWidth="10"
-          :imgUrl="imgUrl"
+          :imgUrl.sync="imgUrl"
           @selectOneImg="chooseSwiperImg"
         ></picture-swiper>
       </el-row>
       <el-row :style="{'position':'','margin':'0 auto'}">
         <upload-border>
           <div class="imgUpload">
-            <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load></up-load>
+            <img class="showOneImg" width="80%" height="70%" :src.sync="imgUrlFormSwiper" alt />
+            <up-load
+              @createImg="imgArrPush"
+              :masterid.sync="record_spaid"
+              :czda_spaid.sync="file_spaid"
+            ></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -50,6 +55,10 @@ import ActivityFormVue from '../../components/dayActivity/ActivityForm/FormA4.vu
 import swiperVue from '../../components/swiper.vue'
 import UploadBorderVue from '../../components/dayActivity/UploadBorder.vue'
 import uploadVue from '../../components/upload.vue'
+
+import { getCZJL } from '../../util/apiCreator'
+import { reqApi } from '../../api/api'
+import { R01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -60,6 +69,8 @@ export default {
   },
   data() {
     return {
+      activityFiles: [], // 左侧边栏渲染记录所属档案（本质还是记录）
+
       sowData: {
         signColor: '',
         signNumber: '',
@@ -69,16 +80,7 @@ export default {
           segmentation: '' // 分段
         }
       },
-      // breedData: {
-      //   // 创建档案表单
-      //   signColor: '',
-      //   signNumber: '',
-      //   breedArea: {
-      //     firstArea: 'A',
-      //     nursery: '', // 苗圃
-      //     partition: '' // 分区
-      //   }
-      // },
+
       recordData: {
         // 更新记录表单
         state: '', // 状态
@@ -91,24 +93,24 @@ export default {
         remark: '' // 备注
       },
       imgUrl: [
-        {
-          url: 'http://dayy.xyz/resource/example/1.png',
-          size: '223.4',
-          time: '2018.4.10',
-          name: 'A1-大鹏大澳湾-2018090410-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/2.jpg',
-          size: '235.6',
-          time: '2018.5.09',
-          name: 'A2-大鹏大澳湾-2018050909-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/3.jpg',
-          size: '240.2',
-          time: '2018.6.09',
-          name: 'A2-大鹏大澳湾-2018060910-01'
-        }
+        // {
+        //   url: 'http://dayy.xyz/resource/example/1.png',
+        //   size: '223.4',
+        //   time: '2018.4.10',
+        //   name: 'A1-大鹏大澳湾-2018090410-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/2.jpg',
+        //   size: '235.6',
+        //   time: '2018.5.09',
+        //   name: 'A2-大鹏大澳湾-2018050909-01'
+        // },
+        // {
+        //   url: 'http://dayy.xyz/resource/example/3.jpg',
+        //   size: '240.2',
+        //   time: '2018.6.09',
+        //   name: 'A2-大鹏大澳湾-2018060910-01'
+        // }
         // {
         //   url: 'http://dayy.xyz/resource/example/4.jpg',
         //   size: '242.5',
@@ -176,29 +178,91 @@ export default {
         //   name: 'A4-大鹏大澳湾-2019082410-01'
         // }
       ],
+
       isCreated: true,
-      imgUrlFormSwiper: ''
+      imgUrlFormSwiper: '',
+
+      file_spaid: '',
+      record_spaid: '',
+
+      activityNumber:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
     }
   },
   computed: {
     ...mapGetters({
-      activityNum: 'getNowDivingActivity',
-      activityFiles: 'getActivityFiles'
+      // activityNum: 'getNowDivingActivity',
+      // activityFiles: 'getActivityFiles'
     }),
 
-    ...mapState(['operateFile'])
-  },
+    ...mapState(['operateFile']),
 
+    isSpaidChange() {
+      const { file_spaid, record_spaid } = this
+      return {
+        file_spaid,
+        record_spaid
+      }
+    }
+  },
+  watch: {
+    isSpaidChange: {
+      handler: function() {
+        if (Boolean(this.file_spaid && this.record_spaid)) {
+          this.requestCZJL()
+        } else {
+          console.log('还没有拿到czda_spaid!')
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
+    // 接收表单组件回传的 档案spaid 和 记录spaid
+    getSpaid(fileSpaid, recordSpaid) {
+      this.file_spaid = fileSpaid
+      this.record_spaid = recordSpaid
+      console.log('拿到的spaid', this.file_spaid, this.record_spaid)
+    },
+
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)
     },
+
+    // 请求该活动下的所有记录
+    requestCZJL() {
+      let obj = getCZJL(R01, JSON.parse(this.$route.query.spaid).czhd_spaid)
+      reqApi(obj, '/tree/select').then(res => {
+        console.log('获取活动下所有残枝记录', res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            let czdaList = res.data.response.CZJL.objects
+            this.activityFiles = czdaList
+          }
+        }
+      })
+    },
+
     setIsCreated(res) {
       this.isCreated = res
     },
     setData(res) {
       this.recordData = res
+    },
+
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(fileId) {
+      reqApi({ file_id: fileId }, '/file/get').then(res => {
+        console.log('img:', res)
+        if (res.data.status === 200 && res.data.response) {
+          this.imgUrl.push({ url: res.data.response.url })
+        }
+      })
     }
   },
   mounted() {},
@@ -221,11 +285,12 @@ export default {
 .createBoard {
   display: flex;
   width: 100%;
+  justify-content: space-around;
 
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
 
     .activityNum {
       width: 40%;
@@ -249,9 +314,9 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 40%;
+        width: 60%;
         min-width: 350px;
-        max-width: 400px;
+        max-width: 500px;
 
         p {
           height: 1.8rem;
@@ -265,7 +330,7 @@ export default {
 
   .uploadArea {
     width: 40vw;
-    margin-left: 5vw;
+    margin-right: 5vw;
     margin-top: 2.3rem;
 
     .imgUpload {

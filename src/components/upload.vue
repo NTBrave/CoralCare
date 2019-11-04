@@ -1,226 +1,144 @@
 <template>
-  <div :closable="false" v-show="uploadVisiable" class="uploadRoot">
-    <el-upload class="avatar-upload" drag multiple action :http-request="uploadProcess">
-      <i class="el-icon-plus"></i>
-      <div>
-        批量上传图片，
-        <span class="em">点击上传</span>
+  <div :closable="false" class="uploadRoot">
+    <el-upload
+      :disabled="uploadable"
+      class="avatar-upload"
+      drag
+      multiple
+      action
+      :http-request="uploadProcess"
+      :show-file-list="false"
+      :before-upload="beforeAvatarUpload"
+    >
+      <div v-if="!uploadable">
+        <i class="el-icon-plus"></i>
+        <h3 class="em">批量上传图片，点击上传</h3>
+      </div>
+      <div v-else>
+        <i class="el-icon-plus"></i>
+        <p class="em" :style="{'color':'#fab6b6'}">先填写表单，再上传图片</p>
       </div>
     </el-upload>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import * as Api from '../api/api'
-import * as DEFAULT from '../json/default'
-import { Message } from 'element-ui'
-import * as ENTITY from '../json/entity'
+import { mapState } from "vuex";
+import * as Api from "../api/api";
+import * as DEFAULT from "../json/default";
+import { Message } from "element-ui";
+import * as ENTITY from "../json/entity";
 
 export default {
-  name: 'Upload',
+  name: "Upload",
   computed: {
-    ...mapState(['uploadVisiable'])
+    uploadable() {
+      return !Boolean(this.masterid && this.czda_spaid);
+    }
   },
   //父节点残肢记录id、残肢档案id
-  props: ['masterid', 'czda_spaid'],
+  props: ["masterid", "czda_spaid"],
   // props: ["currentResourceId"],
   data() {
     return {
       // 上传
-    }
+    };
   },
   methods: {
     uploadProcess(params) {
+      let _this = this;
       // 通用变量 初始化
       let uploadData = {
-        url: '',
-        objectName: '',
-        file_id: '',
-        fileExtension: '',
-        currentUserId: ''
-      }
+        url: "", //上传图片的url
+        objectName: "", //上传图片的key
+        fileExtension: "" //上传图片的拓展名
+      };
+      //获取拓展名
+      let fillNameArr = params.file.name.split(".");
+      uploadData.fileExtension = fillNameArr.pop();
 
-      this.beforeUpload(params, uploadData)
-    },
-    beforeUpload(params, uploadData) {
-      let _this = this
-      uploadData.fileExtension = params.file.name.split('.')[
-        params.file.name.split('.').length - 1
-      ]
-
-      // 从服务器获取一个URL
-      this.policy(params, uploadData)
-    },
-    // 从服务器获取一个URL
-    policy(params, uploadData) {
-      let _this = this
-
-      // var data = JSON.stringify({
-      //   ext: uploadData.fileExtension,
-      //   cur_id: this.currentResourceId
-      // });
-      var data = JSON.stringify({
-        ext: uploadData.fileExtension
-      })
-      console.log(data)
-
-      $.ajax({
-        type: 'post',
-        url: Api.baseUrl + '/file/upload',
-        data: data,
-        async: false,
-        contentType: 'application/json',
-        xhrFields: {
-          withCredentials: false //跨域记得该改这里
-        },
-        crossDomain: true,
-        success: function(datas) {
-          console.log(datas)
-          uploadData.url = datas.response.url
-          console.log(uploadData.url)
-
-          // uploadData.currentUserId = datas.data.creator;
-
-          let strings = uploadData.url.split('/')
-          uploadData.objectName = ''
-          for (var i = 4; i < strings.length - 1; i++) {
-            uploadData.objectName += strings[i] + '/'
+      //请求minio上传的url
+      Api.reqApi({ ext: uploadData.fileExtension }, "/file/upload")
+        .then(res => {
+          if (res.data.status === 200 && res.data.response) {
+            uploadData.url = res.data.response.url;
+            uploadData.objectName = res.data.response.objectName;
+            // 上传文件
+            _this.uploadFile(params, uploadData);
+          } else {
+            this.$message.warning("无上传地址");
           }
-
-          //  let newURl = "http:";
-          // for (var i = 1; i < strings.length; i++) {
-          //   if (i === 2) {
-          //     newURl += "/192.168.199.107:9091";
-          //     continue;
-          //   }
-          //   newURl = newURl + "/" + strings[i];
-          // }
-          // uploadData.url = newURl;
-
-          uploadData.file_id = strings[strings.length - 1].split('?')[0]
-          // 存储在oss里的key
-          uploadData.objectName += uploadData.file_id
-          console.log(uploadData.file_id, uploadData.objectName)
-
-          // 上传文件
-          _this.uploadFile(params, uploadData)
-          // uploadData.url = datas.data.url;
-          // uploadData.currentUserId = datas.data.creator;
-
-          // let strings = uploadData.url.split("/");
-          // uploadData.objectName = "";
-          // for (var i = 4; i < strings.length - 1; i++) {
-          //   uploadData.objectName += strings[i] + "/";
-          // }
-          // uploadData.file_id = strings[strings.length - 1].split("?")[0];
-          // // 存储在oss里的key
-          // uploadData.objectName += uploadData.file_id;
-
-          // // 上传文件
-          // _this.uploadFile(params, uploadData);
-        }
-        // error: _this.handleError() 有点忘了是不是这个函数。。
-      })
+        })
+        .catch(err => {
+          this.$message.warning("请求上传失败" + err);
+        });
     },
     //覆盖默认的上传行为，可以自定义上传的实现
     uploadFile(params, uploadData) {
       // 临时变量
-      let _this = this
-      let file = params.file
-      let xhr = new XMLHttpRequest()
-
+      let _this = this;
+      let file = params.file;
+      let xhr = new XMLHttpRequest();
       // 监听上传进度 中间函数计算已经上传的进度 大小/总量
       //
       xhr.upload.addEventListener(
-        'progress',
+        "progress",
         function(evt) {
-          var percentComplete = Math.round((evt.loaded * 100) / evt.total)
+          var percentComplete = Math.round((evt.loaded * 100) / evt.total);
           if (percentComplete > 50) {
-            percentComplete -= 2
+            percentComplete -= 2;
           }
           params.onProgress({
             //减少2 永不显示100% 避免后端响应太慢产生100%误会
             percent: percentComplete
-          })
+          });
         },
         false
-      )
-      xhr.open('PUT', uploadData.url, true)
-      xhr.send(file)
+      );
+      xhr.open("PUT", uploadData.url, true);
+      xhr.send(file);
       xhr.onload = () => {
         if (xhr.status == 200) {
-          // console.log("uploadFile ",xhr.status);
-          // 调用afterUpload
-          params.onSuccess('上传成功')
-
+          params.onSuccess("上传成功");
           // 上传成功
-          _this.afterUpload(params, uploadData)
+          _this.afterUpload(params, uploadData);
         } else {
-          _this.handleError()
+          _this.handleError();
         }
-      }
+      };
     },
     afterUpload(params, uploadData) {
-      let _this = this
-      let file = params.file
+      let _this = this;
+      let file = params.file;
       //上传成功之后 新建照片节点
-      let imgNodeData = ENTITY.P01
-      imgNodeData.Jobs[0].MasterSpaId = _this.masterid
-      imgNodeData.Jobs[0].Object.ExtendData.czjl_spaid = _this.masterid
-      imgNodeData.Jobs[0].Object.ExtendData.czda_spaid = _this.czda_spaid
-      imgNodeData.Jobs[0].Object.ExtendFileData.file_id = uploadData.url
+      console.log(uploadData.objectName);
+      let imgNodeData = ENTITY.P01;
+      imgNodeData.Jobs[0].MasterSpaId = _this.masterid;
+      imgNodeData.Jobs[0].Object.ExtendData.czjl_spaid = _this.masterid;
+      imgNodeData.Jobs[0].Object.ExtendData.czda_spaid = _this.czda_spaid;
+      imgNodeData.Jobs[0].Object.ExtendFileData.file_id = uploadData.objectName;
       imgNodeData.Jobs[0].Object.ExtendFileData.mine_type =
-        uploadData.fileExtension
-      Api.reqApi(imgNodeData, '/tree/create').then(res => {
-        console.log(res)
-      })
-      // 上传成功后更新meta
-      // let data = JSON.stringify({
-      //   title: file.name.substring(0, file.name.lastIndexOf(".")),
-      //   store_key: uploadData.objectName,
-      //   doc_id: this.currentResourceId,
-      //   parentId: "",
-      //   ext: uploadData.fileExtension,
-      //   creator: uploadData.currentUserId,
-      //   size: Math.floor(file.size.toFixed(1))
-      // });
-
-      // $.ajax({
-      //   type: "post",
-      //   url:
-      //     Api.baseUrl +
-      //     "/files/" +
-      //     uploadData.file_id.substring(0, uploadData.file_id.lastIndexOf(".")),
-      //   data: data,
-      //   contentType: "application/json",
-      //   xhrFields: {
-      //     withCredentials: true
-      //   },
-      //   crossDomain: true,
-      //   //关闭上传组件显示
-      //   success: function(datas) {
-      //     conosle.log(datas);
-      //     _this.$parent.itemDBClicked(-1);
-      //     setTimeout(function() {
-      //       _this.close();
-      //     }, 500);
-      //   }
-      //   // error: _this.handleError() 有点忘了是不是这个函数。。
-      // });
+        uploadData.fileExtension;
+      Api.reqApi(imgNodeData, "/tree/create").then(res => {
+        console.log(res);
+        if (res.data.status === 200 && res.data.response) {
+          this.$emit("createImg", uploadData.objectName);
+        }
+      });
     },
-    close() {
-      return;
-      // this.$store.commit({
-      //   type: "uploadH"
-      // });
+    beforeAvatarUpload(file) {
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        this.$message.error("上传图片大小不能超过 5MB!");
+      }
+      return isLt5M;
     },
     handleError(err) {
-      console.log(err)
-      Message.warning(DEFAULT.defaultNetwordError)
+      console.log(err);
+      this.$message.warning("上传失败");
     }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

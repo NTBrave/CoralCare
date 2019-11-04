@@ -1,8 +1,8 @@
 <template>
   <div class="all-infor">
     <div class="edit-img">
-      <span @click="edit">编辑</span>
-      <span>删除</span>
+      <!-- <span @click="edit">编辑</span>
+      <span>删除</span>-->
     </div>
     <div class="main-size" :style="{'padding':'0'}">
       <el-col :span="8" class="inforSwiper">
@@ -30,12 +30,12 @@
               </span>
               <span v-if="/颜色/.test(item.title)">
                 <span class="color-block" :style="'background-color:'+item.color"></span>
-                <span>—</span>
+                <span>—&nbsp;&nbsp;</span>
                 <span>{{item.msg2}}</span>
                 <span class="color-block" :style="'background-color:'+item.color2"></span>
               </span>
-
-              <span v-if="item.title.search(/尺寸/)>0">
+              <span v-if="item.title === '尺寸' && item.msg">cm</span>
+              <span v-if="item.title === '面积' && item.msg">
                 cm
                 <sup>2</sup>
               </span>
@@ -46,11 +46,18 @@
       </el-col>
       <el-col :span="16" :style="{'padding':'0'}">
         <el-row>
-          <swiper :imgHeight="9.5" :imgWidth="10" @selectOneImg="chooseSwiperImg" :imgUrl="imgUrl"></swiper>
+          <swiper
+            :imgHeight="9.5"
+            :imgWidth="10"
+            @selectOneImg="chooseSwiperImg"
+            :imgUrl.sync="imgUrl"
+          ></swiper>
         </el-row>
         <el-row>
-          <div style="height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;">
-            <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
+          <div
+            style="height: 25rem;width: 32rem;margin: 0 auto;line-height: 25rem;text-align: center"
+          >
+            <img class="showOneImg" width="100%" :src.sync="imgUrlFormSwiper" alt />
           </div>
         </el-row>
       </el-col>
@@ -59,7 +66,7 @@
 </template>
 
 <script>
-import swiper from '@/components/swiper.vue'
+import swiper from "@/components/swiper.vue";
 // import getArea from '@/components/plantFile/getArea.vue'
 export default {
   components: { swiper },
@@ -70,84 +77,84 @@ export default {
   },
   data() {
     return {
-      imgUrlFormSwiper: ''
-    }
+      imgUrlFormSwiper: ""
+    };
   },
   methods: {
     // 展示图片
     chooseSwiperImg(url) {
-      this.imgUrlFormSwiper = url
+      this.imgUrlFormSwiper = url;
       // console.log(this.imgUrlFormSwiper)
     },
 
     typeForm(type) {
       switch (type) {
-        case 'A1':
+        case "A1":
           let A1Form = {
             // 创建档案表单
-            signColor: '',
-            signNumber: '',
+            signColor: "",
+            signNumber: "",
             species: {
-              first: '', // 门纲
-              second: '', // 科目
-              third: '' // 属种
+              first: "", // 门纲
+              second: "", // 科目
+              third: "" // 属种
             },
             collectSite: this.$route.query.address,
             breedArea: {
-              firstArea: '',
-              nursery: '', // 苗圃
-              partition: '' // 分区
+              firstArea: "",
+              nursery: "", // 苗圃
+              partition: "" // 分区
             }
-          }
-          return A1Form
-        case 'A2':
+          };
+          return A1Form;
+        case "A2":
           let A2Form = {
             // 创建档案表单
-            signColor: '',
-            signNumber: '',
+            signColor: "",
+            signNumber: "",
             breedArea: {
-              firstArea: 'A',
-              nursery: '', // 苗圃
-              partition: '' // 分区
+              firstArea: "A",
+              nursery: "", // 苗圃
+              partition: "" // 分区
             }
-          }
-          return A2Form
-        case 'A3':
+          };
+          return A2Form;
+        case "A3":
           let A3Form = {
             sowData: {
-              signColor: '',
-              signNumber: '',
+              signColor: "",
+              signNumber: "",
               sowArea: {
-                firstArea: 'A',
-                line: '', // 样线
-                segmentation: '' // 分段
+                firstArea: "A",
+                line: "", // 样线
+                segmentation: "" // 分段
               }
             },
             breedData: {
               // 创建档案表单
-              signColor: '',
-              signNumber: '',
+              signColor: "",
+              signNumber: "",
               breedArea: {
-                firstArea: 'A',
-                nursery: '', // 苗圃
-                partition: '' // 分区
+                firstArea: "A",
+                nursery: "", // 苗圃
+                partition: "" // 分区
               }
             }
-          }
-          return A3Form
-        case 'A4':
+          };
+          return A3Form;
+        case "A4":
           let A4Form = {
-            signColor: '',
-            signNumber: '',
+            signColor: "",
+            signNumber: "",
             sowArea: {
-              firstArea: 'A',
-              line: '', // 样线
-              segmentation: '' // 分段
+              firstArea: "A",
+              line: "", // 样线
+              segmentation: "" // 分段
             }
-          }
-          return A4Form
+          };
+          return A4Form;
         default:
-          return null
+          return null;
       }
     },
 
@@ -155,17 +162,17 @@ export default {
       this.$router.push({
         name: `build${this.$route.query.activityType}`,
         params: {
-          build: 'edit',
+          build: "edit",
           recordData: {
             // 更新记录表单
-            state: '失踪', // 状态
-            penetrability: '25', // 透光度
-            temperature: '24', // 温度
+            state: "失踪", // 状态
+            penetrability: "25", // 透光度
+            temperature: "24", // 温度
             coralColor: {
-              shallowColor: 'D2', // 最浅颜色
-              deepColor: 'E5' // 最深颜色
+              shallowColor: "D2", // 最浅颜色
+              deepColor: "E5" // 最深颜色
             },
-            remark: '我自横刀向天笑' // 备注
+            remark: "我自横刀向天笑" // 备注
           }
         },
         query: {
@@ -173,7 +180,7 @@ export default {
           address: this.$route.query.address,
           activityType: this.$route.query.activityType
         }
-      })
+      });
       // console.log(this.$route.query)
     }
 
@@ -181,8 +188,20 @@ export default {
     // deleteFile() {
     //   // {activityNumcoralFileId} 根据档案id删除
     // }
+  },
+  watch: {
+    imgUrl() {
+      if (this.imgUrl.length > 0) {
+        this.imgUrlFormSwiper = this.imgUrl[0].url;
+      }
+    }
+  },
+  mounted() {
+    if (this.imgUrl.length > 0) {
+      this.imgUrlFormSwiper = this.imgUrl[0].url;
+    }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -225,7 +244,10 @@ export default {
 }
 
 .showOneImg {
-  max-width: 740px;
+  max-width: 31rem;
+  max-height: 24rem;
+  width: auto;
+  height: auto;
 }
 
 .inforSwiper {

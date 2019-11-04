@@ -1,17 +1,23 @@
 <template>
   <div class="createBoard" :key="isCreated">
     <div class="infoArea">
-      <div class="activityNum">活动编号：{{activityNum}}</div>
+      <div class="activityNum">活动编号：{{activityNumber}}</div>
 
       <div class="info">
         <file-list
           :style="{'marginTop': '4.5vh'}"
           v-if="activityFiles"
-          :fileNameList="activityFiles"
+          :fileNameList.sync="activityFiles"
         ></file-list>
         <div class="form">
           <p>{{operateFile}}</p>
-          <activity-form :fileData="fileData" :recordData="recordData" :isCreated="isCreated"></activity-form>
+          <activity-form
+            :fileData="fileData"
+            :recordData="recordData"
+            :isCreated="isCreated"
+            @func="getSpaid"
+            :imgUrl="imgUrl"
+          ></activity-form>
         </div>
       </div>
     </div>
@@ -22,15 +28,19 @@
           v-if="imgUrl.length"
           :imgHeight="9.5"
           :imgWidth="10"
-          :imgUrl="imgUrl"
+          :imgUrl.sync="imgUrl"
           @selectOneImg="chooseSwiperImg"
         ></picture-swiper>
       </el-row>
       <el-row :style="{'position':'','margin':'0 auto'}">
         <upload-border>
           <div class="imgUpload">
-            <img class="showOneImg" width="80%" height="70%" :src="imgUrlFormSwiper" alt />
-            <up-load></up-load>
+            <img class="showOneImg" :src="imgUrlFormSwiper" alt />
+            <up-load
+              @createImg="imgArrPush"
+              :masterid.sync="record_spaid"
+              :czda_spaid.sync="file_spaid"
+            ></up-load>
           </div>
         </upload-border>
       </el-row>
@@ -45,6 +55,10 @@ import ActivityFormVue from '../../components/dayActivity/ActivityForm/FormA1.vu
 import swiperVue from '../../components/swiper.vue'
 import UploadBorderVue from '../../components/dayActivity/UploadBorder.vue'
 import uploadVue from '../../components/upload.vue'
+
+import { getCZJL } from '../../util/apiCreator'
+import { reqApi } from '../../api/api'
+import { R01 } from '../../json/entity'
 export default {
   components: {
     'file-list': FileListVue,
@@ -55,6 +69,7 @@ export default {
   },
   data() {
     return {
+      activityFiles: [],
       // 传递给表单组件的档案信息和记录信息
       fileData: {
         // 创建档案表单
@@ -84,121 +99,119 @@ export default {
         remark: '' // 备注
       },
       imgUrl: [
-        {
-          url: 'http://dayy.xyz/resource/example/1.png',
-          size: '223.4',
-          time: '2018.4.10',
-          name: 'A1-大鹏大澳湾-2018090410-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/2.jpg',
-          size: '235.6',
-          time: '2018.5.09',
-          name: 'A2-大鹏大澳湾-2018050909-01'
-        },
-        {
-          url: 'http://dayy.xyz/resource/example/3.jpg',
-          size: '240.2',
-          time: '2018.6.09',
-          name: 'A2-大鹏大澳湾-2018060910-01'
-        }
         // {
-        //   url: 'http://dayy.xyz/resource/example/4.jpg',
-        //   size: '242.5',
-        //   time: '2018.6.17',
-        //   name: 'A2-大鹏大澳湾-2018061710-01'
+        //   url: 'http://dayy.xyz/resource/example/1.png',
+        //   size: '223.4',
+        //   time: '2018.4.10',
+        //   name: 'A1-大鹏大澳湾-2018090410-01'
         // },
         // {
-        //   url: 'http://dayy.xyz/resource/example/5.jpg',
-        //   size: '243.2',
-        //   time: '2018.7.01',
-        //   name: 'A2-大鹏大澳湾-2018070110-01'
+        //   url: 'http://dayy.xyz/resource/example/2.jpg',
+        //   size: '235.6',
+        //   time: '2018.5.09',
+        //   name: 'A2-大鹏大澳湾-2018050909-01'
         // },
         // {
-        //   url: 'http://dayy.xyz/resource/example/6.jpg',
-        //   size: '250.4',
-        //   time: '2018.7.28',
-        //   name: 'A2-大鹏大澳湾-2018072810-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/7.jpg',
-        //   size: '254.6',
-        //   time: '2018.11.17',
-        //   name: 'A2-大鹏大澳湾-2018111710-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/8.jpg',
-        //   size: '260.3',
-        //   time: '2018.12.29',
-        //   name: 'A2-大鹏大澳湾-2018122910-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/9.jpg',
-        //   size: '268.4',
-        //   time: '2019.3.02',
-        //   name: 'A2-大鹏大澳湾-2019030210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/10.jpg',
-        //   size: '278.5',
-        //   time: '2019.3.17',
-        //   name: 'A3-大鹏大澳湾-2019031710-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/11.jpg',
-        //   size: '279.1',
-        //   time: '2019.4.06',
-        //   name: 'A4-大鹏大澳湾-2019040610-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/12.jpg',
-        //   size: '280.5',
-        //   time: '2019.6.02',
-        //   name: 'A4-大鹏大澳湾-2019060210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/13.jpg',
-        //   size: '284.6',
-        //   time: '2019.6.22',
-        //   name: 'A4-大鹏大澳湾-2019062210-01'
-        // },
-        // {
-        //   url: 'http://dayy.xyz/resource/example/14.jpg',
-        //   size: '288.1',
-        //   time: '2019.8.24',
-        //   name: 'A4-大鹏大澳湾-2019082410-01'
+        //   url: 'http://dayy.xyz/resource/example/3.jpg',
+        //   size: '240.2',
+        //   time: '2018.6.09',
+        //   name: 'A2-大鹏大澳湾-2018060910-01'
         // }
       ],
       isCreated: true,
-      imgUrlFormSwiper: ''
+      imgUrlFormSwiper: '',
+
+      file_spaid: '',
+      record_spaid: '',
+
+      activityNumber:
+        this.$route.query.activityType +
+        '-' +
+        this.$route.query.address +
+        '-' +
+        this.$route.query.time
+
+      // item: {} // 传给success页面的参数对象
     }
   },
   computed: {
-    ...mapGetters({
-      activityNum: 'getNowDivingActivity',
-      activityFiles: 'getActivityFiles'
-    }),
+    ...mapGetters({}),
 
-    ...mapState(['operateFile'])
+    ...mapState(['operateFile']),
+
+    isSpaidChange() {
+      const { file_spaid, record_spaid } = this
+      return {
+        file_spaid,
+        record_spaid
+      }
+    }
+  },
+
+  watch: {
+    isSpaidChange: {
+      handler: function() {
+        if (Boolean(this.file_spaid && this.record_spaid)) {
+          this.requestCZJL()
+        } else {
+          console.log('还没有拿到czda_spaid!')
+        }
+      },
+      deep: true
+    }
   },
 
   methods: {
+    // 接收表单组件回传的 档案spaid 和 记录spaid
+    getSpaid(fileSpaid, recordSpaid) {
+      this.file_spaid = fileSpaid
+      this.record_spaid = recordSpaid
+    },
+
+    // 接收轮播组件回传的当前选中的图片url
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url
       // console.log(this.imgUrlFormSwiper)
     },
+
+    // 请求该活动下的所有记录
+    requestCZJL() {
+      let obj = getCZJL(R01, JSON.parse(this.$route.query.spaid).czhd_spaid)
+      reqApi(obj, '/tree/select').then(res => {
+        console.log('获取活动下所有残枝记录', res)
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            let czdaList = res.data.response.CZJL.objects
+            this.activityFiles = czdaList
+          }
+        }
+      })
+    },
+
     setIsCreated(res) {
       this.isCreated = res
     },
     setData(res) {
       this.recordData = res
+    },
+
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(fileId) {
+      reqApi({ file_id: fileId }, '/file/get').then(res => {
+        console.log('img:', res)
+        if (res.data.status === 200 && res.data.response) {
+          this.imgUrl.push({ url: res.data.response.url })
+        }
+      })
     }
   },
-  mounted() {},
+  mounted() {
+    this.requestCZJL()
+  },
   beforeRouteEnter(to, from, next) {
     console.log(to.params.recordData)
     if (to.params.build === 'create') {
-      next()
+      next(vm => {})
     } else if (to.params.build === 'edit') {
       next(vm => {
         // vm.recordData = to.params.recordData
@@ -214,11 +227,12 @@ export default {
 .createBoard {
   display: flex;
   width: 100%;
+  justify-content: space-around;
 
   .infoArea {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
 
     .activityNum {
       width: 40%;
@@ -242,9 +256,9 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 40%;
-        min-width: 350px;
-        max-width: 400px;
+        width: 60%;
+        min-width: 400px;
+        max-width: 500px;
 
         p {
           height: 1.8rem;
@@ -258,7 +272,7 @@ export default {
 
   .uploadArea {
     width: 40vw;
-    margin-left: 5vw;
+    margin-right: 5vw;
     margin-top: 2.3rem;
 
     .imgUpload {
@@ -268,6 +282,13 @@ export default {
       height: 100%;
       width: 100%;
       margin: 0 auto;
+    }
+
+    .showOneImg {
+      max-width: 31rem;
+      max-height: 20rem;
+      width: auto;
+      height: auto;
     }
   }
 }

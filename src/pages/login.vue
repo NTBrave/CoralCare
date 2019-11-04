@@ -68,12 +68,12 @@ export default {
     };
   },
   mounted: function() {
-    this.getAllZhan();
+    // this.getAllZhan()
   },
   computed: {},
   methods: {
     //vuex mutation
-    ...mapMutations(["setPYZD", "setIsLogin"]),
+    ...mapMutations(["setPYZD", "setIsLogin", "setCurrentZD"]),
     login() {
       let _this = this;
       Api.reqApi(
@@ -112,6 +112,7 @@ export default {
 
           //把站点数据放到Vuex
           _this.setPYZD(arr);
+          _this.setCurrentZD("A");
           console.log(this.$store.state.PYZD);
         })
         .catch(err => {
@@ -123,46 +124,6 @@ export default {
       // console.log(err);
       // });
       this.$router.push("/manage");
-      // let _this = this;
-      // _this.LoginLoading = true;
-      // Api.Login(this.loginData.user, this.loginData.pwd)
-      // .then(res => {
-      //   _this.$store.commit("setUserInforFromAppVue", res.data.data);
-      //   if (res.data.status === 200) {
-      //     _this.loginData.isLogin = true;
-      //     _this.loginData.visible = false;
-      //     _this.loginData.currentUserName = res.data.data.userInfo.username;
-      //     _this.loginData.currentUserNo = res.data.data.userInfo.work_no;
-      //     _this.loginData.currentUserEmail = res.data.data.userInfo.email;
-      //     _this.loginData.isLogin = true;
-      //     Message({
-      //       message: "用户登陆 成功",
-      //       center: true,
-      //       type: "success",
-      //       showClose: true,
-      //       customClass: "zZindex"
-      //     });
-      //   } else {
-      //     Message({
-      //       message: res.data.msg,
-      //       center: true,
-      //       type: "warning",
-      //       showClose: true,
-      //       customClass: "zZindex"
-      //     });
-      //   }
-      // })
-      // .catch(err => {
-      //   console.log(err);
-      //   this.LoginLoading = false;
-      //   Message({
-      //     message: "账号密码不正确 " + err,
-      //     center: true,
-      //     type: "warning",
-      //     showClose: true,
-      //     customClass: "zZindex"
-      //   });
-      // });
     },
 
     logout() {

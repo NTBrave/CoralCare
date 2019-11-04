@@ -2,7 +2,7 @@
 <template>
   <div id="charts" style="width:1000px;padding: 0 50px;">
     <div id="myChart" @mousemove="inMyChart" :style="{width:'900px',height:'350px'}">
-      <v-chart :options="option2" />
+      <v-chart :options="option" />
     </div>
   </div>
 </template>
@@ -14,28 +14,14 @@ import echarts from "echarts/lib/echarts";
 // require('echarts/lib/component/toolbox');
 export default {
   components: { "v-chart": ECharts },
-
+  props: {
+    timeDataArr: Array
+  },
   data() {
     return {
       indexInChar: 0,
-      CoralData: [
-        ["2018-04-10", "223.4"],
-        ["2018-05-09", "235.6"],
-        ["2018-06-09", "240.2"],
-        ["2018-06-17", "242.5"],
-        ["2018-07-01", "243.2"],
-        ["2018-07-28", "250.4"],
-        ["2018-11-17", "254.6"],
-        ["2018-12-29", "260.3"],
-        ["2019-03-02", "268.4"],
-        ["2019-03-17", "278.5"],
-        ["2019-04-06", "279.1"],
-        ["2019-06-02", "280.5"],
-        ["2019-06-22", "284.6"],
-        ["2019-08-24", "288.1"]
-      ],
-      data2: [],
-      option2: {
+      indexArr: [],
+      option: {
         animation: false,
         title: {},
         legend: {
@@ -217,55 +203,45 @@ export default {
               // }
             },
             data: [
-              ["2018-04-10", "223.4"],
-              ["2018-05-09", "235.6"],
-              ["2018-06-09", "240.2"],
-              ["2018-06-17", "242.5"],
-              ["2018-07-01", "243.2"],
-              ["2018-07-28", "250.4"],
-              ["2018-11-17", "254.6"],
-              ["2018-12-29", "260.3"],
-              ["2019-03-02", "268.4"],
-              ["2019-03-17", "278.5"],
-              ["2019-04-06", "279.1"],
-              ["2019-06-02", "280.5"],
-              ["2019-06-22", "284.6"],
-              ["2019-08-24", "288.1"]
+              // ["2018-04-9", "223.4"],
+              // ["2018-05-09", "235.6"],
+              // ["2018-06-09", "240.2"],
+              // ["2018-06-17", "242.5"],
+              // ["2018-07-01", "243.2"],
+              // ["2018-07-28", "250.4"],
+              // ["2018-11-17", "254.6"],
+              // ["2018-12-29", "260.3"],
+              // ["2019-03-02", "268.4"],
+              // ["2019-03-17", "278.5"],
+              // ["2019-04-06", "279.1"],
+              // ["2019-06-02", "280.5"],
+              // ["2019-06-22", "284.6"],
+              // ["2019-08-24", "288.1"]
             ]
-            // data: [
-            //   ["2016-10-1", 35],
-            //   ["2016-10-5", 44],
-            //   ["2016-10-6", 39],
-            //   ["2016-10-7", 46],
-            //   ["2016-10-8", 51],
-            //   ["2016-10-9", 44],
-            //   ["2016-10-10", 49],
-            //   ["2016-10-11", 57],
-            //   ["2016-10-12", 58]
-            // ]
           }
         ]
       }
     };
   },
-  mounted() {
-    //  let chartBox = document.getElementsByClassName('charts')[0]
-    // let myChart = document.getElementById('myChart')
-    // 用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
-    // function resizeCharts () {
-    //   myChart.style.width = chartBox.style.width + 'px'
-    //   myChart.style.height = chartBox.style.height + 'px'
-    // }
-    // 设置容器高宽
-    // resizeCharts()
-    // let mainChart = ECharts.init(myChart)
-    // mainChart.setOption(options)
-    // var EchartIndex = document.getElementById("selectIndex").attributes;
-  },
+  mounted() {},
   watch: {
     indexInChar() {
       //传下标值值给父组件
-      this.$emit("index", this.indexInChar);
+      this.$emit("index", this.indexArr[this.indexInChar]);
+    },
+    timeDataArr: {
+      handler: function() {
+        this.indexArr = [];
+        let newDataArr = this.sortDataArr(this.timeDataArr);
+        // console.log(newDataArr);
+        for (let item of newDataArr) {
+          let index = this.timeDataArr.indexOf(item);
+          this.indexArr.push(index);
+        }
+        // console.log(this.indexArr);
+        this.option.series[0].data = newDataArr;
+      }
+      // deep: true
     }
   },
   methods: {
@@ -276,6 +252,23 @@ export default {
         var signVal = EchartIndex.attributes;
         _this.indexInChar = signVal.value.value;
       }
+    },
+    // 日期数组排序
+    sortDataArr(DataArr) {
+      let arr = [...DataArr];
+      let length = arr.length;
+      for (let i = 1; i < length; i++) {
+        let temp = arr[i];
+        let j = i;
+        for (; j > 0; j--) {
+          if (temp[0] >= arr[j - 1][0]) {
+            break; // 当前考察的数大于前一个数，证明有序，退出循环
+          }
+          arr[j] = arr[j - 1]; // 将前一个数复制到后一个数上
+        }
+        arr[j] = temp; // 找到考察的数应处于的位置
+      }
+      return arr;
     }
   }
 };

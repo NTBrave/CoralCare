@@ -27,27 +27,27 @@
       </div>
 
       <div class="right-btn-cnt">
-        <span class="el-dropdown-link">
+        <span @click="goLogin" class="el-dropdown-link">
           <img src="../../assets/images/boy.png" alt width="90%;" />
         </span>
-        <span>{{userName}}</span>
+        <span @click="goLogin" class="link-name">{{userName}}</span>
 
-        <span class="el-dropdown-link" @click="changeRoute">
+        <span class="el-dropdown-link" @click="goHome">
           <img src="../../assets/images/home.png" alt width="90%;" />
         </span>
-        <span style=" cursor: pointer;" @click="changeRoute">返回首页</span>
+        <span class="link-name" @click="goHome">返回首页</span>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import * as Api from '../../api/api'
-import * as DEFAULT from '../../json/default'
-import CalendarAddress from './CalendarAddress.vue'
+import * as Api from "../../api/api";
+import * as DEFAULT from "../../json/default";
+import CalendarAddress from "./CalendarAddress.vue";
 export default {
   components: {
-    'calendar-view': CalendarAddress
+    "calendar-view": CalendarAddress
   },
   props: {
     // isDayActivity: Boolean,
@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       // 搜索
-      keyword: '',
+      keyword: "",
       noSearchPage: true,
       //loading动画
       LoginLoading: false,
@@ -68,72 +68,78 @@ export default {
 
       isActivity: true, // 在残枝培育页面显示日历抽屉按钮
       isCoralRecord: true // 在植株档案页面显示筛选条件
-    }
+    };
   },
   computed: {
     userName() {
       // 获得当前用户的名字
-      return '0001'
+      return "0001";
     }
   },
   methods: {
     handleCommand(cmd) {
       switch (cmd) {
-        case 'center':
-        case 'logout':
-        case 'register':
-          this.$message.error('hh')
-          break
+        case "center":
+        case "logout":
+        case "register":
+          this.$message.error("hh");
+          break;
       }
     },
 
     getKeyword(keyword, cb) {
-      let _this = this
-      _this.cardLoading = true
-      Api.Suggestions('all', this.keyword, 10)
-        .then(res => {
-          if (res.data.status === 200) {
-            // 数组清空
-            let searchSuggestions = []
-            for (let i = 0; i < res.data.data.length; ++i) {
-              let temp = {
-                value: res.data.data[i]
-              }
-              searchSuggestions.push(temp)
-            }
-            cb(searchSuggestions)
-            _this.cardLoading = false
-          } else {
-            Message.error(res.data.msg)
-          }
-        })
-        .catch(err => {
-          console.log('getKeyword')
+      let _this = this;
+      // _this.cardLoading = true;
+      // Api.Suggestions("all", this.keyword, 10)
+      //   .then(res => {
+      //     if (res.data.status === 200) {
+      //       // 数组清空
+      //       let searchSuggestions = [];
+      //       for (let i = 0; i < res.data.data.length; ++i) {
+      //         let temp = {
+      //           value: res.data.data[i]
+      //         };
+      //         searchSuggestions.push(temp);
+      //       }
+      //       cb(searchSuggestions);
+      //       _this.cardLoading = false;
+      //     } else {
+      //       Message.error(res.data.msg);
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log("getKeyword");
 
-          this.$message.error(DEFAULT.defaultNetwordError)
-          _this.cardLoading = false
-        })
+      //     this.$message.error(DEFAULT.defaultNetwordError);
+      //     _this.cardLoading = false;
+      //   });
     },
     turnToSearch(item) {
-      this.$router.push({
-        path: '/manage/search',
-        query: {
-          keyword: item.value,
-          resourceId: null
-        }
-      })
+      // this.$router.push({
+      //   path: "/manage/search",
+      //   query: {
+      //     keyword: item.value,
+      //     resourceId: null
+      //   }
+      // });
     },
     turnToSearchByKeyword() {
-      this.$router.push({
-        path: '/manage/search',
-        query: {
-          keyword: this.keyword,
-          resourceId: null
-        }
-      })
+      // this.$router.push({
+      //   path: "/manage/search",
+      //   query: {
+      //     keyword: this.keyword,
+      //     resourceId: null
+      //   }
+      // });
     },
     changeRoute() {
-      this.$router.push('/home')
+      this.$router.push("/home");
+    },
+    goHome() {
+      window.location.href = "http://39.108.93.27/coral/#/";
+    },
+    goLogin() {
+      this.$router.push("/login");
     }
   }
 
@@ -142,7 +148,7 @@ export default {
   //   console.log(from)
   //   next()
   // }
-}
+};
 </script>
 <style>
 nav {
@@ -169,7 +175,15 @@ nav {
   cursor: pointer;
   margin: auto 0.5rem auto 2rem;
 }
-
+.el-dropdown-link:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.link-name {
+  cursor: pointer;
+}
+.link-name:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
 .right-btn-cnt {
   display: flex;
   align-items: center;
@@ -178,10 +192,10 @@ nav {
   justify-content: space-around;
 }
 /* 设置搜索框样式 */
-.nav-box .el-autocomplete .el-input__inner{
+.nav-box .el-autocomplete .el-input__inner {
   border-radius: 20px 0 0 20px !important;
 }
-.nav-box .el-autocomplete .el-input-group__append{
+.nav-box .el-autocomplete .el-input-group__append {
   border-radius: 0 20px 20px 0;
 }
 </style>
