@@ -409,7 +409,6 @@ export default {
 
           msgObj.coralColor.darkest_color = dark
           msgObj.coralColor.color2 = colorObj[dark]
-
           msgObj.time = moment(
             res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
             'YYYYMMDDHH'

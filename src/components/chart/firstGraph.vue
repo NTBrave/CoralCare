@@ -17,22 +17,10 @@ import ECharts from "vue-echarts";
 export default {
   data() {
     return {
-        dropdownKey1:'所有区域',
-        dropdownKey2:'所有苗圃',
-        dropdownKey3:'所有分区'
     }
     },
 
   methods: {
-    handleCommand2(command){
-      this.dropdownKey2=command;
-    },
-    handleCommand1(command){
-      this.dropdownKey1=command;
-    },
-    handleCommand3(command){
-      this.dropdownKey3=command;
-    }
   },
   mounted(){
   },

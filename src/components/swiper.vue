@@ -22,7 +22,7 @@
         </div>
 
         <span class="img-name" :style="'width:'+imgWidth+'vw;bottom:0'">{{images.name}}</span>
-        <span v-if="isShowDel" class="delete-img el-icon-close" @click="deleteImg">
+        <span v-if="isShowDel" class="delete-img el-icon-close" @click="deleteImg(index)">
           <!-- <span class="el-icon-close"></span> -->
         </span>
       </div>
@@ -43,12 +43,12 @@
 
 <script >
 export default {
-  name: 'swiperper',
+  name: "swiperper",
   props: {
-    imgHeight: Number,
-    imgWidth: Number,
-    imgUrl: Array,
-    isShowDelet: Boolean
+    imgHeight: Number, //图片框高
+    imgWidth: Number, //图片框宽
+    imgUrl: Array, //图片对象数组[{url:"http://。。。"}]
+    isShowDelet: Boolean //是否显示删除功能
   },
   data() {
     return {
@@ -59,10 +59,10 @@ export default {
       // imgMargin: 2,
       allImg: [],
       num: 4,
-      signImgUrl: '',
+      signImgUrl: "",
       imgLen: 0,
       isShowDel: false
-    }
+    };
   },
   //用的自定义组件
   components: {},
@@ -70,68 +70,77 @@ export default {
     // if (!this.imgUrl) {
     //   this.imgUrl = []
     // }
-    this.isShowDel = this.isShowDelet || false
-    this.list = document.getElementById('list')
-    this.allImg = document.getElementsByClassName('img-swiper')
+    this.isShowDel = this.isShowDelet || false;
+    this.list = document.getElementById("list");
+    this.allImg = document.getElementsByClassName("img-swiper");
     // console.log("this.allImg", this.allImg);
     if (this.allImg[0]) {
-      this.allImg[0].classList.add('current-img')
-      this.imgLen = this.allImg.length - 1
-      this.selectOneImg(this.index)
+      this.allImg[0].classList.add("current-img");
+      this.imgLen = this.allImg.length - 1;
+      this.selectOneImg(this.index);
     }
   },
   methods: {
     move(offset) {
       //获取的是style.left，是相对左边获取距离，所以第一张图后style.left都为负值，
       if (this.index == 0) {
-        this.list.style.left = 0 + 'vw'
+        this.list.style.left = 0 + "vw";
       } else if (this.index > this.imgLen - this.num) {
         this.list.style.left =
-          -this.imgWidth * (this.imgUrl.length - this.num + 1) + 'vw'
+          -this.imgWidth * (this.imgUrl.length - this.num + 1) + "vw";
       } else {
         // console.log(this.list.style.left)
-        var newLeft = parseInt(this.list.style.left) + offset
+        var newLeft = parseInt(this.list.style.left) + offset;
 
-        this.list.style.left = newLeft + 'vw'
+        this.list.style.left = newLeft + "vw";
         // console.log('newLeft:', newLeft)
       }
     },
     prevOnclick() {
       if (this.allImg.length > 0) {
-        this.allImg[this.index].classList.remove('current-img')
+        this.allImg[this.index].classList.remove("current-img");
         // console.log(this.index);
-        this.index = this.index > 0 ? this.index - 1 : 0
+        this.index = this.index > 0 ? this.index - 1 : 0;
         // console.log(this.index);
-        this.allImg[this.index].classList.add('current-img')
-        this.move(this.imgWidth)
-        this.selectOneImg(this.index)
+        this.allImg[this.index].classList.add("current-img");
+        this.move(this.imgWidth);
+        this.selectOneImg(this.index);
       }
     },
     nextOnclick() {
       if (this.allImg.length > 0) {
-        this.allImg[this.index].classList.remove('current-img')
-        console.log(this.index, this.imgLen)
-        this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen
-        console.log(this.index)
-        this.allImg[this.index].classList.add('current-img')
-        this.move(-this.imgWidth)
-        this.selectOneImg(this.index)
+        this.allImg[this.index].classList.remove("current-img");
+        console.log(this.index, this.imgLen);
+        this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
+        console.log(this.index);
+        this.allImg[this.index].classList.add("current-img");
+        this.move(-this.imgWidth);
+        this.selectOneImg(this.index);
       }
     },
+    //选中传出一个url
     selectOneImg(ind) {
       if (this.allImg.length > 0) {
-        this.allImg[this.index].classList.remove('current-img')
-        this.index = ind
-        this.allImg[this.index].classList.add('current-img')
-        this.$emit('selectOneImg', this.imgUrl[ind].url)
+        this.allImg[this.index].classList.remove("current-img");
+        this.index = ind;
+        this.allImg[this.index].classList.add("current-img");
+        this.$emit("selectOneImg", this.imgUrl[ind].url);
       }
     },
     errorImg(e) {
-      e.currentTarget.src = require('../assets/images/error.svg')
+      e.currentTarget.src = require("../assets/images/error.svg");
     },
-    deleteImg() {}
+    //删除传出一个url
+    deleteImg(ind) {
+      if (this.allImg.length > 0) {
+        this.allImg[this.index].classList.remove("current-img");
+        this.index = ind;
+        this.allImg[this.index].classList.add("current-img");
+        this.$emit("delOneImg", this.imgUrl[ind].url);
+      }
+    }
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
