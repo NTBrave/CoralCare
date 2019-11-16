@@ -41,7 +41,7 @@
           <a-calendar
             :fullscreen="false"
             @panelChange="onPanelChange"
-            @select="onSelect"
+            @change="onSelect"
             :locale="locale"
           >
             <template slot="dateCellRender" slot-scope="value">
@@ -185,6 +185,7 @@ export default {
       addressIndex: 0, // 轮播图片索引
 
       chooseDate: '', // 选择活动日期
+      preDate: '', // 之前选择的日期
 
       dateNumber_review: '', // 以活动日期生成的查看当日活动编号
       dateNumber_build: '', // 以活动日期和具体时间生成的新建活动编号
@@ -312,15 +313,23 @@ export default {
     // 切换年月视图时更新
     onPanelChange(value) {
       // 切换年月视图时更新当前月视图有作业日期
-
+      // console.log('日期面板变化', value, mode)
       this.setActivityDays(value.format('YYYYMM'))
       this.todayHasActivity(value)
     },
 
     // 日历时间选择
-    onSelect(value, mode) {
+    onSelect(value) {
       // console.log(value)
-      this.onPanelChange(value)
+
+      if (
+        // 判断当前月视图是否变化，变化才重新渲染
+        value.format('YYYYMMDD').slice(0, 6) !== this.preDate
+      ) {
+        this.onPanelChange(value)
+        this.preDate = value.format('YYYYMMDD').slice(0, 6)
+      }
+      // console.log('选择日期', value, mode)
       this.chooseDate = value.format('M月D日  YYYY年')
       this.dateNumber_build = value.format('YYYYMMDD')
       this.dateNumber_review = value.format('YYYYMMDD')
@@ -498,12 +507,20 @@ export default {
     //   this.imgLoad(thils.addressIndex)
     // })
 
-    // 初始化时间
-    this.onSelect(moment())
     // this.selectAddress(0)
     // this.initAddress('A')
     // console.log(this.addressSortList)
-    if (this.$route.path === '/manage/coralBreed/dayActivity') {
+    if (
+      this.$route.path === '/manage/coralBreed/dayActivity' &&
+      !this.$route.query.time
+    ) {
+      // 初始化时间
+      this.preDate = moment()
+        .format('YYYYMMDD')
+        .slice(0, 6)
+      this.onSelect(moment())
+
+      // 弹出抽屉
       this.showDrawer()
     }
   }
