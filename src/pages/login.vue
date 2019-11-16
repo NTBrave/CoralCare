@@ -84,7 +84,7 @@ export default {
           if (res.data.status === 200) {
             _this.setIsLogin(true);
             _this.getAllZhan();
-            // this.$router.push('/manage')
+            this.$router.push("/manage");
             // console.log(this.$store.state.isLogin);
           } else {
             this.$message.success("账号或密码错误");
@@ -113,7 +113,7 @@ export default {
           //把站点数据放到Vuex
           _this.setPYZD(arr);
           _this.setCurrentZD("A");
-          console.log(this.$store.state.PYZD);
+          // console.log(this.$store.state.PYZD);
         })
         .catch(err => {
           this.$message.error("获取站点失败");
