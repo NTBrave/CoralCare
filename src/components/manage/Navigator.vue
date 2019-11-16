@@ -15,7 +15,7 @@
           @select="turnToSearch"
           @keyup.native.enter.stop="turnToSearchByKeyword"
           v-model="keyword"
-          placeholder="搜索你的资源"
+          placeholder="搜索"
         >
           <el-button
             icon="el-icon-search"

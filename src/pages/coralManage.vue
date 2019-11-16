@@ -85,7 +85,7 @@
             </el-row>
           </ul>
           <!-- <p v-if="allLoading">加载中...</p> -->
-          <p v-if="!noMore" :style="{'textAlign': 'center','color':'#bfbfbf'}">加载中...</p>
+          <p v-if="!noMore" :style="{'textAlign': 'center','color':'#bfbfbf'}">下拉，加载中...</p>
           <p
             v-if="noMore"
             :style="{'textAlign': 'center','fontWeight': 'bold','color':'#bfbfbf'}"
