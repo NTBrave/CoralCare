@@ -56,7 +56,7 @@
           </el-row>
         </div>
         <!-- @dblclick.native="showRecord" -->
-        <div v-show="!isShowRecord" class="list-width-g">
+        <div v-show="!isShowRecord&&!I_have_all" class="list-width-g">
           <ul
             v-infinite-scroll="getSomeCoralData"
             infinite-scroll-disabled="disabled"
@@ -85,10 +85,34 @@
             </el-row>
           </ul>
           <!-- <p v-if="allLoading">加载中...</p> -->
+          <p v-if="!noMore" :style="{'textAlign': 'center','color':'#bfbfbf'}">加载中...</p>
           <p
             v-if="noMore"
             :style="{'textAlign': 'center','fontWeight': 'bold','color':'#bfbfbf'}"
           >没有更多了~</p>
+        </div>
+        <div v-show="!isShowRecord&&I_have_all" class="list-width-g">
+          <el-row
+            v-for="(coral, index) in coralList"
+            :key="index"
+            class="one-list"
+            @click.native="selectCoral(coral.SpaId,index)"
+          >
+            <el-col
+              :offset="3"
+              :span="22"
+              :class="index===active_index? 'activeItem':'one-list-title'"
+            >
+              <el-col :span="4">
+                <span :style="coral.starred==1?'visibility: visible;':'visibility: hidden;'">
+                  <img src="../assets/images/star.png" width="80%" alt />
+                </span>
+              </el-col>
+              <el-col :span="20">
+                <span>{{coral.title}}</span>
+              </el-col>
+            </el-col>
+          </el-row>
         </div>
         <div v-show="isShowRecord" style="height:10%">
           <el-row style="color:#0090FF;font-size=1.1rem;">
@@ -294,36 +318,36 @@
 </template>
 
 <script>
-import * as Api from '../api/api'
-import * as DEFAULT from '../json/default'
-import * as ENTITY from '../json/entity'
-import { requestSpecies } from '../util/apiCreator'
+import * as Api from "../api/api";
+import * as DEFAULT from "../json/default";
+import * as ENTITY from "../json/entity";
+import { requestSpecies } from "../util/apiCreator";
 // import { Message, Loading } from "element-ui";
 // import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
-import timeChar from '@/components/plantFile/timeChar.vue'
-import inforSwiper from '@/components/inforSwiper.vue'
-import moment from 'moment'
+import timeChar from "@/components/plantFile/timeChar.vue";
+import inforSwiper from "@/components/inforSwiper.vue";
+import moment from "moment";
 
 export default {
   components: { inforSwiper, timeChar },
   computed: {
     noMore() {
-      return this.pageNum >= this.totalPage
+      return this.pageNum >= this.totalPage;
     },
     disabled() {
-      return this.allLoading || this.noMore
+      return this.allLoading || this.noMore;
     }
   },
   data() {
     return {
-      itemChooseArr: ['', '', '', '', '', ''],
+      itemChooseArr: ["", "", "", "", "", ""],
 
       selectIndex: 0,
       SelectionTable: [
         {
-          tips: '时间',
+          tips: "时间",
           width: 70,
-          choose: '所有录入时间',
+          choose: "所有录入时间",
           label: [
             // { name: "所有录入时间", value: "" },
             // { name: "本月", value: 31 },
@@ -334,111 +358,111 @@ export default {
           ]
         },
         {
-          tips: '测量',
+          tips: "测量",
           width: 60,
-          choose: '所有测量状态',
+          choose: "所有测量状态",
           label: [
-            { name: '所有测量状态', value: '' },
-            { name: '有过测量', value: true },
-            { name: '从未测量', value: false }
+            { name: "所有测量状态", value: "" },
+            { name: "有过测量", value: true },
+            { name: "从未测量", value: false }
           ]
         },
 
         {
-          tips: '科',
+          tips: "科",
           width: 60,
-          choose: '所有科',
+          choose: "所有科",
           label: [
-            { name: '所有种类', value: '' }
+            { name: "所有种类", value: "" }
             // { name: "盔型珊瑚科", value: 42 }
           ]
         },
         {
-          tips: '状态',
+          tips: "状态",
           width: 50,
-          choose: '所有状态',
+          choose: "所有状态",
           label: [
-            { name: '所有状态', value: '' },
-            { name: '良好', value: '良好' },
-            { name: '部分百化', value: '部分百化' },
-            { name: '部分死亡', value: '部分死亡' },
-            { name: '死亡', value: '死亡' },
-            { name: '失踪', value: '失踪' }
+            { name: "所有状态", value: "" },
+            { name: "良好", value: "良好" },
+            { name: "部分白化", value: "部分白化" },
+            { name: "部分死亡", value: "部分死亡" },
+            { name: "死亡", value: "死亡" },
+            { name: "失踪", value: "失踪" }
           ]
         },
         {
-          tips: '类型',
+          tips: "类型",
           width: 50,
-          choose: '所有类型',
+          choose: "所有类型",
           label: [
-            { name: '所有类型', value: '' },
-            { name: '样本档案', value: 'YB' },
-            { name: '普通档案', value: 'PT' }
+            { name: "所有类型", value: "" },
+            { name: "样本档案", value: "YB" },
+            { name: "普通档案", value: "PT" }
           ]
         },
         {
-          tips: '阶段',
+          tips: "阶段",
           width: 50,
-          choose: '所有阶段',
+          choose: "所有阶段",
           label: [
-            { name: '所有阶段', value: '' },
-            { name: '暂养', value: '暂养' },
-            { name: '回播', value: '回播' }
+            { name: "所有阶段", value: "" },
+            { name: "暂养", value: "暂养" },
+            { name: "回播", value: "回播" }
           ]
         }
       ],
 
       coralInformations: [
-        { infor: '珊瑚编号', msg: '' },
-        { infor: '属种', msg: '' },
-        { infor: '最新时间', msg: '' },
-        { infor: '现处位置', msg: '' },
-        { infor: '状态', msg: '' },
-        { infor: '阶段类型', msg: '' },
+        { infor: "珊瑚编号", msg: "" },
+        { infor: "属种", msg: "" },
+        { infor: "最新时间", msg: "" },
+        { infor: "现处位置", msg: "" },
+        { infor: "状态", msg: "" },
+        { infor: "阶段类型", msg: "" },
         {
-          infor: '颜色',
-          msg: '',
-          msg2: '',
-          color1: '',
-          color2: ''
+          infor: "颜色",
+          msg: "",
+          msg2: "",
+          color1: "",
+          color2: ""
         },
-        { infor: '尺寸', msg: '' },
-        { infor: '备注', msg: '' },
-        { infor: '高度', msg: '' }
+        { infor: "尺寸", msg: "" },
+        { infor: "备注", msg: "" },
+        { infor: "高度", msg: "" }
       ],
       coralList: [], // 档案列表（分页加载而来）
 
       totalPage: 1,
       pageNum: 0, // 当前页
       record: [
-        { name: 'A1-大鹏大澳湾-2018090910-01' },
-        { name: 'A1-大鹏大澳湾-2018090910-02' },
-        { name: 'A1-大鹏大澳湾-2018090910-03' }
+        { name: "A1-大鹏大澳湾-2018090910-01" },
+        { name: "A1-大鹏大澳湾-2018090910-02" },
+        { name: "A1-大鹏大澳湾-2018090910-03" }
       ],
       isShowRecord: false,
       //当前珊瑚档案
       currentCoralId: null,
       currentCoralData: {},
-      keyword: '',
+      keyword: "",
       currentRecord: {},
-      coralTitle: '',
+      coralTitle: "",
       //是否星标
-      isStart: '0',
+      isStart: "0",
       //是否完结
-      isEnd: '0',
+      isEnd: "0",
       // 结果展示
       resultItems: [],
       sizeForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
+        name: "",
+        region: "",
+        date1: "",
+        date2: "",
         delivery: false,
         type: [],
-        resource: '',
-        desc: ''
+        resource: "",
+        desc: ""
       },
-      activityNum: '',
+      activityNum: "",
       recordIndex: 0,
       // 所有记录的spaid
       allRecordArr: [],
@@ -461,15 +485,16 @@ export default {
       visible1: false,
       visible2: false,
       visible3: false,
+      I_have_all: false,
 
       //选中的下标
       active_index: 0
-    }
+    };
   },
 
   mounted: function() {
     // this.getSomeCoralData()
-    this.getAllFamily()
+    this.getAllFamily();
   },
   // watch:{
   //   SelectionTable(){
@@ -479,534 +504,554 @@ export default {
   methods: {
     //获取所有的档案
     getAllCoralData() {
-      let _this = this
-      let AllCoralData = ENTITY.D02
-      _this.leftLoading = false
-      _this.allLoading = true
-      Api.reqApi(AllCoralData, '/tree/select').then(res => {
+      let _this = this;
+      let AllCoralData = ENTITY.D02;
+      _this.leftLoading = false;
+      _this.allLoading = true;
+      _this.I_have_all = false;
+      Api.reqApi(AllCoralData, "/tree/select").then(res => {
         // console.log("获取所有档案", res);
         if (res.data.status === 200 && res.data.response) {
-          let danAn = res.data.response.CZDA.objects
-          _this.coralList = []
+          let danAn = res.data.response.CZDA.objects;
+          _this.coralList = [];
           for (let i = 0; i < danAn.length; i++) {
-            _this.coralList.push(_this.Refactoring(danAn[i]))
+            _this.coralList.push(_this.Refactoring(danAn[i]));
           }
           // console.log(_this.coralList);
-          _this.allLoading = false
+          _this.allLoading = false;
           // _this.rightLoading = true;
           // console.log("第一个档案：", _this.coralList[0].SpaId);
-          _this.selectCoral(_this.coralList[0].SpaId, 0)
+          _this.selectCoral(_this.coralList[0].SpaId, 0);
         }
-      })
+      });
     },
 
     // 分页获取部分档案
     getSomeCoralData() {
-      this.pageNum++
-      let _this = this
-      let AllCoralData = ENTITY.D02
-      _this.leftLoading = false
-      _this.allLoading = true
+      if (!this.pageNum) {
+        this.coralList = [];
+      }
+      this.pageNum++;
+      let _this = this;
+      _this.I_have_all = false;
+      let AllCoralData = ENTITY.D02;
+      // _this.leftLoading = true;
+      // _this.allLoading = true;
       Api.reqApi(AllCoralData, `/tree/select/${this.pageNum}`).then(res => {
         // console.log('获取部分档案', res)
         // console.log('总页数', res.data.response.total)
         if (res.data.status === 200 && res.data.response) {
-          let danAn = res.data.response.CZDA.objects
+          let danAn = res.data.response.CZDA.objects;
           // _this.coralList = []
           for (let i = 0; i < danAn.length; i++) {
-            _this.coralList.push(_this.Refactoring(danAn[i]))
+            _this.coralList.push(_this.Refactoring(danAn[i]));
           }
           // console.log(_this.coralList);
-          _this.allLoading = false
-          // _this.rightLoading = true;
-          // console.log("第一个档案：", _this.coralList[0].SpaId);
+          _this.leftLoading = false;
           if (this.pageNum === 1) {
-            this.totalPage = res.data.response.total // 总页数
-            _this.selectCoral(_this.coralList[0].SpaId, 0)
+            this.totalPage = res.data.response.total; // 总页数
+            _this.selectCoral(_this.coralList[0].SpaId, 0);
           }
         }
-      })
+      });
     },
     // 重构档案的信息
     Refactoring(obj) {
-      let ExtendData = obj.principle.ExtendData
-      let newObj = {}
+      let ExtendData = obj.principle.ExtendData;
+      let newObj = {};
       if (obj.fks) {
-        let fks = obj.fks
+        let fks = obj.fks;
         for (let i = 0; i < fks.length; i++) {
-          Object.assign(newObj, fks[i])
+          Object.assign(newObj, fks[i]);
         }
       }
-      newObj['SpaId'] = obj.principle.SpaId
-      newObj['CreateAt'] = obj.principle.CreateAt
+      newObj["SpaId"] = obj.principle.SpaId;
+      newObj["CreateAt"] = obj.principle.CreateAt;
       for (let item in ExtendData) {
-        newObj[item] = ExtendData[item]
+        newObj[item] = ExtendData[item];
       }
       //构建珊瑚名字
-      let title = newObj.PYZD.extenddata.number + '-'
+      let title = newObj.PYZD.extenddata.number + "-";
       if (newObj.YX == null) {
         //判断名字显示 样线 还是 区域
-        title += newObj.MP.extenddata.name + '-'
-        title += newObj.FQ.extenddata.name + '-'
+        title += newObj.MP.extenddata.name + "-";
+        title += newObj.FQ.extenddata.name + "-";
       } else {
-        title += newObj.YX.extenddata.name + '-'
+        title += newObj.YX.extenddata.name + "-";
       }
-      title += newObj.haopai_color + '-' + newObj.haopai_number
-      newObj.title = title
+      title += newObj.haopai_color + "-" + newObj.haopai_number;
+      newObj.title = title;
       //构造种类
       // console.log(newObj);
       newObj.type =
         newObj.ORDER.extenddata.name +
-        '-' +
+        "-" +
         newObj.FAMILY.extenddata.name +
-        '-' +
-        newObj.GENUS.extenddata.name
+        "-" +
+        newObj.GENUS.extenddata.name;
       // console.log(newObj);
-      return newObj
+      return newObj;
     },
 
     //展示一个档案的数据
     async selectCoral(spaId, index) {
-      let _this = this
-      _this.active_index = index
-      _this.rightLoading = true
+      let _this = this;
+      _this.active_index = index;
+      _this.rightLoading = true;
       // console.log("01");
       //找到指定的残肢档案
-      let oneCoral = ENTITY.D01
-      var CZDASpaId = spaId
-      oneCoral.Jobs[0].CZDASpaId = CZDASpaId
-      oneCoral.Jobs[0].Where[0].Operator.Value = CZDASpaId
-      await Api.reqApi(oneCoral, '/tree/select').then(res => {
+      let oneCoral = ENTITY.D01;
+      var CZDASpaId = spaId;
+      oneCoral.Jobs[0].CZDASpaId = CZDASpaId;
+      oneCoral.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+      await Api.reqApi(oneCoral, "/tree/select").then(res => {
         // console.log("找到指定的残肢档案", res);
         if (res.data.status === 200 && res.data.response) {
           _this.currentCoralData = _this.Refactoring(
             res.data.response.CZDA.objects[0]
-          )
-          let oneCoralMsg = _this.currentCoralData
+          );
+          let oneCoralMsg = _this.currentCoralData;
           // console.log("找到指定的残肢档案", oneCoralMsg);
-          _this.isStart = oneCoralMsg.starred.toString()
-          _this.isEnd = oneCoralMsg.ended
-          _this.currentCoralId = oneCoralMsg.SpaId
+          _this.isStart = oneCoralMsg.starred.toString();
+          _this.isEnd = oneCoralMsg.ended;
+          _this.currentCoralId = oneCoralMsg.SpaId;
 
           //构建珊瑚名字
-          _this.coralInformations[0].msg = oneCoralMsg.title
-          _this.coralTitle = oneCoralMsg.title
+          _this.coralInformations[0].msg = oneCoralMsg.title;
+          _this.coralTitle = oneCoralMsg.title;
           //构建种类
-          _this.coralInformations[1].msg = oneCoralMsg.type
+          _this.coralInformations[1].msg = oneCoralMsg.type;
 
           //位置
           _this.coralInformations[3].msg =
             oneCoralMsg.MP.extenddata.name +
-            '-' +
-            oneCoralMsg.FQ.extenddata.name
+            "-" +
+            oneCoralMsg.FQ.extenddata.name;
           //阶段
-          _this.coralInformations[5].msg = oneCoralMsg.stage
+          _this.coralInformations[5].msg = oneCoralMsg.stage;
         }
-      })
-      this.getfirstRecord(CZDASpaId)
-      this.getAllCoralRecord(CZDASpaId)
+      });
+      this.getfirstRecord(CZDASpaId);
+      this.getAllCoralRecord(CZDASpaId);
       // return;
     },
     //获取残肢的最新记录
     async getfirstRecord(CZDASpaId) {
       // 获取指定残枝的最新记录
-      let _this = this
-      let forOneRecord = ENTITY.R021
+      let _this = this;
+      let forOneRecord = ENTITY.R021;
       // forOneRecord.Jobs[0].MasterSpaId = CZDASpaId;
-      forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId
-      await Api.reqApi(forOneRecord, '/tree/select').then(res => {
+      forOneRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+      await Api.reqApi(forOneRecord, "/tree/select").then(res => {
         // console.log("最新记录", res);
         if (res.data.status === 200 && res.data.response) {
-          let recoedData = res.data.response.CZJL.objects[0].principle
+          let recoedData = res.data.response.CZJL.objects[0].principle;
           // 设置最新的记录数据
-          _this.currentRecord = recoedData
+          _this.currentRecord = recoedData;
           // console.log("当前记录", _this.currentRecord);
           //构建时间
           _this.coralInformations[2].msg = moment(
             recoedData.ExtendData.timestamp,
-            'YYYYMMDDHH'
-          ).format('YYYY-MM-DD HH')
+            "YYYYMMDDHH"
+          ).format("YYYY-MM-DD HH");
           //构建状态
-          _this.coralInformations[4].msg = recoedData.ExtendData.status
+          _this.coralInformations[4].msg = recoedData.ExtendData.status;
           //构建颜色
-          let light = recoedData.ExtendData.lightest_color
-          let darkest = recoedData.ExtendData.darkest_color
+          let light = recoedData.ExtendData.lightest_color;
+          let darkest = recoedData.ExtendData.darkest_color;
           // console.log(light, darkest);
-          _this.coralInformations[6].msg = darkest
-          _this.coralInformations[6].msg2 = light
-          _this.coralInformations[6].color1 = DEFAULT.colorObj[light]
-          _this.coralInformations[6].color2 = DEFAULT.colorObj[darkest]
+          _this.coralInformations[6].msg = darkest;
+          _this.coralInformations[6].msg2 = light;
+          _this.coralInformations[6].color1 = DEFAULT.colorObj[light];
+          _this.coralInformations[6].color2 = DEFAULT.colorObj[darkest];
 
           //构建尺寸
 
-          _this.coralInformations[7].msg = recoedData.ExtendData.area + 'cm²'
+          _this.coralInformations[7].msg = recoedData.ExtendData.area + "cm²";
           //构建备注
-          _this.coralInformations[8].msg = recoedData.ExtendData.comment
-          _this.coralInformations[9].msg = recoedData.ExtendData.height + 'cm'
+          _this.coralInformations[8].msg = recoedData.ExtendData.comment;
+          _this.coralInformations[9].msg = recoedData.ExtendData.height + "cm";
 
           // console.log(res);
         }
-      })
+      });
       // 获取当前记录的活动数据
-      this.getActivity()
+      this.getActivity();
     },
 
     //获取残肢的所有记录
     async getAllCoralRecord(CZDASpaId) {
-      let _this = this
+      let _this = this;
 
-      let forAllRecord = ENTITY.R02
-      forAllRecord.Jobs[0].Method = 'select'
+      let forAllRecord = ENTITY.R02;
+      forAllRecord.Jobs[0].Method = "select";
       // forAllRecord.Jobs[0].MasterSpaId = CZDASpaId;
-      forAllRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId
-      _this.allRecordArr = []
-      await Api.reqApi(forAllRecord, '/tree/select').then(res => {
+      forAllRecord.Jobs[0].Where[0].Operator.Value = CZDASpaId;
+      _this.allRecordArr = [];
+      await Api.reqApi(forAllRecord, "/tree/select").then(res => {
         // console.log("获取残肢的所有记录:", res);
         if (res.data.status === 200 && res.data.response) {
           //构建日期和大小数组
 
-          let dateSizeArr = []
-          let objArr = res.data.response.CZJL.objects
+          let dateSizeArr = [];
+          let objArr = res.data.response.CZJL.objects;
           // console.log("所有残枝记录：", objArr);
           for (let i = 0; i < objArr.length; i++) {
-            let oneArr = []
+            let oneArr = [];
             //为图表，构建二维数组，时间和面积
             oneArr.push(
               moment(
                 objArr[i].principle.ExtendData.timestamp,
-                'YYYYMMDDHH'
-              ).format('YYYY-MM-DD HH')
-            )
-            oneArr.push(objArr[i].principle.ExtendData.area)
+                "YYYYMMDDHH"
+              ).format("YYYY-MM-DD HH")
+            );
+            oneArr.push(objArr[i].principle.ExtendData.area);
             // console.log(objArr[i].principle.ExtendData.timestamp);
-            _this.allRecordArr.push(objArr[i].principle.SpaId)
-            _this.allActivityArr.push(objArr[i].principle.ExtendData.czhd_spaid)
+            _this.allRecordArr.push(objArr[i].principle.SpaId);
+            _this.allActivityArr.push(
+              objArr[i].principle.ExtendData.czhd_spaid
+            );
             // dateSizeArr.push(oneArr);
-            dateSizeArr[i] = oneArr
+            dateSizeArr[i] = oneArr;
           }
           // console.log("将传给图表:", dateSizeArr);
-          _this.timeCharArr = dateSizeArr
-          _this.getImgUrlId()
+          _this.timeCharArr = dateSizeArr;
+          _this.getImgUrlId();
           // _this.getTimeAndSize();
         }
-      })
+      });
     },
 
     //查看详情
     showRecord() {
-      this.isShowRecord = !this.isShowRecord
-      this.selectCoral(this.currentCoralId, this.active_index)
+      this.isShowRecord = !this.isShowRecord;
+      this.selectCoral(this.currentCoralId, this.active_index);
     },
     //获取当前记录的活动数据
     getActivity() {
-      let _this = this
+      let _this = this;
       if (_this.currentRecord.ExtendData) {
-        let recordID = _this.currentRecord.ExtendData.czhd_spaid
+        let recordID = _this.currentRecord.ExtendData.czhd_spaid;
         // console.log(recordID);
-        let AA_01 = ENTITY.AA_01
-        AA_01.Jobs[0].Where[0].Operator.Value = recordID
-        Api.reqApi(AA_01, '/tree/select').then(res => {
+        let AA_01 = ENTITY.AA_01;
+        AA_01.Jobs[0].Where[0].Operator.Value = recordID;
+        Api.reqApi(AA_01, "/tree/select").then(res => {
           // console.log("活动数据", res);
           if (res.data.status === 200 && res.data.response) {
             _this.activityData =
-              res.data.response.CZHD.objects[0].principle.ExtendData
+              res.data.response.CZHD.objects[0].principle.ExtendData;
             _this.activityData.activityID =
-              res.data.response.CZHD.objects[0].principle.SpaId
-            let msgArr = _this.activityData.activity_number.split('-')
-            _this.activityData.time = moment(msgArr.pop(), 'YYYYMMDDHH').format(
-              'YYYY-MM-DD HH'
-            )
+              res.data.response.CZHD.objects[0].principle.SpaId;
+            let msgArr = _this.activityData.activity_number.split("-");
+            _this.activityData.time = moment(msgArr.pop(), "YYYYMMDDHH").format(
+              "YYYY-MM-DD HH"
+            );
             //时间
             // _this.coralInformations[2].msg = time;
             // console.log("时间", time);
           }
-        })
+        });
       } else {
-        console.log('没有ExtendData')
+        // console.log("没有ExtendData");
       }
     },
     //关于检索的函数 暂时未需要
     getKeyword(keyword, cb) {
-      let _this = this
-      _this.cardLoading = true
-      Api.Suggestions('all', this.keyword, 10)
+      let _this = this;
+      _this.cardLoading = true;
+      Api.Suggestions("all", this.keyword, 10)
         .then(res => {
           if (res.data.status === 200) {
             // 数组清空
-            let searchSuggestions = []
+            let searchSuggestions = [];
             for (let i = 0; i < res.data.data.length; ++i) {
               let temp = {
                 value: res.data.data[i]
-              }
-              searchSuggestions.push(temp)
+              };
+              searchSuggestions.push(temp);
             }
-            cb(searchSuggestions)
-            _this.cardLoading = false
+            cb(searchSuggestions);
+            _this.cardLoading = false;
           } else {
-            Message.error(res.data.msg)
+            Message.error(res.data.msg);
           }
         })
         .catch(err => {
-          console.log('getKeyword')
+          // console.log("getKeyword");
 
-          _this.handleError(err)
-          _this.cardLoading = false
-        })
+          _this.handleError(err);
+          _this.cardLoading = false;
+        });
     },
     handleSelect(item) {
       // 点击后处理
-      this.keyword = item.value
-      this.search()
+      this.keyword = item.value;
+      this.search();
     },
     search() {
       Api.Results(
-        'all',
+        "all",
         this.keyword,
         [],
         [],
-        ['all'],
+        ["all"],
         { from: null, to: null },
         { from: null, to: null },
-        '+8',
+        "+8",
         1,
         10
       )
         .then(res => {
           if (res.data.status === 200) {
             // 结果数组
-            console.log(res.data.data)
-            this.resultItems.splice(0, this.resultItems.length)
-            this.resultItems = res.data.data.results
+            // console.log(res.data.data);
+            this.resultItems.splice(0, this.resultItems.length);
+            this.resultItems = res.data.data.results;
           } else {
-            alert(res.data.msg)
+            alert(res.data.msg);
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          // console.log(err);
+        });
     },
 
     //接收从图表传过来的下标
     currentIndex(ind) {
       // console.log(ind)
-      this.recordIndex = ind
-      this.$refs.carousel.setActiveItem(this.recordIndex)
+      this.recordIndex = ind;
+      this.$refs.carousel.setActiveItem(this.recordIndex);
     },
     //获取所有记录节点下的全部图片节点
     async getImgUrlId() {
       //构造请求体
-      let _this = this
+      let _this = this;
       // console.log("这个档案所有记录id:", _this.allRecordArr);
-      let imgNameArr = []
+      let imgNameArr = [];
       for (let j = 0; j < _this.allRecordArr.length; j++) {
-        let imgNodeData = ENTITY.P04
+        let imgNodeData = ENTITY.P04;
 
-        imgNodeData.Jobs[0].MasterSpaId = _this.allRecordArr[j]
+        imgNodeData.Jobs[0].MasterSpaId = _this.allRecordArr[j];
         // imgNodeData.Jobs[0].Where[0].Operator.Value = _this.allRecordArr[j];
 
-        await Api.reqApi(imgNodeData, '/tree/select').then(res => {
+        await Api.reqApi(imgNodeData, "/tree/select").then(res => {
           // console.log("图片节点:", res);
           if (res.data.status === 200 && res.data.response) {
-            let nodeArr = res.data.response.CZZP.objects
-            let imgArr = []
+            let nodeArr = res.data.response.CZZP.objects;
+            let imgArr = [];
             for (let i = 0; i < nodeArr.length; ++i) {
-              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id }
-              imgArr.push(obj)
+              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+              imgArr.push(obj);
             }
-            imgNameArr[j] = imgArr
+            imgNameArr[j] = imgArr;
           }
-        })
+        });
       }
-      _this.inforImgUrl = imgNameArr
+      _this.inforImgUrl = imgNameArr;
       // console.log("这个档案 所有记录的图片：", _this.inforImgUrl);
-      _this.getImgURL()
+      _this.getImgURL();
     },
     /**
      * 遍历活动数组，找回活动时间
      * 在记录没有timestamp属性时使用
      */
     async getTimeAndSize() {
-      let _this = this
+      let _this = this;
       if (_this.allActivityArr.length > 0) {
         for (let j = 0; j < _this.allActivityArr.length; j++) {
-          let acID = _this.allActivityArr[j]
-          let AA_01 = ENTITY.AA_01
-          AA_01.Jobs[0].Where[0].Operator.Value = acID
-          AA_01.Jobs[0].Where[0].Operator.Value = acID
-          await Api.reqApi(AA_01, '/tree/select').then(res => {
+          let acID = _this.allActivityArr[j];
+          let AA_01 = ENTITY.AA_01;
+          AA_01.Jobs[0].Where[0].Operator.Value = acID;
+          AA_01.Jobs[0].Where[0].Operator.Value = acID;
+          await Api.reqApi(AA_01, "/tree/select").then(res => {
             // console.log();
             if (res.data.status === 200 && res.data.response) {
-              let data = res.data.response.CZHD.objects[0].principle.ExtendData
-              let msgArr = data.activity_number.split('-')
+              let data = res.data.response.CZHD.objects[0].principle.ExtendData;
+              let msgArr = data.activity_number.split("-");
               if (_this.timeCharArr[j]) {
                 _this.timeCharArr[j].unshift(
-                  moment(msgArr.pop(), 'YYYYMMDDHH').format('YYYY-MM-DD')
-                )
+                  moment(msgArr.pop(), "YYYYMMDDHH").format("YYYY-MM-DD")
+                );
               }
             }
-          })
+          });
         }
       } else {
-        console.log('没有记录')
+        console.log("没有记录");
       }
     },
     //根据图片id获取图片url
     async getImgURL() {
-      let _this = this
-      _this.danAnImgList = []
+      let _this = this;
+      _this.danAnImgList = [];
       // console.log(_this.inforImgUrl);
       if (_this.inforImgUrl.length > 0) {
         for (let i = 0; i < _this.inforImgUrl.length; i++) {
-          let oneRecordImg = _this.inforImgUrl[i]
+          let oneRecordImg = _this.inforImgUrl[i];
           // console.log(oneRecordImg);
           if (!oneRecordImg) {
-            continue
+            continue;
           }
-          let imgName = oneRecordImg[oneRecordImg.length - 1].url
+          let imgName = oneRecordImg[oneRecordImg.length - 1].url;
           // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
-          await Api.reqApi({ file_id: imgName }, '/file/get').then(res => {
+          await Api.reqApi({ file_id: imgName }, "/file/get").then(res => {
             // console.log(i, res.data.response.url);
             if (res.data.status === 200 && res.data.response) {
               // _this.danAnImgList.push(res.data.response.url);
-              _this.danAnImgList[i] = res.data.response.url
+              _this.danAnImgList[i] = res.data.response.url;
             }
-          })
+          });
         }
         // console.log(_this.danAnImgList);
       }
-      _this.rightLoading = false
+      _this.rightLoading = false;
     },
     //设置关注状态
     setStart(sign) {
       // console.log(sign);
-      let _this = this
-      let CoralData = ENTITY.D05
+      let _this = this;
+      let CoralData = ENTITY.D05;
       for (let item in CoralData.Jobs[0].Object.ExtendData) {
-        CoralData.Jobs[0].Object.ExtendData[item] = _this.currentCoralData[item]
+        CoralData.Jobs[0].Object.ExtendData[item] =
+          _this.currentCoralData[item];
       }
-      CoralData.Jobs[0].Object.SpaId = _this.currentCoralId
-      CoralData.Jobs[0].Object.ExtendData.starred = sign
-      Api.reqApi(CoralData, '/tree/update').then(res => {
+      CoralData.Jobs[0].Object.SpaId = _this.currentCoralId;
+      CoralData.Jobs[0].Object.ExtendData.starred = sign;
+      Api.reqApi(CoralData, "/tree/update").then(res => {
         if (res.data.status === 200 && res.data.response) {
           // let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
-          _this.getAllCoralData()
+          // _this.getAllCoralData();
+          _this.getSomeCoralData();
           // console.log("返回的url:", returnUrl);
           // _this.selectCoral(returnUrl, this.active_index);
         }
-      })
+      });
     },
     //更新珊瑚档案 设置完结状态
     setEnd(num) {
       //更新档案设置为ended="1";
-      let _this = this
+      let _this = this;
       // console.log("更改档案 : ", _this.currentCoralData);
       //数据搬运 填充
 
-      let CoralData = ENTITY.D05
+      let CoralData = ENTITY.D05;
       for (let item in CoralData.Jobs[0].Object.ExtendData) {
-        CoralData.Jobs[0].Object.ExtendData[item] = _this.currentCoralData[item]
+        CoralData.Jobs[0].Object.ExtendData[item] =
+          _this.currentCoralData[item];
       }
       // console.log("更改档案 请求体: ", CoralData.Jobs[0].Object.ExtendData);
-      CoralData.Jobs[0].Object.SpaId = _this.currentCoralId
-      CoralData.Jobs[0].Object.ExtendData.ended = num
-      Api.reqApi(CoralData, '/tree/update').then(res => {
+      CoralData.Jobs[0].Object.SpaId = _this.currentCoralId;
+      CoralData.Jobs[0].Object.ExtendData.ended = num;
+      Api.reqApi(CoralData, "/tree/update").then(res => {
         if (res.data.status === 200 && res.data.response) {
-          let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId
+          let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
           // console.log("返回的url:", returnUrl);
-          _this.selectCoral(returnUrl, this.active_index)
+          _this.selectCoral(returnUrl, this.active_index);
         }
-      })
+      });
     },
     delDanAn() {
       // console.log(this.currentCoralId);
-      let D06 = ENTITY.D06
-      D06.Jobs[0].Object.SpaId = this.currentCoralId
-      Api.reqApi(D06, '/tree/delete').then(res => {
+      let D06 = ENTITY.D06;
+      D06.Jobs[0].Object.SpaId = this.currentCoralId;
+      Api.reqApi(D06, "/tree/delete").then(res => {
         if ((res.data.staus = 200 && res.data.response)) {
-          this.$message.success('删除成功')
-          this.getAllCoralData()
+          this.$message.success("删除成功");
+          // this.getAllCoralData();
+          _this.getSomeCoralData();
         }
-      })
+      });
     },
     //图片加载404替代方案
     errorImg(e) {
-      e.currentTarget.src = require('../assets/images/error.svg')
+      e.currentTarget.src = require("../assets/images/error.svg");
     },
     //录入所有的科 family_spaid
     getAllFamily() {
       //构造请求体
       let species_family = requestSpecies(
         ENTITY.species_01,
-        '9345ab2e-5843-4957-be03-91ce27a3133a',
-        'ORDER'
-      )
+        "9345ab2e-5843-4957-be03-91ce27a3133a",
+        "ORDER"
+      );
       //根据目请求所有科
-      Api.reqApi(species_family, '/tree/select').then(res => {
+      Api.reqApi(species_family, "/tree/select").then(res => {
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.FAMILY.objects) {
-              let order = {}
-              order.name = i.principle.ExtendData.name
-              order.value = i.principle.SpaId
-              this.SelectionTable[2].label.push(order)
+              let order = {};
+              order.name = i.principle.ExtendData.name;
+              order.value = i.principle.SpaId;
+              this.SelectionTable[2].label.push(order);
             }
-          } else this.SelectionTable[2].label = []
+          } else this.SelectionTable[2].label = [];
         }
-      })
+      });
     },
     //选择不同日期的时候
     onChangeMonth(date, dateString) {
       if (dateString) {
-        this.itemChooseArr[0] = dateString + '%'
+        this.itemChooseArr[0] = dateString + "%";
       } else {
-        this.itemChooseArr[0] = ''
+        this.itemChooseArr[0] = "";
       }
-      this.getSelectDanAn(this.itemChooseArr)
+      this.getSelectDanAn(this.itemChooseArr);
     },
     //筛选档案
     selectItem(slect) {
       // console.log(slect, this.selectIndex);
-      this.itemChooseArr[this.selectIndex] = slect
-      this.getSelectDanAn(this.itemChooseArr)
+      this.itemChooseArr[this.selectIndex] = slect;
+      this.getSelectDanAn(this.itemChooseArr);
     },
     //根据删选条件，请求档案
     getSelectDanAn(chooseArr) {
-      let reqObj = {}
+      let _this = this;
+      let reqObj = {};
       if (chooseArr[0]) {
-        reqObj.modified_at = chooseArr[0]
+        reqObj.modified_at = chooseArr[0];
       }
       if (chooseArr[1] || chooseArr[1] === false) {
-        reqObj.measure = chooseArr[1]
+        reqObj.measure = chooseArr[1];
       }
       if (chooseArr[2]) {
-        reqObj.family_spaid = chooseArr[2]
+        reqObj.family_spaid = chooseArr[2];
       }
       if (chooseArr[3]) {
-        reqObj.status = chooseArr[3]
+        reqObj.status = chooseArr[3];
       }
       if (chooseArr[4]) {
-        reqObj.stage = chooseArr[4]
+        reqObj.starred = chooseArr[4];
       }
       if (chooseArr[5]) {
-        reqObj.label = chooseArr[5]
+        reqObj.stage = chooseArr[5];
       }
-      console.log(reqObj)
-      _this.allLoading = true
-      Api.reqApi(reqObj, '/tree/selectCZDA').then(res => {
-        console, log(res)
-        if (res.data.status === 200 && res.data.response) {
-          let danAn = res.data.response.CZDA.objects
-          _this.coralList = []
+      // console.log(reqObj);
+      if (JSON.stringify(reqObj) == "{}") {
+        this.pageNum = 0;
+        this.getSomeCoralData();
+        return;
+      }
+      _this.I_have_all = true;
+      _this.leftLoading = true;
+      _this.coralList = [];
+      Api.reqApi(reqObj, "/tree/selectCZDA").then(res => {
+        // console.log(res);
+        if (res.data.status === 200 && res.data.response.total) {
+          let danAn = res.data.response.CZDA.objects;
+
           for (let i = 0; i < danAn.length; i++) {
-            _this.coralList.push(_this.Refactoring(danAn[i]))
+            _this.coralList.push(_this.Refactoring(danAn[i]));
           }
-          _this.allLoading = false
-          _this.selectCoral(_this.coralList[0].SpaId, 0)
+          _this.leftLoading = false;
+          _this.selectCoral(_this.coralList[0].SpaId, 0);
+        } else {
+          _this.leftLoading = false;
+          _this.$message.warning("没有档案");
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="stylus">
