@@ -12,31 +12,32 @@ import "ant-design-vue/dist/antd.css";
 import "echarts/lib/chart/bar";
 import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
-import 'echarts/lib/component/toolbox'; //引入工具箱组件
+import "echarts/lib/component/toolbox"; //引入工具箱组件
 import ECharts from "echarts";
 // import globalDirective from "./util/directive";
 import router from "./router/router";
 //路由守护
 router.beforeEach((to, from, next) => {
-  if (to.meta.title) {
-    document.title = to.meta.title
-  }
-  const type = to.meta.type
-  // 判断该路由是否需要登录权限
-  if (type === 'login') {
-    console.log(sessionStorage.getItem("isLogin"))
-    if (sessionStorage.getItem('isLogin')) {
-      next()
+  // console.log(to);
+  // console.log(from);
+  // console.log(to.meta.requireAuth);
+  // console.log(to.matched);
+  // console.log(sessionStorage);
+  if (to.matched.some(item => item.meta.requireAuth)) {
+    // 判断该路由是否需要登录权限
+    if (
+      sessionStorage.length > 0 &&
+      JSON.parse(sessionStorage.getItem("vuex")).isLogin
+    ) {
+      //判断本地是否存在access_token
+      next();
     } else {
-      // next('/login')
-      next()
+      next("/login");
     }
   } else {
-    next()  // 确保一定要有next()被调用
+    next();
   }
-})
-
-
+});
 
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;

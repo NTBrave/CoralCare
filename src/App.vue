@@ -5,41 +5,49 @@
 </template>
 
 <script>
-import * as Api from "./api/api";
-import * as ENTITY from "./json/entity";
-import { mapMutations } from "vuex";
+import * as Api from './api/api'
+import * as ENTITY from './json/entity'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
-    return {};
+    return {}
+  },
+  computed: {
+    // ...mapState(['isLogin'])
   },
   mounted() {
-    this.getAllZhan();
+    if (this.isLogin) {
+      // console.log(sessionStorage)
+      // if (sessionStorage.getItem('vuex')[isLogin]) {
+      this.getAllZhan()
+      // }
+    }
   },
   methods: {
     //vuex mutation
-    ...mapMutations(["setPYZD", "setIsLogin", "setCurrentZD"]),
+    ...mapMutations(['setPYZD', 'setIsLogin', 'setCurrentZD']),
     getAllZhan() {
-      let _this = this;
-      Api.reqApi(ENTITY.O01, "/tree/select")
+      let _this = this
+      Api.reqApi(ENTITY.O01, '/tree/select')
         .then(res => {
-          let PYZDobjects = res.data.response.PYZD.objects;
-          let len = PYZDobjects.length;
-          let arr = [];
+          let PYZDobjects = res.data.response.PYZD.objects
+          let len = PYZDobjects.length
+          let arr = []
           for (let i = 0; i < len; ++i) {
-            arr.push(PYZDobjects[i].principle);
+            arr.push(PYZDobjects[i].principle)
           }
-          _this.setPYZD(arr);
-          _this.setCurrentZD("A");
-          console.log(this.$store.state.PYZD);
+          _this.setPYZD(arr)
+          _this.setCurrentZD('A')
+          console.log(this.$store.state.PYZD)
         })
         .catch(err => {
-          this.$message.error("获取站点失败");
-          console.log(err);
-        });
-      console.log("刷新");
+          this.$message.error('获取站点失败')
+          console.log(err)
+        })
+      console.log('刷新')
     }
   }
-};
+}
 </script>
 
 <style>
@@ -49,7 +57,7 @@ export default {
 }
 
 #app {
-  font-family: "Microsoft YaHei", "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Microsoft YaHei', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
@@ -85,7 +93,7 @@ export default {
   /* transition: 0.5s; */
   transform-origin: 30px 30px;
   animation: rotate 1s linear infinite; /*开始动画后无限循环，用来控制rotate*/
-  background: url("./assets/images/loading2.svg") no-repeat;
+  background: url('./assets/images/loading2.svg') no-repeat;
 }
 @keyframes rotate {
   0% {
