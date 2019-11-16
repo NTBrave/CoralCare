@@ -151,10 +151,10 @@ const mutations = {
   },
 
   // 更新作业下的活动列表（用于在已创建的作业下新建活动）
-  updateActivityList(state, activityList) {
-    state.activityList = [];
-    state.activityList = activityList;
-  },
+  // updateActivityList(state, activityList) {
+  //   state.activityList = [];
+  //   state.activityList = activityList;
+  // },
 
   /**
    *   后台管理端

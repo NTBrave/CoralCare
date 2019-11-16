@@ -66,11 +66,11 @@ export default {
     navType: {
       type: String,
       default: 'card'
-    },
-    existActivity: {
-      type: Array,
-      default: () => []
     }
+    // existActivity: {
+    //   type: Array,
+    //   default: () => []
+    // }
   },
   data() {
     return {
@@ -100,13 +100,14 @@ export default {
   computed: {
     ...mapGetters({
       activeItem: 'getActiveId',
-      currentActivity: 'getCurrentActivity'
+      currentActivity: 'getCurrentActivity',
+      existActivity: 'getExistAct'
       // acticityHadCreated: 'getNowDivingActivitiesList',
       // currentWorkInfo: 'getCurrentWork',
       // activity_spaid: 'getCurrentActivity_spaid'
     }),
     ...mapState([
-      'activityList'
+      // 'activityList'
       // 'currentActivity'
     ])
   },
@@ -137,7 +138,11 @@ export default {
 
     // 点击选择具体活动时显示对应的对话框
     change(index) {
+      // let allSpaid = JSON.parse(this.$route.query.spaid)
+      // console.log(allSpaid.existAct)
+
       this.setActiveId(index) // 传递当前处于哪个活动类型的路由
+
       let currentActivityNum =
         this.activityTypes[index].typeId +
         '-' +
@@ -145,12 +150,16 @@ export default {
         '-' +
         this.$route.query.time
 
-      if (this.activityList.length > 0) {
-        let activityListStr = JSON.stringify(this.activityList, [
-          'activity_num'
+      // if (!allSpaid.existAct) {
+      if (this.existActivity.length > 0) {
+        let activityListStr = JSON.stringify(this.existActivity, [
+          'activity_number'
         ])
+
+        console.log(activityListStr)
         if (activityListStr.indexOf(currentActivityNum) !== -1) {
           this.currentActivity(currentActivityNum)
+
           // 如果当前已创建的下水作业中已存在相应的活动类型
           this.$router.push({
             path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}/create`,
@@ -194,6 +203,24 @@ export default {
           remarks: ''
         }
       }
+      // }
+      // else {
+      //   let actNameArr = Object.keys(allSpaid.existAct)
+      //   if (actNameArr.indexOf(currentActivityNum) !== -1) {
+      //     this.$router.push({
+      //       path: `/manage/coralBreed/newActivity/${this.activityTypes[index].typeId}/create`,
+      //       query: {
+      //         time: this.$route.query.time,
+      //         address: this.$route.query.address,
+      //         activityType: this.activityTypes[index].typeId,
+      //         spaid: JSON.stringify({
+      //           czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
+      //           czhd_spaid: allSpaid.existAct[currentActivityNum]
+      //         })
+      //       }
+      //     })
+      //   }
+      // }
     },
 
     // 提交表单确定新建一个类型的活动，更新这次下水作业已创建的活动列表

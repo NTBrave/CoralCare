@@ -28,7 +28,7 @@ const getters = {
         dataY3[dataY3.length] = coralNumberStatistic[i][1];
         dataY4[dataY4.length] = parseInt(
           (100 * coralNumberStatistic[i][1]) /
-          (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
+            (coralNumberStatistic[i][1] + coralNumberStatistic[i][2])
         );
         if (coralNumberStatistic[i][1] + coralNumberStatistic[i][2] > maxY2) {
           maxY2 = coralNumberStatistic[i][1] + coralNumberStatistic[i][2];
@@ -103,9 +103,22 @@ const getters = {
   //     })[0].SpaId;
   // },
 
+  // 获取已存在的活动，去重
+  getExistAct(state) {
+    let hash = {};
+    return (state.activityList = state.activityList.reduce((preVal, curVal) => {
+      hash[curVal.activity_number]
+        ? ""
+        : (hash[curVal.activity_number] = true && preVal.push(curVal));
+      return preVal;
+    }, []));
+  },
+
   // 获取当前创建的活动的spaid
   getCurrentActivity: state => acitivtyNum => {
-    return state.activityList.find(todo => todo.activity_num === acitivtyNum);
+    return state.activityList.find(
+      todo => todo.activity_number === acitivtyNum
+    );
   },
   // getCurrentActivity_spaid(state) {
   //   return state.activityList.filter(function(item) {

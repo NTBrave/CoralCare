@@ -151,11 +151,11 @@
 </template>
 
 <script>
-import swiper from "@/components/swiper.vue";
-import * as DEFAULT from "../json/default";
-import * as ENTITY from "../json/entity";
-import * as Api from "../api/api";
-import moment from "moment";
+import swiper from '@/components/swiper.vue'
+import * as DEFAULT from '../json/default'
+import * as ENTITY from '../json/entity'
+import * as Api from '../api/api'
+import moment from 'moment'
 export default {
   components: { swiper },
   props: {
@@ -164,42 +164,42 @@ export default {
   data() {
     return {
       recordInfor: [
-        { title: "活动编号", msg: "" },
-        { title: "属种", msg: "盔型珊瑚科目" },
-        { title: "状态", msg: "部分白化" },
-        { title: "阶段类型", msg: "回播" },
-        { title: "暂养区域", msg: "A-宇宙号-1区" },
+        { title: '活动编号', msg: '' },
+        { title: '属种', msg: '盔型珊瑚科目' },
+        { title: '状态', msg: '部分白化' },
+        { title: '阶段类型', msg: '回播' },
+        { title: '暂养区域', msg: 'A-宇宙号-1区' },
         {
-          title: "颜色",
-          msg: "D2",
-          color: "rgb(247,218,159)",
-          msg2: "D5",
-          color2: "rgb(143,65,36)"
+          title: '颜色',
+          msg: 'D2',
+          color: 'rgb(247,218,159)',
+          msg2: 'D5',
+          color2: 'rgb(143,65,36)'
         },
-        { title: "时间", msg: "2018.9.10.10" },
-        { title: "尺寸", msg: "5.66" },
-        { title: "高度", msg: "" },
-        { title: "备注", msg: "有松动现象，已经重新加固，污损生物已清除。" }
+        { title: '时间', msg: '2018.9.10.10' },
+        { title: '尺寸', msg: '5.66' },
+        { title: '高度', msg: '' },
+        { title: '备注', msg: '有松动现象，已经重新加固，污损生物已清除。' }
       ],
 
-      imgUrlFormSwiper: "",
+      imgUrlFormSwiper: '',
       key: 0,
       theRecordImgArr: [],
       inforLoading: false,
       isStart: 1,
-      coralName: "",
+      coralName: '',
       visible1: false,
       //修改涉及
       ifEdit: false,
-      commentNew: "",
-      heightNew: "",
-      areaNew: "",
-      statusNew: "",
-      lightest_colorNew: "",
-      darkest_colorNew: "",
+      commentNew: '',
+      heightNew: '',
+      areaNew: '',
+      statusNew: '',
+      lightest_colorNew: '',
+      darkest_colorNew: '',
       recordLoading: false,
       colorList: []
-    };
+    }
   },
   watch: {
     // imgUrlFormSwiper(){
@@ -208,120 +208,120 @@ export default {
     // }
   },
   mounted: function() {
-    console.log(this.recordObj);
-    this.colorList = DEFAULT.colorList;
+    console.log(this.recordObj)
+    this.colorList = DEFAULT.colorList
     for (let item of this.recordObj.imgUrlArr) {
-      this.theRecordImgArr.push({ url: item });
+      this.theRecordImgArr.push({ url: item })
     }
-    this.imgUrlFormSwiper = this.recordObj.imgUrlArr[0];
+    this.imgUrlFormSwiper = this.recordObj.imgUrlArr[0]
     // console.log(this.theRecordImgArr);
-    this.coralName = this.recordObj.coralNum;
-    this.isStart = this.recordObj.daMsg.starred;
+    this.coralName = this.recordObj.coralNum
+    this.isStart = this.recordObj.daMsg.starred
     //获取这个记录的图片啦
-    this.madeForm();
+    this.madeForm()
     //绑定修改的属性
   },
   methods: {
     madeForm() {
       //构造表单数据
       //   this.inforLoading = true;
-      this.recordInfor[0].msg = this.recordObj.actiName;
-      this.recordInfor[1].msg = this.recordObj.species;
-      this.recordInfor[2].msg = this.recordObj.state;
-      let positonArr = this.recordObj.actiName.split("-");
+      this.recordInfor[0].msg = this.recordObj.actiName
+      this.recordInfor[1].msg = this.recordObj.species
+      this.recordInfor[2].msg = this.recordObj.state
+      let positonArr = Object.keys(this.recordObj.actiName)[0].split('-')
       let type = {
-        A1: "首次暂养",
-        A2: "暂养巡检",
-        A3: "首次回播",
-        A4: "回播巡检"
-      };
-      this.recordInfor[4].msg = type[positonArr[0]];
+        A1: '首次暂养',
+        A2: '暂养巡检',
+        A3: '首次回播',
+        A4: '回播巡检'
+      }
+      this.recordInfor[4].msg = type[positonArr[0]]
       //构建颜色
-      let light = this.recordObj.ExtendData.lightest_color;
-      let darkest = this.recordObj.ExtendData.darkest_color;
+      let light = this.recordObj.ExtendData.lightest_color
+      let darkest = this.recordObj.ExtendData.darkest_color
 
-      this.recordInfor[5].msg = light;
-      this.recordInfor[5].msg2 = darkest;
-      this.recordInfor[5].color = DEFAULT.colorObj[light];
-      this.recordInfor[5].color2 = DEFAULT.colorObj[darkest];
+      this.recordInfor[5].msg = light
+      this.recordInfor[5].msg2 = darkest
+      this.recordInfor[5].color = DEFAULT.colorObj[light]
+      this.recordInfor[5].color2 = DEFAULT.colorObj[darkest]
       //构建时间
-      this.recordInfor[6].msg = this.recordObj.ExtendData.timestamp;
+      this.recordInfor[6].msg = this.recordObj.ExtendData.timestamp
       // this.recordInfor[6].msg = moment(
       //   this.recordObj.ExtendData.timestamp,
       //   "YYYYMMDDHH"
       // ).format("YYYY-MM-DD HH");
       //构建尺寸
-      console.log(this.recordObj.ExtendData);
-      this.recordInfor[7].msg = this.recordObj.ExtendData.area;
+      console.log(this.recordObj.ExtendData)
+      this.recordInfor[7].msg = this.recordObj.ExtendData.area
       //构建备注
-      this.recordInfor[8].msg = this.recordObj.ExtendData.height;
+      this.recordInfor[8].msg = this.recordObj.ExtendData.height
       //构建高度
-      this.recordInfor[9].msg = this.recordObj.ExtendData.comment;
+      this.recordInfor[9].msg = this.recordObj.ExtendData.comment
     },
     beforEdit() {
       if (!this.ifEdit) {
-        this.commentNew = this.recordInfor[9].msg;
-        this.heightNew = this.recordInfor[8].msg;
-        this.areaNew = this.recordInfor[7].msg;
-        this.statusNew = this.recordInfor[2].msg;
-        this.lightest_colorNew = this.recordInfor[5].msg;
-        this.darkest_colorNew = this.recordInfor[5].msg2;
+        this.commentNew = this.recordInfor[9].msg
+        this.heightNew = this.recordInfor[8].msg
+        this.areaNew = this.recordInfor[7].msg
+        this.statusNew = this.recordInfor[2].msg
+        this.lightest_colorNew = this.recordInfor[5].msg
+        this.darkest_colorNew = this.recordInfor[5].msg2
       }
-      this.ifEdit = !this.ifEdit;
+      this.ifEdit = !this.ifEdit
     },
     chooseSwiperImg(url) {
-      this.imgUrlFormSwiper = url;
+      this.imgUrlFormSwiper = url
 
       // console.log(this.imgUrlFormSwiper)
     },
 
     editRecord() {
-      let _this = this;
-      _this.recordLoading = true;
+      let _this = this
+      _this.recordLoading = true
       //构造请求体
-      let recordData = ENTITY.R07;
+      let recordData = ENTITY.R07
       recordData.Jobs[0].Object.ExtendData.czhd_spaid =
-        _this.recordObj.ExtendData.czhd_spaid;
+        _this.recordObj.ExtendData.czhd_spaid
 
-      recordData.Jobs[0].Object.ExtendData.czda_spaid = _this.recordObj.daId;
+      recordData.Jobs[0].Object.ExtendData.czda_spaid = _this.recordObj.daId
 
-      recordData.Jobs[0].MasterSpaId = _this.recordObj.ExtendData.czhd_spaid;
+      recordData.Jobs[0].MasterSpaId = _this.recordObj.ExtendData.czhd_spaid
 
-      recordData.Jobs[0].Object.SpaId = _this.recordObj.jlId;
+      recordData.Jobs[0].Object.SpaId = _this.recordObj.jlId
       //新修改的数据
-      recordData.Jobs[0].Object.ExtendData.status = this.statusNew;
-      recordData.Jobs[0].Object.ExtendData.lightest_color = this.lightest_colorNew;
-      recordData.Jobs[0].Object.ExtendData.darkest_color = this.darkest_colorNew;
-      recordData.Jobs[0].Object.ExtendData.comment = this.commentNew;
-      recordData.Jobs[0].Object.ExtendData.height = this.heightNew;
-      recordData.Jobs[0].Object.ExtendData.area = this.areaNew;
+      recordData.Jobs[0].Object.ExtendData.status = this.statusNew
+      recordData.Jobs[0].Object.ExtendData.lightest_color = this.lightest_colorNew
+      recordData.Jobs[0].Object.ExtendData.darkest_color = this.darkest_colorNew
+      recordData.Jobs[0].Object.ExtendData.comment = this.commentNew
+      recordData.Jobs[0].Object.ExtendData.height = this.heightNew
+      recordData.Jobs[0].Object.ExtendData.area = this.areaNew
 
       // console.log(recordData);
-      Api.reqApi(recordData, "/tree/update").then(res => {
+      Api.reqApi(recordData, '/tree/update').then(res => {
         if (res.data.status === 200 && res.data.response) {
-          this.$message.success("成功修改记录");
+          this.$message.success('成功修改记录')
           this.recordInfor[9].msg =
-            res.data.response.CZJL.objects[0].principle.ExtendData.comment;
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment
           this.recordInfor[8].msg =
-            res.data.response.CZJL.objects[0].principle.ExtendData.height;
+            res.data.response.CZJL.objects[0].principle.ExtendData.height
           this.recordInfor[7].msg =
-            res.data.response.CZJL.objects[0].principle.ExtendData.area;
+            res.data.response.CZJL.objects[0].principle.ExtendData.area
           this.recordInfor[2].msg =
-            res.data.response.CZJL.objects[0].principle.ExtendData.status;
+            res.data.response.CZJL.objects[0].principle.ExtendData.status
           this.recordInfor[5].msg =
-            res.data.response.CZJL.objects[0].principle.ExtendData.lightest_color;
+            res.data.response.CZJL.objects[0].principle.ExtendData.lightest_color
           this.recordInfor[5].msg2 =
-            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color;
-          _this.recordLoading = false;
-          this.ifEdit = false;
+            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
+          _this.recordLoading = false
+          this.ifEdit = false
         }
-      });
+      })
     },
     delRecord() {
-      this.$message.warning("该功能还在开发中，敬请期待");
+      this.$message.warning('该功能还在开发中，敬请期待')
     }
   }
-};
+}
 </script>
 
 <style scoped>
