@@ -11,23 +11,37 @@
           <input style="width: 95%;border: 0;outline: none;" placeholder />
         </div>
       </div>
-      <div>
-        <el-select
-          class="one-select"
-          id="select-option"
-          v-for="item in SelectionTable"
-          :key="item.tips"
-          :style="'width:'+item.width+'%'"
-          v-model="item.choose"
-          placeholder
-        >
-          <el-option
-            v-for="selection in item.label"
-            :key="selection.value"
-            :label="selection.name"
-            :value="selection.value"
-          ></el-option>
-        </el-select>
+      <div style="display: flex;">
+        <!-- v-model="itemChooseArr[index]" -->
+        <div v-for="(item,index) in SelectionTable" :key="index">
+          <!-- <el-date-picker v-if="index===1" v-model="item.choose" type="month" placeholder="选择月"></el-date-picker> -->
+          <a-month-picker
+            class="one-select"
+            id="select-option"
+            v-if="index===0"
+            @change="onChangeMonth"
+            placeholder="所有录入时间"
+          >
+            <span slot="suffixIcon" class="el-icon-arrow-down" style="font-size:20px;color:#fff"></span>
+          </a-month-picker>
+          <el-select
+            v-else
+            class="one-select"
+            id="select-option"
+            :style="'width:'+item.width+'%'"
+            v-model="item.choose"
+            @focus="selectIndex = index"
+            @change="selectItem"
+            placeholder
+          >
+            <el-option
+              v-for="selection in item.label"
+              :key="selection.value"
+              :label="selection.name"
+              :value="selection.value"
+            ></el-option>
+          </el-select>
+        </div>
       </div>
       <div class="selects"></div>
     </div>
@@ -69,7 +83,7 @@
           <el-row style="color:#0090FF;font-size=1.1rem;">
             <el-col :offset="1" style="width:160%">
               <!-- <el-tooltip class="item" effect="light" content="返回" placement="top"> -->
-              <span @click="showRecord" class="an-btn">珊瑚档案</span>
+              <span @click="showRecord" class="an-btn">返回档案</span>
               <!-- </el-tooltip> -->
 
               <span style="width:0.8rem;color:#6F6F6F" class="el-icon-arrow-right">
@@ -272,6 +286,7 @@
 import * as Api from "../api/api";
 import * as DEFAULT from "../json/default";
 import * as ENTITY from "../json/entity";
+import { requestSpecies } from "../util/apiCreator";
 // import { Message, Loading } from "element-ui";
 // import coralTimeLine from "@/components/plantFile/coralTimeLine.vue";
 import timeChar from "@/components/plantFile/timeChar.vue";
@@ -282,71 +297,74 @@ export default {
   components: { inforSwiper, timeChar },
   data() {
     return {
+      itemChooseArr: ["", "", "", "", "", ""],
+
+      selectIndex: 0,
       SelectionTable: [
         {
+          tips: "时间",
+          width: 70,
+          choose: "所有录入时间",
+          label: [
+            // { name: "所有录入时间", value: "" },
+            // { name: "本月", value: 31 },
+            // { name: "三个月内", value: 32 },
+            // { name: "半年内", value: 33 },
+            // { name: "一年内", value: 34 },
+            // { name: "一年前", value: 35 }
+          ]
+        },
+        {
           tips: "测量",
-          width: 10,
+          width: 60,
           choose: "所有测量状态",
           label: [
-            { name: "有过测量", value: 11 },
-            { name: "从未测量", value: 13 },
-            { name: "所有测量状态", value: 12 }
+            { name: "所有测量状态", value: "" },
+            { name: "有过测量", value: true },
+            { name: "从未测量", value: false }
           ]
         },
 
         {
-          tips: "时间",
-          width: 12,
-          choose: "所有最终记录时间",
+          tips: "科",
+          width: 60,
+          choose: "所有科",
           label: [
-            { name: "所有最终记录时间", value: 30 },
-            { name: "3月 2019年", value: 31 },
-            { name: "2月 2019年", value: 32 },
-            { name: "1月 2019年", value: 33 },
-            { name: "12月 2018年", value: 34 }
-          ]
-        },
-        {
-          tips: "种类",
-          width: 10,
-          choose: "所有属种",
-          label: [
-            { name: "所有种类", value: 41 },
-            { name: "盔型珊瑚科", value: 42 }
+            { name: "所有种类", value: "" }
+            // { name: "盔型珊瑚科", value: 42 }
           ]
         },
         {
           tips: "状态",
-          width: 8,
+          width: 50,
           choose: "所有状态",
           label: [
-            { name: "良好", value: 51 },
-            { name: "部分百化", value: 52 },
-            { name: "部分死亡", value: 53 },
-            { name: "死亡", value: 56 },
-            { name: "失踪", value: 54 },
-            { name: "所有状态", value: 55 }
+            { name: "所有状态", value: "" },
+            { name: "良好", value: "良好" },
+            { name: "部分百化", value: "部分百化" },
+            { name: "部分死亡", value: "部分死亡" },
+            { name: "死亡", value: "死亡" },
+            { name: "失踪", value: "失踪" }
           ]
         },
         {
-          tips: "标记",
-          width: 8,
-          choose: "所有标记",
+          tips: "类型",
+          width: 50,
+          choose: "所有类型",
           label: [
-            { name: "样本档案", value: 61 },
-            { name: "普通档案", value: 62 },
-            { name: "所有标记", value: 63 }
+            { name: "所有类型", value: "" },
+            { name: "样本档案", value: "YB" },
+            { name: "普通档案", value: "PT" }
           ]
         },
         {
           tips: "阶段",
-          width: 8,
+          width: 50,
           choose: "所有阶段",
           label: [
-            { name: "首次暂养", value: 71 },
-            { name: "暂养巡检", value: 72 },
-            { name: "首次回播", value: 73 },
-            { name: "回播巡检", value: 74 }
+            { name: "所有阶段", value: "" },
+            { name: "暂养", value: "暂养" },
+            { name: "回播", value: "回播" }
           ]
         }
       ],
@@ -429,7 +447,13 @@ export default {
 
   mounted: function() {
     this.getAllCoralData();
+    this.getAllFamily();
   },
+  // watch:{
+  //   SelectionTable(){
+
+  //   }
+  // },
   methods: {
     //获取所有的档案
     getAllCoralData() {
@@ -445,6 +469,7 @@ export default {
           for (let i = 0; i < danAn.length; i++) {
             _this.coralList.push(_this.Refactoring(danAn[i]));
           }
+          // console.log(_this.coralList);
           _this.allLoading = false;
           // _this.rightLoading = true;
           // console.log("第一个档案：", _this.coralList[0].SpaId);
@@ -860,12 +885,85 @@ export default {
     //图片加载404替代方案
     errorImg(e) {
       e.currentTarget.src = require("../assets/images/error.svg");
+    },
+    //录入所有的科 family_spaid
+    getAllFamily() {
+      //构造请求体
+      let species_family = requestSpecies(
+        ENTITY.species_01,
+        "9345ab2e-5843-4957-be03-91ce27a3133a",
+        "ORDER"
+      );
+      //根据目请求所有科
+      Api.reqApi(species_family, "/tree/select").then(res => {
+        if (res.data.status === 200) {
+          if (res.data.response) {
+            for (let i of res.data.response.FAMILY.objects) {
+              let order = {};
+              order.name = i.principle.ExtendData.name;
+              order.value = i.principle.SpaId;
+              this.SelectionTable[2].label.push(order);
+            }
+          } else this.SelectionTable[2].label = [];
+        }
+      });
+    },
+    //选择不同日期的时候
+    onChangeMonth(date, dateString) {
+      if (dateString) {
+        this.itemChooseArr[0] = dateString + "%";
+      } else {
+        this.itemChooseArr[0] = "";
+      }
+      this.getSelectDanAn(this.itemChooseArr);
+    },
+    //筛选档案
+    selectItem(slect) {
+      // console.log(slect, this.selectIndex);
+      this.itemChooseArr[this.selectIndex] = slect;
+      this.getSelectDanAn(this.itemChooseArr);
+    },
+    //根据删选条件，请求档案
+    getSelectDanAn(chooseArr) {
+      let reqObj = {};
+      if (chooseArr[0]) {
+        reqObj.modified_at = chooseArr[0];
+      }
+      if (chooseArr[1] || chooseArr[1] === false) {
+        reqObj.measure = chooseArr[1];
+      }
+      if (chooseArr[2]) {
+        reqObj.family_spaid = chooseArr[2];
+      }
+      if (chooseArr[3]) {
+        reqObj.status = chooseArr[3];
+      }
+      if (chooseArr[4]) {
+        reqObj.stage = chooseArr[4];
+      }
+      if (chooseArr[5]) {
+        reqObj.label = chooseArr[5];
+      }
+      console.log(reqObj);
+      _this.allLoading = true;
+      Api.reqApi(reqObj, "/tree/selectCZDA").then(res => {
+        console, log(res);
+        if (res.data.status === 200 && res.data.response) {
+          let danAn = res.data.response.CZDA.objects;
+          _this.coralList = [];
+          for (let i = 0; i < danAn.length; i++) {
+            _this.coralList.push(_this.Refactoring(danAn[i]));
+          }
+          _this.allLoading = false;
+          _this.selectCoral(_this.coralList[0].SpaId, 0);
+        }
+      });
     }
   }
 };
 </script>
 
-<style>
+<style lang="stylus">
 .A-btn {
   width: 3rem;
   background: rgba(255, 107, 107, 1);
@@ -877,9 +975,11 @@ export default {
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
 }
+
 .A-btn:hover {
   opacity: 0.7;
 }
+
 .workPage {
   width: 89rem;
   height: 90vh;
@@ -897,22 +997,20 @@ export default {
   /* font-size:1rem; */
   color: rgba(126, 126, 126, 1);
 }
+
 .one-list-title:hover {
   color: #3fc1cb;
 }
 
 /* .one-list:hover { */
 /* background-color: #eaeef3; */
-
 /* } */
-
 .one-list {
   height: 40px;
   width: 90%;
   overflow: hidden;
   margin: 1rem auto;
   /* border-radius: 1rem; */
-
   cursor: pointer;
 }
 
@@ -931,7 +1029,6 @@ export default {
   width: 20%;
   margin: 1% 1% 1% 0;
 } */
-
 .selects {
   width: 70%;
   /* margin-top: 5%; */
@@ -957,19 +1054,46 @@ export default {
   border-radius: 38px;
   padding: 8px 0 0 0;
 }
+
 #select-option {
   background: #3fc1cb;
   color: white;
   border-radius: 10px;
   font-size: 0.9rem;
+
+  div {
+    input {
+      background: #3fc1cb !important;
+      color: white;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      height: 40px;
+      s;
+    }
+
+    input::-webkit-input-placeholder {
+      color: #fff;
+    }
+
+    input::-moz-input-placeholder {
+      color: #fff;
+    }
+
+    input::-ms-input-placeholder {
+      color: #fff;
+    }
+  }
 }
+
 .el-select .el-input .el-select__caret {
   color: white;
   font-size: 20px;
 }
+
 .one-select {
   margin: 1vh 1rem;
 }
+
 .exampleCarousel {
   padding: 1rem;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.16);
@@ -981,20 +1105,25 @@ export default {
   margin: 0.5rem 0;
   font-size: 0.9em;
 }
+
 .exampleOneMargin {
   margin-left: 2rem;
 }
+
 .oneImg {
   width: 1rem;
 }
+
 .marRight {
   margin-right: 1rem;
 }
+
 .el-carousel__item img {
   width: 100%;
   height: 100%;
   border-radius: 20px;
 }
+
 .A-line {
   margin-left: 2rem;
   width: 15rem;
@@ -1003,12 +1132,14 @@ export default {
   opacity: 1;
   margin-top: 1rem;
 }
+
 .rgb-coral {
   width: 2rem;
   height: 1rem;
   display: inline-block;
   margin-right: 0.5rem;
 }
+
 .see-more {
   position: absolute;
   right: 2rem;
@@ -1016,27 +1147,32 @@ export default {
   color: rgba(126, 126, 126, 1);
   cursor: pointer;
 }
+
 .see-mover:hover {
   opacity: 0.7;
 }
+
 .which-on-right {
   position: absolute;
   left: 15rem;
   margin: 0 0 1rem 0;
 }
+
 .list-width {
   /* margin-left: 1%; */
   width: 18rem;
   position: relative;
 }
+
 .list-width-g {
   height: 88%;
   overflow-y: scroll;
   border-right: 2px solid #3fc1cb;
 }
+
 /* 小三角 */
 .list-width-g::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   right: -10px;
@@ -1047,6 +1183,7 @@ export default {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
 }
+
 .an-btn {
   width: 6rem;
   padding: 0 1rem;
@@ -1058,9 +1195,11 @@ export default {
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
 }
+
 .an-btn:hover {
   background: rgba(255, 107, 107, 0.5);
 }
+
 .activeItem {
   color: #3fc1cb;
   background: #f5f5f5;

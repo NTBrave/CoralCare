@@ -14,6 +14,7 @@
       </div>
       <div v-else>
         <el-button type="danger" round size="mini" @click="submitEdit">提交</el-button>
+        <el-button type="success" round size="mini" @click="editActivity">取消</el-button>
       </div>
     </div>
     <div class="infoBoard">
@@ -113,6 +114,9 @@ export default {
         this.changeFocus();
       }
     },
+    setEditF() {
+      this.ifEdit = false;
+    },
 
     // 删除活动
     deleteActivity() {
@@ -134,10 +138,15 @@ export default {
         _this.activityInfo.activityTime;
       newA06.Jobs[0].Object.ExtendData.type = _this.activityInfo.activityType;
       newA06.Jobs[0].Object.ExtendData.code = _this.activityInfo.code;
-      this.$message.warning("该功能还在开发中，敬请期待");
-      reqApi(newA06, "/tree/select/").then(res => {
-        console.log(res);
-        if (res.data.status === 2000 && res.data.response) {
+      // this.$message.warning("该功能还在开发中，敬请期待");
+      reqApi(newA06, "/tree/update").then(res => {
+        // console.log(res);
+        if (res.data.status === 200 && res.data.response) {
+          this.$parent.getActivity();
+          // this.activityInfo.totalMembers = this.members;
+          // this.activityInfo.remarks = this.remarks;
+        } else {
+          this.$message.error("修改失败");
         }
       });
       this.editActivity();

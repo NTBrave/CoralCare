@@ -188,18 +188,18 @@
 
 <script>
 // import {} from '../../api/api'
-import { mapState, mapMutations, mapGetters } from 'vuex'
-import { reqApi } from '../../../api/api'
-import { D04, R03, species_01, ZYQY_HBQY } from '../../../json/entity'
-import { signColorList, colorList, colorObj } from '../../../json/default'
+import { mapState, mapMutations, mapGetters } from "vuex";
+import { reqApi } from "../../../api/api";
+import { D04, R03, species_01, ZYQY_HBQY } from "../../../json/entity";
+import { signColorList, colorList, colorObj } from "../../../json/default";
 import {
   requestSpecies,
   createR03,
   requestZYQY_HBQY,
   Refactoring
-} from '../../../util/apiCreator'
-import { objIsEmpty } from '../../../util/formRules'
-import moment from 'moment'
+} from "../../../util/apiCreator";
+import { objIsEmpty } from "../../../util/formRules";
+import moment from "moment";
 export default {
   props: {
     fileData: Object,
@@ -222,97 +222,97 @@ export default {
     // 监听档案信息是否有空值
     fileForm: {
       handler: function() {
-        let ready = objIsEmpty(this.fileForm)
-        console.log(ready)
-        this.fileInfoNeed = ready
+        let ready = objIsEmpty(this.fileForm);
+        console.log(ready);
+        this.fileInfoNeed = ready;
       },
       deep: true
     },
     // 根据目类来请求科类
-    'fileForm.species.first': function() {
-      this.species_family = []
-      this.fileForm.species.second = ''
-      this.fileForm.species.third = ''
+    "fileForm.species.first": function() {
+      this.species_family = [];
+      this.fileForm.species.second = "";
+      this.fileForm.species.third = "";
 
-      console.log(this.fileForm.species.first)
+      console.log(this.fileForm.species.first);
       let species_family = requestSpecies(
         species_01,
         this.fileForm.species.first,
-        'ORDER'
-      )
-      reqApi(species_family, '/tree/select').then(res => {
+        "ORDER"
+      );
+      reqApi(species_family, "/tree/select").then(res => {
         // console.log(res)
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.FAMILY.objects) {
-              let order = {}
-              order.name = i.principle.ExtendData.name
-              order.spaid = i.principle.SpaId
+              let order = {};
+              order.name = i.principle.ExtendData.name;
+              order.spaid = i.principle.SpaId;
 
-              this.species_family.push(order)
+              this.species_family.push(order);
             }
-          } else this.species_family = []
+          } else this.species_family = [];
         }
-      })
+      });
     },
 
     // 根据科类来请求属类
-    'fileForm.species.second': function() {
-      this.species_genus = []
-      this.fileForm.species.third = ''
+    "fileForm.species.second": function() {
+      this.species_genus = [];
+      this.fileForm.species.third = "";
 
       let species_genus = requestSpecies(
         species_01,
         this.fileForm.species.second,
-        'FAMILY'
-      )
+        "FAMILY"
+      );
 
-      reqApi(species_genus, '/tree/select').then(res => {
+      reqApi(species_genus, "/tree/select").then(res => {
         // console.log(res)
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.GENUS.objects) {
-              let order = {}
-              order.name = i.principle.ExtendData.name
-              order.spaid = i.principle.SpaId
-              this.species_genus.push(order)
+              let order = {};
+              order.name = i.principle.ExtendData.name;
+              order.spaid = i.principle.SpaId;
+              this.species_genus.push(order);
               // console.log(this.species_genus)
             }
-          } else this.species_genus = []
+          } else this.species_genus = [];
         }
-      })
+      });
     },
 
     // 根据苗圃显示分区
-    'fileForm.breedArea.nursery': function() {
-      this.ZY_fenqu = []
-      this.fileForm.breedArea.partition = ''
+    "fileForm.breedArea.nursery": function() {
+      this.ZY_fenqu = [];
+      this.fileForm.breedArea.partition = "";
 
       let fenqu = requestZYQY_HBQY(
         ZYQY_HBQY,
         this.fileForm.breedArea.nursery,
-        'MP'
-      )
-      reqApi(fenqu, '/tree/select').then(res => {
-        console.log(res)
+        "MP"
+      );
+      reqApi(fenqu, "/tree/select").then(res => {
+        console.log(res);
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.FQ.objects) {
-              let fenqu = {}
-              fenqu.name = i.principle.ExtendData.name
-              fenqu.spaid = i.principle.SpaId
-              this.ZY_fenqu.push(fenqu)
+              let fenqu = {};
+              fenqu.name = i.principle.ExtendData.name;
+              fenqu.spaid = i.principle.SpaId;
+              this.ZY_fenqu.push(fenqu);
             }
-          } else this.ZY_fenqu = []
+          } else this.ZY_fenqu = [];
         }
-      })
+      });
     }
   },
   computed: {
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data'
+      currentZD_data: "getCurrentZD_data"
     }),
-    ...mapState(['currentZD'])
+    ...mapState(["currentZD"])
   },
   data() {
     return {
@@ -330,8 +330,8 @@ export default {
       ZY_fenqu: [],
 
       // 创建档案和首次暂养记录成功之后返回的 档案spaid 和 记录spaid
-      file_spaid: '',
-      record_spaid: '',
+      file_spaid: "",
+      record_spaid: "",
 
       fileForm: this.fileData, // 接受父页面传来的档案信息
       recordForm: this.recordData, // 接受父页面传来的记录信息
@@ -341,29 +341,29 @@ export default {
 
       activityNum:
         this.$route.query.activityType +
-        '-' +
+        "-" +
         this.$route.query.address +
-        '-' +
+        "-" +
         this.$route.query.time,
 
       item: {} // 传给success页面的信息对象
-    }
+    };
   },
   methods: {
-    ...mapMutations(['setOperateFile']),
+    ...mapMutations(["setOperateFile"]),
 
     createFile() {
-      this.setOperateFile('A-宇宙号-1区-蓝-10')
+      this.setOperateFile("A-宇宙号-1区-蓝-10");
     },
 
     // 向父组件传递 档案spaid 和 记录spaid
     sendSpaid() {
-      this.$emit('func', this.file_spaid, this.record_spaid)
+      this.$emit("func", this.file_spaid, this.record_spaid);
     },
 
     // 提交记录
     submitRecorder() {
-      console.log(JSON.parse(this.$route.query.spaid))
+      console.log(JSON.parse(this.$route.query.spaid));
       let newR03 = createR03(
         R03,
         this.currentZD_data(this.currentZD).ExtendData.czdaroot_spaid,
@@ -372,78 +372,79 @@ export default {
         this.$route.query.time,
         this.fileForm,
         this.recordForm
-      )
+      );
 
-      console.log(newR03)
-      reqApi(newR03, '/tree/flow').then(res => {
-        console.log(res)
+      console.log(newR03);
+      reqApi(newR03, "/tree/flow").then(res => {
+        console.log(res);
 
         if (res.data.status === 200) {
-          let refactObj = Refactoring(res.data.response.CZDA.objects[0])
-          this.file_spaid = res.data.response.CZDA.objects[0].principle.SpaId
-          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
-          this.sendSpaid() // 向父组件传spaid
+          let refactObj = Refactoring(res.data.response.CZDA.objects[0]);
+          this.file_spaid = res.data.response.CZDA.objects[0].principle.SpaId;
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId;
+          this.sendSpaid(); // 向父组件传spaid
 
-          let msgObj = {}
-          msgObj.activity_Num = this.activityNum
-          msgObj.species = refactObj.type
+          let msgObj = {};
+          msgObj.activity_Num = this.activityNum;
+          msgObj.species = refactObj.type;
           msgObj.status =
-            res.data.response.CZJL.objects[0].principle.ExtendData.status
+            res.data.response.CZJL.objects[0].principle.ExtendData.status;
           msgObj.stage =
-            res.data.response.CZDA.objects[0].principle.ExtendData.stage
+            res.data.response.CZDA.objects[0].principle.ExtendData.stage;
 
           // 构建区域
-          let positonArr = refactObj.title.split('-')
-          positonArr.length = positonArr.length - 2
-          msgObj.zyqy = positonArr.join('-')
+          let positonArr = refactObj.title.split("-");
+          positonArr.length = positonArr.length - 2;
+          msgObj.zyqy = positonArr.join("-");
 
           // 构建最浅到最深颜色
           let light =
             res.data.response.CZJL.objects[0].principle.ExtendData
-              .lightest_color
+              .lightest_color;
           let dark =
-            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
-          msgObj.coralColor = {}
-          msgObj.coralColor.lightest_color = light
-          msgObj.coralColor.color1 = colorObj[light]
+            res.data.response.CZJL.objects[0].principle.ExtendData
+              .darkest_color;
+          msgObj.coralColor = {};
+          msgObj.coralColor.lightest_color = light;
+          msgObj.coralColor.color1 = colorObj[light];
 
-          msgObj.coralColor.darkest_color = dark
-          msgObj.coralColor.color2 = colorObj[dark]
+          msgObj.coralColor.darkest_color = dark;
+          msgObj.coralColor.color2 = colorObj[dark];
           msgObj.time = moment(
             res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
-            'YYYYMMDDHH'
-          ).format('YYYY-MM-DD HH')
+            "YYYYMMDDHH"
+          ).format("YYYY-MM-DD HH");
           msgObj.height =
-            res.data.response.CZJL.objects[0].principle.ExtendData.height
+            res.data.response.CZJL.objects[0].principle.ExtendData.height;
           msgObj.area =
-            res.data.response.CZJL.objects[0].principle.ExtendData.area
+            res.data.response.CZJL.objects[0].principle.ExtendData.area;
           msgObj.comment =
-            res.data.response.CZJL.objects[0].principle.ExtendData.comment
-          msgObj.title = refactObj.title
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment;
+          msgObj.title = refactObj.title;
 
-          this.item = { ...msgObj }
+          this.item = { ...msgObj };
 
           // 数据成功录入提醒
           this.$message({
             showClose: true,
-            message: '记录已成功录入！',
-            type: 'success'
-          })
+            message: "记录已成功录入！",
+            type: "success"
+          });
 
-          this.beforeCreateRecord = false
+          this.beforeCreateRecord = false;
 
           // 携带参数路由跳转
         }
         // else if(res.data.status === 406){
 
         // }
-      })
+      });
     },
 
     // 数据录入完毕后跳转到成功页面
     routeToSuccess() {
       this.$router.push({
-        name: 'resultA1',
+        name: "resultA1",
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
@@ -458,67 +459,67 @@ export default {
           })
         },
         params: {
-          result: 'success'
+          result: "success"
         }
-      })
+      });
     },
 
     // 初始化请求珊瑚目类
     requestOrder() {
-      reqApi(species_01, '/tree/select').then(res => {
+      reqApi(species_01, "/tree/select").then(res => {
         // console.log(res)
 
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.ORDER.objects) {
-              let order = {}
-              order.name = i.principle.ExtendData.name
-              order.spaid = i.principle.SpaId
-              this.species_order.push(order)
+              let order = {};
+              order.name = i.principle.ExtendData.name;
+              order.spaid = i.principle.SpaId;
+              this.species_order.push(order);
             }
           }
-        } else this.species_order = []
-      })
+        } else this.species_order = [];
+      });
     },
 
     // 初始化请求采集区域
     requestCJQU() {
       this.fileForm.breedArea.firstArea = this.currentZD_data(
         this.currentZD
-      ).ExtendData.zyqy_spaid
+      ).ExtendData.zyqy_spaid;
       this.ZY_quyu = [
         {
-          name: 'A',
+          name: "A",
           spaid: this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid
         }
-      ]
-      console.log(this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid)
+      ];
+      console.log(this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid);
       let miaopu = requestZYQY_HBQY(
         ZYQY_HBQY,
         this.currentZD_data(this.currentZD).ExtendData.zyqy_spaid,
-        'ZYQYROOT'
-      )
-      reqApi(miaopu, '/tree/select').then(res => {
-        console.log(res)
+        "ZYQYROOT"
+      );
+      reqApi(miaopu, "/tree/select").then(res => {
+        console.log(res);
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.MP.objects) {
-              let miaopu = {}
-              miaopu.name = i.principle.ExtendData.name
-              miaopu.spaid = i.principle.SpaId
-              this.ZY_miaopu.push(miaopu)
+              let miaopu = {};
+              miaopu.name = i.principle.ExtendData.name;
+              miaopu.spaid = i.principle.SpaId;
+              this.ZY_miaopu.push(miaopu);
             }
-          } else this.ZY_miaopu = []
+          } else this.ZY_miaopu = [];
         }
-      })
+      });
     }
   },
 
   mounted() {
-    this.requestOrder()
-    this.requestCJQU()
+    this.requestOrder();
+    this.requestCJQU();
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
