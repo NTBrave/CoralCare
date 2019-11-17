@@ -156,8 +156,9 @@ import * as DEFAULT from "../json/default";
 import * as ENTITY from "../json/entity";
 import * as Api from "../api/api";
 import moment from "moment";
+// import upload from '@/components/upload.vue'
 export default {
-  components: { swiper, getArea },
+  components: { swiper, getArea, upload },
   props: {
     recordObj: Object,
     recordName: String,

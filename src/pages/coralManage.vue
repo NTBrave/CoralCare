@@ -132,7 +132,7 @@
               <span>活动：</span>
               <span
                 style="font-size: 0.9rem;background: #00ADBA;color: white;border-radius: 5px;padding: 0 1rem;"
-              >{{coralTitle}}</span>
+              >{{activityData.activity_number}}</span>
             </el-col>
           </el-row>
           <!-- <el-row>

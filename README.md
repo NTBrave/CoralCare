@@ -19,33 +19,36 @@
 
    
 
-## 文件结构
+## 前端文件打包 并部署服务器
+
+ 1. 运行npm run build, 生成的文件在dist文件夹中。
+
+ 2. 打开类似WinSCP的软件，登陆连接到服务器。
+
+ 3. 将dist里面的文件拖到27服务器的/home/coralCare/manage下，
+
+    首页打包的文件放在/home/coralCare/coral（不同服务器，位置不一样）。
+
+ 4. 如有必要修改服务器的前端文件位置，请修改/etc/nginx下的nginx.conf，里面的location 再重启nginx, 
+
+    nginx -s reload。
+```json
+ server {
+       ......      
+    
+       location /coral/ {
+          root   /home/coralCare/;
+           index index.html;
+       }
+       location /manage/ {
+           alias  /home/coralCare/manage/;
+       index index.html;
+       }
+    
+    }
+```
+
+   
 
 
-## Project setup
 
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
