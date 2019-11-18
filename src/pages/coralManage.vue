@@ -310,6 +310,7 @@
             :recordObj="currentRecord"
             :recordName="coralTitle"
             :isStart="isStart"
+            :isEnd="isEnd"
           ></inforSwiper>
         </el-row>
       </div>

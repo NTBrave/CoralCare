@@ -67,17 +67,30 @@ export default {
   //用的自定义组件
   components: {},
   mounted: function() {
-    // if (!this.imgUrl) {
-    //   this.imgUrl = []
+    // this.isShowDel = this.isShowDelet || false;
+    // this.list = document.getElementById("list");
+    // this.allImg = document.getElementsByClassName("img-swiper");
+    // // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
+    // if (this.allImg[0]) {
+    //   this.allImg[0].classList.add("current-img");
+    //   this.imgLen = this.allImg.length - 1;
+    //   this.selectOneImg(this.index);
     // }
-    this.isShowDel = this.isShowDelet || false;
-    this.list = document.getElementById("list");
-    this.allImg = document.getElementsByClassName("img-swiper");
-    // console.log("this.allImg", this.allImg);
-    if (this.allImg[0]) {
-      this.allImg[0].classList.add("current-img");
-      this.imgLen = this.allImg.length - 1;
-      this.selectOneImg(this.index);
+    // console.log("this.imgLen", this.imgLen);
+  },
+  watch: {
+    "imgUrl.length"() {
+      this.isShowDel = this.isShowDelet || false;
+      this.list = document.getElementById("list");
+      this.allImg = document.getElementsByClassName("img-swiper");
+      // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
+      if (this.allImg[0]) {
+        // console.log(this.allImg, this.allImg.length);
+        // console.log(this.imgUrl, this.imgUrl.length);
+        this.allImg[0].classList.add("current-img");
+        this.imgLen = this.imgUrl.length - 1;
+        this.selectOneImg(this.index);
+      }
     }
   },
   methods: {
@@ -87,7 +100,7 @@ export default {
         this.list.style.left = 0 + "vw";
       } else if (this.index > this.imgLen - this.num) {
         this.list.style.left =
-          -this.imgWidth * (this.imgUrl.length - this.num + 1) + "vw";
+          -this.imgWidth * (this.imgUrl.length - this.num) + "vw";
       } else {
         // console.log(this.list.style.left)
         var newLeft = parseInt(this.list.style.left) + offset;
@@ -110,9 +123,9 @@ export default {
     nextOnclick() {
       if (this.allImg.length > 0) {
         this.allImg[this.index].classList.remove("current-img");
-        console.log(this.index, this.imgLen);
+        // console.log(this.index, this.imgLen);
         this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
-        console.log(this.index);
+        // console.log(this.index);
         this.allImg[this.index].classList.add("current-img");
         this.move(-this.imgWidth);
         this.selectOneImg(this.index);

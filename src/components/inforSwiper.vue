@@ -115,7 +115,7 @@
       </div>
       <div style="width:40rem">
         <swiper
-          :imgUrl="theRecordImgArr"
+          :imgUrl.sync="theRecordImgArr"
           :imgHeight="9.5"
           :imgWidth="10"
           @selectOneImg="chooseSwiperImg"
@@ -124,6 +124,12 @@
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
           <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
         </div>
+        <upload
+          v-show="ifEdit"
+          @createImg="imgArrPush"
+          :masterid.sync="recordObj.SpaId"
+          :czda_spaid.sync="recordObj.ExtendData.czda_spaid"
+        ></upload>
       </div>
     </div>
 
@@ -135,7 +141,7 @@
     >取消测量</div>
     <div v-if="doMeasuring">
       <swiper
-        :imgUrl="theRecordImgArr"
+        :imgUrl.sync="theRecordImgArr"
         :imgHeight="9.5"
         :imgWidth="10"
         @selectOneImg="chooseSwiperImg"
@@ -156,15 +162,16 @@ import * as DEFAULT from "../json/default";
 import * as ENTITY from "../json/entity";
 import * as Api from "../api/api";
 import moment from "moment";
-// import upload from '@/components/upload.vue'
+import upload from "@/components/upload.vue";
 export default {
-  components: { swiper, getArea},
+  components: { swiper, getArea, upload },
   props: {
     recordObj: Object,
     recordName: String,
     activty: Object,
     type: String,
-    isStart: String
+    isStart: String,
+    isEnd: String
   },
   data() {
     return {
@@ -212,7 +219,7 @@ export default {
     // }
   },
   mounted: function() {
-    // console.log(this.activty);
+    console.log(this.activty, this.recordObj);
     //获取这个记录的图片啦
     this.colorList = DEFAULT.colorList;
     this.madeForm();
@@ -340,6 +347,10 @@ export default {
       }
     },
     beforEdit() {
+      if (this.isEnd == 1) {
+        this.$message.warning("档案已经完结，无法再继续编辑");
+        return;
+      }
       if (!this.ifEdit) {
         this.commentNew = this.recordInfor[9].msg;
         this.statusNew = this.recordInfor[2].msg;
@@ -383,6 +394,15 @@ export default {
             res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color;
           _this.recordLoading = false;
           this.ifEdit = false;
+        }
+      });
+    },
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(fileId) {
+      Api.reqApi({ file_id: fileId }, "/file/get").then(res => {
+        // console.log('img:', res)
+        if (res.data.status === 200 && res.data.response) {
+          this.theRecordImgArr.push({ url: res.data.response.url });
         }
       });
     }
@@ -444,21 +464,21 @@ export default {
 }
 .showOneImg {
   max-width: 31rem;
-  max-height: 24rem;
+  max-height: 21rem;
   width: auto;
   height: auto;
 }
 .boderImg {
-  height: 25rem;
+  height: 21rem;
   width: 32rem;
   margin: 0px auto;
-  line-height: 25rem;
+  line-height: 22rem;
   text-align: center;
 }
 .inforSwiper {
   width: 61rem;
   display: flex;
-  height: 30rem;
+  height: 33rem;
   /* margin-top: 2vh; */
   border: 1px solid rgba(172, 172, 172, 1);
   overflow: hidden;
