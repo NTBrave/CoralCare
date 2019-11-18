@@ -1,5 +1,5 @@
 <template>
-  <div class="all-chart" :style="bodySize">
+  <div class="all-chart">
     <div style="position:relative;z-index:100">
       <div class="coralNumber" @click="clickCoral(0)">
         <div :class="coralClickStyle[0]">
