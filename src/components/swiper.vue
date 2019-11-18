@@ -67,7 +67,7 @@ export default {
   //用的自定义组件
   components: {},
   mounted: function() {
-    // this.isShowDel = this.isShowDelet || false;
+    this.isShowDel = this.isShowDelet || false;
     // this.list = document.getElementById("list");
     // this.allImg = document.getElementsByClassName("img-swiper");
     // // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
@@ -80,7 +80,6 @@ export default {
   },
   watch: {
     "imgUrl.length"() {
-      this.isShowDel = this.isShowDelet || false;
       this.list = document.getElementById("list");
       this.allImg = document.getElementsByClassName("img-swiper");
       // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
@@ -91,6 +90,9 @@ export default {
         this.imgLen = this.imgUrl.length - 1;
         this.selectOneImg(this.index);
       }
+    },
+    isShowDelet() {
+      this.isShowDel = this.isShowDelet || false;
     }
   },
   methods: {
@@ -133,7 +135,15 @@ export default {
     },
     //选中传出一个url
     selectOneImg(ind) {
-      if (this.allImg.length > 0) {
+      // console.log("select->", ind, this.imgUrl.length);
+      if (this.allImg.length > 0 && this.imgUrl.length > 0) {
+        // console.log("select->");
+        if (ind === this.imgUrl.length) {
+          ind--;
+        }
+        if (ind < 0) {
+          ind = 0;
+        }
         this.allImg[this.index].classList.remove("current-img");
         this.index = ind;
         this.allImg[this.index].classList.add("current-img");
@@ -145,10 +155,15 @@ export default {
     },
     //删除传出一个url
     deleteImg(ind) {
+      console.log("del INDX:", ind, this.allImg.length);
       if (this.allImg.length > 0) {
+        if (ind === this.imgUrl.length) {
+          ind--;
+        }
         this.allImg[this.index].classList.remove("current-img");
         this.index = ind;
         this.allImg[this.index].classList.add("current-img");
+        console.log("del 222:", this.imgUrl[ind].url);
         this.$emit("delOneImg", this.imgUrl[ind].url);
       }
     }
@@ -255,11 +270,14 @@ body {
 }
 
 .delete-img:hover {
-  opacity: 1;
+  color: #000;
+  font-size: larger;
+  cursor: pointer;
   display: flex;
 }
 
 .delete-img {
+  z-index: 5;
   width: 1rem;
   height: 1rem;
   font-size: 1rem;
@@ -269,7 +287,7 @@ body {
   right: 0px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  opacity: 0.3;
+  opacity: 1;
   transition: opacity 0.5s;
 }
 

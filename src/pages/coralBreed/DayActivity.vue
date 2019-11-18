@@ -157,7 +157,23 @@ export default {
       activityArr: [],
       noActivity: false,
       recordData: [],
-      allMsg: [],
+      allMsg: [
+        // {
+        //   ExtendData:{},
+        //   actiName:"",
+        //   coralNum:"",
+        //   daId:"",
+        //   daMsg:{},
+        //   imgId:[],
+        //   imgUrl:"",
+        //   imgUrlArr:[],
+        //   imgSpaID;[],
+        //   jlId:"",
+        //   species:"",
+        //   state:"",
+        //
+        // }
+      ],
       imgId: [],
 
       //加载
@@ -165,7 +181,9 @@ export default {
       //细节
       isShowDetail: false,
       //选中的记录数据
-      oneRecordData: {}
+      oneRecordData: {},
+      currentWorkIndex: 0,
+      currentActiIndec: 0
     };
   },
   computed: {
@@ -210,7 +228,10 @@ export default {
     // 点击选择活动，显示活动详情及活动下的珊瑚记录
     showActivityInfo(activityNum, workIndex, actiIndec) {
       this.recordLoading = true;
+      // console.log("s->",activityNum)
       this.selectActivity = activityNum;
+      this.currentWorkIndex = workIndex;
+      this.currentActiIndec = actiIndec;
       //更改子组件的编辑状态先
       this.$refs.child.setEditF();
       // 拿到请求的数据
@@ -259,6 +280,7 @@ export default {
         _this.allMsg[i].imgUrlArr = [];
         _this.allMsg[i].imgUrl = "";
         _this.allMsg[i].imgId = [];
+        _this.allMsg[i].imgSpaID = [];
         _this.allMsg[i].ExtendData = this.recordData[i].principle.ExtendData;
 
         //获取档案
@@ -279,6 +301,7 @@ export default {
           if (res.data.status === 200 && res.data.response) {
             let nodeArr = res.data.response.CZZP.objects;
             for (let j = 0; j < nodeArr.length; ++j) {
+              _this.allMsg[i].imgSpaID.push(nodeArr[j].principle.SpaId);
               let file_id = nodeArr[j].principle.ExtendFileData.file_id;
               _this.allMsg[i].imgId.push(file_id);
             }
@@ -329,6 +352,13 @@ export default {
     },
     selectShow() {
       this.isShowDetail = !this.isShowDetail;
+      if (!this.isShowDetail) {
+        this.showActivityInfo(
+          this.selectActivity,
+          this.currentWorkIndex,
+          this.currentActiIndec
+        );
+      }
     },
 
     // 设置分页每页显示的内容
@@ -476,10 +506,11 @@ export default {
       // console.log('活动', this.activityArr)
       //初始化显示第一个活动
       if (this.activityArr[0]) {
+        this.selectActivity = this.activityArr[0][0].principle.ExtendData.activity_number;
         this.showActivityInfo(
-          this.activityArr[0][0].principle.ExtendData.activity_number,
-          0,
-          0
+          this.selectActivity,
+          this.currentWorkIndex,
+          this.currentActiIndec
         );
       }
     },

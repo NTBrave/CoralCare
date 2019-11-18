@@ -140,6 +140,8 @@
           :imgHeight="9.5"
           :imgWidth="10"
           @selectOneImg="chooseSwiperImg"
+          :isShowDelet.sync="ifEdit"
+          @delOneImg="delSwiperImg"
         ></swiper>
         <div class="boderImg">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
@@ -198,6 +200,8 @@ export default {
       visible1: false,
       //修改涉及
       ifEdit: false,
+      theDelImgSpaId: 0,
+      theDelImKey: 0,
       commentNew: "",
       heightNew: "",
       areaNew: "",
@@ -232,7 +236,8 @@ export default {
     madeForm() {
       //构造表单数据
       //   this.inforLoading = true;
-      this.recordInfor[0].msg = this.recordObj.actiName;
+      // this.recordInfor[0].msg = this.recordObj.actiName;
+      this.recordInfor[0].msg = Object.keys(this.recordObj.actiName)[0];
       this.recordInfor[1].msg = this.recordObj.species;
       this.recordInfor[2].msg = this.recordObj.state;
       let positonArr = Object.keys(this.recordObj.actiName)[0].split("-");
@@ -258,7 +263,7 @@ export default {
       //   "YYYYMMDDHH"
       // ).format("YYYY-MM-DD HH");
       //构建尺寸
-      console.log(this.recordObj.ExtendData);
+      // console.log(this.recordObj.ExtendData);
       this.recordInfor[7].msg = this.recordObj.ExtendData.area;
       //构建备注
       this.recordInfor[8].msg = this.recordObj.ExtendData.height;
@@ -278,8 +283,45 @@ export default {
     },
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url;
+    },
+    //接受从轮播组件传回来,要删除的的url
+    delSwiperImg(url) {
+      // 根据url,截取key的识别码
+      let msgArr = url.split(/\/+|\?/);
+      let imgKey = msgArr[4];
+      for (var i = 0; i < this.recordObj.imgId.length; i++) {
+        if (this.recordObj.imgId[i].search(imgKey) >= 0) {
+          this.theDelImgSpaId = this.recordObj.imgSpaID[i];
+          this.theDelImKey = this.recordObj.imgId[i];
+          break;
+        }
+      }
+      if (this.theDelImgSpaId && this.theDelImKey) {
+        let imgNodeData = ENTITY.P03;
+        imgNodeData.Jobs[0].MasterSpaId = this.recordObj.SpaId;
+        imgNodeData.Jobs[0].Object.SpaId = this.theDelImgSpaId;
+        imgNodeData.Jobs[0].Object.fileId = this.theDelImKey;
+        Api.reqApi(imgNodeData, "/tree/delete")
+          .then(res => {
+            if (res.data.status === 200 && res.data.response) {
+              this.$message.success("删除成功");
 
-      // console.log(this.imgUrlFormSwiper)
+              // this.theRecordImgArr.splice(i, 1);//这样会去除没有删的图片
+              for (let j = 0; j < this.theRecordImgArr.length; j++) {
+                if (this.theRecordImgArr[j].url.search(imgKey) >= 0) {
+                  this.theRecordImgArr.splice(j, 1);
+                  break;
+                }
+              }
+            } else {
+              this.$message.success("删除失败,请尝试返回上一页,再进入");
+            }
+          })
+          .catch(err => {
+            this.$message.success("删除失败,请尝试返回上一页,再进入");
+          });
+        console.log("del:", imgNodeData);
+      }
     },
 
     editRecord() {
@@ -319,6 +361,10 @@ export default {
             res.data.response.CZJL.objects[0].principle.ExtendData.lightest_color;
           this.recordInfor[5].msg2 =
             res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color;
+          _this.recordLoading = false;
+          this.ifEdit = false;
+        } else {
+          this.$message.success("无法修改记录");
           _this.recordLoading = false;
           this.ifEdit = false;
         }

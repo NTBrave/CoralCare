@@ -27,12 +27,12 @@
               </div>
               <div class style>
                 <div
-                  style="color:#ACACAC;margin-bottom: 5px;"
+                  style="color:#777;margin-bottom: 5px;"
                   v-for="(item,index) in recordInfor"
                   :key="index"
                   class
                 >
-                  <span style="color:#7E7E7E;">
+                  <span style="color:#000;">
                     {{item.title}}：
                     <!-- <span v-if="index==0">
                       <br />
@@ -118,7 +118,9 @@
           :imgUrl.sync="theRecordImgArr"
           :imgHeight="9.5"
           :imgWidth="10"
+          :isShowDelet.sync="ifEdit"
           @selectOneImg="chooseSwiperImg"
+          @delOneImg="delSwiperImg"
         ></swiper>
         <div class="boderImg">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
@@ -198,13 +200,15 @@ export default {
       doMeasuring: false,
       imgUrlFormSwiper: "",
       key: 0,
-      // 记录下图片节点里面的图片id
+      // 记录下图片节点里面的图片id和key
       inforImgUrlId: [],
-      //图片id对应的推按url
+      //图片id对应的图片url
       theRecordImgArr: [],
       inforLoading: false,
       //修改涉及
       ifEdit: false,
+      theDelImgSpaId: 0,
+      theDelImKey: 0,
       commentNew: "",
       statusNew: "",
       lightest_colorNew: "",
@@ -263,10 +267,47 @@ export default {
         this.madeForm();
       }
     },
+    //接受从轮播组件传回来的url
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url;
-
-      // console.log(this.imgUrlFormSwiper)
+    },
+    //接受从轮播组件传回来,要删除的的url
+    delSwiperImg(url) {
+      // 根据url,截取key的识别码
+      let msgArr = url.split(/\/+|\?/);
+      let imgKey = msgArr[4];
+      for (var i = 0; i < this.inforImgUrlId.length; i++) {
+        if (this.inforImgUrlId[i].url.search(imgKey) >= 0) {
+          this.theDelImgSpaId = this.inforImgUrlId[i].spaId;
+          this.theDelImKey = this.inforImgUrlId[i].url;
+          break;
+        }
+      }
+      if (this.theDelImgSpaId && this.theDelImKey) {
+        let imgNodeData = ENTITY.P03;
+        imgNodeData.Jobs[0].MasterSpaId = this.recordObj.SpaId;
+        imgNodeData.Jobs[0].Object.SpaId = this.theDelImgSpaId;
+        imgNodeData.Jobs[0].Object.fileId = this.theDelImKey;
+        Api.reqApi(imgNodeData, "/tree/delete")
+          .then(res => {
+            if (res.data.status === 200 && res.data.response) {
+              this.$message.success("删除成功");
+              // this.theRecordImgArr.splice(i, 1);//这样会去除没有删的图片
+              for (let j = 0; j < this.theRecordImgArr.length; j++) {
+                if (this.theRecordImgArr[j].url.search(imgKey) >= 0) {
+                  this.theRecordImgArr.splice(j, 1);
+                  break;
+                }
+              }
+            } else {
+              this.$message.success("删除失败,请尝试返回上一页,再进入");
+            }
+          })
+          .catch(err => {
+            this.$message.success("删除失败,请尝试返回上一页,再进入");
+          });
+        console.log("del:", imgNodeData);
+      }
     },
     //更新记录
     setRecordSize(sizeData) {
@@ -312,7 +353,10 @@ export default {
           if (res.data.status === 200 && res.data.response) {
             let nodeArr = res.data.response.CZZP.objects;
             for (let i = 0; i < nodeArr.length; ++i) {
-              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+              let obj = {
+                url: nodeArr[i].principle.ExtendFileData.file_id,
+                spaId: nodeArr[i].principle.SpaId
+              };
               _this.inforImgUrlId.push(obj);
               this.inforLoading = false;
             }
