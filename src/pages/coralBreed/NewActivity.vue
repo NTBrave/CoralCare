@@ -1,6 +1,6 @@
 <template>
   <div class="ActivityRoot">
-    <activity-nav :existActivity="existActivity"></activity-nav>
+    <activity-nav :existType="existActivity"></activity-nav>
   </div>
 </template>
 
@@ -17,7 +17,8 @@ export default {
     }
   },
   mounted() {
-    this.existActivity = this.$route.params.existActivity
+    console.log(this.$route.params.existType)
+    this.existActivity = this.$route.params.existType
   }
 }
 </script>

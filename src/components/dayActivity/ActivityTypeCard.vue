@@ -1,5 +1,5 @@
 <template>
-  <div :class="navType" @click="$emit('click')">
+  <div :class="navType" @click="$emit('createAct');$emit('initStyle')">
     <div :class="activeItem === index? 'activeItem':''" class="subCard">{{activityName}}</div>
   </div>
 </template>
