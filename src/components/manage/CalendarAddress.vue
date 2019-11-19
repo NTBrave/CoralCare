@@ -69,23 +69,24 @@
             @change="timeReady(selectHour)"
           >
             <template slot="prepend">
-              <span style="cursor: pointer" @click="newActivity">残枝作业时间</span>
+              <span>残枝作业时间</span>
             </template>
           </el-input>
         </div>
       </div>
-      <el-button style round v-show="!ifNewActivity" @click="newActivity">
+      <!-- <el-button style round v-show="!ifNewActivity" @click="newActivity">
         <span class="el-icon-caret-left"></span>
-      </el-button>
+      </el-button>-->
 
       <el-button
         class="checkNewActivity margin-right: 40px;"
         :style="{color: isTimeReady? '': 'red'} "
         round
-        v-show="!ifNewActivity"
         :disabled="isTimeReady"
+        v-if="!ifNewActivity"
         @click="submitTimeAddress"
       >确认新建作业</el-button>
+      <el-button type="info" icon="el-icon-back" circle @click="newActivity" v-if="!ifNewActivity"></el-button>
     </show-drawer>
   </div>
 </template>
@@ -501,10 +502,10 @@ export default {
         !this.$route.query.time
       ) {
         // 初始化时间
-        this.preDate = moment()
-          .format("YYYYMMDD")
-          .slice(0, 6);
-        this.onSelect(moment());
+        // this.preDate = moment()
+        //   .format('YYYYMMDD')
+        //   .slice(0, 6)
+        // this.onSelect(moment())
 
         // 弹出抽屉
         this.showDrawer();
@@ -537,10 +538,10 @@ export default {
     //   !this.$route.query.time
     // ) {
     //   // 初始化时间
-    //   this.preDate = moment()
-    //     .format('YYYYMMDD')
-    //     .slice(0, 6)
-    //   this.onSelect(moment())
+    this.preDate = moment()
+      .format("YYYYMMDD")
+      .slice(0, 6);
+    this.onSelect(moment());
 
     //   // 弹出抽屉
     //   this.showDrawer()

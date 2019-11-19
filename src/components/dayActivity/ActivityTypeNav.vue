@@ -3,12 +3,13 @@
     <activity-card
       class="cardItem"
       v-for="(item, idx) in activityTypes"
+      :class="(existType.indexOf(activityTypes[idx].typeId) !== -1)? 'exist': ''"
       :key="idx"
       :activityName="item.activityType"
       :index="item.idx"
       :activeItem="activeItem"
       :navType="navType"
-      @click="change(item.idx)"
+      @createAct="change(item.idx)"
     ></activity-card>
     <el-dialog
       width="40%"
@@ -66,11 +67,11 @@ export default {
     navType: {
       type: String,
       default: 'card'
+    },
+    existType: {
+      type: Array,
+      default: () => []
     }
-    // existActivity: {
-    //   type: Array,
-    //   default: () => []
-    // }
   },
   data() {
     return {
@@ -88,7 +89,7 @@ export default {
       formLabelWidth: '100px'
 
       // activitiesList: [], // 已创建的活动列表
-      // currentActivity: {} // 当前活动信息(spaid, activity_num, czzy_spaid)
+      // currentActivity: {} // 当前活动信息(spaid, activity_number, czzy_spaid)
     }
   },
 
@@ -230,14 +231,15 @@ export default {
         JSON.parse(this.$route.query.spaid).czzy_spaid,
         this.form
       )
-      // console.log(requestObj)
+      console.log('请求创建活动', requestObj)
+      console.log('表单', this.form)
       // console.log(this.form)
       reqApi(requestObj, '/tree/create')
         .then(res => {
           if (res.data.status === 200) {
             console.log('创建残枝活动成功', res)
             let activity = {}
-            activity.activity_num =
+            activity.activity_number =
               res.data.response.CZHD.objects[0].principle.ExtendData.activity_number
             activity.czzy_spaid =
               res.data.response.CZHD.objects[0].principle.ExtendData.czzy_spaid
@@ -257,7 +259,7 @@ export default {
                 activityType: this.form.activityNum.slice(0, 2),
                 spaid: JSON.stringify({
                   czzy_spaid: JSON.parse(this.$route.query.spaid).czzy_spaid,
-                  czhd_spaid: this.currentActivity(activity.activity_num)
+                  czhd_spaid: this.currentActivity(activity.activity_number)
                     .czhd_spaid
                 })
               }
@@ -272,6 +274,7 @@ export default {
           }
         })
         .catch(err => {
+          console.log('????????????')
           this.$message({
             showClose: true,
             message: '该活动类型已存在！',
@@ -281,13 +284,26 @@ export default {
 
       // console.log(this.$route.query.time + this.$route.query.address)
     }
+
+    // callUp() {
+    //   console.log('事件')
+    // }
   },
+
+  // directives: {
+  //   trigger: {
+  //     inserted(el, binging) {
+  //       el.click(console.log('自动唤起'))
+  //     }
+  //   }
+  // },
   mounted() {
     // 将路由传来的已创建活动并入当前作业下已有的作业列表
     // if (this.$route.params.existActivity) {
     //   this.activityList = this.$route.params.existActivity
     // }
     console.log('重新渲染')
+
     this.showActive()
   }
 }
@@ -301,6 +317,11 @@ export default {
 
   .cardItem {
     flex: 0 1 auto;
+  }
+
+  .exist {
+    background: #acacac;
+    border-radius: 20px;
   }
 }
 
