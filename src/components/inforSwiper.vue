@@ -128,7 +128,7 @@
         </div>
         <upload
           v-show="ifEdit"
-          @createImg="imgArrPush"
+          @createImg="imgArrPush(arguments)"
           :masterid.sync="recordObj.SpaId"
           :czda_spaid.sync="recordObj.ExtendData.czda_spaid"
         ></upload>
@@ -277,12 +277,13 @@ export default {
       let msgArr = url.split(/\/+|\?/);
       let imgKey = msgArr[4];
       for (var i = 0; i < this.inforImgUrlId.length; i++) {
-        if (this.inforImgUrlId[i].url.search(imgKey) >= 0) {
+        if (this.inforImgUrlId[i].key.search(imgKey) >= 0) {
           this.theDelImgSpaId = this.inforImgUrlId[i].spaId;
-          this.theDelImKey = this.inforImgUrlId[i].url;
+          this.theDelImKey = this.inforImgUrlId[i].key;
           break;
         }
       }
+      console.log("找到的id和key", this.theDelImgSpaId, this.theDelImKey);
       if (this.theDelImgSpaId && this.theDelImKey) {
         let imgNodeData = ENTITY.P03;
         imgNodeData.Jobs[0].MasterSpaId = this.recordObj.SpaId;
@@ -354,7 +355,7 @@ export default {
             let nodeArr = res.data.response.CZZP.objects;
             for (let i = 0; i < nodeArr.length; ++i) {
               let obj = {
-                url: nodeArr[i].principle.ExtendFileData.file_id,
+                key: nodeArr[i].principle.ExtendFileData.file_id,
                 spaId: nodeArr[i].principle.SpaId
               };
               _this.inforImgUrlId.push(obj);
@@ -379,7 +380,7 @@ export default {
         let imgName = _this.inforImgUrlId[i];
         // console.log("图片id：", imgName.url);
         // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
-        await Api.reqApi({ file_id: imgName.url }, "/file/get").then(res => {
+        await Api.reqApi({ file_id: imgName.key }, "/file/get").then(res => {
           if (res.data.status === 200 && res.data.response) {
             // console.log("图片:", res.data.response.url);
             _this.theRecordImgArr.push({ url: res.data.response.url });
@@ -442,9 +443,15 @@ export default {
       });
     },
     // 生成传给轮播组件的url对象数组
-    imgArrPush(fileId) {
+    imgArrPush(arg) {
+      let fileId = arg[0];
+      let imgSpaId = arg[1];
+      this.inforImgUrlId.push({
+        key: fileId,
+        spaId: imgSpaId
+      });
+      //根据图片key,获取图片url
       Api.reqApi({ file_id: fileId }, "/file/get").then(res => {
-        // console.log('img:', res)
         if (res.data.status === 200 && res.data.response) {
           this.theRecordImgArr.push({ url: res.data.response.url });
         }

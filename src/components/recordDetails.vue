@@ -149,7 +149,7 @@
         </div>
         <upload
           v-show="ifEdit"
-          @createImg="imgArrPush"
+          @createImg="imgArrPush(arguments)"
           :masterid.sync="recordObj.jlId"
           :czda_spaid.sync="recordObj.daId"
         ></upload>
@@ -282,6 +282,7 @@ export default {
       this.ifEdit = !this.ifEdit;
     },
     chooseSwiperImg(url) {
+      // console.log("返回来的", url);
       this.imgUrlFormSwiper = url;
     },
     //接受从轮播组件传回来,要删除的的url
@@ -374,7 +375,12 @@ export default {
       this.$message.warning("该功能还在开发中，敬请期待");
     },
     // 生成传给轮播组件的url对象数组
-    imgArrPush(fileId) {
+    imgArrPush(arg) {
+      let fileId = arg[0];
+      let imgSpaId = arg[1];
+      this.recordObj.imgSpaID.push(imgSpaId);
+      this.recordObj.imgId.push(fileId);
+      //根据图片key,获取图片url
       Api.reqApi({ file_id: fileId }, "/file/get").then(res => {
         // console.log('img:', res)
         if (res.data.status === 200 && res.data.response) {

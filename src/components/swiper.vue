@@ -148,6 +148,8 @@ export default {
         this.index = ind;
         this.allImg[this.index].classList.add("current-img");
         this.$emit("selectOneImg", this.imgUrl[ind].url);
+      } else {
+        this.$emit("selectOneImg", 0);
       }
     },
     errorImg(e) {

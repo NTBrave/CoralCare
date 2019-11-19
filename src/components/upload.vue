@@ -123,7 +123,12 @@ export default {
       Api.reqApi(imgNodeData, "/tree/create").then(res => {
         console.log(res);
         if (res.data.status === 200 && res.data.response) {
-          this.$emit("createImg", uploadData.objectName);
+          //传给父组件，图片的key,图片节点的spaid
+          this.$emit(
+            "createImg",
+            uploadData.objectName,
+            res.data.response.CZZP.objects[0].principle.SpaId
+          );
         }
       });
     },
