@@ -74,9 +74,12 @@
           </el-input>
         </div>
       </div>
+      <!-- <el-button style round v-show="!ifNewActivity" @click="newActivity">
+        <span class="el-icon-caret-left"></span>
+      </el-button>-->
 
       <el-button
-        class="checkNewActivity"
+        class="checkNewActivity margin-right: 40px;"
         :style="{color: isTimeReady? '': 'red'} "
         round
         :disabled="isTimeReady"

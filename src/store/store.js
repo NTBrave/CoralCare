@@ -67,9 +67,9 @@ const state = {
     activeId: -1, // 选择活动类型之后进入的记录页面显示的路由id
 
     //珊瑚数据部分下拉列表
-    dropdownKey1: "所有区域",
-    dropdownKey2: "所有苗圃",
-    dropdownKey3: "所有分区",
+    dropdownKey1: { name: '所有区域', spa_id: '' },
+    dropdownKey2: { name: '所有苗圃', spa_id: '' },
+    dropdownKey3: { name: '所有分区', spa_id: '' },
     //珊瑚的区域，苗圃，分区信息
     area: ["区域A", "区域B", "区域C", "区域D", "区域E", "区域F"],
     group: [],
