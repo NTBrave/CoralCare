@@ -106,6 +106,9 @@ export default {
   mounted: function() {
     //初始化statistics和接口一,以及area
     //Axios.post('',{}).then(response=>{}).catch(error=>{});
+    this.$store.state.dropdownKey2={ name: '所有苗圃', spa_id: '' };
+    this.$store.state.dropdownKey3={ name: '所有分区', spa_id: '' };
+    this.$store.state.fq=[];
     Axios.post(this.initUrl, {})
       .then(response => {
         this.statistic = response.data.statistic;
