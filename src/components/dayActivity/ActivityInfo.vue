@@ -143,6 +143,11 @@ export default {
         // console.log(res);
         if (res.data.status === 200 && res.data.response) {
           this.$parent.getActivity();
+          // this.$parent.showActivityInfo(
+          //   this.$parent.selectActivity,
+          //   this.$parent.currentWorkIndex,
+          //   this.$parent.currentActiIndec
+          // );
           // this.activityInfo.totalMembers = this.members;
           // this.activityInfo.remarks = this.remarks;
         } else {

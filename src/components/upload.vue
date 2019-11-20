@@ -8,7 +8,6 @@
       action
       :http-request="uploadProcess"
       :show-file-list="false"
-      :before-upload="beforeAvatarUpload"
     >
       <div v-if="!uploadable">
         <i class="el-icon-plus"></i>
@@ -16,7 +15,8 @@
       </div>
       <div v-else>
         <i class="el-icon-plus"></i>
-        <p class="em" :style="{'color':'#fab6b6'}">{{tipMsg}}</p>
+        <!-- <p class="em" :style="{'color':'#fab6b6'}">{{tipMsg}}</p> -->
+        <p class="em" :style="{'color':'#fab6b6'}">先填写表单，再上传图片</p>
       </div>
     </el-upload>
   </div>
@@ -37,12 +37,12 @@ export default {
     }
   },
   //父节点残肢记录id、残肢档案id
-  props: ["masterid", "czda_spaid", "msg"],
+  props: ["masterid", "czda_spaid"],
   // props: ["currentResourceId"],
   data() {
     return {
       // 上传
-      tipMsg: this.msg || "先填写表单，再上传图片"
+      // tipMsg: this.msg || "先填写表单，再上传图片"
     };
   },
   methods: {
@@ -123,7 +123,12 @@ export default {
       Api.reqApi(imgNodeData, "/tree/create").then(res => {
         console.log(res);
         if (res.data.status === 200 && res.data.response) {
-          this.$emit("createImg", uploadData.objectName);
+          //传给父组件，图片的key,图片节点的spaid
+          this.$emit(
+            "createImg",
+            uploadData.objectName,
+            res.data.response.CZZP.objects[0].principle.SpaId
+          );
         }
       });
     },

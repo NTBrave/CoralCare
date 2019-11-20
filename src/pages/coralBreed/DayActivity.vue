@@ -157,7 +157,23 @@ export default {
       activityArr: [],
       noActivity: false,
       recordData: [],
-      allMsg: [],
+      allMsg: [
+        // {
+        //   ExtendData:{},
+        //   actiName:"",
+        //   coralNum:"",
+        //   daId:"",
+        //   daMsg:{},
+        //   imgId:[],
+        //   imgUrl:"",
+        //   imgUrlArr:[],
+        //   imgSpaID;[],
+        //   jlId:"",
+        //   species:"",
+        //   state:"",
+        //
+        // }
+      ],
       imgId: [],
 
       //加载
@@ -165,7 +181,9 @@ export default {
       //细节
       isShowDetail: false,
       //选中的记录数据
-      oneRecordData: {}
+      oneRecordData: {},
+      currentWorkIndex: 0,
+      currentActiIndec: 0
     }
   },
   computed: {
@@ -210,7 +228,10 @@ export default {
     // 点击选择活动，显示活动详情及活动下的珊瑚记录
     showActivityInfo(activityNum, workIndex, actiIndec) {
       this.recordLoading = true
+      // console.log("s->",activityNum)
       this.selectActivity = activityNum
+      this.currentWorkIndex = workIndex
+      this.currentActiIndec = actiIndec
       //更改子组件的编辑状态先
       this.$refs.child.setEditF()
       // 拿到请求的数据
@@ -258,6 +279,7 @@ export default {
         _this.allMsg[i].imgUrlArr = []
         _this.allMsg[i].imgUrl = ''
         _this.allMsg[i].imgId = []
+        _this.allMsg[i].imgSpaID = []
         _this.allMsg[i].ExtendData = this.recordData[i].principle.ExtendData
 
         //获取档案
@@ -278,6 +300,7 @@ export default {
           if (res.data.status === 200 && res.data.response) {
             let nodeArr = res.data.response.CZZP.objects
             for (let j = 0; j < nodeArr.length; ++j) {
+              _this.allMsg[i].imgSpaID.push(nodeArr[j].principle.SpaId)
               let file_id = nodeArr[j].principle.ExtendFileData.file_id
               _this.allMsg[i].imgId.push(file_id)
             }
@@ -324,10 +347,17 @@ export default {
       this.oneRecordData = item
       this.oneRecordData.actiName = selectActivity
       this.selectShow()
-      console.log('记录：', this.oneRecordData)
+      // console.log('记录：', this.oneRecordData)
     },
     selectShow() {
       this.isShowDetail = !this.isShowDetail
+      if (!this.isShowDetail) {
+        this.showActivityInfo(
+          this.selectActivity,
+          this.currentWorkIndex,
+          this.currentActiIndec
+        )
+      }
     },
 
     // 设置分页每页显示的内容
@@ -355,29 +385,35 @@ export default {
     // 点击小加号是在作业下添加新的活动，页面跳转
     //val:作业名称, idx_1：作业id数组下边
     addActivity(val, idx_1) {
-      console.log(val, this.workIdArr[idx_1])
+      // console.log(val, this.workIdArr[idx_1])
 
       let queryArr = Object.keys(val[0])[0].split('-')
       let act = {}
+      let existType = []
       for (let i of val) {
         act.activity_number = Object.keys(i)[0]
         act.czzy_spaid = this.workIdArr[idx_1]
         act.czhd_spaid = i[Object.keys(i)[0]]
         this.setActivityList(act)
         act = {}
+
+        existType.push(Object.keys(i)[0].slice(0, 2))
       }
-      console.log(act)
-      console.log(this.$store.getters.getExistAct)
+      // console.log(act)
+      // console.log(this.$store.getters.getExistAct)
 
       this.$router.push({
         name: 'newActivity',
         query: {
           time: queryArr[2],
           address: queryArr[1],
-          activityType: queryArr[0],
+          // activityType: queryArr[0],
           spaid: JSON.stringify({
             czzy_spaid: this.workIdArr[idx_1]
           })
+        },
+        params: {
+          existType
         }
       })
     },
@@ -397,9 +433,9 @@ export default {
       //   '10e489cb-aa38-47fa-ae49-fef7c2296977'
       // 请求接口创建一次下水作业活动，返回下水作业id及已创建的活动
       reqApi(W03, '/tree/create').then(res => {
-        console.log('新建作业', res)
+        // console.log('新建作业', res)
         if (res.data.status === 200) {
-          console.log('新建作业成功', res)
+          // console.log('新建作业成功', res)
           // let newWork = {}
           // newWork.pyzd_spaid =
           //   res.data.response.CZZY.objects[0].principle.ExtendData.pyzd_spaid
@@ -440,7 +476,7 @@ export default {
         let newA01 = A01
         newA01.Jobs[0].MasterSpaId = this.workIdArr[i]
         await reqApi(newA01, '/tree/select').then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.data.status === 200) {
             if (!res.data.response) {
               // this.$message.warning("作业下没有活动");
@@ -460,7 +496,7 @@ export default {
               //这里最好用push 不然界面不改变
               // this.activityNameList[i]=nameArr;
               this.activityNameList.push(nameArr)
-              console.log('活动数组-------------', this.activityNameList)
+              // console.log('活动数组-------------', this.activityNameList)
             }
           }
         })
@@ -472,13 +508,14 @@ export default {
           i--
         }
       }
-      console.log('活动', this.activityArr)
+      // console.log('活动', this.activityArr)
       //初始化显示第一个活动
       if (this.activityArr[0]) {
+        this.selectActivity = this.activityArr[0][0].principle.ExtendData.activity_number
         this.showActivityInfo(
-          this.activityArr[0][0].principle.ExtendData.activity_number,
-          0,
-          0
+          this.selectActivity,
+          this.currentWorkIndex,
+          this.currentActiIndec
         )
       }
     },
@@ -491,7 +528,7 @@ export default {
         if (res.data.status === 200) {
           if (res.data.response) {
             _this.recordData = res.data.response.CZJL.objects
-            console.log('记录', _this.recordData)
+            // console.log('记录', _this.recordData)
             this.makeCard()
           } else {
             this.$message.warning('这个活动下，没有记录')

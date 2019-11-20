@@ -817,11 +817,12 @@ export const P03 = {
     "Jobs": [
         {
             "Method": "delete",
-            "MasterSpaId": "masterid",
+            "MasterSpaId": "",
             "MasterExtendType": "CZJL",		//父节点:[/残枝记录]
             "Object": {
-                "SpaId": "spaid",			//要删除的节点spaid
-                "ExtendType": "CZZP"			//删除节点:[/残枝照片]	
+                "SpaId": "",			//要删除的节点spaid
+                "ExtendType": "CZZP",
+                "fileId": ""		//删除节点:[/残枝照片]	
             }
         }
     ]

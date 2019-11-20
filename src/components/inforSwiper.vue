@@ -27,12 +27,12 @@
               </div>
               <div class style>
                 <div
-                  style="color:#ACACAC;margin-bottom: 5px;"
+                  style="color:#777;margin-bottom: 5px;"
                   v-for="(item,index) in recordInfor"
                   :key="index"
                   class
                 >
-                  <span style="color:#7E7E7E;">
+                  <span style="color:#000;">
                     {{item.title}}：
                     <!-- <span v-if="index==0">
                       <br />
@@ -115,15 +115,23 @@
       </div>
       <div style="width:40rem">
         <swiper
-          :imgUrl="theRecordImgArr"
+          :imgUrl.sync="theRecordImgArr"
           :imgHeight="9.5"
           :imgWidth="10"
+          :isShowDelet.sync="ifEdit"
           @selectOneImg="chooseSwiperImg"
+          @delOneImg="delSwiperImg"
         ></swiper>
         <div class="boderImg">
           <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
           <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
         </div>
+        <upload
+          v-show="ifEdit"
+          @createImg="imgArrPush(arguments)"
+          :masterid.sync="recordObj.SpaId"
+          :czda_spaid.sync="recordObj.ExtendData.czda_spaid"
+        ></upload>
       </div>
     </div>
 
@@ -135,7 +143,7 @@
     >取消测量</div>
     <div v-if="doMeasuring">
       <swiper
-        :imgUrl="theRecordImgArr"
+        :imgUrl.sync="theRecordImgArr"
         :imgHeight="9.5"
         :imgWidth="10"
         @selectOneImg="chooseSwiperImg"
@@ -156,15 +164,16 @@ import * as DEFAULT from "../json/default";
 import * as ENTITY from "../json/entity";
 import * as Api from "../api/api";
 import moment from "moment";
-// import upload from '@/components/upload.vue'
+import upload from "@/components/upload.vue";
 export default {
-  components: { swiper, getArea},
+  components: { swiper, getArea, upload },
   props: {
     recordObj: Object,
     recordName: String,
     activty: Object,
     type: String,
-    isStart: String
+    isStart: String,
+    isEnd: String
   },
   data() {
     return {
@@ -191,13 +200,15 @@ export default {
       doMeasuring: false,
       imgUrlFormSwiper: "",
       key: 0,
-      // 记录下图片节点里面的图片id
+      // 记录下图片节点里面的图片id和key
       inforImgUrlId: [],
-      //图片id对应的推按url
+      //图片id对应的图片url
       theRecordImgArr: [],
       inforLoading: false,
       //修改涉及
       ifEdit: false,
+      theDelImgSpaId: 0,
+      theDelImKey: 0,
       commentNew: "",
       statusNew: "",
       lightest_colorNew: "",
@@ -212,7 +223,7 @@ export default {
     // }
   },
   mounted: function() {
-    // console.log(this.activty);
+    console.log(this.activty, this.recordObj);
     //获取这个记录的图片啦
     this.colorList = DEFAULT.colorList;
     this.madeForm();
@@ -256,10 +267,48 @@ export default {
         this.madeForm();
       }
     },
+    //接受从轮播组件传回来的url
     chooseSwiperImg(url) {
       this.imgUrlFormSwiper = url;
-
-      // console.log(this.imgUrlFormSwiper)
+    },
+    //接受从轮播组件传回来,要删除的的url
+    delSwiperImg(url) {
+      // 根据url,截取key的识别码
+      let msgArr = url.split(/\/+|\?/);
+      let imgKey = msgArr[4];
+      for (var i = 0; i < this.inforImgUrlId.length; i++) {
+        if (this.inforImgUrlId[i].key.search(imgKey) >= 0) {
+          this.theDelImgSpaId = this.inforImgUrlId[i].spaId;
+          this.theDelImKey = this.inforImgUrlId[i].key;
+          break;
+        }
+      }
+      console.log("找到的id和key", this.theDelImgSpaId, this.theDelImKey);
+      if (this.theDelImgSpaId && this.theDelImKey) {
+        let imgNodeData = ENTITY.P03;
+        imgNodeData.Jobs[0].MasterSpaId = this.recordObj.SpaId;
+        imgNodeData.Jobs[0].Object.SpaId = this.theDelImgSpaId;
+        imgNodeData.Jobs[0].Object.fileId = this.theDelImKey;
+        Api.reqApi(imgNodeData, "/tree/delete")
+          .then(res => {
+            if (res.data.status === 200 && res.data.response) {
+              this.$message.success("删除成功");
+              // this.theRecordImgArr.splice(i, 1);//这样会去除没有删的图片
+              for (let j = 0; j < this.theRecordImgArr.length; j++) {
+                if (this.theRecordImgArr[j].url.search(imgKey) >= 0) {
+                  this.theRecordImgArr.splice(j, 1);
+                  break;
+                }
+              }
+            } else {
+              this.$message.success("删除失败,请尝试返回上一页,再进入");
+            }
+          })
+          .catch(err => {
+            this.$message.success("删除失败,请尝试返回上一页,再进入");
+          });
+        console.log("del:", imgNodeData);
+      }
     },
     //更新记录
     setRecordSize(sizeData) {
@@ -305,7 +354,10 @@ export default {
           if (res.data.status === 200 && res.data.response) {
             let nodeArr = res.data.response.CZZP.objects;
             for (let i = 0; i < nodeArr.length; ++i) {
-              let obj = { url: nodeArr[i].principle.ExtendFileData.file_id };
+              let obj = {
+                key: nodeArr[i].principle.ExtendFileData.file_id,
+                spaId: nodeArr[i].principle.SpaId
+              };
               _this.inforImgUrlId.push(obj);
               this.inforLoading = false;
             }
@@ -328,7 +380,7 @@ export default {
         let imgName = _this.inforImgUrlId[i];
         // console.log("图片id：", imgName.url);
         // await Api.mockApi({ file_id: imgName }, "/file/get").then(res => {
-        await Api.reqApi({ file_id: imgName.url }, "/file/get").then(res => {
+        await Api.reqApi({ file_id: imgName.key }, "/file/get").then(res => {
           if (res.data.status === 200 && res.data.response) {
             // console.log("图片:", res.data.response.url);
             _this.theRecordImgArr.push({ url: res.data.response.url });
@@ -340,6 +392,10 @@ export default {
       }
     },
     beforEdit() {
+      if (this.isEnd == 1) {
+        this.$message.warning("档案已经完结，无法再继续编辑");
+        return;
+      }
       if (!this.ifEdit) {
         this.commentNew = this.recordInfor[9].msg;
         this.statusNew = this.recordInfor[2].msg;
@@ -383,6 +439,21 @@ export default {
             res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color;
           _this.recordLoading = false;
           this.ifEdit = false;
+        }
+      });
+    },
+    // 生成传给轮播组件的url对象数组
+    imgArrPush(arg) {
+      let fileId = arg[0];
+      let imgSpaId = arg[1];
+      this.inforImgUrlId.push({
+        key: fileId,
+        spaId: imgSpaId
+      });
+      //根据图片key,获取图片url
+      Api.reqApi({ file_id: fileId }, "/file/get").then(res => {
+        if (res.data.status === 200 && res.data.response) {
+          this.theRecordImgArr.push({ url: res.data.response.url });
         }
       });
     }
@@ -444,21 +515,21 @@ export default {
 }
 .showOneImg {
   max-width: 31rem;
-  max-height: 24rem;
+  max-height: 21rem;
   width: auto;
   height: auto;
 }
 .boderImg {
-  height: 25rem;
+  height: 21rem;
   width: 32rem;
   margin: 0px auto;
-  line-height: 25rem;
+  line-height: 22rem;
   text-align: center;
 }
 .inforSwiper {
   width: 61rem;
   display: flex;
-  height: 30rem;
+  height: 33rem;
   /* margin-top: 2vh; */
   border: 1px solid rgba(172, 172, 172, 1);
   overflow: hidden;

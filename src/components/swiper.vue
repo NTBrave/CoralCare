@@ -67,17 +67,32 @@ export default {
   //用的自定义组件
   components: {},
   mounted: function() {
-    // if (!this.imgUrl) {
-    //   this.imgUrl = []
-    // }
     this.isShowDel = this.isShowDelet || false;
-    this.list = document.getElementById("list");
-    this.allImg = document.getElementsByClassName("img-swiper");
-    // console.log("this.allImg", this.allImg);
-    if (this.allImg[0]) {
-      this.allImg[0].classList.add("current-img");
-      this.imgLen = this.allImg.length - 1;
-      this.selectOneImg(this.index);
+    // this.list = document.getElementById("list");
+    // this.allImg = document.getElementsByClassName("img-swiper");
+    // // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
+    // if (this.allImg[0]) {
+    //   this.allImg[0].classList.add("current-img");
+    //   this.imgLen = this.allImg.length - 1;
+    //   this.selectOneImg(this.index);
+    // }
+    // console.log("this.imgLen", this.imgLen);
+  },
+  watch: {
+    "imgUrl.length"() {
+      this.list = document.getElementById("list");
+      this.allImg = document.getElementsByClassName("img-swiper");
+      // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
+      if (this.allImg[0]) {
+        // console.log(this.allImg, this.allImg.length);
+        // console.log(this.imgUrl, this.imgUrl.length);
+        this.allImg[0].classList.add("current-img");
+        this.imgLen = this.imgUrl.length - 1;
+        this.selectOneImg(this.index);
+      }
+    },
+    isShowDelet() {
+      this.isShowDel = this.isShowDelet || false;
     }
   },
   methods: {
@@ -87,7 +102,7 @@ export default {
         this.list.style.left = 0 + "vw";
       } else if (this.index > this.imgLen - this.num) {
         this.list.style.left =
-          -this.imgWidth * (this.imgUrl.length - this.num + 1) + "vw";
+          -this.imgWidth * (this.imgUrl.length - this.num) + "vw";
       } else {
         // console.log(this.list.style.left)
         var newLeft = parseInt(this.list.style.left) + offset;
@@ -110,9 +125,9 @@ export default {
     nextOnclick() {
       if (this.allImg.length > 0) {
         this.allImg[this.index].classList.remove("current-img");
-        console.log(this.index, this.imgLen);
+        // console.log(this.index, this.imgLen);
         this.index = this.index < this.imgLen ? this.index + 1 : this.imgLen;
-        console.log(this.index);
+        // console.log(this.index);
         this.allImg[this.index].classList.add("current-img");
         this.move(-this.imgWidth);
         this.selectOneImg(this.index);
@@ -120,11 +135,21 @@ export default {
     },
     //选中传出一个url
     selectOneImg(ind) {
-      if (this.allImg.length > 0) {
+      // console.log("select->", ind, this.imgUrl.length);
+      if (this.allImg.length > 0 && this.imgUrl.length > 0) {
+        // console.log("select->");
+        if (ind === this.imgUrl.length) {
+          ind--;
+        }
+        if (ind < 0) {
+          ind = 0;
+        }
         this.allImg[this.index].classList.remove("current-img");
         this.index = ind;
         this.allImg[this.index].classList.add("current-img");
         this.$emit("selectOneImg", this.imgUrl[ind].url);
+      } else {
+        this.$emit("selectOneImg", 0);
       }
     },
     errorImg(e) {
@@ -132,10 +157,15 @@ export default {
     },
     //删除传出一个url
     deleteImg(ind) {
+      console.log("del INDX:", ind, this.allImg.length);
       if (this.allImg.length > 0) {
+        if (ind === this.imgUrl.length) {
+          ind--;
+        }
         this.allImg[this.index].classList.remove("current-img");
         this.index = ind;
         this.allImg[this.index].classList.add("current-img");
+        console.log("del 222:", this.imgUrl[ind].url);
         this.$emit("delOneImg", this.imgUrl[ind].url);
       }
     }
@@ -242,11 +272,14 @@ body {
 }
 
 .delete-img:hover {
-  opacity: 1;
+  color: #000;
+  font-size: larger;
+  cursor: pointer;
   display: flex;
 }
 
 .delete-img {
+  z-index: 5;
   width: 1rem;
   height: 1rem;
   font-size: 1rem;
@@ -256,7 +289,7 @@ body {
   right: 0px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  opacity: 0.3;
+  opacity: 1;
   transition: opacity 0.5s;
 }
 

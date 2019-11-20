@@ -310,6 +310,7 @@
             :recordObj="currentRecord"
             :recordName="coralTitle"
             :isStart="isStart"
+            :isEnd="isEnd"
           ></inforSwiper>
         </el-row>
       </div>
@@ -919,11 +920,11 @@ export default {
       CoralData.Jobs[0].Object.ExtendData.starred = sign;
       Api.reqApi(CoralData, "/tree/update").then(res => {
         if (res.data.status === 200 && res.data.response) {
-          // let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
+          let returnUrl = res.data.response.CZDA.objects[0].principle.SpaId;
           // _this.getAllCoralData();
-          _this.getSomeCoralData();
+          // _this.getSomeCoralData();
           // console.log("返回的url:", returnUrl);
-          // _this.selectCoral(returnUrl, this.active_index);
+          _this.selectCoral(returnUrl, this.active_index);
         }
       });
     },
@@ -957,8 +958,16 @@ export default {
       Api.reqApi(D06, "/tree/delete").then(res => {
         if ((res.data.staus = 200 && res.data.response)) {
           this.$message.success("删除成功");
+          this.coralList.splice(this.active_index, 1);
+          if (this.active_index === this.coralList.length) {
+            this.active_index = this.coralList.length - 1;
+          }
+          this.selectCoral(
+            this.coralList[this.active_index].SpaId,
+            this.active_index
+          );
           // this.getAllCoralData();
-          _this.getSomeCoralData();
+          // this.getSomeCoralData();
         }
       });
     },
