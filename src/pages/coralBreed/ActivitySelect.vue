@@ -1,7 +1,9 @@
 <template>
   <div>
     <activity-nav navType="nav"></activity-nav>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

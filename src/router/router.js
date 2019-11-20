@@ -64,6 +64,7 @@ export default new Router({
           // component: () => import("../pages/coralWelcome.vue")
           path: "/manage/coralBreed/dayActivity",
           name: "dayActivity",
+          meta: { keepAlive: true },
           component: () => import("../pages/coralBreed/DayActivity.vue")
         },
 

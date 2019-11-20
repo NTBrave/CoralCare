@@ -234,12 +234,18 @@ export default {
       // this.submitTimeAddress()
       this.timeReady(this.selectHour)
     },
-    '$route.path': function() {
-      if (this.$route.path !== '/manage/coralBreed/dayActivity') {
-        this.closeDrawer()
-      } else {
-        this.showDrawer()
-      }
+    '$route.query.time': {
+      handler: function() {
+        if (
+          this.$route.path === '/manage/coralBreed/dayActivity' &&
+          !this.$route.query.time
+        ) {
+          // this.closeDrawer()
+          // } else {
+          this.showDrawer()
+        }
+      },
+      deep: true
     }
   },
   methods: {
