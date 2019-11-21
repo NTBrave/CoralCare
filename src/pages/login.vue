@@ -126,36 +126,6 @@ export default {
       this.$router.push("/manage");
     },
 
-    logout() {
-      let _this = this;
-      Api.Logout()
-        .then(res => {
-          if (res.data.status === 200) {
-            _this.loginData.isLogin = false;
-            _this.loginData.visible = true;
-            Message({
-              message: "注销登陆 成功",
-              center: true,
-              type: "success",
-              showClose: true,
-              customClass: "zZindex"
-            });
-          } else {
-            alert(res.data.msg);
-          }
-        })
-        .catch(err => {
-          Message({
-            message: "注销登陆 失败",
-            center: true,
-            type: "warning",
-            showClose: true,
-            customClass: "zZindex"
-          });
-          _this.handleError(err);
-        });
-    },
-
     cancelLogin() {
       this.loginData.visible = false;
       Message({

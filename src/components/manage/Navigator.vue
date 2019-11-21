@@ -63,8 +63,6 @@ export default {
       //loading动画
       LoginLoading: false,
       RegistLoading: false,
-      // 手机端 还未完成
-      phone: false,
 
       isActivity: true, // 在残枝培育页面显示日历抽屉按钮
       isCoralRecord: true // 在植株档案页面显示筛选条件

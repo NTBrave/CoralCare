@@ -758,63 +758,13 @@ export default {
     },
     //关于检索的函数 暂时未需要
     getKeyword(keyword, cb) {
-      let _this = this;
-      _this.cardLoading = true;
-      Api.Suggestions("all", this.keyword, 10)
-        .then(res => {
-          if (res.data.status === 200) {
-            // 数组清空
-            let searchSuggestions = [];
-            for (let i = 0; i < res.data.data.length; ++i) {
-              let temp = {
-                value: res.data.data[i]
-              };
-              searchSuggestions.push(temp);
-            }
-            cb(searchSuggestions);
-            _this.cardLoading = false;
-          } else {
-            Message.error(res.data.msg);
-          }
-        })
-        .catch(err => {
-          // console.log("getKeyword");
-
-          _this.handleError(err);
-          _this.cardLoading = false;
-        });
+   
     },
     handleSelect(item) {
-      // 点击后处理
-      this.keyword = item.value;
-      this.search();
+     
     },
     search() {
-      Api.Results(
-        "all",
-        this.keyword,
-        [],
-        [],
-        ["all"],
-        { from: null, to: null },
-        { from: null, to: null },
-        "+8",
-        1,
-        10
-      )
-        .then(res => {
-          if (res.data.status === 200) {
-            // 结果数组
-            // console.log(res.data.data);
-            this.resultItems.splice(0, this.resultItems.length);
-            this.resultItems = res.data.data.results;
-          } else {
-            alert(res.data.msg);
-          }
-        })
-        .catch(err => {
-          // console.log(err);
-        });
+    
     },
 
     //接收从图表传过来的下标

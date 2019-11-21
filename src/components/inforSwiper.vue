@@ -301,11 +301,11 @@ export default {
                 }
               }
             } else {
-              this.$message.success("删除失败,请尝试返回上一页,再进入");
+              this.$message.error("删除失败，请尝试返回上一页，再进入");
             }
           })
           .catch(err => {
-            this.$message.success("删除失败,请尝试返回上一页,再进入");
+            this.$message.error("删除失败，请尝试返回上一页，再进入");
           });
         console.log("del:", imgNodeData);
       }
