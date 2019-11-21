@@ -30,7 +30,7 @@ export default {
       option1:function(){
         let op={
                 title: {
-                    text:'所有当前暂养残肢的种类及数量统计',
+                    text:'所有当前暂养残枝的种类及数量统计',
                     x: 'center',
                         },
                 color: [ '#FF6B6B', '#707070','#000000'],

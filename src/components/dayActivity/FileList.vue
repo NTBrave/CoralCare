@@ -47,6 +47,7 @@ export default {
         for (let i of this.fileNameList) {
           let obj = getCZDA(D01, i.principle.ExtendData.czda_spaid)
           await reqApi(obj, '/tree/select').then(res => {
+            console.log(res)
             let name = Refactoring(res.data.response.CZDA.objects[0]).title
             console.log(Refactoring(res.data.response.CZDA.objects[0]))
             this.fileName.push(name)

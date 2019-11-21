@@ -199,7 +199,7 @@ export default {
     option1: function() {
       return {
         title: {
-          text: "所有历史暂养残肢的种类及数量及存活数统计",
+          text: "所有历史暂养残枝的种类及数量及存活数统计",
           x: "center"
         },
         color: ["#FF6B6B", "#707070", "#000000"],

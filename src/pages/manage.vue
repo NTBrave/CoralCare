@@ -4,7 +4,10 @@
     <sidebar></sidebar>
     <navigator :pageRoute="$route.path"></navigator>
     <div class="manage-box">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
       <!-- <footer>大鹏潜爱 天盛信息 华南理工大学 Micerlabs&copy;2019</footer> -->
     </div>
     <footer>大鹏潜爱 天盛信息 华南理工大学 Micerlabs&copy;2019</footer>
