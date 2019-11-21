@@ -468,7 +468,7 @@ export default {
         .catch(err => {
           this.$message({
             showClose: true,
-            message: '该残枝作业已存在！',
+            message: '新建失败，检查这个时间点是否存在作业！',
             type: 'error'
           })
         })
