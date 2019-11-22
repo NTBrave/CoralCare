@@ -136,18 +136,18 @@
 
 <script>
 // import {} from '../../api/api'
-import { mapState, mapGetters, mapMutations } from 'vuex'
-import { signColorList, colorList, colorObj } from '../../../json/default'
-import { ZYQY_HBQY, CZDA_02, R06 } from '../../../json/entity'
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { signColorList, colorList, colorObj } from "../../../json/default";
+import { ZYQY_HBQY, CZDA_02, R06 } from "../../../json/entity";
 import {
   requestZYQY_HBQY,
   getCZDA_HB,
   createR04_06,
   Refactoring
-} from '../../../util/apiCreator'
-import { debounce } from '../../../util/requestLimit'
-import { reqApi } from '../../../api/api'
-import moment from 'moment'
+} from "../../../util/apiCreator";
+import { debounce } from "../../../util/requestLimit";
+import { reqApi } from "../../../api/api";
+import moment from "moment";
 
 export default {
   props: {
@@ -161,10 +161,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentZD_data: 'getCurrentZD_data',
-      currentActivity: 'getCurrentActivity'
+      currentZD_data: "getCurrentZD_data",
+      currentActivity: "getCurrentActivity"
     }),
-    ...mapState(['currentZD'])
+    ...mapState(["currentZD"])
   },
   watch: {
     // 监听整个查找档案的表单对象
@@ -176,33 +176,37 @@ export default {
             this.sowForm.sowArea.segmentation &&
             this.sowForm.signColor &&
             this.sowForm.signNumber
-        )
+        );
         if (is) {
-          this.requestCZDA_debounce(is)
-        } else this.beforeFileFind = !is
+          this.requestCZDA_debounce(is);
+        } else this.beforeFileFind = !is;
       },
       deep: true
     },
 
     // 根据样线显示分段
-    'sowForm.sowArea.line': function() {
-      this.HB_fenduan = []
-      this.sowForm.sowArea.segmentation = ''
+    "sowForm.sowArea.line": function() {
+      this.HB_fenduan = [];
+      this.sowForm.sowArea.segmentation = "";
 
-      let fenduan = requestZYQY_HBQY(ZYQY_HBQY, this.sowForm.sowArea.line, 'YX')
-      reqApi(fenduan, '/tree/select').then(res => {
-        console.log(res)
+      let fenduan = requestZYQY_HBQY(
+        ZYQY_HBQY,
+        this.sowForm.sowArea.line,
+        "YX"
+      );
+      reqApi(fenduan, "/tree/select").then(res => {
+        console.log(res);
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.FD.objects) {
-              let fenduan = {}
-              fenduan.name = i.principle.ExtendData.name
-              fenduan.spaid = i.principle.SpaId
-              this.HB_fenduan.push(fenduan)
+              let fenduan = {};
+              fenduan.name = i.principle.ExtendData.name;
+              fenduan.spaid = i.principle.SpaId;
+              this.HB_fenduan.push(fenduan);
             }
-          } else this.HB_fenduan = []
+          } else this.HB_fenduan = [];
         }
-      })
+      });
     }
   },
   data() {
@@ -218,8 +222,8 @@ export default {
       HB_fenduan: [],
 
       // 获取的残枝档案spaid
-      file_spaid: '',
-      record_spaid: '',
+      file_spaid: "",
+      record_spaid: "",
 
       sowForm: this.sowData,
       recordForm: this.recordData,
@@ -228,72 +232,72 @@ export default {
 
       activityNum:
         this.$route.query.activityType +
-        '-' +
+        "-" +
         this.$route.query.address +
-        '-' +
+        "-" +
         this.$route.query.time,
 
       item: {}
-    }
+    };
   },
   methods: {
-    ...mapMutations(['setOperateFile']),
+    ...mapMutations(["setOperateFile"]),
 
     // 根据最后的号码输入框改变请求 残枝档案spaid
     requestCZDA(is) {
       if (is) {
-        let requestObj = getCZDA_HB(CZDA_02, this.sowForm)
-        reqApi(requestObj, '/tree/select').then(res => {
-          console.log(res)
+        let requestObj = getCZDA_HB(CZDA_02, this.sowForm);
+        reqApi(requestObj, "/tree/select").then(res => {
+          console.log(res);
           if (res.data.status === 200) {
             if (res.data.response) {
-              let refactObj = Refactoring(res.data.response.CZDA.objects[0])
-              console.log(refactObj)
+              let refactObj = Refactoring(res.data.response.CZDA.objects[0]);
+              console.log(refactObj);
               this.file_spaid =
-                res.data.response.CZDA.objects[0].principle.SpaId // 缓存档案spaid
+                res.data.response.CZDA.objects[0].principle.SpaId; // 缓存档案spaid
 
               // 构造成功表单中的档案数据
-              this.item.activity_Num = this.activityNum
-              this.item.species = refactObj.type
-              this.item.stage = refactObj.stage
-              this.item.title = refactObj.title
+              this.item.activity_Num = this.activityNum;
+              this.item.species = refactObj.type;
+              this.item.stage = refactObj.stage;
+              this.item.title = refactObj.title;
 
               // 构建区域
-              let positonArr = refactObj.title.split('-')
-              positonArr.length = positonArr.length - 2
-              this.item.zyqy = positonArr.join('-')
+              let positonArr = refactObj.title.split("-");
+              positonArr.length = positonArr.length - 2;
+              this.item.zyqy = positonArr.join("-");
               // 成功提示消息
               this.$message({
                 showClose: true,
-                message: '档案已找到！',
-                type: 'success'
-              })
+                message: "档案已找到！",
+                type: "success"
+              });
 
               // 记录表单可以操作了
-              this.beforeFileFind = !is
+              this.beforeFileFind = !is;
             } else {
               this.$message({
                 showClose: true,
-                message: '找不到残枝档案！',
-                type: 'error',
+                message: "找不到残枝档案！",
+                type: "error",
                 duration: 4000
-              })
+              });
             }
           }
-        })
+        });
       } else {
         this.$message({
           showClose: true,
-          message: '残枝档案信息不完整！',
-          type: 'error',
+          message: "残枝档案信息不完整！",
+          type: "error",
           duration: 4000
-        })
+        });
       }
     },
 
     requestCZDA_debounce: debounce(
       function(is) {
-        this.requestCZDA(is)
+        this.requestCZDA(is);
       },
       1000,
       false
@@ -301,7 +305,7 @@ export default {
 
     // 向父组件传递 档案spaid 和 记录spaid
     sendSpaid() {
-      this.$emit('func', this.file_spaid, this.record_spaid)
+      this.$emit("func", this.file_spaid, this.record_spaid);
     },
 
     submitRecorder() {
@@ -313,58 +317,59 @@ export default {
         this.file_spaid,
         this.$route.query.time,
         this.recordForm
-      )
+      );
 
-      console.log(newR06)
-      reqApi(newR06, '/tree/create').then(res => {
+      console.log(newR06);
+      reqApi(newR06, "/tree/create").then(res => {
         if (res.data.status === 200) {
-          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId
-          this.sendSpaid() // 向父组件传spaid
+          this.record_spaid = res.data.response.CZJL.objects[0].principle.SpaId;
+          this.sendSpaid(); // 向父组件传spaid
 
           // 构造成功表单的记录数据
           this.item.status =
-            res.data.response.CZJL.objects[0].principle.ExtendData.status
-
+            res.data.response.CZJL.objects[0].principle.ExtendData.status;
+          this.item.stage = "回播";
           // 构建最浅到最深颜色
           let light =
             res.data.response.CZJL.objects[0].principle.ExtendData
-              .lightest_color
+              .lightest_color;
           let dark =
-            res.data.response.CZJL.objects[0].principle.ExtendData.darkest_color
-          this.item.coralColor = {}
-          this.item.coralColor.lightest_color = light
-          this.item.coralColor.color1 = colorObj[light]
+            res.data.response.CZJL.objects[0].principle.ExtendData
+              .darkest_color;
+          this.item.coralColor = {};
+          this.item.coralColor.lightest_color = light;
+          this.item.coralColor.color1 = colorObj[light];
 
-          this.item.coralColor.darkest_color = dark
-          this.item.coralColor.color2 = colorObj[dark]
+          this.item.coralColor.darkest_color = dark;
+          this.item.coralColor.color2 = colorObj[dark];
           this.item.time = moment(
             res.data.response.CZJL.objects[0].principle.ExtendData.timestamp,
-            'YYYYMMDDHH'
-          ).format('YYYY-MM-DD HH')
+            "YYYYMMDDHH"
+          ).format("YYYY-MM-DD HH");
           this.item.height =
-            res.data.response.CZJL.objects[0].principle.ExtendData.height
+            res.data.response.CZJL.objects[0].principle.ExtendData.height;
           this.item.area =
-            res.data.response.CZJL.objects[0].principle.ExtendData.area
+            res.data.response.CZJL.objects[0].principle.ExtendData.area;
           this.item.comment =
-            res.data.response.CZJL.objects[0].principle.ExtendData.comment
+            res.data.response.CZJL.objects[0].principle.ExtendData.comment;
 
           // 数据成功录入提醒
           this.$message({
             showClose: true,
-            message: '数据已成功录入！',
-            type: 'success'
-          })
+            message: "数据已成功录入！",
+            type: "success"
+          });
 
-          this.beforeCreateRecord = false
+          this.beforeCreateRecord = false;
         }
-        console.log(res)
-      })
+        console.log(res);
+      });
     },
 
     // 数据录入完毕后跳转到成功页面
     routeToSuccess() {
       this.$router.push({
-        name: 'resultA4',
+        name: "resultA4",
         query: {
           time: this.$route.query.time,
           address: this.$route.query.address,
@@ -379,48 +384,48 @@ export default {
           })
         },
         params: {
-          result: 'success'
+          result: "success"
         }
-      })
+      });
     },
 
     // 初始化请求回播区域
     requestHBQY() {
       this.sowForm.sowArea.firstArea = this.currentZD_data(
         this.currentZD
-      ).ExtendData.hbqy_spaid
+      ).ExtendData.hbqy_spaid;
       this.HB_quyu = [
         {
-          name: 'A',
+          name: "A",
           spaid: this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid
         }
-      ]
-      console.log(this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid)
+      ];
+      console.log(this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid);
       let yangxian = requestZYQY_HBQY(
         ZYQY_HBQY,
         this.currentZD_data(this.currentZD).ExtendData.hbqy_spaid,
-        'HBQYROOT'
-      )
-      reqApi(yangxian, '/tree/select').then(res => {
-        console.log(res)
+        "HBQYROOT"
+      );
+      reqApi(yangxian, "/tree/select").then(res => {
+        console.log(res);
         if (res.data.status === 200) {
           if (res.data.response) {
             for (let i of res.data.response.YX.objects) {
-              let yangxian = {}
-              yangxian.name = i.principle.ExtendData.name
-              yangxian.spaid = i.principle.SpaId
-              this.HB_yangxian.push(yangxian)
+              let yangxian = {};
+              yangxian.name = i.principle.ExtendData.name;
+              yangxian.spaid = i.principle.SpaId;
+              this.HB_yangxian.push(yangxian);
             }
-          } else this.HB_yangxian = []
+          } else this.HB_yangxian = [];
         }
-      })
+      });
     }
   },
 
   mounted() {
-    this.requestHBQY()
+    this.requestHBQY();
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

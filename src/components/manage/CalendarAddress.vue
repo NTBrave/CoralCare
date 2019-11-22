@@ -418,9 +418,9 @@ export default {
           }
         })
         .catch(err => {
-          this.$message.error("新建失败，检查这个时间点是否存在作业");
-          console.log(err);
-        });
+          this.$message.error('新建失败，检查这个时间点是否存在作业')
+          console.log(err)
+        })
     },
 
     // 点击查看当日活动
