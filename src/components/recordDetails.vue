@@ -240,6 +240,7 @@ export default {
       this.recordInfor[0].msg = Object.keys(this.recordObj.actiName)[0];
       this.recordInfor[1].msg = this.recordObj.species;
       this.recordInfor[2].msg = this.recordObj.state;
+      this.recordInfor[3].msg = this.recordObj.daMsg.stage;
       let positonArr = Object.keys(this.recordObj.actiName)[0].split("-");
       let type = {
         A1: "首次暂养",

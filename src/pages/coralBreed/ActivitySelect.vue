@@ -1,22 +1,22 @@
 <template>
   <div>
     <activity-nav navType="nav"></activity-nav>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <!-- <keep-alive> -->
+    <router-view></router-view>
+    <!-- </keep-alive> -->
   </div>
 </template>
 
 <script>
-import ActivityTypeNavVue from '../../components/dayActivity/ActivityTypeNav'
-import { mapGetters, mapMutations } from 'vuex'
+import ActivityTypeNavVue from "../../components/dayActivity/ActivityTypeNav";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
-    'activity-nav': ActivityTypeNavVue
+    "activity-nav": ActivityTypeNavVue
   },
 
   data() {
-    return {}
+    return {};
   },
   computed: {
     // ...mapGetters({
@@ -36,7 +36,7 @@ export default {
     // this.setActivity(buildActivity)
     // console.log(this.$route.params)
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped></style>
