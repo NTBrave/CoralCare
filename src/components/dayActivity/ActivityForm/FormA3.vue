@@ -405,6 +405,7 @@ export default {
     submitRecorder() {
       // 提交记录接口，成功后跳转到查看详情页面
       // 根据活动id查询活动下涉及的植株档案，以及档案对应的记录数据
+      console.log(this.currentActivity, this.activityNum);
       let newR05 = createR05(
         R05,
         this.currentActivity(this.activityNum).czhd_spaid,

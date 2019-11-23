@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import { reqApi } from '../../api/api'
-import { Refactoring, getCZDA } from '../../util/apiCreator'
-import { D01 } from '../../json/entity'
+import { reqApi } from "../../api/api";
+import { Refactoring, getCZDA } from "../../util/apiCreator";
+import { D01 } from "../../json/entity";
 export default {
   props: {
     fileNameList: {
@@ -23,7 +23,7 @@ export default {
   watch: {
     fileNameList: {
       handler: function() {
-        this.getFileName()
+        this.getFileName();
       },
       deep: true
     }
@@ -35,38 +35,40 @@ export default {
   data() {
     return {
       fileName: [],
-      activeFile: ''
-    }
+      activeFile: ""
+    };
   },
   methods: {
     // 循环根据记录请求档案，拼接档案名称
     async getFileName() {
       // this.getFileName()
-      this.fileName = []
+      this.fileName = [];
       if (this.fileNameList.length > 0) {
         for (let i of this.fileNameList) {
-          let obj = getCZDA(D01, i.principle.ExtendData.czda_spaid)
-          await reqApi(obj, '/tree/select').then(res => {
-            console.log(res)
-            let name = Refactoring(res.data.response.CZDA.objects[0]).title
-            console.log(Refactoring(res.data.response.CZDA.objects[0]))
-            this.fileName.push(name)
-          })
+          let obj = getCZDA(D01, i.principle.ExtendData.czda_spaid);
+          await reqApi(obj, "/tree/select").then(res => {
+            console.log(res);
+            if (res.data.status === 200 && res.data.response) {
+              let name = Refactoring(res.data.response.CZDA.objects[0]).title;
+              console.log(Refactoring(res.data.response.CZDA.objects[0]));
+              this.fileName.push(name);
+            }
+          });
         }
       }
     },
 
     findFile(item) {
-      this.activeFile = item
-      console.log(item)
+      this.activeFile = item;
+      console.log(item);
     }
 
     // 将接受到的
   },
   mounted() {
-    this.getFileName()
+    this.getFileName();
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>

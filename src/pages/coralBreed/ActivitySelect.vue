@@ -1,21 +1,9 @@
 <template>
   <div>
-<<<<<<< HEAD
-    <div v-if="!$route.query.edit">
-      <activity-nav navType="nav"></activity-nav>
-    </div>
-    <div class="back" v-else>
-      <el-button type="danger" round size="mini" @click="back">返回</el-button>
-    </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-=======
     <activity-nav navType="nav"></activity-nav>
     <!-- <keep-alive> -->
     <router-view></router-view>
     <!-- </keep-alive> -->
->>>>>>> 284570a102fb76ac5ef5abbe9bf4e02f13da0ee9
   </div>
 </template>
 
@@ -42,7 +30,7 @@ export default {
 
     // 返回上一个页面
     back() {
-      this.$router.back(-1)
+      this.$router.back(-1);
     }
   },
   mounted() {
@@ -51,7 +39,7 @@ export default {
     //   address: sessionStorage.getItem('selectedAddress')
     // }
     // this.setActivity(buildActivity)
-    console.log(this.$route.query.edit)
+    console.log(this.$route.query.edit);
   }
 };
 </script>
