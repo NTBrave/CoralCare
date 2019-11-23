@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="infoForm" v-if="activityInfo">
-          <ActivityInfoVue ref="child" :activityInfo="activityInfo"></ActivityInfoVue>
+          <ActivityInfoVue ref="child" :activityInfo="activityInfo" @add="addRecoder"></ActivityInfoVue>
         </div>
 
         <div v-loading="recordLoading" element-loading-spinner="loadingSvg" class="fileArea">
@@ -110,6 +110,7 @@ import { reqApi } from '../../api/api'
 import FileItemVue from '../../components/dayActivity/FileItem.vue'
 import ActivityInfoVue from '../../components/dayActivity/ActivityInfo.vue'
 import recordDetails from '../../components/recordDetails.vue'
+import { objIsEmpty } from '../../util/formRules'
 export default {
   components: {
     ActivityInfoVue,
@@ -122,7 +123,10 @@ export default {
 
       selectHourValid: true,
 
-      selectActivity: '', // 当前选中的活动编号
+      selectActivity: {}, // 当前选中的活动编号
+
+      currentWork: '', // 当前作业spaid
+
       activityInfo: {
         activityNum: '', //活动编号
         activityTime: '', // 活动时间
@@ -237,6 +241,9 @@ export default {
       // 拿到请求的数据
       //填写表单数据
       let actiMsg = this.activityArr[workIndex][actiIndec]
+
+      this.currentWork = actiMsg.principle.ExtendData.czzy_spaid // 当前作业的spaid
+
       // console.log(workIndex, actiIndec, actiMsg);
       this.activityInfo.activityNum =
         actiMsg.principle.ExtendData.activity_number
@@ -392,7 +399,7 @@ export default {
       let existType = []
       for (let i of val) {
         act.activity_number = Object.keys(i)[0]
-        act.czzy_spaid = this.workIdArr[idx_1]
+        act.czzy_spaid = this.workIdArr[idx_1].SpaId
         act.czhd_spaid = i[Object.keys(i)[0]]
         this.setActivityList(act)
         act = {}
@@ -409,7 +416,7 @@ export default {
           address: queryArr[1],
           // activityType: queryArr[0],
           spaid: JSON.stringify({
-            czzy_spaid: this.workIdArr[idx_1]
+            czzy_spaid: this.workIdArr[idx_1].SpaId
           })
         },
         params: {
@@ -483,12 +490,13 @@ export default {
       }
       for (let i = 0; i < this.workIdArr.length; i++) {
         let newA01 = A01
-        newA01.Jobs[0].MasterSpaId = this.workIdArr[i]
+        newA01.Jobs[0].MasterSpaId = this.workIdArr[i].SpaId
         await reqApi(newA01, '/tree/select').then(res => {
-          // console.log(res)
+          console.log('hhhhhhhhhhhhh', res)
           if (res.data.status === 200) {
             if (!res.data.response) {
               // this.$message.warning("作业下没有活动");
+
               this.noActivity = true
             } else {
               this.noActivity = false
@@ -505,7 +513,7 @@ export default {
               //这里最好用push 不然界面不改变
               // this.activityNameList[i]=nameArr;
               this.activityNameList.push(nameArr)
-              // console.log('活动数组-------------', this.activityNameList)
+              console.log('活动数组-------------', this.activityNameList)
             }
           }
         })
@@ -517,10 +525,11 @@ export default {
           i--
         }
       }
-      // console.log('活动', this.activityArr)
+      console.log('活动', this.activityArr)
       //初始化显示第一个活动
       if (this.activityArr[0]) {
-        this.selectActivity = this.activityArr[0][0].principle.ExtendData.activity_number
+        // this.selectActivity = this.activityArr[0][0].principle.ExtendData.activity_number
+        this.selectActivity = Object.values(this.activityNameList[0])[0]
         this.showActivityInfo(
           this.selectActivity,
           this.currentWorkIndex,
@@ -582,6 +591,26 @@ export default {
         newObj.GENUS.extenddata.name
       // console.log(newObj);
       return newObj
+    },
+
+    // 在活动下添加新纪录
+    addRecoder() {
+      console.log(this.selectActivity)
+      this.$router.push({
+        path: `/manage/coralBreed/newActivity/${Object.keys(
+          this.selectActivity
+        )[0].slice(0, 2)}/create`,
+        query: {
+          time: Object.keys(this.selectActivity)[0].split('-')[2],
+          address: this.$route.query.address,
+          activityType: Object.keys(this.selectActivity)[0].slice(0, 2),
+          spaid: JSON.stringify({
+            czzy_spaid: this.currentWork,
+            czhd_spaid: Object.values(this.selectActivity)[0]
+          }),
+          edit: true
+        }
+      })
     }
   },
   mounted() {

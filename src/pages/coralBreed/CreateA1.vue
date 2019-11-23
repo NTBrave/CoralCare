@@ -239,7 +239,7 @@ export default {
 
     .activityNum {
       width: 40%;
-      height: 1.6rem;
+      height: 1.5rem;
       min-width: 320px;
       margin: 1.5rem 0;
       background: rgba(0, 173, 186, 0.8);
@@ -260,6 +260,7 @@ export default {
         flex-direction: column;
         align-items: center;
         width: 60%;
+        margin-right: 3rem;
         min-width: 400px;
         max-width: 500px;
 

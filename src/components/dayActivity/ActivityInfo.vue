@@ -2,14 +2,22 @@
   <div class="infoRoot">
     <div class="bottonArea">
       <div v-if="!ifEdit">
-        <i class="el-icon-s-operation" @click="editActivity"></i>
+        <el-popover placement="top" trigger="hover">
+          <p :style="{'text-align': 'center','fontSize': '1.2rem'}">新建记录</p>
+          <span slot="reference" class="el-icon-plus" @click="$emit('add')"></span>
+        </el-popover>
+        <el-popover placement="top" trigger="hover">
+          <p :style="{'text-align': 'center','fontSize': '1.2rem'}">编辑活动信息</p>
+          <span slot="reference" class="el-icon-s-operation" @click="editActivity"></span>
+        </el-popover>
+
         <el-popover v-model="visible1" placement="top" trigger="click">
           <p>确定删除该活动？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible1 = false">否</el-button>
             <el-button type="primary" size="mini" @click="visible1 = false,deleteActivity()">是</el-button>
           </div>
-          <span slot="reference" :style="{'cursor':'pointer'}" class="el-icon-delete"></span>
+          <span slot="reference" :style="{'cursor':'pointer'}" class="el-icon-delete" title="删除该活动"></span>
         </el-popover>
       </div>
       <div v-else>
@@ -52,8 +60,8 @@
 </template>
 
 <script>
-import { reqApi } from "../../api/api";
-import { A06 } from "../../json/entity";
+import { reqApi } from '../../api/api'
+import { A06 } from '../../json/entity'
 export default {
   props: {
     activityInfo: {
@@ -63,86 +71,86 @@ export default {
   data() {
     return {
       ifEdit: false,
-      members: "",
-      remarks: "",
+      members: '',
+      remarks: '',
       formTitle: [
-        { title: "活动编号", data: "" },
-        { title: "活动时间", data: "" },
-        { title: "参与人员", data: "" },
-        { title: "活动类型", data: "" },
-        { title: "采集区域", data: "" },
-        { title: "珊瑚数量", data: "" },
-        { title: "品种数量", data: "" },
-        { title: "备注", data: "" }
+        { title: '活动编号', data: '' },
+        { title: '活动时间', data: '' },
+        { title: '参与人员', data: '' },
+        { title: '活动类型', data: '' },
+        { title: '采集区域', data: '' },
+        { title: '珊瑚数量', data: '' },
+        { title: '品种数量', data: '' },
+        { title: '备注', data: '' }
       ],
       visible1: false
-    };
+    }
   },
   computed: {
     // 将传入的数据与表单名称拼接起来形成一个新的数组，便于遍历渲染
     formList: function() {
-      let result = this.formTitle;
-      let datas = Object.values(this.activityInfo);
+      let result = this.formTitle
+      let datas = Object.values(this.activityInfo)
       for (let i of result) {
         for (var j of datas) {
-          i.data = j;
-          datas.shift(j);
-          break;
+          i.data = j
+          datas.shift(j)
+          break
         }
       }
-      return result;
+      return result
     }
   },
   watch: {
-    "activityInfo.activityNum": function() {
-      this.members = this.activityInfo.totalMembers;
-      this.remarks = this.activityInfo.remarks;
+    'activityInfo.activityNum': function() {
+      this.members = this.activityInfo.totalMembers
+      this.remarks = this.activityInfo.remarks
     }
   },
   methods: {
     // 自动聚焦
     changeFocus() {
       this.$nextTick(function() {
-        this.$refs.input[0].focus();
-      });
+        this.$refs.input[0].focus()
+      })
     },
 
     // 编辑活动信息
     editActivity() {
-      this.ifEdit = !this.ifEdit;
+      this.ifEdit = !this.ifEdit
       if (this.ifEdit) {
-        this.changeFocus();
+        this.changeFocus()
       }
     },
     setEditF() {
-      this.ifEdit = false;
+      this.ifEdit = false
     },
 
     // 删除活动
     deleteActivity() {
-      this.$message.warning("该功能还在开发中，敬请期待");
+      this.$message.warning('该功能还在开发中，敬请期待')
     },
 
     // 提交修改表单
     submitEdit() {
-      let _this = this;
-      console.log(this.activityInfo);
-      let newA06 = A06;
-      newA06.Jobs[0].Object.ExtendData.participants = _this.members;
-      newA06.Jobs[0].Object.ExtendData.comment = _this.remarks;
-      newA06.Jobs[0].MasterSpaId = _this.activityInfo.czzy_spaid;
-      newA06.Jobs[0].Object.SpaId = _this.activityInfo.czhd_spaid;
+      let _this = this
+      console.log(this.activityInfo)
+      let newA06 = A06
+      newA06.Jobs[0].Object.ExtendData.participants = _this.members
+      newA06.Jobs[0].Object.ExtendData.comment = _this.remarks
+      newA06.Jobs[0].MasterSpaId = _this.activityInfo.czzy_spaid
+      newA06.Jobs[0].Object.SpaId = _this.activityInfo.czhd_spaid
       newA06.Jobs[0].Object.ExtendData.czzy_spaid =
-        _this.activityInfo.czzy_spaid;
+        _this.activityInfo.czzy_spaid
       newA06.Jobs[0].Object.ExtendData.timestamp =
-        _this.activityInfo.activityTime;
-      newA06.Jobs[0].Object.ExtendData.type = _this.activityInfo.activityType;
-      newA06.Jobs[0].Object.ExtendData.code = _this.activityInfo.code;
+        _this.activityInfo.activityTime
+      newA06.Jobs[0].Object.ExtendData.type = _this.activityInfo.activityType
+      newA06.Jobs[0].Object.ExtendData.code = _this.activityInfo.code
       // this.$message.warning("该功能还在开发中，敬请期待");
-      reqApi(newA06, "/tree/update").then(res => {
+      reqApi(newA06, '/tree/update').then(res => {
         // console.log(res);
         if (res.data.status === 200 && res.data.response) {
-          this.$parent.getActivity();
+          this.$parent.getActivity()
           // this.$parent.showActivityInfo(
           //   this.$parent.selectActivity,
           //   this.$parent.currentWorkIndex,
@@ -151,17 +159,17 @@ export default {
           // this.activityInfo.totalMembers = this.members;
           // this.activityInfo.remarks = this.remarks;
         } else {
-          this.$message.error("修改失败");
+          this.$message.error('修改失败')
         }
-      });
-      this.editActivity();
+      })
+      this.editActivity()
     }
   },
   mounted() {
-    this.members = this.activityInfo.totalMembers;
-    this.remarks = this.activityInfo.remarks;
+    this.members = this.activityInfo.totalMembers
+    this.remarks = this.activityInfo.remarks
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -178,6 +186,15 @@ export default {
     text-align: right;
     font-size: 1.5rem;
     margin-right: 1vw;
+
+    .el-icon-plus {
+      margin-right: 1vw;
+      cursor: pointer;
+
+      &:hover {
+        color: #3FC1CB;
+      }
+    }
 
     .el-icon-s-operation {
       margin-right: 1vw;

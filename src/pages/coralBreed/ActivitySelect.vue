@@ -1,6 +1,11 @@
 <template>
   <div>
-    <activity-nav navType="nav"></activity-nav>
+    <div v-if="!$route.query.edit">
+      <activity-nav navType="nav"></activity-nav>
+    </div>
+    <div class="back" v-else>
+      <el-button type="danger" round size="mini" @click="back">返回</el-button>
+    </div>
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
@@ -27,6 +32,11 @@ export default {
   },
   methods: {
     // ...mapMutations(['setActivity'])
+
+    // 返回上一个页面
+    back() {
+      this.$router.back(-1)
+    }
   },
   mounted() {
     // let buildActivity = {
@@ -34,9 +44,17 @@ export default {
     //   address: sessionStorage.getItem('selectedAddress')
     // }
     // this.setActivity(buildActivity)
-    // console.log(this.$route.params)
+    console.log(this.$route.query.edit)
   }
 }
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.back {
+  position: absolute;
+  left: 25%;
+  // right: 40%;
+  // bottom: 0.5rem;
+  top: 1.5rem;
+}
+</style>

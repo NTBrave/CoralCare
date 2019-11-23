@@ -429,7 +429,11 @@ export default {
       let workIdArr = []
       for (let item of this.datesHaveActivity) {
         if (item.date.search(this.dateNumber_review) >= 0) {
-          workIdArr.push(item.SpaId)
+          // workIdArr.push(item.SpaId)
+          let obj = {}
+          obj.work = item.date
+          obj.SpaId = item.SpaId
+          workIdArr.push(obj)
         }
       }
       this.setWorkIdArr(workIdArr)
@@ -486,14 +490,14 @@ export default {
       //   '737ee050-7f45-4dc7-b276-59b410581cc8'
       W01.Jobs[0].Where[1].Operator.Value = `${yearMonth}%`
       reqApi(W01, '/tree/select').then(res => {
-        // console.log(res)
+        // console.log('佛噢噢噢噢哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦', res)
         if (res.data.response && res.data.status === 200) {
           for (let i of res.data.response.CZZY.objects) {
             let obj = {}
             obj.date = i.principle.ExtendData.timestamp
             obj.SpaId = i.principle.SpaId
             obj.state = 0
-            // console.log(obj);
+            // console.log(obj)
             this.datesHaveActivity.push(obj)
           }
         } else {
