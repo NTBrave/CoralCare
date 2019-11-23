@@ -1,6 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
     <div v-if="!$route.query.edit">
       <activity-nav navType="nav"></activity-nav>
     </div>
@@ -10,25 +9,19 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
-=======
-    <activity-nav navType="nav"></activity-nav>
-    <!-- <keep-alive> -->
-    <router-view></router-view>
-    <!-- </keep-alive> -->
->>>>>>> 284570a102fb76ac5ef5abbe9bf4e02f13da0ee9
   </div>
 </template>
 
 <script>
-import ActivityTypeNavVue from "../../components/dayActivity/ActivityTypeNav";
-import { mapGetters, mapMutations } from "vuex";
+import ActivityTypeNavVue from '../../components/dayActivity/ActivityTypeNav'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   components: {
-    "activity-nav": ActivityTypeNavVue
+    'activity-nav': ActivityTypeNavVue
   },
 
   data() {
-    return {};
+    return {}
   },
   computed: {
     // ...mapGetters({
@@ -53,7 +46,7 @@ export default {
     // this.setActivity(buildActivity)
     console.log(this.$route.query.edit)
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
