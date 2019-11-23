@@ -16,9 +16,9 @@
 export default {
   props: { showActivityData: Object },
   data() {
-    return {}
+    return {};
   }
-}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -30,8 +30,10 @@ export default {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  // justify-content: space-around;
   cursor: pointer;
+  position: relative;
+  width: 30vw;
 
   .imgArea {
     margin: 0.8rem 0 0.6rem 0.6rem;
@@ -64,6 +66,8 @@ export default {
     align-self: flex-start;
     // margin-top: 0.4rem;
     font-size: 1rem;
+    position: absolute;
+    right: 0;
   }
 }
 </style>

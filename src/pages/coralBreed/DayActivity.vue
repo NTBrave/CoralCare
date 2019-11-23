@@ -232,7 +232,7 @@ export default {
     // 点击选择活动，显示活动详情及活动下的珊瑚记录
     showActivityInfo(activityNum, workIndex, actiIndec) {
       this.recordLoading = true
-      // console.log("s->",activityNum)
+      // console.log("s->", this.activityArr, workIndex, actiIndec);
       this.selectActivity = activityNum
       this.currentWorkIndex = workIndex
       this.currentActiIndec = actiIndec
@@ -513,7 +513,7 @@ export default {
               //这里最好用push 不然界面不改变
               // this.activityNameList[i]=nameArr;
               this.activityNameList.push(nameArr)
-              console.log('活动数组-------------', this.activityNameList)
+              // console.log('活动数组-------------', this.activityNameList)
             }
           }
         })
@@ -680,13 +680,15 @@ export default {
       }
     }
 
-    .infoForm, .fileArea {
+    .infoForm {
       margin-left: 6vw;
       margin-top: 5.5vw;
     }
 
     .fileArea {
-      // display: flow-root;
+      margin-left: 6vw;
+      width: 30vw;
+      margin-top: 5.5vw;
     }
 
     .list {
