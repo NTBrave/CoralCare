@@ -7,7 +7,6 @@
       multiple
       action
       :http-request="uploadProcess"
-      :show-file-list="false"
     >
       <div v-if="!uploadable">
         <i class="el-icon-plus"></i>

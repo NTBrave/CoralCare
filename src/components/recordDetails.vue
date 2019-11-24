@@ -143,16 +143,18 @@
           :isShowDelet.sync="ifEdit"
           @delOneImg="delSwiperImg"
         ></swiper>
-        <div class="boderImg">
-          <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
-          <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
+        <div>
+          <div class="boderImg">
+            <!-- <img class="showOneImg" width="100%" src="http://dayy.xyz/resource/example/1.png" alt /> -->
+            <img class="showOneImg" width="100%" :src="imgUrlFormSwiper" alt />
+          </div>
+          <upload
+            v-show="ifEdit"
+            @createImg="imgArrPush(arguments)"
+            :masterid.sync="recordObj.jlId"
+            :czda_spaid.sync="recordObj.daId"
+          ></upload>
         </div>
-        <upload
-          v-show="ifEdit"
-          @createImg="imgArrPush(arguments)"
-          :masterid.sync="recordObj.jlId"
-          :czda_spaid.sync="recordObj.daId"
-        ></upload>
       </div>
     </div>
   </div>
@@ -461,7 +463,7 @@ export default {
 .inforSwiper {
   width: 61rem;
   display: flex;
-  height: 33rem;
+  /* height: 33rem; */
   /* margin-top: 2vh; */
   border: 1px solid rgba(172, 172, 172, 1);
   overflow: hidden;

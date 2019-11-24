@@ -82,14 +82,19 @@ export default {
     "imgUrl.length"() {
       this.list = document.getElementById("list");
       this.allImg = document.getElementsByClassName("img-swiper");
-      // console.log("this.allImg", this.allImg, this.allImg.length, this.allImg[0]);
+      // console.log(
+      //   "this.allImg",
+      //   this.allImg,
+      //   this.allImg.length,
+      //   this.allImg.item(0)
+      // );
       if (this.allImg[0]) {
         // console.log(this.allImg, this.allImg.length);
-        // console.log(this.imgUrl, this.imgUrl.length);
+        // console.log("this.imgUrl", this.imgUrl, this.imgUrl.length);
         this.allImg[0].classList.add("current-img");
-        this.imgLen = this.imgUrl.length - 1;
-        this.selectOneImg(this.index);
       }
+      this.imgLen = this.imgUrl.length - 1;
+      this.selectOneImg(this.index);
     },
     isShowDelet() {
       this.isShowDel = this.isShowDelet || false;
@@ -106,7 +111,6 @@ export default {
       } else {
         // console.log(this.list.style.left)
         var newLeft = parseInt(this.list.style.left) + offset;
-
         this.list.style.left = newLeft + "vw";
         // console.log('newLeft:', newLeft)
       }
