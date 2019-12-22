@@ -43,7 +43,7 @@
         >{{item.name}}</div>
       </el-col>
     </el-row>
-    <el-row :gutter="0">
+    <el-row :gutter="0" style="z-index:-1;">
       <el-col :span="2">
         <div
           :style="{'textAlign':'center','borderLeft': '1px solid lightgray','borderBottom':'1px solid lightgray'}"

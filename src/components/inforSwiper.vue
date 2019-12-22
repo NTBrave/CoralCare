@@ -529,7 +529,7 @@ export default {
 .inforSwiper {
   width: 61rem;
   display: flex;
-  height: 33rem;
+  /* height: 33rem; */
   /* margin-top: 2vh; */
   border: 1px solid rgba(172, 172, 172, 1);
   overflow: hidden;
