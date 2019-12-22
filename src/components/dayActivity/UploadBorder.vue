@@ -9,7 +9,7 @@
       </el-col>
       <el-col
         :span="4"
-        v-for="(item, idx) in colorList.B_color"
+        v-for="(item, idx) in colorListB"
         :key="idx"
         :style="{'borderTop': '1px solid lightgray'}"
       >
@@ -37,7 +37,7 @@
       </el-col>
       <el-col :span="1">
         <div
-          v-for="(item, idx) in colorList.C_color"
+          v-for="(item, idx) in colorListC"
           :key="idx"
           :style="{'width':'100%','height':'6vw','background': item.color,'textAlign': 'center','lineHeight':'6vw','color':'white','borderRight': '1px solid lightgray'}"
         >{{item.name}}</div>
@@ -157,7 +157,8 @@ const colorList = {
 export default {
   data() {
     return {
-      colorList
+      colorListB: colorList.B_color,
+      colorListC: colorList.C_color
     }
   },
   computed: {
