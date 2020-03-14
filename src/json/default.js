@@ -1,3 +1,10 @@
+/**
+ * @description: 测试数据（大部分废弃）
+ * @version: V1.0,
+ * @date: ,
+ * @author: dlcai,
+*/
+
 export const signColorList = [
   {
     label: "红",

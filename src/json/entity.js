@@ -1,4 +1,9 @@
-
+/**
+ * @description: 请求体的数据实体，用于接口请求
+ * @version: V1.0,
+ * @date: ,
+ * @author: dlcai,
+*/
 
 //O-01 获取所有站点
 export const O01 =

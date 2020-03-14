@@ -1,5 +1,11 @@
-import axios from "axios";
+/**
+ * @description: 统一请求接口 ,
+ * @version: V1.0,
+ * @date: ,
+ * @author: ,
+*/
 
+import axios from "axios";
 export const GET = "get";
 export const POST = "post";
 export const PUT = "put";

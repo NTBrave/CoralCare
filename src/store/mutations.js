@@ -1,3 +1,9 @@
+/**
+ * @description: vuex的set函数,s
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
 const mutations = {
   setIsHome(state, home) {
     state.isHome = home;

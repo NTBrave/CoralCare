@@ -1,4 +1,9 @@
-// 判断一个对象里面是否有某个属性为空
+/**
+ * @description: 判断一个对象里面是否有某个属性为空,
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
 export function objIsEmpty(obj) {
   let empty;
   for (let key in obj) {

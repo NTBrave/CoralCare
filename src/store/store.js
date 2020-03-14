@@ -1,3 +1,9 @@
+/**
+ * @description: vuex的数据,最后数据本地化,
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
 import Vue from "vue";
 import Vuex from "vuex";
 import getters from "./getters.js";

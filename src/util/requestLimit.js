@@ -1,4 +1,11 @@
 /**
+ * @description: ,
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
+
+/**
  * 防抖
  * @param {*} func
  * @param {*} wait
@@ -49,7 +56,7 @@
 export function debounce(func, wait, immediate) {
   let timeout;
 
-  return function() {
+  return function () {
     let context = this;
     let args = arguments;
 
@@ -61,7 +68,7 @@ export function debounce(func, wait, immediate) {
       }, wait);
       if (callNow) func.apply(context, args);
     } else {
-      timeout = setTimeout(function() {
+      timeout = setTimeout(function () {
         func.apply(context, args);
       }, wait);
     }

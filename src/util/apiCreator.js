@@ -1,4 +1,9 @@
-// import * as entity from "../json/entity";
+/**
+ * @description: 构造请求实体的公用函数,
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
 
 // 深拷贝
 function deepCopy(obj) {

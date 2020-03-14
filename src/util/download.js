@@ -1,4 +1,10 @@
 /**
+ * @description: 下载的函数,
+ * @version: V1.0,
+ * @date: ,
+ * @author: dlcai,
+*/
+/**
  * 获取 blob
  * @param  {String} url 目标文件地址
  * @return {Promise}

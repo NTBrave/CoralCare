@@ -1,3 +1,9 @@
+/**
+ * @description: 页面路由，跳转时需要设置
+ * @version: V1.0,
+ * @date: ,
+ * @author: dlcai,
+*/
 import Vue from "vue";
 import Router from "vue-router";
 Vue.use(Router);

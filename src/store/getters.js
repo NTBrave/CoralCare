@@ -1,3 +1,9 @@
+/**
+ * @description: vuex的get函数,
+ * @version: V1.0,
+ * @date: ,
+ * @author: czb,
+*/
 const getters = {
     //得到珊瑚数据
     coralStatistic(state) {
