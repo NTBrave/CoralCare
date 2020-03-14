@@ -9,7 +9,7 @@
       </el-col>
       <el-col
         :span="4"
-        v-for="(item, idx) in colorList.B_color"
+        v-for="(item, idx) in colorListB"
         :key="idx"
         :style="{'borderTop': '1px solid lightgray'}"
       >
@@ -37,7 +37,7 @@
       </el-col>
       <el-col :span="1">
         <div
-          v-for="(item, idx) in colorList.C_color"
+          v-for="(item, idx) in colorListC"
           :key="idx"
           :style="{'width':'100%','height':'6vw','background': item.color,'textAlign': 'center','lineHeight':'6vw','color':'white','borderRight': '1px solid lightgray'}"
         >{{item.name}}</div>
@@ -67,109 +67,110 @@
 const colorList = {
   B_color: [
     {
-      color: "#E1EAAE",
-      name: "B2"
+      color: '#E1EAAE',
+      name: 'B2'
     },
     {
-      color: "#C1DA83",
-      name: "B3"
+      color: '#C1DA83',
+      name: 'B3'
     },
     {
-      color: "#899D52",
-      name: "B4"
+      color: '#899D52',
+      name: 'B4'
     },
     {
-      color: "#586832",
-      name: "B5"
+      color: '#586832',
+      name: 'B5'
     },
     {
-      color: "#223017",
-      name: "B6"
+      color: '#223017',
+      name: 'B6'
     }
   ],
   C_color: [
     {
-      color: "#F9D2BC",
-      name: "C2"
+      color: '#F9D2BC',
+      name: 'C2'
     },
     {
-      color: "#F1915E",
-      name: "C3"
+      color: '#F1915E',
+      name: 'C3'
     },
     {
-      color: "#D86430",
-      name: "C4"
+      color: '#D86430',
+      name: 'C4'
     },
     {
-      color: "#8A3820",
-      name: "C5"
+      color: '#8A3820',
+      name: 'C5'
     },
     {
-      color: "#510D0C",
-      name: "C6"
+      color: '#510D0C',
+      name: 'C6'
     }
   ],
   D_color: [
     {
-      color: "#F7DA9F",
-      name: "D2"
+      color: '#F7DA9F',
+      name: 'D2'
     },
     {
-      color: "#F2A04C",
-      name: "D3"
+      color: '#F2A04C',
+      name: 'D3'
     },
     {
-      color: "#CC7D3F",
-      name: "D4"
+      color: '#CC7D3F',
+      name: 'D4'
     },
     {
-      color: "#8F4124",
-      name: "D5"
+      color: '#8F4124',
+      name: 'D5'
     },
     {
-      color: "#73381C",
-      name: "D6"
+      color: '#73381C',
+      name: 'D6'
     }
   ],
   E_color: [
     {
-      color: "#4C200E",
-      name: "E2"
+      color: '#4C200E',
+      name: 'E2'
     },
     {
-      color: "#764922",
-      name: "E3"
+      color: '#764922',
+      name: 'E3'
     },
     {
-      color: "#AC913D",
-      name: "E4"
+      color: '#AC913D',
+      name: 'E4'
     },
     {
-      color: "#E2C96F",
-      name: "E5"
+      color: '#E2C96F',
+      name: 'E5'
     },
     {
-      color: "#EEEDA4",
-      name: "E6"
+      color: '#EEEDA4',
+      name: 'E6'
     }
   ]
-};
+}
 export default {
   data() {
     return {
-      colorList
-    };
+      colorListB: colorList.B_color,
+      colorListC: colorList.C_color
+    }
   },
   computed: {
     reverseD_color() {
-      return colorList.D_color.reverse();
+      return colorList.D_color.reverse()
     },
     reverseE_color() {
-      return colorList.E_color.reverse();
+      return colorList.E_color.reverse()
     }
   },
   methods: {}
-};
+}
 </script>
 
 <style lang="stylus" scoped></style>
